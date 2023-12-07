@@ -9,7 +9,6 @@ import (
 
 var db = pg.Db
 
-// Create creates a new eq.Equipment record in the database
 func Create(title string, description string) (int, error) {
 	// TODO: add validation to prevent sql injection
 	query := `INSERT INTO Equipment (title, description) VALUES ($1, $2) returning id`
@@ -19,7 +18,6 @@ func Create(title string, description string) (int, error) {
 	return id, err
 }
 
-// Update updates an eq.Equipment record in the database
 func Update(id int, title string, description string) error {
 	// TODO: add validation to prevent sql injection
 	query := `UPDATE Equipment SET title = $1, description = $2 WHERE id = $3`
@@ -28,7 +26,6 @@ func Update(id int, title string, description string) error {
 	return err
 }
 
-// Get returns an eq.Equipment record from the database
 func Get(id int) (tp.Equipment, error) {
 	// TODO: add validation to prevent sql injection
 	var e tp.Equipment
@@ -37,7 +34,6 @@ func Get(id int) (tp.Equipment, error) {
 	return e, err
 }
 
-// GetAll returns all eq.Equipment records from the database
 func GetAll() ([]tp.Equipment, error) {
 	// TODO: add validation to prevent sql injection
 	var Equipment []tp.Equipment

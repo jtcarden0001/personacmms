@@ -5,6 +5,7 @@ import (
 	"github.com/jtcarden0001/personacmms/projects/webapi/pkg/handler/equipment"
 )
 
+// TODO: adding data access layer code feels very copy pasty, how can I improve the structure to reduce this?
 func main() {
 	router := gin.Default()
 	registerEquipmentRoutes(router)
