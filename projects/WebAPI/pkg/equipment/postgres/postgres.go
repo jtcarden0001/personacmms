@@ -3,8 +3,8 @@ package postgres
 import (
 	"fmt"
 
-	pg "github.com/jtcarden0001/personacmms/src/webapi/pkg/db/postgres"
-	tp "github.com/jtcarden0001/personacmms/src/webapi/pkg/types"
+	pg "github.com/jtcarden0001/personacmms/projects/webapi/pkg/db/postgres"
+	tp "github.com/jtcarden0001/personacmms/projects/webapi/pkg/types"
 )
 
 var db = pg.Db

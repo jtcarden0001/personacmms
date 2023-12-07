@@ -1,8 +1,8 @@
 package equipment
 
 import (
-	imp "github.com/jtcarden0001/personacmms/src/webapi/pkg/equipment/postgres"
-	tp "github.com/jtcarden0001/personacmms/src/webapi/pkg/types"
+	imp "github.com/jtcarden0001/personacmms/projects/webapi/pkg/equipment/postgres"
+	tp "github.com/jtcarden0001/personacmms/projects/webapi/pkg/types"
 )
 
 // Create creates a new equipment record in the database

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	tp "github.com/jtcarden0001/personacmms/src/webapi/pkg/types"
+	tp "github.com/jtcarden0001/personacmms/projects/webapi/pkg/types"
 )
 
 func TestGetNotExists(t *testing.T) {
