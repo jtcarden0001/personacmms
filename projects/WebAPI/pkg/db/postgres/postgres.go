@@ -9,7 +9,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetDB() *sql.DB {
+var Db *sql.DB
+
+func init() {
+	Db = getDB()
+}
+
+func getDB() *sql.DB {
 	pgPass := os.Getenv("postgrespass")
 	connStr := fmt.Sprintf("postgresql://postgres:%s@localhost/personacmms?sslmode=disable", pgPass)
 	// Connect to database
