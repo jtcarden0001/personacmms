@@ -1,4 +1,4 @@
-package equipment
+package gin
 
 import (
 	"net/http"

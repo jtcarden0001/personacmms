@@ -1,18 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/jtcarden0001/personacmms/projects/webapi/pkg/handler/equipment"
+	"github.com/jtcarden0001/personacmms/projects/webapi/internal/app"
+	"github.com/jtcarden0001/personacmms/projects/webapi/internal/db"
+	"github.com/jtcarden0001/personacmms/projects/webapi/internal/http"
 )
 
-// TODO: adding data access layer code feels very copy pasty, how can I improve the structure to reduce this?
 func main() {
-	router := gin.Default()
-	registerEquipmentRoutes(router)
+	storeLayer := db.New()
 
-	router.Run("localhost:8080")
-}
+	appLayer := app.New(storeLayer)
 
-func registerEquipmentRoutes(r *gin.Engine) {
-	r.GET("/equipment", equipment.GetAll)
+	httpLayer := http.New(appLayer)
+
+	httpLayer.Start()
 }
