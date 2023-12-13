@@ -14,8 +14,16 @@ type Store struct {
 }
 
 func New() *Store {
+	return getStore("personacmms")
+}
+
+func NewTest() *Store {
+	return getStore("personacmms-test")
+}
+
+func getStore(dbName string) *Store {
 	pgPass := os.Getenv("postgrespass")
-	connStr := fmt.Sprintf("postgresql://postgres:%s@localhost/personacmms?sslmode=disable", pgPass)
+	connStr := fmt.Sprintf("postgresql://postgres:%s@localhost/%s?sslmode=disable", pgPass, dbName)
 	// Connect to database
 	Db, err := sql.Open("postgres", connStr)
 	if err != nil {

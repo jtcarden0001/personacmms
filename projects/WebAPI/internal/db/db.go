@@ -7,5 +7,5 @@ func New() Store {
 }
 
 func NewTest() StoreTest {
-	return imp.New()
+	return imp.NewTest()
 }
