@@ -25,11 +25,11 @@ CREATE TABLE task (
   time_periodicity_unit_id INT,
   usage_periodicity_quantity INT,
   usage_periodicity_unit_id INT,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
   CONSTRAINT fk_task__time_periodicity_unit_id
     FOREIGN KEY (time_periodicity_unit_id)
         REFERENCES time_periodicity_unit(id)
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
   CONSTRAINT fk_task__usage_periodicity_unit_id
     FOREIGN KEY (usage_periodicity_unit_id)
         REFERENCES usage_periodicity_unit(id)
