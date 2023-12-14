@@ -1,6 +1,9 @@
 CREATE TABLE equipment (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
+  year INT,
+  make VARCHAR,
+  model_number VARCHAR,
   description VARCHAR,
   PRIMARY KEY (id)
 );

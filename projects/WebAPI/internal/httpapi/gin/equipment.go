@@ -19,7 +19,7 @@ func (h *HttpApi) CreateEquipment(c *gin.Context) {
 		return
 	}
 
-	_, err := h.app.CreateEquipment(e.Title, e.Description)
+	_, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description)
 	if err != nil {
 		c.IndentedJSON(http.StatusCreated, e)
 	} else {

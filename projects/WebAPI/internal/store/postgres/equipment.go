@@ -6,11 +6,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 )
 
-func (pg *Store) CreateEquipment(title string, description string) (int, error) {
+func (pg *Store) CreateEquipment(title string, year int, make, modelNumber, description string) (int, error) {
 	// TODO: add validation to prevent sql injection
-	query := `INSERT INTO Equipment (title, description) VALUES ($1, $2) returning id`
+	query := `INSERT INTO Equipment (title, year, make, model_number, description) VALUES ($1, $2, $3, $4, $5) returning id`
 	var id int
-	err := pg.db.QueryRow(query, title, description).Scan(&id)
+	err := pg.db.QueryRow(query, title, year, make, modelNumber, description).Scan(&id)
 
 	return id, err
 }
@@ -51,10 +51,10 @@ func (pg *Store) GetEquipment(id int) (tp.Equipment, error) {
 	return e, err
 }
 
-func (pg *Store) UpdateEquipment(id int, title string, description string) error {
+func (pg *Store) UpdateEquipment(id int, title string, year int, make, modelNumber, description string) error {
 	// TODO: add validation to prevent sql injection
-	query := `UPDATE Equipment SET title = $1, description = $2 WHERE id = $3`
-	_, err := pg.db.Exec(query, title, description, id)
+	query := `UPDATE Equipment SET title = $1, year = $2, make = $3, model_number = $4, description = $5 WHERE id = $3`
+	_, err := pg.db.Exec(query, title, year, make, modelNumber, description, id)
 
 	return err
 }
