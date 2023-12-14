@@ -25,7 +25,7 @@ func (pg *Store) DeleteEquipment(id int) error {
 func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 	// TODO: add validation to prevent sql injection
 	var Equipment []tp.Equipment
-	query := `SELECT id, title, description FROM Equipment`
+	query := `SELECT id, title, year, make, model_number, description FROM Equipment`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 
 	for rows.Next() {
 		var e tp.Equipment
-		err = rows.Scan(&e.Id, &e.Title, &e.Description)
+		err = rows.Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description)
 		if err != nil {
 			return nil, err
 		}

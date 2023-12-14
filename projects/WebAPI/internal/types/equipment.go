@@ -5,6 +5,6 @@ type Equipment struct {
 	Title       string `json:"title" binding:"required"`
 	Year        int    `json:"year"`
 	Make        string `json:"make"`
-	ModelNumber string `json:"model_number"`
+	ModelNumber string `json:"modelNumber"`
 	Description string `json:"description"`
 }
