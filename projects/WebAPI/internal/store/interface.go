@@ -1,4 +1,4 @@
-package db
+package store
 
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 

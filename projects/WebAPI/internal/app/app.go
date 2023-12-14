@@ -2,9 +2,13 @@ package app
 
 import (
 	imp "github.com/jtcarden0001/personacmms/projects/webapi/internal/app/cmmsapp"
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/db"
+	"github.com/jtcarden0001/personacmms/projects/webapi/internal/store"
 )
 
-func New(store db.Store) *imp.App {
-	return imp.New(store)
+func New(db store.Store) *imp.App {
+	return imp.New(db)
+}
+
+func NewTest(db store.StoreTest) *imp.AppTest {
+	return imp.NewTest(db)
 }

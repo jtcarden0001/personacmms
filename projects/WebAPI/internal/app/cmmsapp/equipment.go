@@ -3,25 +3,25 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
 func (cmms *App) CreateEquipment(title string, description string) (int, error) {
-	return cmms.store.CreateEquipment(title, description)
+	return cmms.db.CreateEquipment(title, description)
 }
 
 func (cmms *App) DeleteEquipment(id int) error {
-	return cmms.store.DeleteEquipment(id)
+	return cmms.db.DeleteEquipment(id)
 }
 
 func (cmms *App) GetAllEquipment() ([]tp.Equipment, error) {
-	return cmms.store.GetAllEquipment()
+	return cmms.db.GetAllEquipment()
 }
 
 func (cmms *App) GetEquipment(id int) (tp.Equipment, error) {
-	return cmms.store.GetEquipment(id)
+	return cmms.db.GetEquipment(id)
 }
 
 func (cmms *App) UpdateEquipment(id int, title string, description string) error {
-	return cmms.store.UpdateEquipment(id, title, description)
+	return cmms.db.UpdateEquipment(id, title, description)
 }
 
 func (cmms *AppTest) ResetSequenceEquipment(id int) error {
-	return cmms.store.ResetSequenceEquipment(id)
+	return cmms.db.ResetSequenceEquipment(id)
 }

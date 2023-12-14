@@ -3,25 +3,25 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
 func (cmms *App) CreateTool(title string) (int, error) {
-	return cmms.store.CreateTool(title)
+	return cmms.db.CreateTool(title)
 }
 
 func (cmms *App) DeleteTool(id int) error {
-	return cmms.store.DeleteTool(id)
+	return cmms.db.DeleteTool(id)
 }
 
 func (cmms *App) GetAllTools() ([]tp.Tool, error) {
-	return cmms.store.GetAllTools()
+	return cmms.db.GetAllTools()
 }
 
 func (cmms *App) GetTool(id int) (tp.Tool, error) {
-	return cmms.store.GetTool(id)
+	return cmms.db.GetTool(id)
 }
 
 func (cmms *App) UpdateTool(id int, title string) error {
-	return cmms.store.UpdateTool(id, title)
+	return cmms.db.UpdateTool(id, title)
 }
 
 func (cmms *AppTest) ResetSequenceTool(id int) error {
-	return cmms.store.ResetSequenceTool(id)
+	return cmms.db.ResetSequenceTool(id)
 }

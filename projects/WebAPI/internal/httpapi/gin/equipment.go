@@ -4,18 +4,22 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	eq "github.com/jtcarden0001/personacmms/projects/webapi/pkg/equipment"
-	tp "github.com/jtcarden0001/personacmms/projects/webapi/pkg/types"
+	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 )
 
-func Create(c *gin.Context) {
+func (h *HttpApi) registerEquipmentRoutes(r *gin.Engine) {
+	r.GET("/equipment", h.GetAllEquipment)
+	r.POST("/equipment", h.CreateEquipment)
+}
+
+func (h *HttpApi) CreateEquipment(c *gin.Context) {
 	var e tp.Equipment
 	if err := c.BindJSON(&e); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	_, err := eq.Create(e.Title, e.Description)
+	_, err := h.app.CreateEquipment(e.Title, e.Description)
 	if err != nil {
 		c.IndentedJSON(http.StatusCreated, e)
 	} else {
@@ -24,8 +28,8 @@ func Create(c *gin.Context) {
 	}
 }
 
-func GetAll(c *gin.Context) {
-	equipment, err := eq.GetAll()
+func (h *HttpApi) GetAllEquipment(c *gin.Context) {
+	equipment, err := h.app.GetAllEquipment()
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {
