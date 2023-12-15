@@ -46,14 +46,14 @@ func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 func (pg *Store) GetEquipment(id int) (tp.Equipment, error) {
 	// TODO: add validation to prevent sql injection
 	var e tp.Equipment
-	query := `SELECT id, title, description FROM Equipment WHERE id = $1`
-	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Description)
+	query := `SELECT id, title, year, make, model_number, description FROM Equipment WHERE id = $1`
+	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description)
 	return e, err
 }
 
 func (pg *Store) UpdateEquipment(id int, title string, year int, make, modelNumber, description string) error {
 	// TODO: add validation to prevent sql injection
-	query := `UPDATE Equipment SET title = $1, year = $2, make = $3, model_number = $4, description = $5 WHERE id = $3`
+	query := `UPDATE Equipment SET title = $1, year = $2, make = $3, model_number = $4, description = $5 WHERE id = $6`
 	_, err := pg.db.Exec(query, title, year, make, modelNumber, description, id)
 
 	return err
