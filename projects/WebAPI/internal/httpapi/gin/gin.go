@@ -18,6 +18,7 @@ func New(injectedApp app.App) *HttpApi {
 	}
 
 	instance.registerEquipmentRoutes(ginRouter)
+	instance.registerToolRoutes(ginRouter)
 
 	return instance
 }

@@ -54,7 +54,7 @@ func (pg *Store) GetTool(id int) (tp.Tool, error) {
 
 func (pg *Store) UpdateTool(id int, title string) error {
 	// TODO: add validation to prevent sql injection
-	query := `UPDATE tool SET title = $1 WHERE id = $3`
+	query := `UPDATE tool SET title = $1 WHERE id = $2`
 	_, err := pg.db.Exec(query, title, id)
 
 	return err

@@ -23,11 +23,12 @@ func (h *HttpApi) CreateEquipment(c *gin.Context) {
 		return
 	}
 
-	_, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description)
+	id, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description)
 	if err != nil {
 		// TODO: revisit this error to make sure it is correct
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {
+		e.Id = id
 		c.IndentedJSON(http.StatusCreated, e)
 	}
 }
