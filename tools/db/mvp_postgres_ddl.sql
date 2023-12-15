@@ -64,6 +64,7 @@ CREATE TABLE work_order (
 CREATE TABLE tool (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
+  size VARCHAR,
   PRIMARY KEY (id)
 );
 

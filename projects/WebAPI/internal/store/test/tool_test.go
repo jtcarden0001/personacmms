@@ -7,14 +7,14 @@ import (
 
 func TestCreateUpdateDelete(t *testing.T) {
 	// Create
-	id, err := testStore.CreateTool("test tool")
+	id, err := testStore.CreateTool("test tool", "test size")
 	fmt.Println("test tool id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Update
-	err = testStore.UpdateTool(id, "test tool updated")
+	err = testStore.UpdateTool(id, "test tool updated", "test size")
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}

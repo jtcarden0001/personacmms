@@ -6,11 +6,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 )
 
-func (pg *Store) CreateTool(title string) (int, error) {
+func (pg *Store) CreateTool(title string, size string) (int, error) {
 	// TODO: add validation to prevent sql injection
-	query := `INSERT INTO tool (title) VALUES ($1) returning id`
+	query := `INSERT INTO tool (title, size) VALUES ($1, $2) returning id`
 	var id int
-	err := pg.db.QueryRow(query, title).Scan(&id)
+	err := pg.db.QueryRow(query, title, size).Scan(&id)
 
 	return id, err
 }
@@ -24,38 +24,38 @@ func (pg *Store) DeleteTool(id int) error {
 
 func (pg *Store) GetAllTools() ([]tp.Tool, error) {
 	// TODO: add validation to prevent sql injection
-	var tool []tp.Tool
-	query := `SELECT id, title FROM tool`
+	var tools []tp.Tool
+	query := `SELECT id, title, size FROM tool`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 
 	for rows.Next() {
-		var e tp.Tool
-		err = rows.Scan(&e.Id, &e.Title)
+		var t tp.Tool
+		err = rows.Scan(&t.Id, &t.Title, &t.Size)
 		if err != nil {
 			return nil, err
 		}
-		tool = append(tool, e)
+		tools = append(tools, t)
 	}
 
-	return tool, nil
+	return tools, nil
 }
 
 func (pg *Store) GetTool(id int) (tp.Tool, error) {
 	// TODO: add validation to prevent sql injection
 	var t tp.Tool
-	query := `SELECT id, title FROM tool WHERE id = $1`
-	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title)
+	query := `SELECT id, title, size FROM tool WHERE id = $1`
+	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title, &t.Size)
 
 	return t, err
 }
 
-func (pg *Store) UpdateTool(id int, title string) error {
+func (pg *Store) UpdateTool(id int, title string, size string) error {
 	// TODO: add validation to prevent sql injection
-	query := `UPDATE tool SET title = $1 WHERE id = $2`
-	_, err := pg.db.Exec(query, title, id)
+	query := `UPDATE tool SET title = $1, size = $2 WHERE id = $3`
+	_, err := pg.db.Exec(query, title, size, id)
 
 	return err
 }

@@ -23,7 +23,7 @@ func (h *HttpApi) CreateTool(c *gin.Context) {
 		return
 	}
 
-	id, err := h.app.CreateTool(t.Title)
+	id, err := h.app.CreateTool(t.Title, t.Size)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {
@@ -85,7 +85,7 @@ func (h *HttpApi) UpdateTool(c *gin.Context) {
 	}
 
 	t.Id = id
-	err = h.app.UpdateTool(t.Id, t.Title)
+	err = h.app.UpdateTool(t.Id, t.Title, t.Size)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {

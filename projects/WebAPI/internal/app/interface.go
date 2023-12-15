@@ -9,11 +9,11 @@ type App interface {
 	GetEquipment(int) (tp.Equipment, error)
 	UpdateEquipment(int, string, int, string, string, string) error
 
-	CreateTool(string) (int, error)
+	CreateTool(string, string) (int, error)
 	DeleteTool(int) error
 	GetAllTools() ([]tp.Tool, error)
 	GetTool(int) (tp.Tool, error)
-	UpdateTool(int, string) error
+	UpdateTool(int, string, string) error
 }
 
 type AppTest interface {
@@ -24,10 +24,10 @@ type AppTest interface {
 	UpdateEquipment(int, string, int, string, string, string) error
 	ResetSequenceEquipment(int) error
 
-	CreateTool(string) (int, error)
+	CreateTool(string, string) (int, error)
 	DeleteTool(int) error
 	GetAllTools() ([]tp.Tool, error)
 	GetTool(int) (tp.Tool, error)
-	UpdateTool(int, string) error
+	UpdateTool(int, string, string) error
 	ResetSequenceTool(int) error
 }
