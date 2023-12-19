@@ -6,6 +6,20 @@ import (
 	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 )
 
+// these interfaces are platform agnostic but I like having them in the same file as the implementation,
+// will move to a common location if I field the idea of another implemntation
+type EquipmentCategory interface {
+	CreateEquipmentCategory(string) (int, error)
+	DeleteEquipmentCategory(int) error
+	GetAllEquipmentCategories() ([]tp.EquipmentCategory, error)
+	GetEquipmentCategory(int) (tp.EquipmentCategory, error)
+	UpdateEquipmentCategory(int, string) error
+}
+
+type EquipmentCategoryTest interface {
+	ResetSequenceEquipmentCategory(int) error
+}
+
 func (pg *Store) CreateEquipmentCategory(title string) (int, error) {
 	// TODO: add validation to prevent sql injection
 	query := `INSERT INTO equipment_category (title) VALUES ($1) returning id`

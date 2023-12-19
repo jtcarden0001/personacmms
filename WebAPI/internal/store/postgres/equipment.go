@@ -6,6 +6,19 @@ import (
 	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 )
 
+type Equipment interface {
+	CreateEquipment(string, int, string, string, string, int) (int, error)
+	DeleteEquipment(int) error
+	GetAllEquipment() ([]tp.Equipment, error)
+	GetEquipment(int) (tp.Equipment, error)
+	UpdateEquipment(int, string, int, string, string, string, int) error
+	UpdateEquipmentCategoryFK(int, int) error
+}
+
+type EquipmentTest interface {
+	ResetSequenceEquipment(int) error
+}
+
 func (pg *Store) CreateEquipment(title string, year int, make, modelNumber, description string, categoryId int) (int, error) {
 	// TODO: add validation to prevent sql injection
 	query := `INSERT INTO Equipment (title, year, make, model_number, description, category_id) VALUES ($1, $2, $3, $4, $5, $6) returning id`
