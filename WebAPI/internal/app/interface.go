@@ -3,11 +3,11 @@ package app
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
 type App interface {
-	CreateEquipment(string, int, string, string, string) (int, error)
+	CreateEquipment(string, int, string, string, string, int) (int, error)
 	DeleteEquipment(int) error
 	GetAllEquipment() ([]tp.Equipment, error)
 	GetEquipment(int) (tp.Equipment, error)
-	UpdateEquipment(int, string, int, string, string, string) error
+	UpdateEquipment(int, string, int, string, string, string, int) error
 
 	CreateTool(string, string) (int, error)
 	DeleteTool(int) error
@@ -17,11 +17,11 @@ type App interface {
 }
 
 type AppTest interface {
-	CreateEquipment(string, int, string, string, string) (int, error)
+	CreateEquipment(string, int, string, string, string, int) (int, error)
 	DeleteEquipment(int) error
 	GetAllEquipment() ([]tp.Equipment, error)
 	GetEquipment(int) (tp.Equipment, error)
-	UpdateEquipment(int, string, int, string, string, string) error
+	UpdateEquipment(int, string, int, string, string, string, int) error
 	ResetSequenceEquipment(int) error
 
 	CreateTool(string, string) (int, error)

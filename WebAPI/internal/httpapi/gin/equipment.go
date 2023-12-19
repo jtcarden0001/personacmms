@@ -23,7 +23,7 @@ func (h *HttpApi) CreateEquipment(c *gin.Context) {
 		return
 	}
 
-	id, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description)
+	id, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
 	if err != nil {
 		// TODO: revisit this error to make sure it is correct
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -87,7 +87,7 @@ func (h *HttpApi) UpdateEquipment(c *gin.Context) {
 	}
 
 	e.Id = id // ignoring the id in the body and using the id in the url
-	err = h.app.UpdateEquipment(e.Id, e.Title, e.Year, e.Make, e.ModelNumber, e.Description)
+	err = h.app.UpdateEquipment(e.Id, e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {

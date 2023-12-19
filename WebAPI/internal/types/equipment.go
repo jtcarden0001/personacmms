@@ -7,4 +7,5 @@ type Equipment struct {
 	Make        string `json:"make"`
 	ModelNumber string `json:"modelNumber"`
 	Description string `json:"description"`
+	CategoryId  int    `json:"categoryId"`
 }

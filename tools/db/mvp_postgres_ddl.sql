@@ -1,11 +1,21 @@
+CREATE TABLE equipment_category (
+  id INT GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE equipment (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
-  year INT,
-  make VARCHAR,
-  model_number VARCHAR,
-  description VARCHAR,
-  PRIMARY KEY (id)
+  year INT NOT NULL,
+  make VARCHAR NOT NULL,
+  model_number VARCHAR NOT NULL,
+  description VARCHAR NOT NULL,
+  category_id INT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_equipment__equipment_category
+    FOREIGN KEY (category_id)
+        REFERENCES equipment_category(id)
 );
 
 CREATE TABLE usage_periodicity_unit (
@@ -23,7 +33,7 @@ CREATE TABLE time_periodicity_unit (
 CREATE TABLE task (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
-  instructions VARCHAR,
+  instructions VARCHAR NOT NULL,
   time_periodicity_quantity INT,
   time_periodicity_unit_id INT,
   usage_periodicity_quantity INT,
@@ -39,9 +49,22 @@ CREATE TABLE task (
         ON DELETE SET NULL
 );
 
+CREATE TABLE equipment_task (
+  equipment_id INT NOT NULL,
+  task_id INT NOT NULL,
+  CONSTRAINT fk_equipment_task__equipment_id
+    FOREIGN KEY (equipment_id)
+      REFERENCES equipment(id)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_equipment_task__task_id
+    FOREIGN KEY (task_id)
+      REFERENCES task(id)
+      ON DELETE CASCADE
+);
+
 CREATE TABLE work_order_status (
   id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR,
+  title VARCHAR NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -64,7 +87,7 @@ CREATE TABLE work_order (
 CREATE TABLE tool (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
-  size VARCHAR,
+  size VARCHAR NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -99,16 +122,19 @@ CREATE TABLE task_consumable (
       REFERENCES consumable(id)
 );
 
-CREATE TABLE equipment_task (
-  equipment_id INT NOT NULL,
-  task_id INT NOT NULL,
-  CONSTRAINT fk_equipment_task__equipment_id
-    FOREIGN KEY (equipment_id)
-      REFERENCES equipment(id)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_equipment_task__task_id
-    FOREIGN KEY (task_id)
-      REFERENCES task(id)
-      ON DELETE CASCADE
-);
+---- in case you want to wipe the db schema
+DROP TABLE equipment_task;
+DROP TABLE equipment;
+DROP TABLE equipment_category;
+DROP TABLE task_tool;
+DROP TABLE tool;
+DROP TABLE task_consumable;
+DROP TABLE consumable;
+DROP TABLE work_order;
+DROP TABLE work_order_status;
+DROP TABLE task;
+DROP TABLE usage_periodicity_unit;
+DROP TABLE time_periodicity_unit;
+
+
 

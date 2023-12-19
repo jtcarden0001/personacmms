@@ -21,6 +21,7 @@ func NewTest() *Store {
 	return getStore("personacmms-test")
 }
 
+// TODO: need to devise a strategy to scan nll values from the store withough exposing sql semantics throughout the app.
 func getStore(dbName string) *Store {
 	pgPass := os.Getenv("postgrespass")
 	connStr := fmt.Sprintf("postgresql://postgres:%s@localhost/%s?sslmode=disable", pgPass, dbName)

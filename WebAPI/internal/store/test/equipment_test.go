@@ -23,9 +23,11 @@ func TestDeleteNotExists(t *testing.T) {
 	}
 }
 
+var otherEquipmentCategoryId int = 1
+
 func TestCreateGetDeleteGet(t *testing.T) {
 	// Create
-	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description")
+	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description", otherEquipmentCategoryId)
 	fmt.Println("test equipment id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
@@ -64,7 +66,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	origLength := len(e1)
 
 	// Create
-	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1")
+	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1", otherEquipmentCategoryId)
 	fmt.Println("test equipment id:", id1)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
@@ -72,7 +74,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 
 	// Create
 	var id2 int
-	id2, err = testStore.CreateEquipment("test equipment 2", 2023, "test make 2", "test model number 2", "test description 2")
+	id2, err = testStore.CreateEquipment("test equipment 2", 2023, "test make 2", "test model number 2", "test description 2", otherEquipmentCategoryId)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
