@@ -4,11 +4,11 @@ import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
 // TODO: probably will need to devise a way to break these interfaces up soon.
 type Store interface {
-	// CreateEquipmentCategory(string) (int, error)
-	// DeleteEquipmentCategory(int) error
-	// GetAllEquipmentCategory() ([]tp.EquipmentCategory, error)
-	// GetEquipmentCategory(int) (tp.EquipmentCategory, error)
-	// UpdateEquipmentCategory(int, string) error
+	CreateEquipmentCategory(string) (int, error)
+	DeleteEquipmentCategory(int) error
+	GetAllEquipmentCategories() ([]tp.EquipmentCategory, error)
+	GetEquipmentCategory(int) (tp.EquipmentCategory, error)
+	UpdateEquipmentCategory(int, string) error
 
 	CreateEquipment(string, int, string, string, string, int) (int, error)
 	DeleteEquipment(int) error
@@ -25,11 +25,12 @@ type Store interface {
 }
 
 type StoreTest interface {
-	// CreateEquipmentCategory(string) (int, error)
-	// DeleteEquipmentCategory(int) error
-	// GetAllEquipmentCategories() ([]tp.EquipmentCategory, error)
-	// GetEquipmentCategory(int) (tp.EquipmentCategory, error)
-	// UpdateEquipmentCategory(int, string) error
+	CreateEquipmentCategory(string) (int, error)
+	DeleteEquipmentCategory(int) error
+	GetAllEquipmentCategories() ([]tp.EquipmentCategory, error)
+	GetEquipmentCategory(int) (tp.EquipmentCategory, error)
+	UpdateEquipmentCategory(int, string) error
+	ResetSequenceEquipmentCategory(int) error
 
 	CreateEquipment(string, int, string, string, string, int) (int, error)
 	DeleteEquipment(int) error

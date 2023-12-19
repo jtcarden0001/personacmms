@@ -5,27 +5,27 @@ import (
 	"testing"
 )
 
-func TestToolCreateUpdateDelete(t *testing.T) {
+func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 	// Create
-	id, err := testStore.CreateTool("test tool", "test size")
-	fmt.Println("test tool id:", id)
+	id, err := testStore.CreateEquipmentCategory("test category")
+	fmt.Println("test category id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Update
-	err = testStore.UpdateTool(id, "test tool updated", "test size")
+	err = testStore.UpdateEquipmentCategory(id, "test category 2")
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
 	// Delete
-	err = testStore.DeleteTool(id)
+	err = testStore.DeleteEquipmentCategory(id)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = testStore.ResetSequenceTool(id)
+	err = testStore.ResetSequenceEquipmentCategory(id)
 	if err != nil {
 		t.Errorf("ResetSequence() failed: %v", err)
 	}
