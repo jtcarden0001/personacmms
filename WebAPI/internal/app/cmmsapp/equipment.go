@@ -2,6 +2,18 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
+type Equipment interface {
+	CreateEquipment(string, int, string, string, string, int) (int, error)
+	DeleteEquipment(int) error
+	GetAllEquipment() ([]tp.Equipment, error)
+	GetEquipment(int) (tp.Equipment, error)
+	UpdateEquipment(int, string, int, string, string, string, int) error
+}
+
+type EquipmentTest interface {
+	ResetSequenceEquipment(int) error
+}
+
 func (cmms *App) CreateEquipment(title string, year int, make, modelNumber, description string, categoryId int) (int, error) {
 	return cmms.db.CreateEquipment(title, year, make, modelNumber, description, categoryId)
 }

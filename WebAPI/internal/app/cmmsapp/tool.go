@@ -2,6 +2,18 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
 
+type Tool interface {
+	CreateTool(string, string) (int, error)
+	DeleteTool(int) error
+	GetAllTools() ([]tp.Tool, error)
+	GetTool(int) (tp.Tool, error)
+	UpdateTool(int, string, string) error
+}
+
+type ToolTest interface {
+	ResetSequenceTool(int) error
+}
+
 func (cmms *App) CreateTool(title string, size string) (int, error) {
 	return cmms.db.CreateTool(title, size)
 }
