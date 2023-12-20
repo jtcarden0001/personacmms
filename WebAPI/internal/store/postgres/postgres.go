@@ -30,5 +30,13 @@ func getStore(dbName string) *Store {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return &Store{db: Db}
+}
+
+func (pg *Store) ResetSequence(table string, id int) error {
+	query := fmt.Sprintf("ALTER SEQUENCE %s_id_seq RESTART WITH %d", table, id)
+	_, err := pg.db.Exec(query)
+
+	return err
 }

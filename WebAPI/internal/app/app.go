@@ -2,7 +2,7 @@ package app
 
 import (
 	imp "github.com/jtcarden0001/personacmms/webapi/internal/app/cmmsapp"
-	"github.com/jtcarden0001/personacmms/webapi/internal/store"
+	st "github.com/jtcarden0001/personacmms/webapi/internal/store"
 )
 
 type App interface {
@@ -12,14 +12,13 @@ type App interface {
 
 type AppTest interface {
 	App
-	imp.EquipmentTest
-	imp.ToolTest
+	ResetSequence(string, int) error
 }
 
-func New(injectedStore store.Store) *imp.App {
+func New(injectedStore st.Store) *imp.App {
 	return imp.New(injectedStore)
 }
 
-func NewTest(injectedStore store.StoreTest) *imp.AppTest {
+func NewTest(injectedStore st.StoreTest) *imp.AppTest {
 	return imp.NewTest(injectedStore)
 }

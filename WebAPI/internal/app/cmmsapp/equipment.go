@@ -33,7 +33,3 @@ func (cmms *App) GetEquipment(id int) (tp.Equipment, error) {
 func (cmms *App) UpdateEquipment(id int, title string, year int, make, modelNumber, description string, categoryId int) error {
 	return cmms.db.UpdateEquipment(id, title, year, make, modelNumber, description, categoryId)
 }
-
-func (cmms *AppTest) ResetSequenceEquipment(id int) error {
-	return cmms.db.ResetSequenceEquipment(id)
-}

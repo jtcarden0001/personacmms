@@ -14,10 +14,6 @@ type Task interface {
 	UpdateTask(int, string, string, *int, *int, *int, *int) error
 }
 
-type TaskTest interface {
-	ResetSequenceTask(int) error
-}
-
 func (pg *Store) CreateTask(title string, instructions string, timeQuant *int, timeUnit *int, usageQuant *int, usageUnit *int) (int, error) {
 	return 0, errors.New("not implemented")
 }

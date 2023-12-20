@@ -14,10 +14,6 @@ type Consumable interface {
 	UpdateConsumable(int, string) error
 }
 
-type ConsumableTest interface {
-	ResetSequenceConsumable(int) error
-}
-
 func (pg *Store) CreateConsumable(title string) (int, error) {
 	query := "INSERT INTO consumable (title) VALUES ($1) RETURNING id"
 	var id int
@@ -39,9 +35,5 @@ func (pg *Store) GetConsumable(id int) (tp.EquipmentCategory, error) {
 }
 
 func (pg *Store) UpdateConsumable(id int, title string) error {
-	return errors.New("not implemented")
-}
-
-func (pg *Store) ResetSequenceConsumable(id int) error {
 	return errors.New("not implemented")
 }

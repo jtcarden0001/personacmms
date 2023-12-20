@@ -14,10 +14,6 @@ type TimePeriodicityUnit interface {
 	UpdateTimePeriodicityUnit(int, string) error
 }
 
-type TimePeriodicityUnitTest interface {
-	ResetSequenceTimePeriodicityUnit(int) error
-}
-
 func (pg *Store) CreateTimePeriodicityUnit(title string) (int, error) {
 	return 0, errors.New("not implemented")
 }
@@ -35,9 +31,5 @@ func (pg *Store) GetTimePeriodicityUnit(id int) (tp.TimePeriodicityUnit, error) 
 }
 
 func (pg *Store) UpdateTimePeriodicityUnit(id int, title string) error {
-	return errors.New("not implemented")
-}
-
-func (pg *Store) ResetSequenceTimePeriodicityUnit(id int) error {
 	return errors.New("not implemented")
 }

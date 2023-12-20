@@ -12,9 +12,7 @@ type Store interface {
 
 type StoreTest interface {
 	Store
-	imp.EquipmentTest
-	imp.ToolTest
-	imp.EquipmentCategoryTest
+	ResetSequence(string, int) error
 }
 
 func New() *imp.Store {

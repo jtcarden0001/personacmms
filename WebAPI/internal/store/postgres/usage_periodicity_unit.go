@@ -14,10 +14,6 @@ type UsagePeriodicityUnit interface {
 	UpdateUsagePeriodicityUnit(int, string) error
 }
 
-type UsagePeriodicityUnitTest interface {
-	ResetSequenceUsagePeriodicityUnit(int) error
-}
-
 func (pg *Store) CreateUsagePeriodicityUnit(name string) (int, error) {
 	return 0, errors.New("not implemented")
 }
@@ -35,9 +31,5 @@ func (pg *Store) GetUsagePeriodicityUnit(id int) (tp.UsagePeriodicityUnit, error
 }
 
 func (pg *Store) UpdateUsagePeriodicityUnit(id int, name string) error {
-	return errors.New("not implemented")
-}
-
-func (pg *Store) ResetSequenceUsagePeriodicityUnit(id int) error {
 	return errors.New("not implemented")
 }

@@ -1,19 +1,23 @@
 package cmmsapp
 
-import "github.com/jtcarden0001/personacmms/webapi/internal/store"
+import st "github.com/jtcarden0001/personacmms/webapi/internal/store"
 
 type App struct {
-	db store.Store
+	db st.Store
 }
 
-func New(injectedStore store.Store) *App {
+func New(injectedStore st.Store) *App {
 	return &App{db: injectedStore}
 }
 
 type AppTest struct {
-	db store.StoreTest
+	db st.StoreTest
 }
 
-func NewTest(injectedStore store.StoreTest) *AppTest {
+func NewTest(injectedStore st.StoreTest) *AppTest {
 	return &AppTest{db: injectedStore}
+}
+
+func (cmms *AppTest) ResetSequence(table string, nextVal int) error {
+	return cmms.db.ResetSequence(table, nextVal)
 }

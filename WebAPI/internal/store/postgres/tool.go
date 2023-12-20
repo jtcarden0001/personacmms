@@ -1,8 +1,6 @@
 package postgres
 
 import (
-	"fmt"
-
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
@@ -12,10 +10,6 @@ type Tool interface {
 	GetAllTool() ([]tp.Tool, error)
 	GetTool(int) (tp.Tool, error)
 	UpdateTool(int, string, string) error
-}
-
-type ToolTest interface {
-	ResetSequenceTool(int) error
 }
 
 func (pg *Store) CreateTool(title string, size string) (int, error) {
@@ -70,11 +64,5 @@ func (pg *Store) UpdateTool(id int, title string, size string) error {
 	query := `UPDATE tool SET title = $1, size = $2 WHERE id = $3`
 	_, err := pg.db.Exec(query, title, size, id)
 
-	return err
-}
-
-func (pg *Store) ResetSequenceTool(id int) error {
-	query := fmt.Sprintf("ALTER SEQUENCE tool_id_seq RESTART WITH %d", id)
-	_, err := pg.db.Query(query)
 	return err
 }

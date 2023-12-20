@@ -1,8 +1,6 @@
 package postgres
 
 import (
-	"fmt"
-
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
@@ -12,10 +10,6 @@ type EquipmentCategory interface {
 	GetAllEquipmentCategory() ([]tp.EquipmentCategory, error)
 	GetEquipmentCategory(int) (tp.EquipmentCategory, error)
 	UpdateEquipmentCategory(int, string) error
-}
-
-type EquipmentCategoryTest interface {
-	ResetSequenceEquipmentCategory(int) error
 }
 
 func (pg *Store) CreateEquipmentCategory(title string) (int, error) {
@@ -70,11 +64,5 @@ func (pg *Store) UpdateEquipmentCategory(id int, title string) error {
 	query := `UPDATE equipment_category SET title = $1 WHERE id = $2`
 	_, err := pg.db.Exec(query, title, id)
 
-	return err
-}
-
-func (pg *Store) ResetSequenceEquipmentCategory(id int) error {
-	query := fmt.Sprintf("ALTER SEQUENCE equipment_category_id_seq RESTART WITH %d", id)
-	_, err := pg.db.Query(query)
 	return err
 }

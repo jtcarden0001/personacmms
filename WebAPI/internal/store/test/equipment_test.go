@@ -51,7 +51,7 @@ func TestCreateGetDeleteGet(t *testing.T) {
 		t.Errorf("Get() should have failed")
 	}
 
-	err = testStore.ResetSequenceEquipment(id)
+	err = testStore.ResetSequence("equipment", id)
 	if err != nil {
 		t.Errorf("ResetSequence() failed: %v", err)
 	}
@@ -99,7 +99,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = testStore.ResetSequenceEquipment(id1)
+	err = testStore.ResetSequence("equipment", id1)
 	if err != nil {
 		t.Errorf("ResetSequence() failed: %v", err)
 	}

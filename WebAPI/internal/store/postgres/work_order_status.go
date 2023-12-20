@@ -14,10 +14,6 @@ type WorkOrderStatus interface {
 	UpdateWorkOrderStatus(int, string) error
 }
 
-type WorkOrderStatusTest interface {
-	ResetSequenceWorkOrderStatus(int) error
-}
-
 func (pg *Store) CreateWorkOrderStatus(name string) (int, error) {
 	return 0, errors.New("not implemented")
 }
@@ -35,9 +31,5 @@ func (pg *Store) GetWorkOrderStatus(id int) (tp.WorkOrderStatus, error) {
 }
 
 func (pg *Store) UpdateWorkOrderStatus(id int, name string) error {
-	return errors.New("not implemented")
-}
-
-func (pg *Store) ResetSequenceWorkOrderStatus(id int) error {
 	return errors.New("not implemented")
 }

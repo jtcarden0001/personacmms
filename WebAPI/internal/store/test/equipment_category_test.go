@@ -25,8 +25,8 @@ func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = testStore.ResetSequenceEquipmentCategory(id)
+	err = testStore.ResetSequence("equipment_category", id)
 	if err != nil {
-		t.Errorf("ResetSequence() failed: %v", err)
+		t.Errorf("ResetSequence on equipment_category failed: %v", err)
 	}
 }

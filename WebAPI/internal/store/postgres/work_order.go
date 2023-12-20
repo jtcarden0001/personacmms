@@ -15,10 +15,6 @@ type WorkOrder interface {
 	UpdateWorkOrder(int, int, int, int, string, *string) error
 }
 
-type WorkOrderTest interface {
-	ResetSequenceWorkOrder(int) error
-}
-
 func (pg *Store) CreateWorkOrder(equipmentId int, taskId int, statusId int, startDateTime string, CompleteDateTime *string) (int, error) {
 	return 0, errors.New("not implemented")
 }

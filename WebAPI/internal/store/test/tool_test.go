@@ -25,7 +25,7 @@ func TestToolCreateUpdateDelete(t *testing.T) {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = testStore.ResetSequenceTool(id)
+	err = testStore.ResetSequence("teool", id)
 	if err != nil {
 		t.Errorf("ResetSequence() failed: %v", err)
 	}

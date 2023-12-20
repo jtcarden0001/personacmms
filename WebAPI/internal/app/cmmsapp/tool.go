@@ -35,5 +35,5 @@ func (cmms *App) UpdateTool(id int, title string, size string) error {
 }
 
 func (cmms *AppTest) ResetSequenceTool(id int) error {
-	return cmms.db.ResetSequenceTool(id)
+	return cmms.db.ResetSequence("tool", id)
 }
