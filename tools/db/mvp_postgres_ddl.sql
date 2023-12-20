@@ -52,6 +52,7 @@ CREATE TABLE task (
 CREATE TABLE equipment_task (
   equipment_id INT NOT NULL,
   task_id INT NOT NULL,
+  PRIMARY KEY (equipment_id, task_id),
   CONSTRAINT fk_equipment_task__equipment_id
     FOREIGN KEY (equipment_id)
       REFERENCES equipment(id)
@@ -94,6 +95,7 @@ CREATE TABLE tool (
 CREATE TABLE task_tool (
   task_id INT NOT NULL,
   tool_id INT NOT NULL,
+  PRIMARY KEY (task_id, tool_id),
   CONSTRAINT fk_task_tool__task_id
     FOREIGN KEY (task_id)
       REFERENCES task(id)
@@ -113,6 +115,7 @@ CREATE TABLE task_consumable (
   task_id INT NOT NULL,
   consumable_id INT NOT NULL,
   quantity_note VARCHAR NOT NULL,
+  PRIMARY KEY (task_id, consumable_id),
   CONSTRAINT fk_task_consumable__task_id
     FOREIGN KEY (task_id)
       REFERENCES task(id)
