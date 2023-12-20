@@ -9,7 +9,7 @@ import (
 type EquipmentCategory interface {
 	CreateEquipmentCategory(string) (int, error)
 	DeleteEquipmentCategory(int) error
-	GetAllEquipmentCategories() ([]tp.EquipmentCategory, error)
+	GetAllEquipmentCategory() ([]tp.EquipmentCategory, error)
 	GetEquipmentCategory(int) (tp.EquipmentCategory, error)
 	UpdateEquipmentCategory(int, string) error
 }
@@ -34,7 +34,7 @@ func (pg *Store) DeleteEquipmentCategory(id int) error {
 	return err
 }
 
-func (pg *Store) GetAllEquipmentCategories() ([]tp.EquipmentCategory, error) {
+func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
 	// TODO: add validation to prevent sql injection
 	var categories []tp.EquipmentCategory
 	query := `SELECT id, title FROM equipment_category`

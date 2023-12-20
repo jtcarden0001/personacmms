@@ -9,7 +9,7 @@ import (
 type Tool interface {
 	CreateTool(string, string) (int, error)
 	DeleteTool(int) error
-	GetAllTools() ([]tp.Tool, error)
+	GetAllTool() ([]tp.Tool, error)
 	GetTool(int) (tp.Tool, error)
 	UpdateTool(int, string, string) error
 }
@@ -34,7 +34,7 @@ func (pg *Store) DeleteTool(id int) error {
 	return err
 }
 
-func (pg *Store) GetAllTools() ([]tp.Tool, error) {
+func (pg *Store) GetAllTool() ([]tp.Tool, error) {
 	// TODO: add validation to prevent sql injection
 	var tools []tp.Tool
 	query := `SELECT id, title, size FROM tool`
