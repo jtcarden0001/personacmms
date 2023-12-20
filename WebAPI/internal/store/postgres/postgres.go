@@ -5,20 +5,25 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	_ "github.com/lib/pq"
 )
 
 type Store struct {
-	db *sql.DB
+	name string
+	db   *sql.DB
 }
 
+var prodDbName = "personacmms"
+var testDbName = "personacmms-test"
+
 func New() *Store {
-	return getStore("personacmms")
+	return getStore(prodDbName)
 }
 
 func NewTest() *Store {
-	return getStore("personacmms-test")
+	return getStore(testDbName)
 }
 
 func getStore(dbName string) *Store {
@@ -30,7 +35,10 @@ func getStore(dbName string) *Store {
 		log.Fatal(err)
 	}
 
-	return &Store{db: Db}
+	return &Store{
+		name: dbName,
+		db:   Db,
+	}
 }
 
 func (pg *Store) ResetSequence(table string, id int) error {
@@ -38,4 +46,31 @@ func (pg *Store) ResetSequence(table string, id int) error {
 	_, err := pg.db.Exec(query)
 
 	return err
+}
+
+// this might be a little heavy handed to nuke the entire db and recreate it instead of just deleting the data and resetting the sequences
+// but will leave unless a reason surfaces to change it.
+func (pg *Store) CleanTestStore() error {
+	// very important to prevent accidental deletion of production data
+	if pg.name != testDbName {
+		return fmt.Errorf("cleaning failed on db: %s, cleaning is only allowable on db: %s", pg.name, testDbName)
+	}
+
+	ddlPath, err := filepath.Abs("../../../../tools/db/mvp_postgres_ddl.sql")
+	if err != nil {
+		return err
+	}
+
+	ddlBuffer, err := os.ReadFile(ddlPath)
+	if err != nil {
+		return err
+	}
+
+	ddl := string(ddlBuffer)
+	_, err = pg.db.Exec(ddl)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

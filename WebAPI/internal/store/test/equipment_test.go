@@ -9,7 +9,13 @@ import (
 )
 
 func TestGetNotExists(t *testing.T) {
-	_, err := testStore.GetEquipment(0)
+	err := initStore()
+	if err != nil {
+		t.Errorf("initStore() failed: %v", err)
+		return
+	}
+
+	_, err = testStore.GetEquipment(0)
 	errString := "sql: no rows in result set"
 	if err.Error() != errString {
 		t.Errorf("Get() should have failed with error: %s", errString)
@@ -23,11 +29,24 @@ func TestDeleteNotExists(t *testing.T) {
 	}
 }
 
-var otherEquipmentCategoryId int = 1
-
+// TODO: parse out the initialization code so that we only wipe the db and initialize foreign keys once per test run.
 func TestCreateGetDeleteGet(t *testing.T) {
+	//// initialization
+	err := initStore()
+	if err != nil {
+		t.Errorf("initStore() failed: %v", err)
+		return
+	}
+
+	ecId, err := initEquipmentFKs()
+	if err != nil {
+		t.Errorf("initEquipmentFKs() failed: %v", err)
+		return
+	}
+
+	//// Test
 	// Create
-	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description", otherEquipmentCategoryId)
+	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description", ecId)
 	fmt.Println("test equipment id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
@@ -58,6 +77,20 @@ func TestCreateGetDeleteGet(t *testing.T) {
 }
 
 func TestGetAllCreateCreateGetAll(t *testing.T) {
+	//// initialization
+	err := initStore()
+	if err != nil {
+		t.Errorf("initStore() failed: %v", err)
+		return
+	}
+
+	ecId, err := initEquipmentFKs()
+	if err != nil {
+		t.Errorf("initEquipmentFKs() failed: %v", err)
+		return
+	}
+
+	//// Test
 	// Get all
 	e1, err := testStore.GetAllEquipment()
 	if err != nil {
@@ -66,7 +99,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	origLength := len(e1)
 
 	// Create
-	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1", otherEquipmentCategoryId)
+	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1", ecId)
 	fmt.Println("test equipment id:", id1)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
@@ -74,7 +107,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 
 	// Create
 	var id2 int
-	id2, err = testStore.CreateEquipment("test equipment 2", 2023, "test make 2", "test model number 2", "test description 2", otherEquipmentCategoryId)
+	id2, err = testStore.CreateEquipment("test equipment 2", 2023, "test make 2", "test model number 2", "test description 2", ecId)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -103,4 +136,13 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	if err != nil {
 		t.Errorf("ResetSequence() failed: %v", err)
 	}
+}
+
+func initEquipmentFKs() (int, error) {
+	ecId, err := testStore.CreateEquipmentCategory("test equipment category")
+	if err != nil {
+		return 0, err
+	}
+
+	return ecId, nil
 }

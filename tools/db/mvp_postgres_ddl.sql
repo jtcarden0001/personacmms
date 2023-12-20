@@ -1,3 +1,18 @@
+---- in case you want to wipe the db schema
+DROP TABLE equipment_task;
+DROP TABLE equipment;
+DROP TABLE equipment_category;
+DROP TABLE task_tool;
+DROP TABLE tool;
+DROP TABLE task_consumable;
+DROP TABLE consumable;
+DROP TABLE work_order;
+DROP TABLE work_order_status;
+DROP TABLE task;
+DROP TABLE usage_periodicity_unit;
+DROP TABLE time_periodicity_unit;
+
+---- db schema
 CREATE TABLE equipment_category (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
@@ -125,20 +140,6 @@ CREATE TABLE task_consumable (
     FOREIGN KEY (consumable_id)
       REFERENCES consumable(id)
 );
-
----- in case you want to wipe the db schema
-DROP TABLE equipment_task;
-DROP TABLE equipment;
-DROP TABLE equipment_category;
-DROP TABLE task_tool;
-DROP TABLE tool;
-DROP TABLE task_consumable;
-DROP TABLE consumable;
-DROP TABLE work_order;
-DROP TABLE work_order_status;
-DROP TABLE task;
-DROP TABLE usage_periodicity_unit;
-DROP TABLE time_periodicity_unit;
 
 
 
