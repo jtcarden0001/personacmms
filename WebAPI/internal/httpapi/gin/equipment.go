@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
 func (h *HttpApi) registerEquipmentRoutes(r *gin.Engine) {

@@ -1,8 +1,8 @@
 package app
 
 import (
-	imp "github.com/jtcarden0001/personacmms/projects/webapi/internal/app/cmmsapp"
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/store"
+	imp "github.com/jtcarden0001/personacmms/webapi/internal/app/cmmsapp"
+	"github.com/jtcarden0001/personacmms/webapi/internal/store"
 )
 
 type App interface {

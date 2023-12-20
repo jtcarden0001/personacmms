@@ -1,6 +1,6 @@
 package cmmsapp
 
-import tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
+import tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 
 type Tool interface {
 	CreateTool(string, string) (int, error)

@@ -1,4 +1,4 @@
-module github.com/jtcarden0001/personacmms/projects/webapi
+module github.com/jtcarden0001/personacmms/webapi
 
 go 1.21.4
 

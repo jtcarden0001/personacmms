@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/app"
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/httpapi"
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/store"
+	"github.com/jtcarden0001/personacmms/webapi/internal/app"
+	"github.com/jtcarden0001/personacmms/webapi/internal/httpapi"
+	"github.com/jtcarden0001/personacmms/webapi/internal/store"
 )
 
 func main() {

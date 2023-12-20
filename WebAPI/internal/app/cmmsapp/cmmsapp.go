@@ -1,6 +1,6 @@
 package cmmsapp
 
-import "github.com/jtcarden0001/personacmms/projects/webapi/internal/store"
+import "github.com/jtcarden0001/personacmms/webapi/internal/store"
 
 type App struct {
 	db store.Store

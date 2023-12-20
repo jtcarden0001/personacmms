@@ -3,7 +3,7 @@ package postgres
 import (
 	"fmt"
 
-	tp "github.com/jtcarden0001/personacmms/projects/webapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
 // these interfaces are platform agnostic but I like having them in the same file as the implementation,

@@ -1,8 +1,8 @@
 package httpapi
 
 import (
-	"github.com/jtcarden0001/personacmms/projects/webapi/internal/app"
-	imp "github.com/jtcarden0001/personacmms/projects/webapi/internal/httpapi/gin"
+	"github.com/jtcarden0001/personacmms/webapi/internal/app"
+	imp "github.com/jtcarden0001/personacmms/webapi/internal/httpapi/gin"
 )
 
 type HttpApi interface {
