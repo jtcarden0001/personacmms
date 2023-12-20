@@ -10,10 +10,6 @@ type Tool interface {
 	UpdateTool(int, string, string) error
 }
 
-type ToolTest interface {
-	ResetSequenceTool(int) error
-}
-
 func (cmms *App) CreateTool(title string, size string) (int, error) {
 	return cmms.db.CreateTool(title, size)
 }
