@@ -42,6 +42,7 @@ func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var ec tp.EquipmentCategory

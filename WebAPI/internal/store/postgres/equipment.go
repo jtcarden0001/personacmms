@@ -43,6 +43,7 @@ func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var e tp.Equipment

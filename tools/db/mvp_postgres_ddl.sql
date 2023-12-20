@@ -71,6 +71,7 @@ CREATE TABLE work_order_status (
 
 CREATE TABLE work_order (
   id INT GENERATED ALWAYS AS IDENTITY,
+  equipment_id INT NOT NULL,
   task_id INT NOT NULL,
   status_id INT NOT NULL,
   create_date TIMESTAMPTZ NOT NULL,

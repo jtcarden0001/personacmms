@@ -5,7 +5,7 @@ import tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 type Tool interface {
 	CreateTool(string, string) (int, error)
 	DeleteTool(int) error
-	GetAllTools() ([]tp.Tool, error)
+	GetAllTool() ([]tp.Tool, error)
 	GetTool(int) (tp.Tool, error)
 	UpdateTool(int, string, string) error
 }
@@ -22,8 +22,8 @@ func (cmms *App) DeleteTool(id int) error {
 	return cmms.db.DeleteTool(id)
 }
 
-func (cmms *App) GetAllTools() ([]tp.Tool, error) {
-	return cmms.db.GetAllTools()
+func (cmms *App) GetAllTool() ([]tp.Tool, error) {
+	return cmms.db.GetAllTool()
 }
 
 func (cmms *App) GetTool(id int) (tp.Tool, error) {

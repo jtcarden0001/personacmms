@@ -42,6 +42,7 @@ func (pg *Store) GetAllTool() ([]tp.Tool, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var t tp.Tool

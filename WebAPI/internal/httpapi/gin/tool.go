@@ -11,7 +11,7 @@ import (
 func (h *HttpApi) registerToolRoutes(r *gin.Engine) {
 	r.POST("/tool", h.CreateTool)
 	r.DELETE("/tool/:id", h.DeleteTool)
-	r.GET("/tool", h.GetAllTools)
+	r.GET("/tool", h.GetAllTool)
 	r.GET("/tool/:id", h.GetTool)
 	r.PATCH("/tool/:id", h.UpdateTool)
 }
@@ -47,8 +47,8 @@ func (h *HttpApi) DeleteTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetAllTools(c *gin.Context) {
-	tools, err := h.app.GetAllTools()
+func (h *HttpApi) GetAllTool(c *gin.Context) {
+	tools, err := h.app.GetAllTool()
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 	} else {
