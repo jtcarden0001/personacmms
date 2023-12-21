@@ -20,5 +20,5 @@ func New(injectedStore st.Store) App {
 }
 
 func NewTest(injectedStore st.StoreTest) AppTest {
-	return nil //imp.NewTest(injectedStore) TBD
+	return imp.NewTest(injectedStore) // current missing method compile error
 }
