@@ -4,11 +4,12 @@ import "github.com/jtcarden0001/personacmms/webapi/internal/store"
 
 var testStore = store.NewTest()
 
-func initStore() error {
-	err := testStore.CleanTestStore()
+func teardownTable(tableName string, lastId int) error {
+	err := testStore.CleanTable(tableName)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	err = testStore.ResetSequence(tableName, lastId)
+	return err
 }

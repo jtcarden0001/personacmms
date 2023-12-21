@@ -4,14 +4,13 @@ import (
 	"testing"
 )
 
-func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
-	// init
-	err := initStore()
-	if err != nil {
-		t.Errorf("initStore() failed: %v", err)
-		return
-	}
+// CreateEquipmentCategory(string) (int, error)
+// DeleteEquipmentCategory(int) error
+// GetAllEquipmentCategory() ([]tp.EquipmentCategory, error)
+// GetEquipmentCategory(int) (tp.EquipmentCategory, error)
+// UpdateEquipmentCategory(int, string) error
 
+func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 	// Create
 	id, err := testStore.CreateEquipmentCategory("test category")
 	if err != nil {
@@ -28,5 +27,10 @@ func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 	err = testStore.DeleteEquipmentCategory(id)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
+	}
+
+	err = teardownTable("equipment_category", id)
+	if err != nil {
+		t.Errorf("teardownTable() failed: %v", err)
 	}
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	_ "github.com/lib/pq"
 )
@@ -48,29 +47,13 @@ func (pg *Store) ResetSequence(table string, id int) error {
 	return err
 }
 
-// this might be a little heavy handed to nuke the entire db and recreate it instead of just deleting the data and resetting the sequences
-// but will leave unless a reason surfaces to change it.
-func (pg *Store) CleanTestStore() error {
+func (pg *Store) CleanTable(tableName string) error {
 	// very important to prevent accidental deletion of production data
 	if pg.name != testDbName {
 		return fmt.Errorf("cleaning failed on db: %s, cleaning is only allowable on db: %s", pg.name, testDbName)
 	}
 
-	ddlPath, err := filepath.Abs("../../../../tools/db/mvp_postgres_ddl.sql")
-	if err != nil {
-		return err
-	}
-
-	ddlBuffer, err := os.ReadFile(ddlPath)
-	if err != nil {
-		return err
-	}
-
-	ddl := string(ddlBuffer)
-	_, err = pg.db.Exec(ddl)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	query := fmt.Sprintf("DELETE FROM %s", tableName)
+	_, err := pg.db.Exec(query)
+	return err
 }

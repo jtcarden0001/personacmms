@@ -13,8 +13,8 @@ type Store interface {
 
 type StoreTest interface {
 	Store
+	CleanTable(string) error
 	ResetSequence(string, int) error
-	CleanTestStore() error
 }
 
 func New() *imp.Store {

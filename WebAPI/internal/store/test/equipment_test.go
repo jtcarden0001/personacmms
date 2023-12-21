@@ -7,14 +7,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetNotExists(t *testing.T) {
-	err := initStore()
-	if err != nil {
-		t.Errorf("initStore() failed: %v", err)
-		return
-	}
+// CreateEquipment(string, int, string, string, string, int) (int, error)
+// DeleteEquipment(int) error
+// GetAllEquipment() ([]tp.Equipment, error)
+// GetEquipment(int) (tp.Equipment, error)
+// UpdateEquipment(int, string, int, string, string, string, int) error
+// UpdateEquipmentCategoryFK(int, int) error
 
-	_, err = testStore.GetEquipment(0)
+func TestGetNotExists(t *testing.T) {
+	_, err := testStore.GetEquipment(0)
 	errString := "sql: no rows in result set"
 	if err.Error() != errString {
 		t.Errorf("Get() should have failed with error: %s", errString)
@@ -30,13 +31,7 @@ func TestDeleteNotExists(t *testing.T) {
 
 // TODO: parse out the initialization code so that we only wipe the db and initialize foreign keys once per test run.
 func TestCreateGetDeleteGet(t *testing.T) {
-	//// initialization
-	err := initStore()
-	if err != nil {
-		t.Errorf("initStore() failed: %v", err)
-		return
-	}
-
+	// initialization
 	ecId, err := initEquipmentFKs()
 	if err != nil {
 		t.Errorf("initEquipmentFKs() failed: %v", err)
@@ -67,16 +62,15 @@ func TestCreateGetDeleteGet(t *testing.T) {
 	if err == nil {
 		t.Errorf("Get() should have failed")
 	}
+
+	err = teardownEquipment(id, ecId)
+	if err != nil {
+		t.Errorf("teardownEquipment() failed: %v", err)
+	}
 }
 
 func TestGetAllCreateCreateGetAll(t *testing.T) {
-	//// initialization
-	err := initStore()
-	if err != nil {
-		t.Errorf("initStore() failed: %v", err)
-		return
-	}
-
+	// initialization
 	ecId, err := initEquipmentFKs()
 	if err != nil {
 		t.Errorf("initEquipmentFKs() failed: %v", err)
@@ -123,6 +117,11 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
+
+	err = teardownEquipment(id1, ecId)
+	if err != nil {
+		t.Errorf("teardownEquipment() failed: %v", err)
+	}
 }
 
 func initEquipmentFKs() (int, error) {
@@ -132,4 +131,14 @@ func initEquipmentFKs() (int, error) {
 	}
 
 	return ecId, nil
+}
+
+func teardownEquipment(id int, ecId int) error {
+	err := teardownTable("equipment", id)
+	if err != nil {
+		return err
+	}
+
+	err = teardownTable("equipment_category", ecId)
+	return err
 }
