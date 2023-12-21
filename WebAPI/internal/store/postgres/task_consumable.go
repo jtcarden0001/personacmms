@@ -50,10 +50,10 @@ func (pg *Store) GetAllTaskConsumableByTaskId(taskId int) ([]tp.TaskConsumable, 
 	return populateTaskConsumableList(rows)
 }
 
-func (pg *Store) GetTaskConsumable(consumableId int, quantity string) (tp.TaskConsumable, error) {
+func (pg *Store) GetTaskConsumable(consumableId int, taskId int) (tp.TaskConsumable, error) {
 	query := `SELECT task_id, consumable_id, quantity_note FROM task_consumable WHERE task_id = $1 AND consumable_id = $2`
 	var tc tp.TaskConsumable
-	err := pg.db.QueryRow(query, consumableId, quantity).Scan(&tc.TaskId, &tc.ConsumableId, &tc.QuantityNote)
+	err := pg.db.QueryRow(query, taskId, consumableId).Scan(&tc.TaskId, &tc.ConsumableId, &tc.QuantityNote)
 
 	return tc, err
 }
