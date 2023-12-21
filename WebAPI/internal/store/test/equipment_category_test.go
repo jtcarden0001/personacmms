@@ -1,14 +1,19 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
+	// init
+	err := initStore()
+	if err != nil {
+		t.Errorf("initStore() failed: %v", err)
+		return
+	}
+
 	// Create
 	id, err := testStore.CreateEquipmentCategory("test category")
-	fmt.Println("test category id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -23,10 +28,5 @@ func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 	err = testStore.DeleteEquipmentCategory(id)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
-	}
-
-	err = testStore.ResetSequence("equipment_category", id)
-	if err != nil {
-		t.Errorf("ResetSequence on equipment_category failed: %v", err)
 	}
 }

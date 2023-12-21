@@ -1,14 +1,12 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestToolCreateUpdateDelete(t *testing.T) {
 	// Create
 	id, err := testStore.CreateTool("test tool", "test size")
-	fmt.Println("test tool id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}

@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
@@ -47,7 +46,6 @@ func TestCreateGetDeleteGet(t *testing.T) {
 	//// Test
 	// Create
 	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description", ecId)
-	fmt.Println("test equipment id:", id)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -68,11 +66,6 @@ func TestCreateGetDeleteGet(t *testing.T) {
 	_, err = testStore.GetEquipment(id)
 	if err == nil {
 		t.Errorf("Get() should have failed")
-	}
-
-	err = testStore.ResetSequence("equipment", id)
-	if err != nil {
-		t.Errorf("ResetSequence() failed: %v", err)
 	}
 }
 
@@ -100,7 +93,6 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 
 	// Create
 	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1", ecId)
-	fmt.Println("test equipment id:", id1)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -130,11 +122,6 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	err = testStore.DeleteEquipment(id2)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
-	}
-
-	err = testStore.ResetSequence("equipment", id1)
-	if err != nil {
-		t.Errorf("ResetSequence() failed: %v", err)
 	}
 }
 
