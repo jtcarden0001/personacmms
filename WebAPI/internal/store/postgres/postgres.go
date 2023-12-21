@@ -26,10 +26,13 @@ func NewTest() *Store {
 }
 
 func getStore(dbName string) *Store {
+	pgUser := os.Getenv("postgresuser")
 	pgPass := os.Getenv("postgrespass")
-	connStr := fmt.Sprintf("postgresql://postgres:%s@localhost/%s?sslmode=disable", pgPass, dbName)
-	// Connect to database
-	Db, err := sql.Open("postgres", connStr)
+	pgHost := os.Getenv("postgreshost")
+
+	connStr := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", pgUser, pgPass, pgHost, dbName)
+
+	Db, err := sql.Open(pgUser, connStr)
 	if err != nil {
 		log.Fatal(err)
 	}

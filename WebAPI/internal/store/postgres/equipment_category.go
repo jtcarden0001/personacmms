@@ -13,7 +13,6 @@ type EquipmentCategory interface {
 }
 
 func (pg *Store) CreateEquipmentCategory(title string) (int, error) {
-	// TODO: add validation to prevent sql injection
 	query := `INSERT INTO equipment_category (title) VALUES ($1) returning id`
 	var id int
 	err := pg.db.QueryRow(query, title).Scan(&id)
@@ -22,14 +21,13 @@ func (pg *Store) CreateEquipmentCategory(title string) (int, error) {
 }
 
 func (pg *Store) DeleteEquipmentCategory(id int) error {
-	// TODO: add validation to prevent sql injection
 	query := `DELETE FROM equipment_category WHERE id = $1`
 	_, err := pg.db.Exec(query, id)
+
 	return err
 }
 
 func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
-	// TODO: add validation to prevent sql injection
 	var categories []tp.EquipmentCategory
 	query := `SELECT id, title FROM equipment_category`
 	rows, err := pg.db.Query(query)
@@ -51,7 +49,6 @@ func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
 }
 
 func (pg *Store) GetEquipmentCategory(id int) (tp.EquipmentCategory, error) {
-	// TODO: add validation to prevent sql injection
 	var ec tp.EquipmentCategory
 	query := `SELECT id, title FROM equipment_category WHERE id = $1`
 	err := pg.db.QueryRow(query, id).Scan(&ec.Id, &ec.Title)
@@ -60,7 +57,6 @@ func (pg *Store) GetEquipmentCategory(id int) (tp.EquipmentCategory, error) {
 }
 
 func (pg *Store) UpdateEquipmentCategory(id int, title string) error {
-	// TODO: add validation to prevent sql injection
 	query := `UPDATE equipment_category SET title = $1 WHERE id = $2`
 	_, err := pg.db.Exec(query, title, id)
 

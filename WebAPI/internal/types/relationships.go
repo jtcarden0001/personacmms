@@ -10,8 +10,3 @@ type TaskConsumable struct {
 	ConsumableId int `json:"consumableId" binding:"required"`
 	QuantityNote int `json:"quantityNote" binding:"required"`
 }
-
-type EquipmentTask struct {
-	EquipmentId int `json:"equipmentId" binding:"required"`
-	TaskId      int `json:"taskId" binding:"required"`
-}

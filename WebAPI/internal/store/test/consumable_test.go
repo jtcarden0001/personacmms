@@ -57,7 +57,7 @@ func TestConsumableCreateGetUpdateGetDeleteGet(t *testing.T) {
 		t.Errorf("Get() should have failed")
 	}
 
-	err = teardownTable("consumable", id)
+	err = teardownTable("consumable", &id)
 	if err != nil {
 		t.Errorf("teardownTable() failed: %v", err)
 	}
@@ -101,7 +101,7 @@ func TestConsumableCreateCreateGetAll(t *testing.T) {
 		}
 	}
 
-	err = teardownTable("consumable", id1)
+	err = teardownTable("consumable", &id1)
 	if err != nil {
 		t.Errorf("teardownTable() failed: %v", err)
 	}

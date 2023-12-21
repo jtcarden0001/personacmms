@@ -7,8 +7,9 @@ import imp "github.com/jtcarden0001/personacmms/webapi/internal/store/postgres"
 type Store interface {
 	imp.Consumable
 	imp.Equipment
-	imp.Tool
 	imp.EquipmentCategory
+	imp.Task
+	imp.Tool
 }
 
 type StoreTest interface {

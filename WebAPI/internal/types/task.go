@@ -8,4 +8,5 @@ type Task struct {
 	TimePeriodicityUnitId    *int   `json:"timePeriodicityUnitId"`
 	UsagePeriodicityQuantity *int   `json:"usagePeriodicityQuantity"`
 	UsagePeriodicityUnitId   *int   `json:"usagePeriodicityUnitId"`
+	EquipmentId              int    `json:"equipmentId" binding:"required"`
 }

@@ -134,11 +134,11 @@ func initEquipmentFKs() (int, error) {
 }
 
 func teardownEquipment(id int, ecId int) error {
-	err := teardownTable("equipment", id)
+	err := teardownTable("equipment", &id)
 	if err != nil {
 		return err
 	}
 
-	err = teardownTable("equipment_category", ecId)
+	err = teardownTable("equipment_category", &ecId)
 	return err
 }

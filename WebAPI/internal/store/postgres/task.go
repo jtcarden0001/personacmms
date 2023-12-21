@@ -7,14 +7,14 @@ import (
 )
 
 type Task interface {
-	CreateTask(string, string, *int, *int, *int, *int) (int, error)
+	CreateTask(string, string, *int, *int, *int, *int, int) (int, error)
 	DeleteTask(int) error
 	GetAllTask() ([]tp.Task, error)
 	GetTask(int) (tp.Task, error)
 	UpdateTask(int, string, string, *int, *int, *int, *int) error
 }
 
-func (pg *Store) CreateTask(title string, instructions string, timeQuant *int, timeUnit *int, usageQuant *int, usageUnit *int) (int, error) {
+func (pg *Store) CreateTask(title string, instructions string, timeQuant *int, timeUnit *int, usageQuant *int, usageUnit *int, equipmentId int) (int, error) {
 	return 0, errors.New("not implemented")
 }
 

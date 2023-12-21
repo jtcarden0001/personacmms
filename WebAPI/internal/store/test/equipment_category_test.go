@@ -29,8 +29,8 @@ func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = teardownTable("equipment_category", id)
+	err = teardownTable("equipment_category", &id)
 	if err != nil {
-		t.Errorf("teardownTable() failed: %v", err)
+		t.Errorf("teardownTable(equipment_category) failed: %v", err)
 	}
 }
