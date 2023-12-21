@@ -17,6 +17,8 @@ type Store struct {
 var prodDbName = "personacmms"
 var testDbName = "personacmms-test"
 
+// All of the entity store code is structured almost exactly the same.  Probably a way to reduce code using generics or something.
+// TODO: look into above
 func New() *Store {
 	return getStore(prodDbName)
 }
@@ -53,7 +55,7 @@ func (pg *Store) ResetSequence(table string, id int) error {
 func (pg *Store) CleanTable(tableName string) error {
 	// very important to prevent accidental deletion of production data
 	if pg.name != testDbName {
-		return fmt.Errorf("cleaning failed on db: %s, cleaning is only allowable on db: %s", pg.name, testDbName)
+		return fmt.Errorf("clean table for table %s failed on db: %s, cleaning is only allowable on db: %s", tableName, pg.name, testDbName)
 	}
 
 	query := fmt.Sprintf("DELETE FROM %s", tableName)

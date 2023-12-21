@@ -13,7 +13,6 @@ type Tool interface {
 }
 
 func (pg *Store) CreateTool(title string, size string) (int, error) {
-	// TODO: add validation to prevent sql injection
 	query := `INSERT INTO tool (title, size) VALUES ($1, $2) returning id`
 	var id int
 	err := pg.db.QueryRow(query, title, size).Scan(&id)
@@ -22,15 +21,12 @@ func (pg *Store) CreateTool(title string, size string) (int, error) {
 }
 
 func (pg *Store) DeleteTool(id int) error {
-	// TODO: add validation to prevent sql injection
 	query := `DELETE FROM tool WHERE id = $1`
 	_, err := pg.db.Exec(query, id)
 	return err
 }
 
 func (pg *Store) GetAllTool() ([]tp.Tool, error) {
-	// TODO: add validation to prevent sql injection
-	var tools []tp.Tool
 	query := `SELECT id, title, size FROM tool`
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -38,6 +34,7 @@ func (pg *Store) GetAllTool() ([]tp.Tool, error) {
 	}
 	defer rows.Close()
 
+	var tools []tp.Tool
 	for rows.Next() {
 		var t tp.Tool
 		err = rows.Scan(&t.Id, &t.Title, &t.Size)
@@ -51,16 +48,14 @@ func (pg *Store) GetAllTool() ([]tp.Tool, error) {
 }
 
 func (pg *Store) GetTool(id int) (tp.Tool, error) {
-	// TODO: add validation to prevent sql injection
-	var t tp.Tool
 	query := `SELECT id, title, size FROM tool WHERE id = $1`
+	var t tp.Tool
 	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title, &t.Size)
 
 	return t, err
 }
 
 func (pg *Store) UpdateTool(id int, title string, size string) error {
-	// TODO: add validation to prevent sql injection
 	query := `UPDATE tool SET title = $1, size = $2 WHERE id = $3`
 	_, err := pg.db.Exec(query, title, size, id)
 

@@ -28,7 +28,6 @@ func (pg *Store) DeleteConsumable(id int) error {
 }
 
 func (pg *Store) GetAllConsumable() ([]tp.Consumable, error) {
-	var consumables []tp.Consumable
 	query := "SELECT id, title FROM consumable"
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -36,6 +35,7 @@ func (pg *Store) GetAllConsumable() ([]tp.Consumable, error) {
 	}
 	defer rows.Close()
 
+	var consumables []tp.Consumable
 	for rows.Next() {
 		var c tp.Consumable
 		err = rows.Scan(&c.Id, &c.Title)

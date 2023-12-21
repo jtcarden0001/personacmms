@@ -28,7 +28,6 @@ func (pg *Store) DeleteEquipmentCategory(id int) error {
 }
 
 func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
-	var categories []tp.EquipmentCategory
 	query := `SELECT id, title FROM equipment_category`
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -36,6 +35,7 @@ func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
 	}
 	defer rows.Close()
 
+	var categories []tp.EquipmentCategory
 	for rows.Next() {
 		var ec tp.EquipmentCategory
 		err = rows.Scan(&ec.Id, &ec.Title)
@@ -49,8 +49,8 @@ func (pg *Store) GetAllEquipmentCategory() ([]tp.EquipmentCategory, error) {
 }
 
 func (pg *Store) GetEquipmentCategory(id int) (tp.EquipmentCategory, error) {
-	var ec tp.EquipmentCategory
 	query := `SELECT id, title FROM equipment_category WHERE id = $1`
+	var ec tp.EquipmentCategory
 	err := pg.db.QueryRow(query, id).Scan(&ec.Id, &ec.Title)
 
 	return ec, err

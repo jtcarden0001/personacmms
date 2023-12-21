@@ -28,7 +28,6 @@ func (pg *Store) DeleteEquipment(id int) error {
 }
 
 func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
-	var Equipment []tp.Equipment
 	query := `SELECT id, title, year, make, model_number, description, category_id FROM Equipment`
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -36,6 +35,7 @@ func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 	}
 	defer rows.Close()
 
+	var Equipment []tp.Equipment
 	for rows.Next() {
 		var e tp.Equipment
 		err = rows.Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryId)
@@ -49,8 +49,8 @@ func (pg *Store) GetAllEquipment() ([]tp.Equipment, error) {
 }
 
 func (pg *Store) GetEquipment(id int) (tp.Equipment, error) {
-	var e tp.Equipment
 	query := `SELECT id, title, year, make, model_number, description, category_id FROM Equipment WHERE id = $1`
+	var e tp.Equipment
 	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryId)
 
 	return e, err
