@@ -4,12 +4,6 @@ import (
 	"testing"
 )
 
-// CreateEquipmentCategory(string) (int, error)
-// DeleteEquipmentCategory(int) error
-// GetAllEquipmentCategory() ([]tp.EquipmentCategory, error)
-// GetEquipmentCategory(int) (tp.EquipmentCategory, error)
-// UpdateEquipmentCategory(int, string) error
-
 func TestEquipmentCategoryCreateUpdateDelete(t *testing.T) {
 	// Create
 	id, err := testStore.CreateEquipmentCategory("test category")

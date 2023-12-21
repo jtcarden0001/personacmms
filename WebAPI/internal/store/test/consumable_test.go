@@ -4,12 +4,6 @@ import (
 	"testing"
 )
 
-// CreateConsumable(string) (int, error)
-// DeleteConsumable(int) error
-// GetAllConsumable() ([]tp.EquipmentCategory, error)
-// GetConsumable(int) (tp.EquipmentCategory, error)
-// UpdateConsumable(int, string) error
-
 func TestConsumableCreateGetUpdateGetDeleteGet(t *testing.T) {
 	// Create
 	coTitle := "test consumable"

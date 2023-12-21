@@ -7,13 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// CreateEquipment(string, int, string, string, string, int) (int, error)
-// DeleteEquipment(int) error
-// GetAllEquipment() ([]tp.Equipment, error)
-// GetEquipment(int) (tp.Equipment, error)
-// UpdateEquipment(int, string, int, string, string, string, int) error
-// UpdateEquipmentCategoryFK(int, int) error
-
 func TestGetNotExists(t *testing.T) {
 	_, err := testStore.GetEquipment(0)
 	errString := "sql: no rows in result set"
