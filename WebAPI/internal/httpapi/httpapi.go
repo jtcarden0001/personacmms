@@ -9,6 +9,6 @@ type HttpApi interface {
 	Start()
 }
 
-func New(injectedApp app.App) *imp.HttpApi {
+func New(injectedApp app.App) HttpApi {
 	return imp.New(injectedApp)
 }

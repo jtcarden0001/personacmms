@@ -15,10 +15,10 @@ type AppTest interface {
 	ResetSequence(string, int) error
 }
 
-func New(injectedStore st.Store) *imp.App {
+func New(injectedStore st.Store) App {
 	return imp.New(injectedStore)
 }
 
-func NewTest(injectedStore st.StoreTest) *imp.AppTest {
-	return imp.NewTest(injectedStore)
+func NewTest(injectedStore st.StoreTest) AppTest {
+	return nil //imp.NewTest(injectedStore) TBD
 }
