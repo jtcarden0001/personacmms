@@ -1,9 +1,43 @@
 package gin
 
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
 func (h *HttpApi) registerConsumableRoutes() {
-	h.router.POST("/v1/consumables", h.createConsumable)
-	h.router.DELETE("/v1/consumables/:id", h.deleteConsumable)
-	h.router.GET("/v1/consumables", h.getAllConsumable)
-	h.router.GET("/v1/consumables/:id", h.getConsumable)
-	h.router.PUT("/v1/consumables/:id", h.updateConsumable)
+	baseRoute := fmt.Sprintf("%s/consumables", routePrefix)
+	individualRoute := fmt.Sprintf("%s/:id", baseRoute)
+
+	h.router.POST(baseRoute, h.createConsumable)
+	h.router.DELETE(individualRoute, h.deleteConsumable)
+	h.router.GET(baseRoute, h.getAllConsumable)
+	h.router.GET(individualRoute, h.getConsumable)
+	h.router.PUT(individualRoute, h.updateConsumable)
+}
+
+func (h *HttpApi) createConsumable(c *gin.Context) {
+	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
+	return
+}
+
+func (h *HttpApi) deleteConsumable(c *gin.Context) {
+	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
+	return
+}
+
+func (h *HttpApi) getAllConsumable(c *gin.Context) {
+	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
+	return
+}
+
+func (h *HttpApi) getConsumable(c *gin.Context) {
+	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
+	return
+}
+
+func (h *HttpApi) updateConsumable(c *gin.Context) {
+	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
+	return
 }

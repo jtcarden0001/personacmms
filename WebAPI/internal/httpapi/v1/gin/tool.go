@@ -1,6 +1,7 @@
 package gin
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,8 +10,8 @@ import (
 )
 
 func (h *HttpApi) registerToolRoutes(r *gin.Engine) {
-	baseRoute := "/v1/tool"
-	individualRoute := baseRoute + "/:toolId"
+	baseRoute := fmt.Sprintf("%s/tool", routePrefix)
+	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
 
 	r.POST(baseRoute, h.CreateTool)
 	r.DELETE(individualRoute, h.DeleteTool)

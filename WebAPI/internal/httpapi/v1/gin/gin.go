@@ -26,3 +26,5 @@ func New(injectedApp app.App) *HttpApi {
 func (h *HttpApi) Start() {
 	h.router.Run("localhost:8080")
 }
+
+var routePrefix = "/api/v1"

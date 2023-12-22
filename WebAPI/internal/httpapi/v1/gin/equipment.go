@@ -10,7 +10,7 @@ import (
 )
 
 func (h *HttpApi) registerEquipmentRoutes(r *gin.Engine) {
-	baseRoute := "/v1/equipment"
+	baseRoute := fmt.Sprintf("%s/equipment", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:equipmentId", baseRoute)
 
 	r.POST(baseRoute, h.createEquipment)
