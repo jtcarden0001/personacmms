@@ -9,15 +9,15 @@ import (
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
-func (h *HttpApi) registerEquipmentRoutes(r *gin.Engine) {
+func (h *HttpApi) registerEquipmentRoutes() {
 	baseRoute := fmt.Sprintf("%s/equipment", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:equipmentId", baseRoute)
 
-	r.POST(baseRoute, h.createEquipment)
-	r.DELETE(individualRoute, h.deleteEquipment)
-	r.GET(baseRoute, h.getAllEquipment)
-	r.GET(individualRoute, h.getEquipment)
-	r.PUT(individualRoute, h.updateEquipment)
+	h.router.POST(baseRoute, h.createEquipment)
+	h.router.DELETE(individualRoute, h.deleteEquipment)
+	h.router.GET(baseRoute, h.getAllEquipment)
+	h.router.GET(individualRoute, h.getEquipment)
+	h.router.PUT(individualRoute, h.updateEquipment)
 }
 
 func (h *HttpApi) createEquipment(c *gin.Context) {

@@ -9,15 +9,15 @@ import (
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
-func (h *HttpApi) registerToolRoutes(r *gin.Engine) {
+func (h *HttpApi) registerToolRoutes() {
 	baseRoute := fmt.Sprintf("%s/tool", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
 
-	r.POST(baseRoute, h.CreateTool)
-	r.DELETE(individualRoute, h.DeleteTool)
-	r.GET(baseRoute, h.GetAllTool)
-	r.GET(individualRoute, h.GetTool)
-	r.PUT(individualRoute, h.UpdateTool)
+	h.router.POST(baseRoute, h.CreateTool)
+	h.router.DELETE(individualRoute, h.DeleteTool)
+	h.router.GET(baseRoute, h.GetAllTool)
+	h.router.GET(individualRoute, h.GetTool)
+	h.router.PUT(individualRoute, h.UpdateTool)
 }
 
 func (h *HttpApi) CreateTool(c *gin.Context) {
