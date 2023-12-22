@@ -9,3 +9,23 @@ type TaskConsumable interface {
 	GetAllTaskConsumableByTaskId(int) ([]tp.TaskConsumable, error)
 	GetTaskConsumable(int, int) (tp.TaskConsumable, error)
 }
+
+func (a *App) CreateTaskConsumable(taskId int, consumableId int, quantity string) error {
+	return a.db.CreateTaskConsumable(taskId, consumableId, quantity)
+}
+
+func (a *App) DeleteTaskConsumable(taskId int, consumableId int) error {
+	return a.db.DeleteTaskConsumable(taskId, consumableId)
+}
+
+func (a *App) GetAllTaskConsumable() ([]tp.TaskConsumable, error) {
+	return a.db.GetAllTaskConsumable()
+}
+
+func (a *App) GetAllTaskConsumableByTaskId(taskId int) ([]tp.TaskConsumable, error) {
+	return a.db.GetAllTaskConsumableByTaskId(taskId)
+}
+
+func (a *App) GetTaskConsumable(taskId int, consumableId int) (tp.TaskConsumable, error) {
+	return a.db.GetTaskConsumable(taskId, consumableId)
+}
