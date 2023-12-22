@@ -3,19 +3,21 @@ package postgres
 import (
 	"errors"
 
+	tm "time"
+
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
 type WorkOrder interface {
-	CreateWorkOrder(int, int, string, *string) (int, error)
+	CreateWorkOrder(int, int, tm.Time, *tm.Time) (int, error)
 	DeleteWorkOrder(int) error
 	GetAllWorkOrder() ([]tp.WorkOrder, error)
 	GetAllWorkOrderByEquipmentId(int) ([]tp.WorkOrder, error)
 	GetWorkOrder(int) (tp.WorkOrder, error)
-	UpdateWorkOrder(int, int, int, string, *string) error
+	UpdateWorkOrder(int, int, int, tm.Time, *tm.Time) error
 }
 
-func (pg *Store) CreateWorkOrder(taskId int, statusId int, createdDateTime string, CompleteDateTime *string) (int, error) {
+func (pg *Store) CreateWorkOrder(taskId int, statusId int, createdDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
 	query := `INSERT INTO work_order (task_id, status_id, create_date, complete_date) VALUES ($1, $2, $3, $4) RETURNING id`
 	var id int
 	err := pg.db.QueryRow(query, taskId, statusId, createdDateTime, CompleteDateTime).Scan(&id)
@@ -64,7 +66,7 @@ func (pg *Store) GetWorkOrder(id int) (tp.WorkOrder, error) {
 	return wo, err
 }
 
-func (pg *Store) UpdateWorkOrder(id int, taskId int, statusId int, startDateTime string, CompleteDateTime *string) error {
+func (pg *Store) UpdateWorkOrder(id int, taskId int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
 	query := `UPDATE work_order SET task_id = $1, status_id = $2, create_date = $3, complete_date = $4 WHERE id = $5`
 	_, err := pg.db.Exec(query, taskId, statusId, startDateTime, CompleteDateTime, id)
 
