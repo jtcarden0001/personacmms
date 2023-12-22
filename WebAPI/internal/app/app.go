@@ -5,6 +5,7 @@ import (
 	st "github.com/jtcarden0001/personacmms/webapi/internal/store"
 )
 
+// App layer hosts the business logic (To be implemented) and forwards requests to the Store layer.
 type App interface {
 	imp.Equipment
 	imp.Tool

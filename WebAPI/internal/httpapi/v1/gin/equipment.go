@@ -1,6 +1,7 @@
 package gin
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,14 +10,17 @@ import (
 )
 
 func (h *HttpApi) registerEquipmentRoutes(r *gin.Engine) {
-	r.POST("/equipment", h.CreateEquipment)
-	r.DELETE("/equipment/:id", h.DeleteEquipment)
-	r.GET("/equipment", h.GetAllEquipment)
-	r.GET("/equipment/:id", h.GetEquipment)
-	r.PATCH("/equipment/:id", h.UpdateEquipment)
+	baseRoute := "/v1/equipment"
+	individualRoute := fmt.Sprintf("%s/:equipmentId", baseRoute)
+
+	r.POST(baseRoute, h.createEquipment)
+	r.DELETE(individualRoute, h.deleteEquipment)
+	r.GET(baseRoute, h.getAllEquipment)
+	r.GET(individualRoute, h.getEquipment)
+	r.PUT(individualRoute, h.updateEquipment)
 }
 
-func (h *HttpApi) CreateEquipment(c *gin.Context) {
+func (h *HttpApi) createEquipment(c *gin.Context) {
 	var e tp.Equipment
 	if err := c.BindJSON(&e); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -33,8 +37,8 @@ func (h *HttpApi) CreateEquipment(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) DeleteEquipment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+func (h *HttpApi) deleteEquipment(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("equipmentId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -48,7 +52,7 @@ func (h *HttpApi) DeleteEquipment(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetAllEquipment(c *gin.Context) {
+func (h *HttpApi) getAllEquipment(c *gin.Context) {
 	equipment, err := h.app.GetAllEquipment()
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -57,8 +61,8 @@ func (h *HttpApi) GetAllEquipment(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetEquipment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+func (h *HttpApi) getEquipment(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("equipmentId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -72,7 +76,7 @@ func (h *HttpApi) GetEquipment(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) UpdateEquipment(c *gin.Context) {
+func (h *HttpApi) updateEquipment(c *gin.Context) {
 	var e tp.Equipment
 
 	if err := c.BindJSON(&e); err != nil {

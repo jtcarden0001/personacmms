@@ -8,6 +8,7 @@ type TaskConsumable interface {
 	GetAllTaskConsumable() ([]tp.TaskConsumable, error)
 	GetAllTaskConsumableByTaskId(int) ([]tp.TaskConsumable, error)
 	GetTaskConsumable(int, int) (tp.TaskConsumable, error)
+	UpdateTaskConsumable(int, int, string) error
 }
 
 func (a *App) CreateTaskConsumable(taskId int, consumableId int, quantity string) error {
@@ -28,4 +29,8 @@ func (a *App) GetAllTaskConsumableByTaskId(taskId int) ([]tp.TaskConsumable, err
 
 func (a *App) GetTaskConsumable(taskId int, consumableId int) (tp.TaskConsumable, error) {
 	return a.db.GetTaskConsumable(taskId, consumableId)
+}
+
+func (a *App) UpdateTaskConsumable(taskId int, consumableId int, quantity string) error {
+	return a.db.UpdateTaskConsumable(taskId, consumableId, quantity)
 }

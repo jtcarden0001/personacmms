@@ -9,11 +9,14 @@ import (
 )
 
 func (h *HttpApi) registerToolRoutes(r *gin.Engine) {
-	r.POST("/tool", h.CreateTool)
-	r.DELETE("/tool/:id", h.DeleteTool)
-	r.GET("/tool", h.GetAllTool)
-	r.GET("/tool/:id", h.GetTool)
-	r.PATCH("/tool/:id", h.UpdateTool)
+	baseRoute := "/v1/tool"
+	individualRoute := baseRoute + "/:toolId"
+
+	r.POST(baseRoute, h.CreateTool)
+	r.DELETE(individualRoute, h.DeleteTool)
+	r.GET(baseRoute, h.GetAllTool)
+	r.GET(individualRoute, h.GetTool)
+	r.PUT(individualRoute, h.UpdateTool)
 }
 
 func (h *HttpApi) CreateTool(c *gin.Context) {

@@ -1,14 +1,15 @@
 package httpapi
 
 import (
-	"github.com/jtcarden0001/personacmms/webapi/internal/app"
-	imp "github.com/jtcarden0001/personacmms/webapi/internal/httpapi/gin"
+	a "github.com/jtcarden0001/personacmms/webapi/internal/app"
+	imp "github.com/jtcarden0001/personacmms/webapi/internal/httpapi/v1/gin"
 )
 
+// HttpApi layer hosts the http routing, handling, and serving logic and forwards requests to the App layer.
 type HttpApi interface {
 	Start()
 }
 
-func New(injectedApp app.App) HttpApi {
+func New(injectedApp a.App) HttpApi {
 	return imp.New(injectedApp)
 }

@@ -12,6 +12,7 @@ type TaskConsumable interface {
 	GetAllTaskConsumable() ([]tp.TaskConsumable, error)
 	GetAllTaskConsumableByTaskId(int) ([]tp.TaskConsumable, error)
 	GetTaskConsumable(int, int) (tp.TaskConsumable, error)
+	UpdateTaskConsumable(int, int, string) error
 }
 
 func (pg *Store) CreateTaskConsumable(taskId int, consumableId int, quantity string) error {
@@ -56,6 +57,13 @@ func (pg *Store) GetTaskConsumable(consumableId int, taskId int) (tp.TaskConsuma
 	err := pg.db.QueryRow(query, taskId, consumableId).Scan(&tc.TaskId, &tc.ConsumableId, &tc.QuantityNote)
 
 	return tc, err
+}
+
+func (pg *Store) UpdateTaskConsumable(taskId int, consumableId int, quantity string) error {
+	query := `UPDATE task_consumable SET quantity_note = $1 WHERE task_id = $2 AND consumable_id = $3`
+	_, err := pg.db.Exec(query, quantity, taskId, consumableId)
+
+	return err
 }
 
 func populateTaskConsumableList(rows *sql.Rows) ([]tp.TaskConsumable, error) {
