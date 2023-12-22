@@ -1,7 +1,4 @@
 ---- in case you want to wipe the db schema
-DROP TABLE equipment_task;
-DROP TABLE equipment;
-DROP TABLE equipment_category;
 DROP TABLE task_tool;
 DROP TABLE tool;
 DROP TABLE task_consumable;
@@ -9,6 +6,8 @@ DROP TABLE consumable;
 DROP TABLE work_order;
 DROP TABLE work_order_status;
 DROP TABLE task;
+DROP TABLE equipment;
+DROP TABLE equipment_category;
 DROP TABLE usage_periodicity_unit;
 DROP TABLE time_periodicity_unit;
 
@@ -53,6 +52,7 @@ CREATE TABLE task (
   time_periodicity_unit_id INT,
   usage_periodicity_quantity INT,
   usage_periodicity_unit_id INT,
+  equipment_id INT NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_task__time_periodicity_unit_id
     FOREIGN KEY (time_periodicity_unit_id)
@@ -61,20 +61,10 @@ CREATE TABLE task (
   CONSTRAINT fk_task__usage_periodicity_unit_id
     FOREIGN KEY (usage_periodicity_unit_id)
         REFERENCES usage_periodicity_unit(id)
-        ON DELETE SET NULL
-);
-
-CREATE TABLE equipment_task (
-  equipment_id INT NOT NULL,
-  task_id INT NOT NULL,
-  PRIMARY KEY (equipment_id, task_id),
-  CONSTRAINT fk_equipment_task__equipment_id
+        ON DELETE SET NULL,
+  CONSTRAINT fk_task__equipment_id
     FOREIGN KEY (equipment_id)
       REFERENCES equipment(id)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_equipment_task__task_id
-    FOREIGN KEY (task_id)
-      REFERENCES task(id)
       ON DELETE CASCADE
 );
 
@@ -86,7 +76,6 @@ CREATE TABLE work_order_status (
 
 CREATE TABLE work_order (
   id INT GENERATED ALWAYS AS IDENTITY,
-  equipment_id INT NOT NULL,
   task_id INT NOT NULL,
   status_id INT NOT NULL,
   create_date TIMESTAMPTZ NOT NULL,
