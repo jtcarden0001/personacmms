@@ -10,14 +10,6 @@ func New(injectedStore st.Store) *App {
 	return &App{db: injectedStore}
 }
 
-type AppTest struct {
-	db st.StoreTest
-}
-
-func NewTest(injectedStore st.StoreTest) *AppTest {
-	return &AppTest{db: injectedStore}
-}
-
-func (cmms *AppTest) ResetSequence(table string, nextVal int) error {
-	return cmms.db.ResetSequence(table, nextVal)
+func NewTest(injectedStore st.StoreTest) *App {
+	return &App{db: injectedStore}
 }

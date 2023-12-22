@@ -12,7 +12,6 @@ type App interface {
 
 type AppTest interface {
 	App
-	ResetSequence(string, int) error
 }
 
 func New(injectedStore st.Store) App {
@@ -20,5 +19,5 @@ func New(injectedStore st.Store) App {
 }
 
 func NewTest(injectedStore st.StoreTest) AppTest {
-	return imp.NewTest(injectedStore) // current missing method compile error
+	return imp.NewTest(injectedStore)
 }

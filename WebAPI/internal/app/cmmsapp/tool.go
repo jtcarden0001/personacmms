@@ -29,7 +29,3 @@ func (cmms *App) GetTool(id int) (tp.Tool, error) {
 func (cmms *App) UpdateTool(id int, title string, size string) error {
 	return cmms.db.UpdateTool(id, title, size)
 }
-
-func (cmms *AppTest) ResetSequenceTool(id int) error {
-	return cmms.db.ResetSequence("tool", id)
-}
