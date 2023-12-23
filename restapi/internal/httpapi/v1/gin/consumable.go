@@ -16,7 +16,7 @@ func (h *HttpApi) registerConsumableRoutes() {
 	h.router.DELETE(individualRoute, h.deleteConsumable)
 	h.router.GET(baseRoute, h.getAllConsumable)
 	h.router.GET(individualRoute, h.getConsumable)
-	h.router.PUT(individualRoute, h.updateConsumable)
+	h.router.PUT(individualRoute, h.updateConsumable) // accepts object id in url, disregards id in body, may revisit this design
 }
 
 func (h *HttpApi) createConsumable(c *gin.Context) {
