@@ -29,8 +29,7 @@ func (h *HttpApi) createEquipment(c *gin.Context) {
 
 	id, err := h.app.CreateEquipment(e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
 	if err != nil {
-		// TODO: revisit this error to make sure it is correct
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		e.Id = id
 		c.IndentedJSON(http.StatusCreated, e)
@@ -46,7 +45,7 @@ func (h *HttpApi) deleteEquipment(c *gin.Context) {
 
 	err = h.app.DeleteEquipment(id)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusNoContent, gin.H{})
 	}
@@ -55,7 +54,7 @@ func (h *HttpApi) deleteEquipment(c *gin.Context) {
 func (h *HttpApi) getAllEquipment(c *gin.Context) {
 	equipment, err := h.app.GetAllEquipment()
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, equipment)
 	}
@@ -70,7 +69,7 @@ func (h *HttpApi) getEquipment(c *gin.Context) {
 
 	equipment, err := h.app.GetEquipment(id)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, equipment)
 	}
@@ -93,7 +92,7 @@ func (h *HttpApi) updateEquipment(c *gin.Context) {
 	e.Id = id // ignoring the id in the body and using the id in the url
 	err = h.app.UpdateEquipment(e.Id, e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, e)
 	}
