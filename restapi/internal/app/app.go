@@ -7,8 +7,16 @@ import (
 
 // App layer hosts the business logic (To be implemented) and forwards requests to the Store layer.
 type App interface {
+	imp.Consumable
+	imp.EquipmentCategory
 	imp.Equipment
+	imp.TaskConsumable
+	imp.TaskTool
+	imp.Task
 	imp.Tool
+	imp.UsagePeriodicityUnit
+	imp.WorkOrderStatus
+	imp.WorkOrder
 }
 
 type AppTest interface {

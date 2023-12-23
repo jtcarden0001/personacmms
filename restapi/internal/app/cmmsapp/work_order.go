@@ -7,12 +7,12 @@ import (
 )
 
 type WorkOrder interface {
-	CreateWorkOrder(int, int, int, tm.Time, *tm.Time) (int, error)
+	CreateWorkOrder(int, int, tm.Time, *tm.Time) (int, error)
 	DeleteWorkOrder(int) error
 	GetAllWorkOrder() ([]tp.WorkOrder, error)
 	GetAllWorkOrderByEquipmentId(int) ([]tp.WorkOrder, error)
 	GetWorkOrder(int) (tp.WorkOrder, error)
-	UpdateWorkOrder(int, int, int, int, tm.Time, *tm.Time) error
+	UpdateWorkOrder(int, int, int, tm.Time, *tm.Time) error
 }
 
 func (a *App) CreateWorkOrder(taskId int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
@@ -35,6 +35,6 @@ func (a *App) GetWorkOrder(id int) (tp.WorkOrder, error) {
 	return a.db.GetWorkOrder(id)
 }
 
-func (a *App) UpdateWorkOrder(id int, taskId int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
-	return a.db.UpdateWorkOrder(id, taskId, statusId, startDateTime, CompleteDateTime)
+func (a *App) UpdateWorkOrder(workOrderId int, taskId int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
+	return a.db.UpdateWorkOrder(workOrderId, taskId, statusId, startDateTime, CompleteDateTime)
 }

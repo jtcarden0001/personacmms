@@ -40,3 +40,8 @@ func (h *HttpApi) registerRoutes() {
 	h.registerWorkOrderStatusRoutes()
 	h.registerWorkOrderRoutes()
 }
+
+func processAppError(c *gin.Context, err error) {
+	//TODO: procees different errors (i.e. validation, not found, etc.)
+	c.JSON(500, gin.H{"error": err.Error()})
+}
