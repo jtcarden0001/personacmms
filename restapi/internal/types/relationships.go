@@ -6,7 +6,7 @@ type TaskTool struct {
 }
 
 type TaskConsumable struct {
-	TaskId       int `json:"taskId" binding:"required"`
-	ConsumableId int `json:"consumableId" binding:"required"`
-	QuantityNote int `json:"quantityNote" binding:"required"`
+	TaskId       int    `json:"taskId" binding:"required"`
+	ConsumableId int    `json:"consumableId" binding:"required"`
+	QuantityNote string `json:"quantityNote" binding:"required"`
 }
