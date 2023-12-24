@@ -2,15 +2,15 @@ package gin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jtcarden0001/personacmms/webapi/internal/app"
+	a "github.com/jtcarden0001/personacmms/webapi/internal/app"
 )
 
 type HttpApi struct {
-	app    app.App
+	app    a.App
 	router *gin.Engine
 }
 
-func New(injectedApp app.App) *HttpApi {
+func New(injectedApp a.App) *HttpApi {
 	ginRouter := gin.Default()
 	ginApi := &HttpApi{
 		app:    injectedApp,
@@ -39,9 +39,4 @@ func (h *HttpApi) registerRoutes() {
 	h.registerUsagePeriodicityUnitRoutes()
 	h.registerWorkOrderStatusRoutes()
 	h.registerWorkOrderRoutes()
-}
-
-func processAppError(c *gin.Context, err error) {
-	//TODO: procees different errors (i.e. validation, not found, etc.)
-	c.JSON(500, gin.H{"error": err.Error()})
 }
