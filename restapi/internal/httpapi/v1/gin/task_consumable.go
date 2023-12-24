@@ -44,7 +44,7 @@ func (h *HttpApi) createTaskConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(201, tc)
+		c.IndentedJSON(201, tc) // switch to .JSON() for performance
 	}
 }
 
@@ -65,7 +65,7 @@ func (h *HttpApi) deleteTaskConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }
 
@@ -80,7 +80,7 @@ func (h *HttpApi) getAllTaskConsumableByTask(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskConsumables)
+		c.IndentedJSON(200, taskConsumables) // switch to .JSON() for performance
 	}
 }
 
@@ -101,7 +101,7 @@ func (h *HttpApi) getTaskConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskConsumable)
+		c.IndentedJSON(200, taskConsumable) // switch to .JSON() for performance
 	}
 }
 
@@ -130,6 +130,6 @@ func (h *HttpApi) updateTaskConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }

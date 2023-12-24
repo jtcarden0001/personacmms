@@ -31,7 +31,7 @@ func (h *HttpApi) createConsumable(c *gin.Context) {
 		processAppError(c, err)
 	} else {
 		co.Id = id
-		c.IndentedJSON(201, co)
+		c.IndentedJSON(201, co) // switch to .JSON() for performance
 	}
 }
 
@@ -46,7 +46,7 @@ func (h *HttpApi) deleteConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }
 
@@ -55,7 +55,7 @@ func (h *HttpApi) getAllConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, consumables)
+		c.IndentedJSON(200, consumables) // switch to .JSON() for performance
 	}
 }
 
@@ -70,7 +70,7 @@ func (h *HttpApi) getConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, consumable)
+		c.IndentedJSON(200, consumable) // switch to .JSON() for performance
 	}
 }
 
@@ -92,6 +92,6 @@ func (h *HttpApi) updateConsumable(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }

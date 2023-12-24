@@ -31,7 +31,7 @@ func (h *HttpApi) createEquipmentCategory(c *gin.Context) {
 		processAppError(c, err)
 	} else {
 		ec.Id = id
-		c.IndentedJSON(201, ec)
+		c.IndentedJSON(201, ec) // switch to .JSON() for performance
 	}
 }
 
@@ -46,7 +46,7 @@ func (h *HttpApi) deleteEquipmentCategory(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }
 
@@ -55,7 +55,7 @@ func (h *HttpApi) getAllEquipmentCategory(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, equipmentCategories)
+		c.IndentedJSON(200, equipmentCategories) // switch to .JSON() for performance
 	}
 }
 
@@ -70,7 +70,7 @@ func (h *HttpApi) getEquipmentCategory(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, equipmentCategory)
+		c.IndentedJSON(200, equipmentCategory) // switch to .JSON() for performance
 	}
 }
 
@@ -91,6 +91,6 @@ func (h *HttpApi) updateEquipmentCategory(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(204, gin.H{})
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
 }

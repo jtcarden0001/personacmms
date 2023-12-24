@@ -32,7 +32,7 @@ func (h *HttpApi) createEquipment(c *gin.Context) {
 		processAppError(c, err)
 	} else {
 		e.Id = id
-		c.IndentedJSON(http.StatusCreated, e)
+		c.IndentedJSON(http.StatusCreated, e) // switch to .JSON() for performance
 	}
 }
 
@@ -47,7 +47,7 @@ func (h *HttpApi) deleteEquipment(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(http.StatusNoContent, gin.H{})
+		c.IndentedJSON(http.StatusNoContent, gin.H{}) // switch to .JSON() for performance
 	}
 }
 
@@ -56,7 +56,7 @@ func (h *HttpApi) getAllEquipment(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(http.StatusOK, equipment)
+		c.IndentedJSON(http.StatusOK, equipment) // switch to .JSON() for performance
 	}
 }
 
@@ -71,7 +71,7 @@ func (h *HttpApi) getEquipment(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(http.StatusOK, equipment)
+		c.IndentedJSON(http.StatusOK, equipment) // switch to .JSON() for performance
 	}
 }
 
@@ -94,6 +94,6 @@ func (h *HttpApi) updateEquipment(c *gin.Context) {
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(http.StatusOK, e)
+		c.IndentedJSON(http.StatusOK, e) // switch to .JSON() for performance
 	}
 }
