@@ -29,7 +29,7 @@ func (h *HttpApi) CreateTool(c *gin.Context) {
 
 	id, err := h.app.CreateTool(t.Title, t.Size)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		t.Id = id
 		c.IndentedJSON(http.StatusCreated, t)
@@ -45,7 +45,7 @@ func (h *HttpApi) DeleteTool(c *gin.Context) {
 
 	err = h.app.DeleteTool(id)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusNoContent, gin.H{})
 	}
@@ -54,7 +54,7 @@ func (h *HttpApi) DeleteTool(c *gin.Context) {
 func (h *HttpApi) GetAllTool(c *gin.Context) {
 	tools, err := h.app.GetAllTool()
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, tools)
 	}
@@ -69,7 +69,7 @@ func (h *HttpApi) GetTool(c *gin.Context) {
 
 	tool, err := h.app.GetTool(id)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, tool)
 	}
@@ -91,7 +91,7 @@ func (h *HttpApi) UpdateTool(c *gin.Context) {
 	t.Id = id
 	err = h.app.UpdateTool(t.Id, t.Title, t.Size)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		processAppError(c, err)
 	} else {
 		c.IndentedJSON(http.StatusOK, t)
 	}
