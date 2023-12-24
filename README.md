@@ -10,6 +10,11 @@ projects found within:
     * Implement integration testing for REST calls through all the layers
     * Implement app layer task frequency scanning / work order creation
     * create a dockerfile to containerize the app
+    * add consistent logging
+        * log levels (Err, Warn, Info, Debug)
+        * log service response times
+        * trace requests through layers
+
 
 ### webfe: a web based interface, probably will write it in REACT.. tbd
 * TODO
