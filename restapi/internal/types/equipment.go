@@ -3,9 +3,9 @@ package types
 type Equipment struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title" binding:"required"`
-	Year        int    `json:"year"`
-	Make        string `json:"make"`
-	ModelNumber string `json:"modelNumber"`
-	Description string `json:"description"`
+	Year        int    `json:"year" binding:"required"`
+	Make        string `json:"make" binding:"required"`
+	ModelNumber string `json:"modelNumber" binding:"required"`
+	Description string `json:"description" binding:"required"`
 	CategoryId  int    `json:"categoryId"`
 }

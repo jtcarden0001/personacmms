@@ -6,6 +6,6 @@ type WorkOrder struct {
 	Id            int      `json:"id"`
 	TaskId        int      `json:"taskId" binding:"required"`
 	StatusId      int      `json:"statusId" binding:"required"`
-	CreatedDate   tm.Time  `json:"createdDate"`
+	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
 	CompletedDate *tm.Time `json:"completedDate"`
 }
