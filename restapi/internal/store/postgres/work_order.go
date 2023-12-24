@@ -14,7 +14,7 @@ type WorkOrder interface {
 	GetAllWorkOrder() ([]tp.WorkOrder, error)
 	GetAllWorkOrderByEquipmentId(int) ([]tp.WorkOrder, error)
 	GetWorkOrder(int) (tp.WorkOrder, error)
-	UpdateWorkOrder(int, int, int, tm.Time, *tm.Time) error
+	UpdateWorkOrder(int, int, tm.Time, *tm.Time) error
 }
 
 func (pg *Store) CreateWorkOrder(taskId int, statusId int, createdDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
@@ -66,9 +66,11 @@ func (pg *Store) GetWorkOrder(id int) (tp.WorkOrder, error) {
 	return wo, err
 }
 
-func (pg *Store) UpdateWorkOrder(id int, taskId int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
-	query := `UPDATE work_order SET task_id = $1, status_id = $2, create_date = $3, complete_date = $4 WHERE id = $5`
-	_, err := pg.db.Exec(query, taskId, statusId, startDateTime, CompleteDateTime, id)
+func (pg *Store) UpdateWorkOrder(id int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
+	// A work order is only associated with 1 task, the ability to update the taskId on a work order doesn't make sense
+	// as it is just a status descriptor to a task that needs to be completed
+	query := `UPDATE work_order SET status_id = $1, create_date = $2, complete_date = $3 WHERE id = $4`
+	_, err := pg.db.Exec(query, statusId, startDateTime, CompleteDateTime, id)
 
 	return err
 }
