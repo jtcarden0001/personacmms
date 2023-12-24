@@ -2,8 +2,10 @@ package gin
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
 func (h *HttpApi) registerWorkOrderStatusRoutes() {
@@ -18,26 +20,78 @@ func (h *HttpApi) registerWorkOrderStatusRoutes() {
 }
 
 func (h *HttpApi) createWorkOrderStatus(c *gin.Context) {
-	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
-	return
+	var wos tp.WorkOrderStatus
+	if err := c.BindJSON(&wos); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := h.app.CreateWorkOrderStatus(wos.Title)
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		wos.Id = id
+		c.IndentedJSON(201, wos) // switch to .JSON() for performance
+	}
 }
 
 func (h *HttpApi) deleteWorkOrderStatus(c *gin.Context) {
-	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
-	return
+	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.app.DeleteWorkOrderStatus(wosId)
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
+	}
 }
 
 func (h *HttpApi) getAllWorkOrderStatus(c *gin.Context) {
-	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
-	return
+	woss, err := h.app.GetAllWorkOrderStatus()
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		c.IndentedJSON(200, woss) // switch to .JSON() for performance
+	}
 }
 
 func (h *HttpApi) getWorkOrderStatus(c *gin.Context) {
-	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
-	return
+	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	wos, err := h.app.GetWorkOrderStatus(wosId)
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		c.IndentedJSON(200, wos) // switch to .JSON() for performance
+	}
 }
 
 func (h *HttpApi) updateWorkOrderStatus(c *gin.Context) {
-	c.JSON(503, gin.H{"error": fmt.Errorf("not implemented")})
-	return
+	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	var wos tp.WorkOrderStatus
+	if err := c.BindJSON(&wos); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	wos.Id = wosId
+	err = h.app.UpdateWorkOrderStatus(wos.Id, wos.Title)
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
+	}
 }
