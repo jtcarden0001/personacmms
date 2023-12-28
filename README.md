@@ -16,7 +16,7 @@ projects found within:
         * trace requests through layers
 
 
-### webfe: a web based interface, probably will write it in REACT.. tbd
+### webui: a web based interface, probably will write it in REACT.. tbd
 * TODO
     * Design UI using some design tool, maybe try out figma
     * Get started on the REACT app
