@@ -15,6 +15,9 @@ projects found within:
         * log service response times
         * trace requests through layers
 
+* Future Features
+    * Add equipment tagging and filtering based on tag
+
 
 ### webui: a web based interface, probably will write it in REACT.. tbd
 * TODO
