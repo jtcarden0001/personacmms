@@ -4,6 +4,10 @@ Personal computer maintenance management system
 
 projects found within: 
 ### restapi: A REST api using gin/golang/postgres stack to manage the data
+* Stack:
+    * golang (gin for httpapi layer)
+    * PostgreSQL
+
 * TODO  
     * Implement proper error propagation up from store layer through app layer to httpapi layer
     * Implement proper app layer error handling in the httpapi layer (correct http status codes, etc.)
@@ -19,9 +23,13 @@ projects found within:
     * Add equipment tagging and filtering based on tag
 
 
-### webui: a web based interface, probably will write it in REACT.. tbd
+### webui: a web based interface.
+* Stack: 
+    * CSS: TailwindCSS + DaisyUI
+    * JS Framework: SvelteKit
+
 * TODO
-    * Design UI using some design tool, maybe try out figma
-    * Get started on the REACT app
+    * Complete design in Figma
+    * Build out design in SvelteKit app
 
 ### cli: a command line based interface, may not implement, tbd..
