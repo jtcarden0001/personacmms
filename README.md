@@ -3,7 +3,7 @@ Personal computer maintenance management system
 * An application to aid in tracking, recording, and reminding me about periodic maintenance for all the things I don't currently maintain properly around my house.
 
 projects found within: 
-### restapi: A REST api using gin/golang/postgres stack to manage the data
+### restapi: A REST api to serve state and run background tasks on the data as business rules require
 * Stack:
     * golang (gin for httpapi layer)
     * PostgreSQL
