@@ -1,1 +1,9 @@
-<h1>Welcome to the Not-Implemented <strong>manage</strong> page</h1>
+<script>
+    import Manage from "./manage.svelte";
+</script>
+
+<Manage />
+
+<style>
+
+</style>
