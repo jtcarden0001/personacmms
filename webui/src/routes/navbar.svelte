@@ -4,7 +4,7 @@
     function handleDetailsClick() {
         document.getElementById("AccountDetails").removeAttribute("open");
     }
-
+    
 </script>
 
 <div class="navbar bg-base-100 flex-none z-50">
