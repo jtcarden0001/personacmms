@@ -4,6 +4,4 @@
 
 <Manage />
 
-<style>
-
-</style>
+<style></style>

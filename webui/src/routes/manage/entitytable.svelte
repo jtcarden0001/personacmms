@@ -4,7 +4,7 @@
     export let dataRows;
 </script>
 
-<div class="overflow-x-auto flex-auto">
+<div class="overflow-x-auto flex-auto m-10">
     <table class="table">
       <thead>
         <tr>

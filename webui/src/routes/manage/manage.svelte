@@ -10,7 +10,7 @@
     ]
 </script>
 
-<div class="flex">
+<div class="flex items-center grow z-20">
     <SideNav />
     <EntityTable columnTitles={columns} dataRows={data} />
 </div>
