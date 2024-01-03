@@ -1,18 +1,34 @@
 <script>
     let basePath = '/manage';
-    let woPath = basePath + '/workorders';
-    let eqPath = basePath + '/equipment';
-    let taskPath = basePath + '/tasks';
-    let toolPath = basePath + '/tools';
-    let coPath = basePath + '/consumables';
+    let woPath = 'workorders';
+    let eqPath = 'equipment';
+    let taskPath = 'tasks';
+    let toolPath = 'tools';
+    let coPath = 'consumables';
+
+    const pathSuffixes = [woPath, eqPath, taskPath, toolPath, coPath]
+
+    const pathTitleMap = new Map([
+        [woPath, "Work Orders"],
+        [eqPath, "Equipment"],
+        [taskPath, "Tasks"],
+        [toolPath, "Tools"],
+        [coPath, "Consumables"]
+    ])
+
+    const currentPath = window.location.pathname
+    const selected = currentPath.split("/").pop();
 </script>
+
 <div class="h-4/5 flex items-center border-r-4 rounded-md">
   <ul class="menu bg-transparent rounded-box m-5">
-    <li><a href={woPath}>Work Orders</a></li>
-    <li><a href={eqPath}>Equipment</a></li>
-    <li><a href={taskPath}>Tasks</a></li>
-    <li><a href={toolPath}>Tools</a></li>
-    <li><a href={coPath}>Consumables</a></li>
+    {#each pathSuffixes as pathsfx}
+      {#if pathsfx === selected}
+        <li class="text-white bg-purple-900 rounded-lg"><a href={basePath.concat("/", pathsfx)}>{pathTitleMap.get(pathsfx)}</a></li>
+      {:else}
+        <li><a href={basePath.concat("/", pathsfx)}>{pathTitleMap.get(pathsfx)}</a></li>
+      {/if}
+    {/each}
   </ul>
 </div>
 
