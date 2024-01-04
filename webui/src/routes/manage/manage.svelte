@@ -1,6 +1,7 @@
 <script>
     import EntityTable from "./entitytable.svelte";
     import SideNav from "./sidenav.svelte";
+    import AddNew from "./addnew.svelte";
 
     let columns = ["Name", "Job", "Favorite Color"];
     let data = [
@@ -27,8 +28,11 @@
 </script>
 
 <div class="flex grow z-20">
-    <SideNav />
+  <SideNav />
+  <div class="flex-auto">
     <EntityTable columnTitles={columns} dataRows={data} />
+    <AddNew />
+  </div>
 </div>
 
 <style></style>

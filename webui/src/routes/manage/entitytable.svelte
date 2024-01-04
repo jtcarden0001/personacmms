@@ -1,6 +1,7 @@
 <script>
     import "../../app.css";
     import EntityTableRowSuffix from "./entitytablerowsuffix.svelte"
+    import AddNew from "./addnew.svelte"
 
     export let columnTitles;
     export let dataRows;
@@ -24,6 +25,7 @@
             <EntityTableRowSuffix />
           </tr>
         {/each}
+        <AddNew />
       </tbody>
     </table>
   </div>
