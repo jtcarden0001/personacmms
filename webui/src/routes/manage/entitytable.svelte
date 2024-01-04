@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         {#each dataRows as row}
-          <tr>
+          <tr class="hover">
             {#each row as cell}
               <td>{cell}</td>
             {/each}
@@ -29,5 +29,7 @@
   </div>
 
 <style>
-
+  tr{
+    cursor: pointer;
+  }
 </style>
