@@ -31,7 +31,6 @@
   <SideNav />
   <div class="flex-auto">
     <EntityTable columnTitles={columns} dataRows={data} />
-    <AddNew />
   </div>
 </div>
 

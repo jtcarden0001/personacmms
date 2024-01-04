@@ -31,7 +31,7 @@
   </div>
 
 <style>
-  tr{
+  tbody{
     cursor: pointer;
   }
 </style>
