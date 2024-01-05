@@ -3,17 +3,20 @@ package gin
 import (
 	"fmt"
 	"strconv"
+	tm "time"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
 )
 
 func (h *HttpApi) registerWorkOrderRoutes() {
+	baseRoute := fmt.Sprintf("%s/work-orders", routePrefix)
 	baseRouteByTask := fmt.Sprintf("%s/equipment/:equipmentId/tasks/:taskId/work-orders", routePrefix)
 	individualRouteByTask := fmt.Sprintf("%s/:workOrderId", baseRouteByTask)
 
 	h.router.POST(baseRouteByTask, h.createWorkOrderByTask)
 	h.router.DELETE(individualRouteByTask, h.deleteWorkOrderByTask)
+	h.router.GET(baseRoute, h.getAllWorkOrder)
 	h.router.GET(baseRouteByTask, h.getAllWorkOrderByTask)
 	h.router.GET(individualRouteByTask, h.getWorkOrderByTask)
 	h.router.PUT(individualRouteByTask, h.updateWorkOrderByTask)
@@ -59,10 +62,26 @@ func (h *HttpApi) deleteWorkOrderByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllWorkOrderByTask(c *gin.Context) {
+func (h *HttpApi) getAllWorkOrder(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	woss, err := h.app.GetAllWorkOrder()
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		iwoss, err := h.interpolateWorkOrders(woss)
+		if err != nil {
+			processAppError(c, err)
+		} else {
+			c.IndentedJSON(200, iwoss) // switch to .JSON() for performance
+		}
+	}
+}
+
+func (h *HttpApi) getAllWorkOrderByTask(c *gin.Context) {
+	// while we don't use the taskId, a work order is always associated with a task
+	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
+	woss, err := h.app.GetAllWorkOrder() // TODO: BUG: this is getting all work orders and not filtering by task
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -109,4 +128,40 @@ func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
 	} else {
 		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
 	}
+}
+
+// may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work.
+// will do if performance suffers, no need for premature optimization.
+func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
+	var iwoss []interpolatedWorkOrder
+	var err error
+	for _, wo := range woss {
+		t, err := h.app.GetTask(wo.TaskId)
+		if err != nil {
+			return nil, err
+		}
+
+		s, err := h.app.GetWorkOrderStatus(wo.StatusId)
+		if err != nil {
+			return nil, err
+		}
+
+		iwoss = append(iwoss, interpolatedWorkOrder{
+			Id:            wo.Id,
+			TaskTitle:     t.Title,
+			StatusTitle:   s.Title,
+			CreatedDate:   wo.CreatedDate,
+			CompletedDate: wo.CompletedDate,
+		})
+	}
+
+	return iwoss, err
+}
+
+type interpolatedWorkOrder struct {
+	Id            int      `json:"id"`
+	TaskTitle     string   `json:"taskTitle" binding:"required"`
+	StatusTitle   string   `json:"statusTitle" binding:"required"`
+	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
+	CompletedDate *tm.Time `json:"completedDate"`
 }
