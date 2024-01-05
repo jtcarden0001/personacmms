@@ -110,6 +110,7 @@ CREATE TABLE task_tool (
       REFERENCES tool(id)
 );
 
+-- TODO: add description or dedicated part number field
 CREATE TABLE consumable (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
