@@ -1,6 +1,6 @@
 package cmmsapp
 
-import tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
+import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
 type TaskTool interface {
 	CreateTaskTool(int, int) error

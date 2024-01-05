@@ -6,7 +6,7 @@ import (
 	tm "time"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func (h *HttpApi) registerWorkOrderRoutes() {

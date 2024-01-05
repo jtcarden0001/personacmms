@@ -1,8 +1,8 @@
 package app
 
 import (
-	imp "github.com/jtcarden0001/personacmms/webapi/internal/app/cmmsapp"
-	st "github.com/jtcarden0001/personacmms/webapi/internal/store"
+	imp "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp"
+	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 )
 
 // App layer hosts the business logic (To be implemented) and forwards requests to the Store layer.

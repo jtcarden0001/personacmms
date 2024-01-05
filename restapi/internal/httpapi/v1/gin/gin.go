@@ -2,7 +2,7 @@ package gin
 
 import (
 	"github.com/gin-gonic/gin"
-	a "github.com/jtcarden0001/personacmms/webapi/internal/app"
+	a "github.com/jtcarden0001/personacmms/restapi/internal/app"
 )
 
 type HttpApi struct {

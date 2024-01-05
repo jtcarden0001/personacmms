@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	"github.com/stretchr/testify/assert"
 )
 

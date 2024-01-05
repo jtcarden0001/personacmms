@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 
-	tp "github.com/jtcarden0001/personacmms/webapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type TaskTool interface {

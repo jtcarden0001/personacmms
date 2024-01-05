@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/jtcarden0001/personacmms/webapi/internal/app"
-	"github.com/jtcarden0001/personacmms/webapi/internal/httpapi"
-	st "github.com/jtcarden0001/personacmms/webapi/internal/store"
+	"github.com/jtcarden0001/personacmms/restapi/internal/app"
+	"github.com/jtcarden0001/personacmms/restapi/internal/httpapi"
+	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 )
 
 func main() {

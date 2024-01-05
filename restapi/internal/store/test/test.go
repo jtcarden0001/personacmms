@@ -1,6 +1,6 @@
 package test
 
-import "github.com/jtcarden0001/personacmms/webapi/internal/store"
+import "github.com/jtcarden0001/personacmms/restapi/internal/store"
 
 var testStore = store.NewTest()
 
