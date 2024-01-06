@@ -25,7 +25,7 @@ projects found within:
 
 ### webui: a web based interface.
 * Stack: 
-    * CSS: TailwindCSS + DaisyUI
+    * CSS: TailwindCSS + DaisyUI + HeroIcons
     * JS Framework: SvelteKit
 
 * TODO
