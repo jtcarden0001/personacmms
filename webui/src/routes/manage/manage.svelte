@@ -3,34 +3,14 @@
     import SideNav from "./sidenav.svelte";
     import AddNew from "./addnew.svelte";
 
-    let columns = ["Name", "Job", "Favorite Color"];
-    let data = [
-        ["Cy Ganderton", "Quality Control Specialist", "Blue"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Brice Swyre", "Tax Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Dorolice Dugdale", "Senior Cost Accountant", "Red"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-        ["Hart Hagerty", "Desktop Support Technician", "Purple"],
-    ]
+    export let columns = ["Title", "Equipment", "Status"];
+    export let dataRows = [];
 </script>
 
 <div class="flex grow z-20">
   <SideNav />
   <div class="flex-auto">
-    <EntityTable columnTitles={columns} dataRows={data} />
+    <EntityTable columnTitles={columns} dataRows={dataRows} />
   </div>
 </div>
 

@@ -4,7 +4,7 @@
     import AddNew from "./addnew.svelte"
 
     export let columnTitles;
-    export let dataRows;
+    export let dataRows = [];
 </script>
 
 <div class="overflow-x-auto flex-auto m-10">
