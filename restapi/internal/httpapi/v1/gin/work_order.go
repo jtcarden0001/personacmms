@@ -130,38 +130,47 @@ func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
 	}
 }
 
-// may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work.
-// will do if performance suffers, no need for premature optimization.
-func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
-	var iwoss []interpolatedWorkOrder
-	var err error
-	for _, wo := range woss {
-		t, err := h.app.GetTask(wo.TaskId)
-		if err != nil {
-			return nil, err
-		}
-
-		s, err := h.app.GetWorkOrderStatus(wo.StatusId)
-		if err != nil {
-			return nil, err
-		}
-
-		iwoss = append(iwoss, interpolatedWorkOrder{
-			Id:            wo.Id,
-			TaskTitle:     t.Title,
-			StatusTitle:   s.Title,
-			CreatedDate:   wo.CreatedDate,
-			CompletedDate: wo.CompletedDate,
-		})
-	}
-
-	return iwoss, err
-}
-
 type interpolatedWorkOrder struct {
 	Id            int      `json:"id"`
 	TaskTitle     string   `json:"taskTitle" binding:"required"`
 	StatusTitle   string   `json:"statusTitle" binding:"required"`
 	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
 	CompletedDate *tm.Time `json:"completedDate"`
+}
+
+func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
+	var iwoss []interpolatedWorkOrder
+	var err error
+	for _, wo := range woss {
+		iwo, err := h.interpolateWorkOrder(wo)
+		if err != nil {
+			return nil, err
+		}
+
+		iwoss = append(iwoss, iwo)
+	}
+
+	return iwoss, err
+}
+
+// may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work
+// or do some memoization to reduce the db calls. Will do if performance suffers, no need for premature optimization.
+func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, error) {
+	t, err := h.app.GetTask(wo.TaskId)
+	if err != nil {
+		return interpolatedWorkOrder{}, err
+	}
+
+	s, err := h.app.GetWorkOrderStatus(wo.StatusId)
+	if err != nil {
+		return interpolatedWorkOrder{}, err
+	}
+
+	return interpolatedWorkOrder{
+		Id:            wo.Id,
+		TaskTitle:     t.Title,
+		StatusTitle:   s.Title,
+		CreatedDate:   wo.CreatedDate,
+		CompletedDate: wo.CompletedDate,
+	}, nil
 }
