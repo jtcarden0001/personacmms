@@ -131,11 +131,12 @@ func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
 }
 
 type interpolatedWorkOrder struct {
-	Id            int      `json:"id"`
-	TaskTitle     string   `json:"taskTitle" binding:"required"`
-	StatusTitle   string   `json:"statusTitle" binding:"required"`
-	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
-	CompletedDate *tm.Time `json:"completedDate"`
+	Id             int      `json:"id"`
+	TaskTitle      string   `json:"taskTitle" binding:"required"`
+	StatusTitle    string   `json:"statusTitle" binding:"required"`
+	EquipmentTitle string   `json:"equipmentTitle" binding:"required"`
+	CreatedDate    tm.Time  `json:"createdDate" binding:"required"`
+	CompletedDate  *tm.Time `json:"completedDate"`
 }
 
 func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
@@ -161,16 +162,22 @@ func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, 
 		return interpolatedWorkOrder{}, err
 	}
 
+	e, err := h.app.GetEquipment(t.EquipmentId)
+	if err != nil {
+		return interpolatedWorkOrder{}, err
+	}
+
 	s, err := h.app.GetWorkOrderStatus(wo.StatusId)
 	if err != nil {
 		return interpolatedWorkOrder{}, err
 	}
 
 	return interpolatedWorkOrder{
-		Id:            wo.Id,
-		TaskTitle:     t.Title,
-		StatusTitle:   s.Title,
-		CreatedDate:   wo.CreatedDate,
-		CompletedDate: wo.CompletedDate,
+		Id:             wo.Id,
+		TaskTitle:      t.Title,
+		StatusTitle:    s.Title,
+		EquipmentTitle: e.Title,
+		CreatedDate:    wo.CreatedDate,
+		CompletedDate:  wo.CompletedDate,
 	}, nil
 }
