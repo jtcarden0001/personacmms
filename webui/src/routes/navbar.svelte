@@ -4,10 +4,11 @@
     function handleDetailsClick() {
         document.getElementById("AccountDetails").removeAttribute("open");
     }
-    
+
 </script>
 
-<div class="navbar bg-base-100 flex-none z-50">
+<!-- based on https://daisyui.com/components/navbar/ -->
+<nav class="navbar bg-base-100 flex-none z-50">
     <div class="flex-1">
       <a class="btn btn-ghost text-xl" href="/">PersonaCMMS</a>
     </div>
@@ -28,7 +29,7 @@
         </li>
       </ul>
     </div>
-  </div>
+</nav>
 
 <style>
 

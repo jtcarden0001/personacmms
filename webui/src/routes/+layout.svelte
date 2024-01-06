@@ -4,8 +4,8 @@
 </script>
 
 <div class="h-screen flex flex-col">
-<Navbar />
-<slot />
+  <Navbar />
+  <slot />
 </div>
 
 <style></style>
