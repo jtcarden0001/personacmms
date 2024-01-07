@@ -1,6 +1,6 @@
 <script>
     let basePath = '/manage';
-    let woPath = 'workorders';
+    let woPath = 'work-orders';
     let eqPath = 'equipment';
     let taskPath = 'tasks';
     let toolPath = 'tools';

@@ -1,5 +1,5 @@
 <script>
-    import Manage from "../manage.svelte";
+    import Manage from "$lib/components/manage/manage.svelte";
 </script>
 
 <Manage />
