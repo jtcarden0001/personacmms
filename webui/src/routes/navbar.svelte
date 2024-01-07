@@ -14,7 +14,7 @@
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1">
-        <li><a href="/manage">Manage</a></li>
+        <li><a href="/manage/workorders">Manage</a></li>
         <li><a href="/about">About</a></li>
         <li>
           <details id="AccountDetails">
