@@ -4,9 +4,7 @@
 
     export let basePath
     export let columns = ["Title", "Equipment", "Status"];
-    export let dataRows = [{
-      data: []
-    }];
+    export let dataRows = [];
     export const itemData = new Map();
 </script>
 

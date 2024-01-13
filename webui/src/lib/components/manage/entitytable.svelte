@@ -7,8 +7,6 @@
     export let columnTitles;
     export let dataRows = [];
     export let itemData;
-
-    console.log("basePath: " + basePath);
 </script>
 
 <div class="overflow-x-auto flex-auto m-10">
