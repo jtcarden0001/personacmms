@@ -17,7 +17,7 @@
         processedRowData.push({
             "id": id,
             "itemRoute": "/manage/equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].taskId + "/work-orders/" + id + "/view",
-            "entityTableRow": row
+            "cells": row
         });
     }
 
