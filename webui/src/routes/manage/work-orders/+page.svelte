@@ -1,9 +1,8 @@
 <script>
-    import Manage from "$lib/components/manage/manage.svelte";
+    import ManageTab from "$lib/components/manage/managetab.svelte";
 
     export let data = {"content":[]};
 
-    let basePath = "/manage/work-orders";
     let columns = ["Title", "Equipment", "Status"];
     const processedRowData = [];
     for (let i = 0; i < data.content.length; i++) {
@@ -18,23 +17,11 @@
         processedRowData.push({
             "id": id,
             "itemRoute": "/manage/equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].taskId + "/work-orders/" + id + "/view",
-            "data": row
+            "entityTableRow": row
         });
     }
-    console.log(processedRowData)
 
-    const processedViewData = new Map();
-    for (let i = 0; i < data.content.length; i++) {
-        processedViewData.set(data.content[i].id, [
-            ["Title", data.content[i].taskTitle],
-            ["Equipment", data.content[i].equipmentTitle],
-            ["Status", data.content[i].statusTitle],
-            ["Created Date", data.content[i].createdDate],
-            ["Completed Date", data.content[i].completedDate]
-        ]);
-    }   
 </script>
 
-<Manage basePath={basePath} columns={columns} dataRows={processedRowData} itemData={processedViewData} />
-
+<ManageTab columns={columns} dataRows={processedRowData} />
 <style></style>

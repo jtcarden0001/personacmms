@@ -3,7 +3,7 @@
 
     export let data;
 </script>
-
+<!-- TODO: add a back button -->
 <ViewItem content={data} />
 
 <style></style>

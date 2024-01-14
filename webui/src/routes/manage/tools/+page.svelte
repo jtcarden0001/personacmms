@@ -1,7 +1,7 @@
 <script>
-    import Manage from "$lib/components/manage/manage.svelte";
+    import ManageTab from "$lib/components/manage/managetab.svelte";
 </script>
 
-<Manage />
+<ManageTab />
 
 <style></style>
