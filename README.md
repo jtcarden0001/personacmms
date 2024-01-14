@@ -18,7 +18,7 @@ projects found within:
         * log levels (Err, Warn, Info, Debug)
         * log service response times
         * trace requests through layers
-    * add integration with TODOist - can be used as an alternative UI (easier access less feature ris\ch UI)
+    * add integration with TODOist - can be used as an alternative UI (easier access less feature rich UI)
         * implement feature flag
         * implement monitoring for work order completion
         * implement api integration for creating TODOs 
