@@ -99,10 +99,11 @@ func (h *HttpApi) getWorkOrderByTask(c *gin.Context) {
 	}
 
 	wo, err := h.app.GetWorkOrder(woId)
+	iwo, err := h.interpolateWorkOrder(wo)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, wo) // switch to .JSON() for performance
+		c.IndentedJSON(200, iwo) // switch to .JSON() for performance
 	}
 }
 
