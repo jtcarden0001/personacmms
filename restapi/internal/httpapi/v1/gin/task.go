@@ -9,12 +9,14 @@ import (
 )
 
 func (h *HttpApi) registerTaskRoutes() {
-	baseRoute := fmt.Sprintf("%s/equipment/:equipmentId/tasks", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:taskId", baseRoute)
+	baseAllRoute := fmt.Sprintf("%s/tasks", routePrefix)
+	baseEqRoute := fmt.Sprintf("%s/equipment/:equipmentId/tasks", routePrefix)
+	individualRoute := fmt.Sprintf("%s/:taskId", baseEqRoute)
 
-	h.router.POST(baseRoute, h.createTask)
+	h.router.POST(baseEqRoute, h.createTask)
 	h.router.DELETE(individualRoute, h.deleteTask)
-	h.router.GET(baseRoute, h.getAllTaskByEquipment)
+	h.router.GET(baseAllRoute, h.getAllTask)
+	h.router.GET(baseEqRoute, h.getAllTaskByEquipment)
 	h.router.GET(individualRoute, h.getTask)
 	h.router.PUT(individualRoute, h.updateTask)
 }
@@ -53,6 +55,15 @@ func (h *HttpApi) deleteTask(c *gin.Context) {
 		processAppError(c, err)
 	} else {
 		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
+	}
+}
+
+func (h *HttpApi) getAllTask(c *gin.Context) {
+	tasks, err := h.app.GetAllTask()
+	if err != nil {
+		processAppError(c, err)
+	} else {
+		c.IndentedJSON(200, tasks) // switch to .JSON() for performance
 	}
 }
 
