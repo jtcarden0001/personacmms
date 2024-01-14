@@ -23,7 +23,7 @@
       {#each dataRows as row}
           <div class="table-row hover:bg-slate-100">
             {#each row.data as cell}
-              <a class="table-cell" href={basePath.concat("/", row.id, "/view")}>
+              <a class="table-cell" href={row.itemRoute}>
                 {cell}
               </a>
             {/each}

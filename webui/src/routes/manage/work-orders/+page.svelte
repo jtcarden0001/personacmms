@@ -17,9 +17,11 @@
         
         processedRowData.push({
             "id": id,
+            "itemRoute": "/manage/equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].taskId + "/work-orders/" + id + "/view",
             "data": row
         });
     }
+    console.log(processedRowData)
 
     const processedViewData = new Map();
     for (let i = 0; i < data.content.length; i++) {
@@ -30,9 +32,7 @@
             ["Created Date", data.content[i].createdDate],
             ["Completed Date", data.content[i].completedDate]
         ]);
-    }
-
-        
+    }   
 </script>
 
 <Manage basePath={basePath} columns={columns} dataRows={processedRowData} itemData={processedViewData} />
