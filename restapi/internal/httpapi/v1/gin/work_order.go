@@ -132,8 +132,10 @@ func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
 
 type interpolatedWorkOrder struct {
 	Id             int      `json:"id"`
+	TaskId         int      `json:"taskId"`
 	TaskTitle      string   `json:"taskTitle" binding:"required"`
 	StatusTitle    string   `json:"statusTitle" binding:"required"`
+	EquipmentId    int      `json:"equipmentId" binding:"required"`
 	EquipmentTitle string   `json:"equipmentTitle" binding:"required"`
 	CreatedDate    tm.Time  `json:"createdDate" binding:"required"`
 	CompletedDate  *tm.Time `json:"completedDate"`
@@ -174,8 +176,10 @@ func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, 
 
 	return interpolatedWorkOrder{
 		Id:             wo.Id,
+		TaskId:         wo.TaskId,
 		TaskTitle:      t.Title,
 		StatusTitle:    s.Title,
+		EquipmentId:    t.EquipmentId,
 		EquipmentTitle: e.Title,
 		CreatedDate:    wo.CreatedDate,
 		CompletedDate:  wo.CompletedDate,
