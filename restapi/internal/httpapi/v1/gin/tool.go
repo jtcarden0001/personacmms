@@ -10,12 +10,12 @@ import (
 )
 
 func (h *HttpApi) registerToolRoutes() {
-	baseRoute := fmt.Sprintf("%s/tool", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
+	baseRoute := fmt.Sprintf("%s/tools", routePrefix)
+	individualRoute := fmt.Sprintf("%s/:id", baseRoute)
 
 	h.router.POST(baseRoute, h.CreateTool)
 	h.router.DELETE(individualRoute, h.DeleteTool)
-	h.router.GET(baseRoute, h.GetAllTool)
+	h.router.GET(baseRoute, h.GetAllTools)
 	h.router.GET(individualRoute, h.GetTool)
 	h.router.PUT(individualRoute, h.UpdateTool)
 }
@@ -51,7 +51,7 @@ func (h *HttpApi) DeleteTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetAllTool(c *gin.Context) {
+func (h *HttpApi) GetAllTools(c *gin.Context) {
 	tools, err := h.app.GetAllTool()
 	if err != nil {
 		processAppError(c, err)
