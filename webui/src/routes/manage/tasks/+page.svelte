@@ -23,4 +23,5 @@
 </script>
 
 <ManageTab columns={columns} dataRows={processedRowData} />
+
 <style></style>
