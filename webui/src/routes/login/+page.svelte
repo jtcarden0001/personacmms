@@ -1,1 +1,13 @@
-<h1>Welcome to the Not-Implemented <strong>login</strong> page</h1>
+<h1>Welcome to the Partially-Implemented <strong>login</strong> page</h1>
+
+<form method="POST">
+	<label>
+		Email
+		<input name="email" type="email">
+	</label>
+	<label>
+		Password
+		<input name="password" type="password">
+	</label>
+	<button>Log in</button>
+</form>

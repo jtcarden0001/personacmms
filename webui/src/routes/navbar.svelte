@@ -1,9 +1,24 @@
 <script>
-    import "../app.css";
+  import "../app.css";
 
-    function handleDetailsClick() {
-        document.getElementById("AccountDetails").removeAttribute("open");
+  function handleDetailsClick() {
+    document.getElementById("AccountDetails").removeAttribute("open");
+  }
+
+  function getBaseManageLink(url) {
+    const splitLink = url.split("/")
+    if (splitLink.length < 3) {
+      return "/manage/work-orders"
     }
+
+    const targetlink = "/" + splitLink[1] + "/" + splitLink[2]
+    return targetlink
+  }
+
+  //TODO: dynamically generate this link so that it redirects to parent manage page of current location
+  // default to work-orders if navigating from a non-manage page
+  // i.e. when at /manage/equipment/1 it should redirect to /manage/equipment
+  let manageLink = "/manage/work-orders"
 
 </script>
 
@@ -14,7 +29,7 @@
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1">
-        <li><a href="/manage/work-orders">Manage</a></li>
+        <li><a href={manageLink}>Manage</a></li>
         <li><a href="/about">About</a></li>
         <li>
           <details id="AccountDetails">
