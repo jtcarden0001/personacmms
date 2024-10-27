@@ -25,7 +25,7 @@
                 {cell}
               </a>
             {/each}
-            <EntityTableRowSuffix />
+            <EntityTableRowSuffix deleteApi={row.scopedUrl}/>
           </div>
       {/each}
       <AddNew />

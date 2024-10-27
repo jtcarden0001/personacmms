@@ -14,11 +14,15 @@
             data.content[i].statusTitle
         ];
         
+        const scopedPath = "equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].taskId + "/work-orders/" + id;
         processedRowData.push({
             "id": id,
-            "itemRoute": "/manage/equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].taskId + "/work-orders/" + id + "/view",
-            "cells": row
+            "itemRoute": "/manage/" + scopedPath + "/view",
+            "cells": row,
+            "scopedUrl": "http://localhost:8080/api/v1/" + scopedPath
         });
+
+        console.log(processedRowData)
     }
 
 </script>
