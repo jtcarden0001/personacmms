@@ -17,7 +17,7 @@ OUT=bin/personacmms
 #
 PKG := 
 
-all: tidy format build
+all: tidy format build test
 
 clean:
 	go clean
