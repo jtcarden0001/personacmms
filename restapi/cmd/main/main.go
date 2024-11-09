@@ -3,19 +3,16 @@ package main
 import (
 	"os"
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/app"
-	"github.com/jtcarden0001/personacmms/restapi/internal/httpapi"
+	ap "github.com/jtcarden0001/personacmms/restapi/internal/app"
+	api "github.com/jtcarden0001/personacmms/restapi/internal/httpapi"
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 )
 
 func main() {
-	storeLayer := getStore()
-
-	appLayer := app.New(storeLayer)
-
-	httpLayer := httpapi.New(appLayer)
-
-	httpLayer.Start()
+	store := getStore()
+	app := ap.New(store)
+	http := api.New(app)
+	http.Start()
 }
 
 // The store has two identical schemas, one for production and one for testing.
