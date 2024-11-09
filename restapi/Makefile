@@ -1,6 +1,6 @@
 GOCMD=GO111MODULE=on GOARCH=amd64 go
 GOBUILD=$(GOCMD) build -v 
-# GOTEST=$(GOCMD) test -v 
+GOTEST=$(GOCMD) test -v 
 GOHOSTOS=$(strip $(shell $(GOCMD) env get GOHOSTOS))
 
 
@@ -37,4 +37,9 @@ build-windows:
 
 build-linux:
 	GOOS=linux $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUT) github.com/jtcarden0001/personacmms/restapi/cmd/main
+
+test: unittest
+
+unittest: 
+	$(GOTEST) ./internal/...
 
