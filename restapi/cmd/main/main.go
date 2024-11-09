@@ -21,7 +21,7 @@ func main() {
 // The store has two identical schemas, one for production and one for testing.
 // This function returns the appropriate store based on the environment.
 func getStore() st.Store {
-	testEnv := os.Getenv("personacmmstestenv")
+	testEnv := os.Getenv("PERSONACMMSTESTENV")
 	if testEnv == "true" {
 		return st.NewTest()
 	}

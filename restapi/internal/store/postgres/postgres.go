@@ -14,7 +14,7 @@ type Store struct {
 	db   *sql.DB
 }
 
-var prodDbName = "personacmms"
+var prodDbName = "personacmms-prod"
 var testDbName = "personacmms-test"
 
 // All of the entity store code is structured almost exactly the same.  Probably a way to reduce code using generics or something.
@@ -28,9 +28,9 @@ func NewTest() *Store {
 }
 
 func getStore(dbName string) *Store {
-	pgUser := os.Getenv("postgresuser")
-	pgPass := os.Getenv("postgrespass")
-	pgHost := os.Getenv("postgreshost")
+	pgUser := os.Getenv("POSTGRESUSER")
+	pgPass := os.Getenv("POSTGRESPASS")
+	pgHost := os.Getenv("POSTGRESHOST")
 
 	connStr := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", pgUser, pgPass, pgHost, dbName)
 
