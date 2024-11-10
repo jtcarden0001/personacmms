@@ -8,25 +8,25 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerEquipmentCategoryRoutes() {
+func (h *HttpApi) registerAssetCategoryRoutes() {
 	baseRoute := fmt.Sprintf("%s/categories", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:categoryId", baseRoute)
 
-	h.router.POST(baseRoute, h.createEquipmentCategory)
-	h.router.DELETE(individualRoute, h.deleteEquipmentCategory)
-	h.router.GET(baseRoute, h.getAllEquipmentCategory)
-	h.router.GET(individualRoute, h.getEquipmentCategory)
-	h.router.PUT(individualRoute, h.updateEquipmentCategory) // accepts object id in url, disregards id in body, may revisit this design
+	h.router.POST(baseRoute, h.createAssetCategory)
+	h.router.DELETE(individualRoute, h.deleteAssetCategory)
+	h.router.GET(baseRoute, h.getAllAssetCategory)
+	h.router.GET(individualRoute, h.getAssetCategory)
+	h.router.PUT(individualRoute, h.updateAssetCategory) // accepts object id in url, disregards id in body, may revisit this design
 }
 
-func (h *HttpApi) createEquipmentCategory(c *gin.Context) {
-	var ec tp.EquipmentCategory
+func (h *HttpApi) createAssetCategory(c *gin.Context) {
+	var ec tp.AssetCategory
 	if err := c.BindJSON(&ec); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.app.CreateEquipmentCategory(ec.Title)
+	id, err := h.app.CreateAssetCategory(ec.Title)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -35,14 +35,14 @@ func (h *HttpApi) createEquipmentCategory(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteEquipmentCategory(c *gin.Context) {
+func (h *HttpApi) deleteAssetCategory(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("categoryId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = h.app.DeleteEquipmentCategory(id)
+	err = h.app.DeleteAssetCategory(id)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -50,32 +50,32 @@ func (h *HttpApi) deleteEquipmentCategory(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllEquipmentCategory(c *gin.Context) {
-	equipmentCategories, err := h.app.GetAllEquipmentCategory()
+func (h *HttpApi) getAllAssetCategory(c *gin.Context) {
+	assetCategories, err := h.app.GetAllAssetCategory()
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, equipmentCategories) // switch to .JSON() for performance
+		c.IndentedJSON(200, assetCategories) // switch to .JSON() for performance
 	}
 }
 
-func (h *HttpApi) getEquipmentCategory(c *gin.Context) {
+func (h *HttpApi) getAssetCategory(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("categoryId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	equipmentCategory, err := h.app.GetEquipmentCategory(id)
+	assetCategory, err := h.app.GetAssetCategory(id)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, equipmentCategory) // switch to .JSON() for performance
+		c.IndentedJSON(200, assetCategory) // switch to .JSON() for performance
 	}
 }
 
-func (h *HttpApi) updateEquipmentCategory(c *gin.Context) {
-	var ec tp.EquipmentCategory
+func (h *HttpApi) updateAssetCategory(c *gin.Context) {
+	var ec tp.AssetCategory
 	if err := c.BindJSON(&ec); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -87,7 +87,7 @@ func (h *HttpApi) updateEquipmentCategory(c *gin.Context) {
 		return
 	}
 
-	err = h.app.UpdateEquipmentCategory(id, ec.Title)
+	err = h.app.UpdateAssetCategory(id, ec.Title)
 	if err != nil {
 		processAppError(c, err)
 	} else {

@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetNotExists(t *testing.T) {
-	_, err := testStore.GetEquipment(0)
+	_, err := testStore.GetAsset(0)
 	errString := "sql: no rows in result set"
 	if err.Error() != errString {
 		t.Errorf("Get() should have failed with error: %s", errString)
@@ -16,7 +16,7 @@ func TestGetNotExists(t *testing.T) {
 }
 
 func TestDeleteNotExists(t *testing.T) {
-	err := testStore.DeleteEquipment(0)
+	err := testStore.DeleteAsset(0)
 	if err != nil {
 		t.Errorf("Delete() record that does not exist should produce no error")
 	}
@@ -25,100 +25,100 @@ func TestDeleteNotExists(t *testing.T) {
 // TODO: parse out the initialization code so that we only wipe the db and initialize foreign keys once per test run.
 func TestCreateGetDeleteGet(t *testing.T) {
 	// initialization
-	ecId, err := initEquipmentFKs()
+	ecId, err := initAssetFKs()
 	if err != nil {
-		t.Errorf("initEquipmentFKs() failed: %v", err)
+		t.Errorf("initAssetFKs() failed: %v", err)
 		return
 	}
 
 	//// Test
 	// Create
-	id, err := testStore.CreateEquipment("test equipment", 2023, "test make", "test model number", "test description", ecId)
+	id, err := testStore.CreateAsset("test asset", 2023, "test make", "test model number", "test description", ecId)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Get
-	_, err = testStore.GetEquipment(id)
+	_, err = testStore.GetAsset(id)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
 
 	// Delete
-	err = testStore.DeleteEquipment(id)
+	err = testStore.DeleteAsset(id)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
 	// Get
-	_, err = testStore.GetEquipment(id)
+	_, err = testStore.GetAsset(id)
 	if err == nil {
 		t.Errorf("Get() should have failed")
 	}
 
-	err = teardownEquipment(id, ecId)
+	err = teardownAsset(id, ecId)
 	if err != nil {
-		t.Errorf("teardownEquipment() failed: %v", err)
+		t.Errorf("teardownAsset() failed: %v", err)
 	}
 }
 
 func TestGetAllCreateCreateGetAll(t *testing.T) {
 	// initialization
-	ecId, err := initEquipmentFKs()
+	ecId, err := initAssetFKs()
 	if err != nil {
-		t.Errorf("initEquipmentFKs() failed: %v", err)
+		t.Errorf("initAssetFKs() failed: %v", err)
 		return
 	}
 
 	//// Test
 	// Get all
-	e1, err := testStore.GetAllEquipment()
+	e1, err := testStore.GetAllAsset()
 	if err != nil {
 		t.Errorf("GetAll() failed: %v", err)
 	}
 	origLength := len(e1)
 
 	// Create
-	id1, err := testStore.CreateEquipment("test equipment 1", 2023, "test make 1", "test model number 1", "test description 1", ecId)
+	id1, err := testStore.CreateAsset("test asset 1", 2023, "test make 1", "test model number 1", "test description 1", ecId)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Create
 	var id2 int
-	id2, err = testStore.CreateEquipment("test equipment 2", 2023, "test make 2", "test model number 2", "test description 2", ecId)
+	id2, err = testStore.CreateAsset("test asset 2", 2023, "test make 2", "test model number 2", "test description 2", ecId)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Get all
-	var e2 []tp.Equipment
-	e2, err = testStore.GetAllEquipment()
+	var e2 []tp.Asset
+	e2, err = testStore.GetAllAsset()
 	if err != nil {
 		t.Errorf("GetAll() failed: %v", err)
 	}
 	assert.Equal(t, origLength+2, len(e2))
 
 	// Delete
-	err = testStore.DeleteEquipment(id1)
+	err = testStore.DeleteAsset(id1)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
 	// Delete
-	err = testStore.DeleteEquipment(id2)
+	err = testStore.DeleteAsset(id2)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = teardownEquipment(id1, ecId)
+	err = teardownAsset(id1, ecId)
 	if err != nil {
-		t.Errorf("teardownEquipment() failed: %v", err)
+		t.Errorf("teardownAsset() failed: %v", err)
 	}
 }
 
-func initEquipmentFKs() (int, error) {
-	ecId, err := testStore.CreateEquipmentCategory("test equipment category")
+func initAssetFKs() (int, error) {
+	ecId, err := testStore.CreateAssetCategory("test asset category")
 	if err != nil {
 		return 0, err
 	}
@@ -126,12 +126,12 @@ func initEquipmentFKs() (int, error) {
 	return ecId, nil
 }
 
-func teardownEquipment(id int, ecId int) error {
-	err := teardownTable("equipment", &id)
+func teardownAsset(id int, ecId int) error {
+	err := teardownTable("asset", &id)
 	if err != nil {
 		return err
 	}
 
-	err = teardownTable("equipment_category", &ecId)
+	err = teardownTable("asset_category", &ecId)
 	return err
 }

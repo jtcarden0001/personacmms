@@ -2,7 +2,7 @@
     import EntityTable from "./entitytable.svelte";
     import SideNav from "./sidenav.svelte";
 
-    export let columns = ["Title", "Equipment", "Status"];
+    export let columns = ["Title", "Asset", "Status"];
     export let dataRows = [];
 </script>
 

@@ -25,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	equipmentCmd.AddCommand(updateCmd)
+	assetCmd.AddCommand(updateCmd)
 
 	// Here you will define your flags and configuration settings.
 

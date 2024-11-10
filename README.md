@@ -47,7 +47,7 @@ projects found within:
         * implement api integration for creating TODOs 
 
 * Future Features
-    * Add equipment tagging and filtering based on tag
+    * Add asset tagging and filtering based on tag
 
 
 ### webui: a web based interface.

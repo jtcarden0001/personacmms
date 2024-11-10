@@ -10,13 +10,13 @@ import (
 
 func (h *HttpApi) registerTaskRoutes() {
 	baseAllRoute := fmt.Sprintf("%s/tasks", routePrefix)
-	baseEqRoute := fmt.Sprintf("%s/equipment/:equipmentId/tasks", routePrefix)
+	baseEqRoute := fmt.Sprintf("%s/asset/:assetId/tasks", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:taskId", baseEqRoute)
 
 	h.router.POST(baseEqRoute, h.createTask)
 	h.router.DELETE(individualRoute, h.deleteTask)
 	h.router.GET(baseAllRoute, h.getAllTask)
-	h.router.GET(baseEqRoute, h.getAllTaskByEquipment)
+	h.router.GET(baseEqRoute, h.getAllTaskByAsset)
 	h.router.GET(individualRoute, h.getTask)
 	h.router.PUT(individualRoute, h.updateTask)
 }
@@ -28,13 +28,13 @@ func (h *HttpApi) createTask(c *gin.Context) {
 		return
 	}
 
-	equipmentId, err := strconv.Atoi(c.Param("equipmentId"))
+	assetId, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.app.CreateTask(t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, equipmentId)
+	id, err := h.app.CreateTask(t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, assetId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -67,14 +67,14 @@ func (h *HttpApi) getAllTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTaskByEquipment(c *gin.Context) {
-	equipmentId, err := strconv.Atoi(c.Param("equipmentId"))
+func (h *HttpApi) getAllTaskByAsset(c *gin.Context) {
+	assetId, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	tasks, err := h.app.GetAllTaskByEquipmentId(equipmentId)
+	tasks, err := h.app.GetAllTaskByAssetId(assetId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -104,7 +104,7 @@ func (h *HttpApi) updateTask(c *gin.Context) {
 		return
 	}
 
-	equipmentId, err := strconv.Atoi(c.Param("equipmentId"))
+	assetId, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -116,7 +116,7 @@ func (h *HttpApi) updateTask(c *gin.Context) {
 		return
 	}
 
-	err = h.app.UpdateTask(taskid, t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, equipmentId)
+	err = h.app.UpdateTask(taskid, t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, assetId)
 	if err != nil {
 		processAppError(c, err)
 	} else {

@@ -12,7 +12,7 @@ type WorkOrder interface {
 	CreateWorkOrder(int, int, tm.Time, *tm.Time) (int, error)
 	DeleteWorkOrder(int) error
 	GetAllWorkOrder() ([]tp.WorkOrder, error)
-	GetAllWorkOrderByEquipmentId(int) ([]tp.WorkOrder, error)
+	GetAllWorkOrderByAssetId(int) ([]tp.WorkOrder, error)
 	GetWorkOrder(int) (tp.WorkOrder, error)
 	UpdateWorkOrder(int, int, tm.Time, *tm.Time) error
 }
@@ -54,7 +54,7 @@ func (pg *Store) GetAllWorkOrder() ([]tp.WorkOrder, error) {
 	return orders, err
 }
 
-func (pg *Store) GetAllWorkOrderByEquipmentId(equipmentId int) ([]tp.WorkOrder, error) {
+func (pg *Store) GetAllWorkOrderByAssetId(assetId int) ([]tp.WorkOrder, error) {
 	return []tp.WorkOrder{}, errors.New("not implemented")
 }
 

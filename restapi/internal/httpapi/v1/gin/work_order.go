@@ -11,7 +11,7 @@ import (
 
 func (h *HttpApi) registerWorkOrderRoutes() {
 	baseRoute := fmt.Sprintf("%s/work-orders", routePrefix)
-	baseRouteByTask := fmt.Sprintf("%s/equipment/:equipmentId/tasks/:taskId/work-orders", routePrefix)
+	baseRouteByTask := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/work-orders", routePrefix)
 	individualRouteByTask := fmt.Sprintf("%s/:workOrderId", baseRouteByTask)
 
 	h.router.POST(baseRouteByTask, h.createWorkOrderByTask)
@@ -138,14 +138,14 @@ func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
 }
 
 type interpolatedWorkOrder struct {
-	Id             int      `json:"id"`
-	TaskId         int      `json:"taskId"`
-	TaskTitle      string   `json:"taskTitle" binding:"required"`
-	StatusTitle    string   `json:"statusTitle" binding:"required"`
-	EquipmentId    int      `json:"equipmentId" binding:"required"`
-	EquipmentTitle string   `json:"equipmentTitle" binding:"required"`
-	CreatedDate    tm.Time  `json:"createdDate" binding:"required"`
-	CompletedDate  *tm.Time `json:"completedDate"`
+	Id            int      `json:"id"`
+	TaskId        int      `json:"taskId"`
+	TaskTitle     string   `json:"taskTitle" binding:"required"`
+	StatusTitle   string   `json:"statusTitle" binding:"required"`
+	AssetId       int      `json:"assetId" binding:"required"`
+	AssetTitle    string   `json:"assetTitle" binding:"required"`
+	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
+	CompletedDate *tm.Time `json:"completedDate"`
 }
 
 func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
@@ -171,7 +171,7 @@ func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, 
 		return interpolatedWorkOrder{}, err
 	}
 
-	e, err := h.app.GetEquipment(t.EquipmentId)
+	e, err := h.app.GetAsset(t.AssetId)
 	if err != nil {
 		return interpolatedWorkOrder{}, err
 	}
@@ -182,13 +182,13 @@ func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, 
 	}
 
 	return interpolatedWorkOrder{
-		Id:             wo.Id,
-		TaskId:         wo.TaskId,
-		TaskTitle:      t.Title,
-		StatusTitle:    s.Title,
-		EquipmentId:    t.EquipmentId,
-		EquipmentTitle: e.Title,
-		CreatedDate:    wo.CreatedDate,
-		CompletedDate:  wo.CompletedDate,
+		Id:            wo.Id,
+		TaskId:        wo.TaskId,
+		TaskTitle:     t.Title,
+		StatusTitle:   s.Title,
+		AssetId:       t.AssetId,
+		AssetTitle:    e.Title,
+		CreatedDate:   wo.CreatedDate,
+		CompletedDate: wo.CompletedDate,
 	}, nil
 }

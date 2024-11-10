@@ -1,7 +1,7 @@
 <script>
     let basePath = '/manage';
     let woPath = 'work-orders';
-    let eqPath = 'equipment';
+    let eqPath = 'asset';
     let taskPath = 'tasks';
     let toolPath = 'tools';
     let coPath = 'consumables';
@@ -10,7 +10,7 @@
 
     const pathTitleMap = new Map([
         [woPath, "Work Orders"],
-        [eqPath, "Equipment"],
+        [eqPath, "Asset"],
         [taskPath, "Tasks"],
         [toolPath, "Tools"],
         [coPath, "Consumables"]

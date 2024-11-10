@@ -1,6 +1,6 @@
 package types
 
-type Equipment struct {
+type Asset struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title" binding:"required"`
 	Year        int    `json:"year" binding:"required"`

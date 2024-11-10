@@ -9,7 +9,7 @@ import (
 )
 
 func (h *HttpApi) registerTaskConsumableRoutes() {
-	baseRoute := fmt.Sprintf("%s/equipment/:equipmentId/tasks/:taskId/consumables", routePrefix)
+	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/consumables", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:consumableId", baseRoute)
 
 	h.router.POST(individualRoute, h.createTaskConsumable)

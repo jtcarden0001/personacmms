@@ -6,19 +6,19 @@ DROP TABLE consumable;
 DROP TABLE work_order;
 DROP TABLE work_order_status;
 DROP TABLE task;
-DROP TABLE equipment;
-DROP TABLE equipment_category;
+DROP TABLE asset;
+DROP TABLE asset_category;
 DROP TABLE usage_periodicity_unit;
 DROP TABLE time_periodicity_unit;
 
 ---- db schema
-CREATE TABLE equipment_category (
+CREATE TABLE asset_category (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE equipment (
+CREATE TABLE asset (
   id INT GENERATED ALWAYS AS IDENTITY,
   title VARCHAR NOT NULL,
   year INT NOT NULL,
@@ -27,9 +27,9 @@ CREATE TABLE equipment (
   description VARCHAR NOT NULL,
   category_id INT NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_equipment__equipment_category
+  CONSTRAINT fk_asset__asset_category
     FOREIGN KEY (category_id)
-        REFERENCES equipment_category(id)
+        REFERENCES asset_category(id)
 );
 
 CREATE TABLE usage_periodicity_unit (
@@ -52,7 +52,7 @@ CREATE TABLE task (
   time_periodicity_unit_id INT,
   usage_periodicity_quantity INT,
   usage_periodicity_unit_id INT,
-  equipment_id INT NOT NULL,
+  asset_id INT NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_task__time_periodicity_unit_id
     FOREIGN KEY (time_periodicity_unit_id)
@@ -62,9 +62,9 @@ CREATE TABLE task (
     FOREIGN KEY (usage_periodicity_unit_id)
         REFERENCES usage_periodicity_unit(id)
         ON DELETE SET NULL,
-  CONSTRAINT fk_task__equipment_id
-    FOREIGN KEY (equipment_id)
-      REFERENCES equipment(id)
+  CONSTRAINT fk_task__asset_id
+    FOREIGN KEY (asset_id)
+      REFERENCES asset(id)
       ON DELETE CASCADE
 );
 

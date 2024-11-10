@@ -1,10 +1,10 @@
 -- Assumption is this is run on a clean database
 
-INSERT INTO equipment_category (title) VALUES ('Test Category 1');
-INSERT INTO equipment_category (title) VALUES ('Test Category 2');
+INSERT INTO asset_category (title) VALUES ('Test Category 1');
+INSERT INTO asset_category (title) VALUES ('Test Category 2');
 
-INSERT INTO equipment (title, year, make, model_number, description, category_id) VALUES ('Test Equipment 1', 2020, 'Test Make 1', 'Test Model Number 1', 'Test Description 1', 1);
-INSERT INTO equipment (title, year, make, model_number, description, category_id) VALUES ('Test Equipment 2', 2020, 'Test Make 2', 'Test Model Number 2', 'Test Description 2', 2);
+INSERT INTO asset (title, year, make, model_number, description, category_id) VALUES ('Test asset 1', 2020, 'Test Make 1', 'Test Model Number 1', 'Test Description 1', 1);
+INSERT INTO asset (title, year, make, model_number, description, category_id) VALUES ('Test asset 2', 2020, 'Test Make 2', 'Test Model Number 2', 'Test Description 2', 2);
 
 INSERT INTO usage_periodicity_unit (title) VALUES ('Miles');
 INSERT INTO usage_periodicity_unit (title) VALUES ('Hours');
@@ -15,8 +15,8 @@ INSERT INTO time_periodicity_unit (title) VALUES ('Week');
 INSERT INTO time_periodicity_unit (title) VALUES ('Month');
 INSERT INTO time_periodicity_unit (title) VALUES ('Year');
 
-INSERT INTO task (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, equipment_id) VALUES ('Test Task 1', 'Test Instructions 1', 1, 1, 1, 1, 1);
-INSERT INTO task (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, equipment_id) VALUES ('Test Task 2', 'Test Instructions 2', 2, 2, 2, 2, 2);
+INSERT INTO task (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test Task 1', 'Test Instructions 1', 1, 1, 1, 1, 1);
+INSERT INTO task (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test Task 2', 'Test Instructions 2', 2, 2, 2, 2, 2);
 
 /* TODO: make this some kind of enum that is sourced from one place */
 INSERT INTO work_order_status (title) VALUES ('New');

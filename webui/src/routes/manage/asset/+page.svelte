@@ -14,7 +14,7 @@
         
         processedRowData.push({
             "id": id,
-            "itemRoute": "/manage/equipment/" + data.content[i].id + "/view",
+            "itemRoute": "/manage/asset/" + data.content[i].id + "/view",
             "cells": row
         });
     }

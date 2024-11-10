@@ -8,7 +8,7 @@ import (
 )
 
 func (h *HttpApi) registerTaskToolRoutes() {
-	baseRoute := fmt.Sprintf("%s/equipment/:equipmentId/tasks/:taskId/tools", routePrefix)
+	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/tools", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
 
 	h.router.POST(individualRoute, h.createTaskTool)

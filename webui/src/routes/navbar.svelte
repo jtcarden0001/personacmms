@@ -17,7 +17,7 @@
 
   //TODO: dynamically generate this link so that it redirects to parent manage page of current location
   // default to work-orders if navigating from a non-manage page
-  // i.e. when at /manage/equipment/1 it should redirect to /manage/equipment
+  // i.e. when at /manage/asset/1 it should redirect to /manage/asset
   let manageLink = "/manage/work-orders"
 
 </script>

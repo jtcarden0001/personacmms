@@ -3,19 +3,19 @@
 
     export let data = {"content":[]};
 
-    let columns = ["Title", "Equipment"];
+    let columns = ["Title", "Asset"];
     const processedRowData = [];
     for (let i = 0; i < data.content.length; i++) {
         let id = data.content[i].id;
         // ensure this order matches the order of the columns
         let row = [
             data.content[i].title,
-            data.content[i].equipmentId
+            data.content[i].assetId
         ];
         
         processedRowData.push({
             "id": id,
-            "itemRoute": "/manage/equipment/" + data.content[i].equipmentId + "/tasks/" + data.content[i].id + "/view",
+            "itemRoute": "/manage/asset/" + data.content[i].assetId + "/tasks/" + data.content[i].id + "/view",
             "cells": row
         });
     }

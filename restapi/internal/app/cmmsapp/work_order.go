@@ -10,7 +10,7 @@ type WorkOrder interface {
 	CreateWorkOrder(int, int, tm.Time, *tm.Time) (int, error)
 	DeleteWorkOrder(int) error
 	GetAllWorkOrder() ([]tp.WorkOrder, error)
-	GetAllWorkOrderByEquipmentId(int) ([]tp.WorkOrder, error)
+	GetAllWorkOrderByAssetId(int) ([]tp.WorkOrder, error)
 	GetWorkOrder(int) (tp.WorkOrder, error)
 	UpdateWorkOrder(int, int, tm.Time, *tm.Time) error
 }
@@ -27,8 +27,8 @@ func (a *App) GetAllWorkOrder() ([]tp.WorkOrder, error) {
 	return a.db.GetAllWorkOrder()
 }
 
-func (a *App) GetAllWorkOrderByEquipmentId(id int) ([]tp.WorkOrder, error) {
-	return a.db.GetAllWorkOrderByEquipmentId(id)
+func (a *App) GetAllWorkOrderByAssetId(id int) ([]tp.WorkOrder, error) {
+	return a.db.GetAllWorkOrderByAssetId(id)
 }
 
 func (a *App) GetWorkOrder(id int) (tp.WorkOrder, error) {

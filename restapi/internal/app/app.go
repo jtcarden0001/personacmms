@@ -8,8 +8,8 @@ import (
 // App layer hosts the business logic (To be implemented) and forwards requests to the Store layer.
 type App interface {
 	imp.Consumable
-	imp.EquipmentCategory
-	imp.Equipment
+	imp.AssetCategory
+	imp.Asset
 	imp.TaskConsumable
 	imp.TaskTool
 	imp.Task
