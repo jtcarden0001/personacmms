@@ -1,135 +1,203 @@
 ---- in case you want to wipe the db schema
-DROP TABLE task_tool;
-DROP TABLE tool;
-DROP TABLE task_consumable;
+DROP TABLE workorder;
+DROP TABLE workorderstatus;
+DROP TABLE assettask_usagetrigger;
+DROP TABLE usagetrigger;
+DROP TABLE usageunit;
+DROP TABLE assettask_timetrigger;
+DROP TABLE timetrigger;
+DROP TABLE timeunit;
+DROP TABLE assettask_consumable;
 DROP TABLE consumable;
-DROP TABLE work_order;
-DROP TABLE work_order_status;
+DROP TABLE assettask_tool;
+DROP TABLE tool;
+DROP TABLE asset_task;
 DROP TABLE task;
 DROP TABLE asset;
-DROP TABLE asset_category;
-DROP TABLE usage_periodicity_unit;
-DROP TABLE time_periodicity_unit;
+DROP TABLE assetgroup;
+DROP TABLE category;
 
----- db schema
-CREATE TABLE asset_category (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "category" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE asset (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  year INT NOT NULL,
-  make VARCHAR NOT NULL,
-  model_number VARCHAR NOT NULL,
-  description VARCHAR NOT NULL,
-  category_id INT NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_asset__asset_category
-    FOREIGN KEY (category_id)
-        REFERENCES asset_category(id)
+CREATE TABLE "assetgroup" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE usage_periodicity_unit (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "asset" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  "year" int,
+  "make" varchar,
+  "model_number" varchar,
+  "description" varchar,
+  "category_id" uuid,
+  "group_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "FK_asset.group_id"
+    FOREIGN KEY ("group_id")
+      REFERENCES "assetgroup"("id"),
+  CONSTRAINT "FK_asset.category_id"
+    FOREIGN KEY ("category_id")
+      REFERENCES "category"("id")
 );
 
-CREATE TABLE time_periodicity_unit (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "task" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  "description" varchar,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE task (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  instructions VARCHAR NOT NULL,
-  time_periodicity_quantity INT,
-  time_periodicity_unit_id INT,
-  usage_periodicity_quantity INT,
-  usage_periodicity_unit_id INT,
-  asset_id INT NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_task__time_periodicity_unit_id
-    FOREIGN KEY (time_periodicity_unit_id)
-        REFERENCES time_periodicity_unit(id)
-        ON DELETE SET NULL,
-  CONSTRAINT fk_task__usage_periodicity_unit_id
-    FOREIGN KEY (usage_periodicity_unit_id)
-        REFERENCES usage_periodicity_unit(id)
-        ON DELETE SET NULL,
-  CONSTRAINT fk_task__asset_id
-    FOREIGN KEY (asset_id)
-      REFERENCES asset(id)
-      ON DELETE CASCADE
+CREATE TABLE "asset_task" (
+  "id" uuid NOT NULL,
+  "unique_instructions" varchar,
+  "asset_id" uuid NOT NULL,
+  "task_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "FK_asset_task.asset_id"
+    FOREIGN KEY ("asset_id")
+      REFERENCES "asset"("id"),
+  CONSTRAINT "FK_asset_task.task_id"
+    FOREIGN KEY ("task_id")
+      REFERENCES "task"("id")
 );
 
-CREATE TABLE work_order_status (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "tool" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  "size" varchar,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE work_order (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  task_id INT NOT NULL,
-  status_id INT NOT NULL,
-  create_date TIMESTAMPTZ NOT NULL,
-  complete_date TIMESTAMPTZ,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_work_order__task_id
-    FOREIGN KEY (task_id)
-      REFERENCES task(id)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_work_order__status_id
-    FOREIGN KEY (status_id)
-      REFERENCES work_order_status(id)
+CREATE TABLE "assettask_tool" (
+  "asset_task_id" uuid NOT NULL,
+  "tool_id" uuid NOT NULL,
+  CONSTRAINT "FK_assettask_tool.asset_task_id"
+    FOREIGN KEY ("asset_task_id")
+      REFERENCES "asset_task"("id"),
+  CONSTRAINT "FK_assettask_tool.tool_id"
+    FOREIGN KEY ("tool_id")
+      REFERENCES "tool"("id")
 );
 
-CREATE TABLE tool (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  size VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "consumable" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE task_tool (
-  task_id INT NOT NULL,
-  tool_id INT NOT NULL,
-  PRIMARY KEY (task_id, tool_id),
-  CONSTRAINT fk_task_tool__task_id
-    FOREIGN KEY (task_id)
-      REFERENCES task(id)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_task_tool__tool_id
-    FOREIGN KEY (tool_id)
-      REFERENCES tool(id)
+CREATE TABLE "assettask_consumable" (
+  "quantity_note" varchar NOT NULL,
+  "asset_task_id" uuid NOT NULL,
+  "consumable_id" uuid NOT NULL,
+  CONSTRAINT "FK_assettask_consumable.asset_task_id"
+    FOREIGN KEY ("asset_task_id")
+      REFERENCES "asset_task"("id"),
+  CONSTRAINT "FK_assettask_consumable.consumable_id"
+    FOREIGN KEY ("consumable_id")
+      REFERENCES "consumable"("id")
 );
 
--- TODO: add description or dedicated part number field
-CREATE TABLE consumable (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE "timeunit" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
 );
 
-CREATE TABLE task_consumable (
-  task_id INT NOT NULL,
-  consumable_id INT NOT NULL,
-  quantity_note VARCHAR NOT NULL,
-  PRIMARY KEY (task_id, consumable_id),
-  CONSTRAINT fk_task_consumable__task_id
-    FOREIGN KEY (task_id)
-      REFERENCES task(id)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_task_consumable__consumable_id
-    FOREIGN KEY (consumable_id)
-      REFERENCES consumable(id)
+CREATE TABLE "timetrigger" (
+  "id" uuid NOT NULL,
+  "quanitity" int NOT NULL,
+  "timeunit_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "FK_timetrigger.timeunit_id"
+    FOREIGN KEY ("timeunit_id")
+      REFERENCES "timeunit"("id")
 );
+
+CREATE TABLE "assettask_timetrigger" (
+  "asset_task_id" uuid NOT NULL,
+  "timetrigger_id" uuid NOT NULL,
+  CONSTRAINT "FK_assettask_timetrigger.asset_task_id"
+    FOREIGN KEY ("asset_task_id")
+      REFERENCES "asset_task"("id"),
+  CONSTRAINT "FK_assettask_timetrigger.timetrigger_id"
+    FOREIGN KEY ("timetrigger_id")
+      REFERENCES "timetrigger"("id")
+);
+
+CREATE TABLE "usageunit" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
+);
+
+CREATE TABLE "usagetrigger" (
+  "id" uuid NOT NULL,
+  "quanitity" int NOT NULL,
+  "usageunit_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "FK_usagetrigger.usageunit_id"
+    FOREIGN KEY ("usageunit_id")
+      REFERENCES "usageunit"("id")
+);
+
+CREATE TABLE "assettask_usagetrigger" (
+  "asset_task_id" uuid NOT NULL,
+  "usagetrigger_id" uuid NOT NULL,
+  CONSTRAINT "FK_assettask_usagetrigger.asset_task_id"
+    FOREIGN KEY ("asset_task_id")
+      REFERENCES "asset_task"("id"),
+  CONSTRAINT "FK_assettask_usagetrigger.usagetrigger_id"
+    FOREIGN KEY ("usagetrigger_id")
+      REFERENCES "usagetrigger"("id")
+);
+
+CREATE TABLE "workorderstatus" (
+  "id" uuid NOT NULL,
+  "title" varchar NOT NULL,
+  PRIMARY KEY ("id")
+);
+
+CREATE TABLE "workorder" (
+  "id" uuid NOT NULL,
+  "created_date" timestamptz NOT NULL,
+  "completed_date" timestamptz,
+  "task_id" uuid NOT NULL,
+  "status_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "FK_workorder.status_id"
+    FOREIGN KEY ("status_id")
+      REFERENCES "workorderstatus"("id"),
+  CONSTRAINT "FK_workorder.task_id"
+    FOREIGN KEY ("task_id")
+      REFERENCES "asset_task"("id")
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* static data not modified by app */
 

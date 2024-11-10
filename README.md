@@ -27,27 +27,6 @@ Personal computer maintenance management system
 
 projects found within: 
 ### restapi: A REST api to serve state and run background tasks on the data as business rules require
-* Stack:
-    * golang (gin for httpapi layer)
-    * PostgreSQL
-
-* TODO  
-    * Implement proper error propagation up from store layer through app layer to httpapi layer
-    * Implement proper app layer error handling in the httpapi layer (correct http status codes, etc.)
-    * Implement integration testing for REST calls through all the layers
-    * Implement app layer task frequency scanning / work order creation
-    * create a dockerfile to containerize the app
-    * add consistent logging
-        * log levels (Err, Warn, Info, Debug)
-        * log service response times
-        * trace requests through layers
-    * add integration with TODOist - can be used as an alternative UI (easier access less feature rich UI)
-        * implement feature flag
-        * implement monitoring for work order completion
-        * implement api integration for creating TODOs 
-
-* Future Features
-    * Add asset tagging and filtering based on tag
 
 
 ### webui: a web based interface.
