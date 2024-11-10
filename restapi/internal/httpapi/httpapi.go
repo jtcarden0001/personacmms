@@ -1,7 +1,7 @@
 package httpapi
 
 import (
-	a "github.com/jtcarden0001/personacmms/restapi/internal/app"
+	app "github.com/jtcarden0001/personacmms/restapi/internal/app"
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/httpapi/v1/gin"
 )
 
@@ -10,6 +10,6 @@ type HttpApi interface {
 	Start()
 }
 
-func New(injectedApp a.App) HttpApi {
+func New(injectedApp app.App) HttpApi {
 	return imp.New(injectedApp)
 }

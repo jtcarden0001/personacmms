@@ -131,5 +131,18 @@ CREATE TABLE task_consumable (
       REFERENCES consumable(id)
 );
 
+/* static data not modified by app */
+
+/* TODO: make this some kind of enum that is sourced from one place */
+INSERT INTO time_periodicity_unit (title) VALUES ('Day');
+INSERT INTO time_periodicity_unit (title) VALUES ('Week');
+INSERT INTO time_periodicity_unit (title) VALUES ('Month');
+INSERT INTO time_periodicity_unit (title) VALUES ('Year');
+
+/* TODO: make this some kind of enum that is sourced from one place */
+INSERT INTO work_order_status (title) VALUES ('New');
+INSERT INTO work_order_status (title) VALUES ('In Progress');
+INSERT INTO work_order_status (title) VALUES ('Complete');
+
 
 

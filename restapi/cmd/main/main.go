@@ -3,14 +3,14 @@ package main
 import (
 	"os"
 
-	ap "github.com/jtcarden0001/personacmms/restapi/internal/app"
+	application "github.com/jtcarden0001/personacmms/restapi/internal/app"
 	api "github.com/jtcarden0001/personacmms/restapi/internal/httpapi"
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 )
 
 func main() {
 	store := getStore()
-	app := ap.New(store)
+	app := application.New(store)
 	http := api.New(app)
 	http.Start()
 }
