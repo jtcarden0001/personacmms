@@ -179,38 +179,18 @@ CREATE TABLE "workorder" (
       REFERENCES "asset_task"("id")
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* static data not modified by app */
 
 /* TODO: make this some kind of enum that is sourced from one place */
-INSERT INTO time_periodicity_unit (title) VALUES ('Day');
-INSERT INTO time_periodicity_unit (title) VALUES ('Week');
-INSERT INTO time_periodicity_unit (title) VALUES ('Month');
-INSERT INTO time_periodicity_unit (title) VALUES ('Year');
+INSERT INTO timeunit (id, title) VALUES ('4137d18f-d548-4d75-b84b-5a92d36acbc7', 'Day');
+INSERT INTO timeunit (id, title) VALUES ('8deb9996-d0a2-4c3d-b551-de07f9d4b91b','Week');
+INSERT INTO timeunit (id, title) VALUES ('e85451ba-f3e2-41a2-85e3-97aa782e76b8','Month');
+INSERT INTO timeunit (id, title) VALUES ('f14475db-e969-4fb6-af55-341110e29df6','Year');
 
 /* TODO: make this some kind of enum that is sourced from one place */
-INSERT INTO work_order_status (title) VALUES ('New');
-INSERT INTO work_order_status (title) VALUES ('In Progress');
-INSERT INTO work_order_status (title) VALUES ('Complete');
+INSERT INTO workorderstatus (id, title) VALUES ('a0f7f76f-9b1b-4758-83d9-bc42da07fbe7','New');
+INSERT INTO workorderstatus (id, title) VALUES ('ff0ff8df-05fc-48b1-a5cf-d7af8b41cde4','In Progress');
+INSERT INTO workorderstatus (id, title) VALUES ('72d51235-c1c5-4387-a94f-efebd40d9eed','Complete');
 
 
 

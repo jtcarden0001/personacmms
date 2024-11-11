@@ -118,12 +118,12 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 }
 
 func initAssetFKs() (int, error) {
-	ecId, err := testStore.CreateAssetCategory("test asset category")
+	ecId, err := testStore.CreateCategory("test asset category")
 	if err != nil {
 		return 0, err
 	}
 
-	return ecId, nil
+	return int(ecId.ID()), nil
 }
 
 func teardownAsset(id int, ecId int) error {

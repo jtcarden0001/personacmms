@@ -9,7 +9,7 @@ import imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 type Store interface {
 	imp.Consumable
 	imp.Asset
-	imp.AssetCategory
+	imp.Category
 	imp.Task
 	imp.TaskConsumable
 	imp.TaskTool
