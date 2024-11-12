@@ -6,14 +6,14 @@ import (
 )
 
 type Category interface {
-	CreateCategory(string) (uid.UUID, error)
-	DeleteCategory(uid.UUID) error
+	CreateCategory(string) (tp.UUID, error)
+	DeleteCategory(tp.UUID) error
 	ListCategory() ([]tp.Category, error)
-	GetCategory(uid.UUID) (tp.Category, error)
-	UpdateCategory(uid.UUID, string) error
+	GetCategory(tp.UUID) (tp.Category, error)
+	UpdateCategory(tp.UUID, string) error
 }
 
-func (pg *Store) CreateCategory(title string) (uid.UUID, error) {
+func (pg *Store) CreateCategory(title string) (tp.UUID, error) {
 	id := uid.New()
 	query := `INSERT INTO category (id, title) VALUES ($1, $2) returning id`
 	_, err := pg.db.Exec(query, id.String(), title)
