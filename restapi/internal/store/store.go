@@ -7,9 +7,10 @@ import imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 // there is probably a way to greatly reduce the code quantity and generalize the interface implementation, just making the query strings
 // implementation specific but tbd....
 type Store interface {
-	imp.Consumable
 	imp.Asset
 	imp.Category
+	imp.Consumable
+	imp.Group
 	imp.Task
 	imp.TaskConsumable
 	imp.TaskTool
