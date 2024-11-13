@@ -68,9 +68,9 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	return cat, nil
 }
 
-func (pg *Store) UpdateCategory(title, newTitle string) (tp.Category, error) {
+func (pg *Store) UpdateCategory(oldTitle, newTitle string) (tp.Category, error) {
 	query := `UPDATE category SET title = $1 WHERE title = $2`
-	_, err := pg.db.Exec(query, newTitle, title)
+	_, err := pg.db.Exec(query, newTitle, oldTitle)
 	if err != nil {
 		return tp.Category{}, err
 	}
