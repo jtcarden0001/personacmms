@@ -1,12 +1,11 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 */
-package category
+package update
 
 import (
 	"fmt"
 
-	"github.com/jtcarden0001/personacmms/cmmsctl/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	cmd.UpdateCmd.AddCommand(updateCategoryCmd)
+	updateCmd.AddCommand(updateCategoryCmd)
 
 	// Here you will define your flags and configuration settings.
 

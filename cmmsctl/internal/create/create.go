@@ -1,16 +1,17 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 */
-package cmd
+package create
 
 import (
 	"fmt"
 
+	"github.com/jtcarden0001/personacmms/cmmsctl/internal/root"
 	"github.com/spf13/cobra"
 )
 
 // createCmd represents the create command
-var CreateCmd = &cobra.Command{
+var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -25,7 +26,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(CreateCmd)
+	root.RootCmd.AddCommand(createCmd)
 
 	// Here you will define your flags and configuration settings.
 
