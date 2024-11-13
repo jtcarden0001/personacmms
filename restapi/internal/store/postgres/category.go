@@ -6,24 +6,32 @@ import (
 )
 
 type Category interface {
-	CreateCategory(string) (tp.UUID, error)
-	DeleteCategory(tp.UUID) error
+	CreateCategory(string) (tp.Category, error)
+	DeleteCategory(string) error
 	ListCategory() ([]tp.Category, error)
-	GetCategory(tp.UUID) (tp.Category, error)
-	UpdateCategory(tp.UUID, string) error
+	GetCategory(string) (tp.Category, error)
+	UpdateCategory(string, string) (tp.Category, error)
 }
 
-func (pg *Store) CreateCategory(title string) (tp.UUID, error) {
+func (pg *Store) CreateCategory(title string) (tp.Category, error) {
 	id := uid.New()
 	query := `INSERT INTO category (id, title) VALUES ($1, $2) returning id`
 	_, err := pg.db.Exec(query, id.String(), title)
+	if err != nil {
+		return tp.Category{}, err
+	}
 
-	return id, err
+	category := tp.Category{
+		Id:    id,
+		Title: title,
+	}
+
+	return category, nil
 }
 
-func (pg *Store) DeleteCategory(id uid.UUID) error {
-	query := `DELETE FROM category WHERE id = $1`
-	_, err := pg.db.Exec(query, id.String())
+func (pg *Store) DeleteCategory(title string) error {
+	query := `DELETE FROM category WHERE title = $1`
+	_, err := pg.db.Exec(query, title)
 
 	return err
 }
@@ -49,17 +57,23 @@ func (pg *Store) ListCategory() ([]tp.Category, error) {
 	return categories, nil
 }
 
-func (pg *Store) GetCategory(id uid.UUID) (tp.Category, error) {
-	query := `SELECT id, title FROM category WHERE id = $1`
+func (pg *Store) GetCategory(title string) (tp.Category, error) {
+	query := `SELECT id, title FROM category WHERE title = $1`
 	var cat tp.Category
-	err := pg.db.QueryRow(query, id.String()).Scan(&cat.Id, &cat.Title)
+	err := pg.db.QueryRow(query, title).Scan(&cat.Id, &cat.Title)
+	if err != nil {
+		return tp.Category{}, err
+	}
 
-	return cat, err
+	return cat, nil
 }
 
-func (pg *Store) UpdateCategory(id uid.UUID, title string) error {
-	query := `UPDATE category SET title = $1 WHERE id = $2`
-	_, err := pg.db.Exec(query, title, id)
+func (pg *Store) UpdateCategory(title, newTitle string) (tp.Category, error) {
+	query := `UPDATE category SET title = $1 WHERE title = $2`
+	_, err := pg.db.Exec(query, newTitle, title)
+	if err != nil {
+		return tp.Category{}, err
+	}
 
-	return err
+	return pg.GetCategory(newTitle)
 }

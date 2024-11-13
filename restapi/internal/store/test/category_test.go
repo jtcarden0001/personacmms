@@ -6,13 +6,13 @@ import (
 
 func TestCategoryCRUD(t *testing.T) {
 	// Create
-	id, err := testStore.CreateCategory("test category")
+	cat1, err := testStore.CreateCategory("test category")
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// create a second category
-	id2, err := testStore.CreateCategory("test category 2")
+	cat2, err := testStore.CreateCategory("test category 2")
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -27,36 +27,36 @@ func TestCategoryCRUD(t *testing.T) {
 	}
 
 	// Get
-	cat, err := testStore.GetCategory(id)
+	getCat, err := testStore.GetCategory(cat1.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
-	if (cat.Id != id) || (cat.Title != "test category") {
-		t.Errorf("GetCategory() failed: expected %d, got %d", id, cat.Id)
+	if (getCat.Id != cat1.Id) || (getCat.Title != cat1.Title) {
+		t.Errorf("GetCategory() failed: expected %d, got %d", cat1.Id, getCat.Id)
 	}
 
 	// Update
-	err = testStore.UpdateCategory(id, "test category 3")
+	upCat, err := testStore.UpdateCategory(cat1.Title, "test category 3")
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
 	// Get
-	cat, err = testStore.GetCategory(id)
+	getCat, err = testStore.GetCategory(upCat.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
-	if (cat.Id != id) || (cat.Title != "test category 3") {
-		t.Errorf("GetCategory() failed: expected %d, got %d", id, cat.Id)
+	if (upCat.Id != getCat.Id) || (upCat.Title != getCat.Title) {
+		t.Errorf("GetCategory() failed: expected %d, got %d", getCat.Id, upCat.Id)
 	}
 
 	// Delete
-	err = testStore.DeleteCategory(id)
+	err = testStore.DeleteCategory(upCat.Title)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
 
-	err = testStore.DeleteCategory(id2)
+	err = testStore.DeleteCategory(cat2.Title)
 	if err != nil {
 		t.Errorf("Delete() failed: %v", err)
 	}
