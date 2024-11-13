@@ -20,6 +20,7 @@ DROP TABLE category;
 CREATE TABLE "category" (
   "title" varchar,
   "id" uuid NOT NULL UNIQUE,
+  "description" varchar,
   PRIMARY KEY ("title")
   );
 
@@ -80,7 +81,7 @@ CREATE TABLE "assettask_tool" (
   "tool_id" uuid NOT NULL,
   PRIMARY KEY ("assettask_id", "tool_id"),
   CONSTRAINT "FK_assettask_tool.asset_task_id"
-    FOREIGN KEY ("asset_task_id")
+    FOREIGN KEY ("assettask_id")
       REFERENCES "asset_task"("id"),
   CONSTRAINT "FK_assettask_tool.tool_id"
     FOREIGN KEY ("tool_id")
@@ -99,7 +100,7 @@ CREATE TABLE "assettask_consumable" (
   "quantity_note" varchar NOT NULL,
   PRIMARY KEY ("assettask_id", "consumable_id"),
   CONSTRAINT "FK_assettask_consumable.asset_task_id"
-    FOREIGN KEY ("asset_task_id")
+    FOREIGN KEY ("assettask_id")
       REFERENCES "asset_task"("id"),
   CONSTRAINT "FK_assettask_consumable.consumable_id"
     FOREIGN KEY ("consumable_id")
@@ -126,7 +127,7 @@ CREATE TABLE "assettask_timetrigger" (
   "assettask_id" uuid NOT NULL,
   "timetrigger_id" uuid NOT NULL,
   CONSTRAINT "FK_assettask_timetrigger.asset_task_id"
-    FOREIGN KEY ("asset_task_id")
+    FOREIGN KEY ("assettask_id")
       REFERENCES "asset_task"("id"),
   CONSTRAINT "FK_assettask_timetrigger.timetrigger_id"
     FOREIGN KEY ("timetrigger_id")
