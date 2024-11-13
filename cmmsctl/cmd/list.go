@@ -10,7 +10,7 @@ import (
 )
 
 // listCmd represents the list command
-var listCmd = &cobra.Command{
+var ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -25,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	assetCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(ListCmd)
 
 	// Here you will define your flags and configuration settings.
 

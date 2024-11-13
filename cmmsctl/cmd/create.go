@@ -10,7 +10,7 @@ import (
 )
 
 // createCmd represents the create command
-var createCmd = &cobra.Command{
+var CreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -25,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	assetCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(CreateCmd)
 
 	// Here you will define your flags and configuration settings.
 
