@@ -33,7 +33,7 @@ format:
 build: build-windows build-linux
 
 build-windows:
-	GOOS=windows $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUTEXE) github.com/jtcarden0001/personacmms/cmmsctl/cmd/main
+	GOOS=windows $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUTEXE) github.com/jtcarden0001/personacmms/cli/cmd/main
 
 build-linux:
-	GOOS=linux $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUT) github.com/jtcarden0001/personacmms/cmmsctl/cmd/main
+	GOOS=linux $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUT) github.com/jtcarden0001/personacmms/cli/cmd/main

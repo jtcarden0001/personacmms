@@ -6,7 +6,7 @@ package update
 import (
 	"fmt"
 
-	"github.com/jtcarden0001/personacmms/cmmsctl/internal/root"
+	"github.com/jtcarden0001/personacmms/cli/internal/root"
 	"github.com/spf13/cobra"
 )
 
