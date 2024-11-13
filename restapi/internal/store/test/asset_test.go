@@ -117,13 +117,14 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 	}
 }
 
-func initAssetFKs() (string, error) {
-	cat, err := testStore.CreateCategory("test asset category")
+// TODO: broken, need to fix, just patched nonsense to get it to compile
+func initAssetFKs() (int, error) {
+	_, err := testStore.CreateCategory("test asset category")
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
-	return cat.Title, nil
+	return 0, nil
 }
 
 func teardownAsset(id int, ecId int) error {

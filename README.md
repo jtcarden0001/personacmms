@@ -39,4 +39,4 @@ projects found within:
     * Build out design in SvelteKit app
     * Make UI responsive for mobile rendering
 
-### cli: a command line based interface, may not implement, tbd..
+### cli: a command line based interface cmmsctl

@@ -3,7 +3,7 @@
 #
 # Binaries for programs and plugins
 restapi/bin
-cmmsctl/bin
+cli/bin
 *.exe
 *.exe~
 *.dll
