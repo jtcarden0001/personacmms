@@ -4,7 +4,6 @@ Copyright © 2024 John Carden john.carden.02@gmail.com
 package root
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -44,7 +43,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cmmsctl.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cmmsctl/config)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -67,10 +66,18 @@ func initConfig() {
 		viper.SetConfigName("config")
 	}
 
+	viper.SetDefault("server.ip", "localhost")
+	viper.SetDefault("server.port", "8080")
+
 	viper.AutomaticEnv() // read in environment variables that match
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// Config file not found; ignore
+		} else {
+			// Config file was found but another error was produced, ignore
+		}
 	}
+
+	// Config file found and successfully parsed
 }
