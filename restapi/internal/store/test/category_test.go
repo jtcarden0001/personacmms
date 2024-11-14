@@ -6,13 +6,13 @@ import (
 
 func TestCategoryCRUD(t *testing.T) {
 	// Create
-	cat1, err := testStore.CreateCategory("test category")
+	cat1, err := testStore.CreateCategory("test category", "test description")
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// create a second category
-	cat2, err := testStore.CreateCategory("test category 2")
+	cat2, err := testStore.CreateCategory("test category 2", "test description 2")
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -36,7 +36,7 @@ func TestCategoryCRUD(t *testing.T) {
 	}
 
 	// Update
-	upCat, err := testStore.UpdateCategory(cat1.Title, "test category 3")
+	upCat, err := testStore.UpdateCategory(cat1.Title, "test category 3", "test description 3")
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}

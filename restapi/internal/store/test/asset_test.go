@@ -119,7 +119,7 @@ func TestGetAllCreateCreateGetAll(t *testing.T) {
 
 // TODO: broken, need to fix, just patched nonsense to get it to compile
 func initAssetFKs() (int, error) {
-	_, err := testStore.CreateCategory("test asset category")
+	_, err := testStore.CreateCategory("test asset category", "test asset category description")
 	if err != nil {
 		return 0, err
 	}
