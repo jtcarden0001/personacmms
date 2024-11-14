@@ -6,12 +6,11 @@ package update
 import (
 	"fmt"
 
-	"github.com/jtcarden0001/personacmms/cli/cmd/root"
 	"github.com/spf13/cobra"
 )
 
 // updateCmd represents the update command
-var updateCmd = &cobra.Command{
+var UpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -26,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	root.RootCmd.AddCommand(updateCmd)
+	UpdateCmd.AddCommand(updateCategoryCmd)
 
 	// Here you will define your flags and configuration settings.
 

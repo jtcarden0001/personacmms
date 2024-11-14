@@ -6,22 +6,24 @@ package create
 import (
 	"fmt"
 
-	"github.com/jtcarden0001/personacmms/cli/cmd/root"
 	"github.com/spf13/cobra"
 )
 
 // createCmd represents the create command
-var createCmd = &cobra.Command{
+var CreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a resource",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
+		// Print the help message if no subcommands are provided
+		if err := cmd.Help(); err != nil {
+			fmt.Println("Error showing help:", err)
+		}
 	},
 }
 
 func init() {
-	root.RootCmd.AddCommand(createCmd)
-
+	// sub commands
+	CreateCmd.AddCommand(createCategoryCmd)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

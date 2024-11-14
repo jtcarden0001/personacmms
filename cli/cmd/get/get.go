@@ -6,12 +6,11 @@ package get
 import (
 	"fmt"
 
-	"github.com/jtcarden0001/personacmms/cli/cmd/root"
 	"github.com/spf13/cobra"
 )
 
 // getCmd represents the get command
-var getCmd = &cobra.Command{
+var GetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -26,7 +25,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	root.RootCmd.AddCommand(getCmd)
+	GetCmd.AddCommand(getCategoryCmd)
 
 	// Here you will define your flags and configuration settings.
 

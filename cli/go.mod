@@ -3,7 +3,6 @@ module github.com/jtcarden0001/personacmms/cli
 go 1.22.2
 
 require (
-	github.com/jtcarden0001/personacmms/cmmsctl v0.0.0-20241113151800-17a65a3e01c8
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 )
