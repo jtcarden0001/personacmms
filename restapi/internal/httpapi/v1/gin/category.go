@@ -2,6 +2,7 @@ package gin
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
@@ -21,17 +22,17 @@ func (h *HttpApi) registerCategoryRoutes() {
 func (h *HttpApi) createCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	cat, err := h.app.CreateCategory(cat.Title)
+	cat, err := h.app.CreateCategory(cat.Title, cat.Description)
 	if err != nil {
 		processAppError(c, err)
 		return
 	}
 
-	c.IndentedJSON(201, cat) // switch to .JSON() for performance
+	c.IndentedJSON(http.StatusCreated, cat) // switch to .JSON() for performance
 
 }
 
@@ -42,16 +43,7 @@ func (h *HttpApi) deleteCategory(c *gin.Context) {
 		processAppError(c, err)
 	}
 
-	c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-}
-
-func (h *HttpApi) listCategory(c *gin.Context) {
-	cats, err := h.app.ListCategory()
-	if err != nil {
-		processAppError(c, err)
-	}
-
-	c.IndentedJSON(200, cats) // switch to .JSON() for performance
+	c.IndentedJSON(http.StatusNoContent, gin.H{}) // switch to .JSON() for performance
 }
 
 func (h *HttpApi) getCategory(c *gin.Context) {
@@ -61,21 +53,30 @@ func (h *HttpApi) getCategory(c *gin.Context) {
 		processAppError(c, err)
 	}
 
-	c.IndentedJSON(200, cat) // switch to .JSON() for performance
+	c.IndentedJSON(http.StatusOK, cat) // switch to .JSON() for performance
+}
+
+func (h *HttpApi) listCategory(c *gin.Context) {
+	cats, err := h.app.ListCategory()
+	if err != nil {
+		processAppError(c, err)
+	}
+
+	c.IndentedJSON(http.StatusOK, cats) // switch to .JSON() for performance
 }
 
 func (h *HttpApi) updateCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	oldTitle := c.Param("categoryId")
-	newCat, err := h.app.UpdateCategory(oldTitle, cat.Title)
+	oldTitle := c.Param("categoryTitle")
+	newCat, err := h.app.UpdateCategory(oldTitle, cat.Title, cat.Description)
 	if err != nil {
 		processAppError(c, err)
 	}
 
-	c.IndentedJSON(200, newCat) // switch to .JSON() for performance
+	c.IndentedJSON(http.StatusOK, newCat) // switch to .JSON() for performance
 }
