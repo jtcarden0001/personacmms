@@ -26,7 +26,7 @@ func New(injectedApp a.App) *HttpApi {
 }
 
 func (h *HttpApi) Start() {
-	h.router.Run("localhost:8080")
+	h.router.Run(":8080")
 }
 
 var routePrefix = "/api/v1"
@@ -52,7 +52,8 @@ func (h *HttpApi) configureCORS() {
 	// - Credentials shareT ODO: what is this?
 	// - Preflight requests cached for 12 hours TODO: what is this?
 	h.router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{"http://localhost:5173"},
+		// AllowAllOrigins: true,
+		// AllowOrigins:  []string{"http://localhost:5173"},
 		AllowMethods:  []string{"PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS"},
 		AllowHeaders:  []string{"Origin, Content-Type, Authorization, X-Requested-With"},
 		ExposeHeaders: []string{"Content-Length"},
