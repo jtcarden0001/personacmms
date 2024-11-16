@@ -21,3 +21,9 @@ cli/bin
 
 # Go workspace file
 go.work
+
+# environment
+*.env
+
+# air temp directory
+tmp
