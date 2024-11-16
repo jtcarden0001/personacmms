@@ -60,9 +60,9 @@ func (h *HttpApi) listCategory(c *gin.Context) {
 	cats, err := h.app.ListCategory()
 	if err != nil {
 		processAppError(c, err)
+	} else {
+		c.IndentedJSON(http.StatusOK, cats) // switch to .JSON() for performance
 	}
-
-	c.IndentedJSON(http.StatusOK, cats) // switch to .JSON() for performance
 }
 
 func (h *HttpApi) updateCategory(c *gin.Context) {

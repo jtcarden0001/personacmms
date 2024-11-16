@@ -28,9 +28,11 @@ func NewTest() *Store {
 }
 
 func getStore(dbName string) *Store {
-	pgUser := os.Getenv("POSTGRESUSER")
-	pgPass := os.Getenv("POSTGRESPASS")
-	pgHost := os.Getenv("POSTGRESHOST")
+	// TODO: move this config out of the implementation code
+	pgUser := os.Getenv("DATABASE_USER")
+	pgPass := os.Getenv("DATABASE_PASSWORD")
+	pgHost := os.Getenv("DATABASE_HOST")
+	//pgPort := os.Getenv("DATABASE_PORT")
 
 	connStr := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", pgUser, pgPass, pgHost, dbName)
 
