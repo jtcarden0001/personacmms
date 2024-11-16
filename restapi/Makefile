@@ -11,8 +11,10 @@ COMMIT ?= $(shell git describe --always)
 BUILD_DATE ?= $(shell date -u +%m/%d/%Y)
 LDFLAGS="-X main.commit=${COMMIT} -X main.date=${BUILD_DATE}"
 
-OUTEXE=bin/personacmms.exe
-OUT=bin/personacmms
+OUTWIN=bin/personacmms.exe
+OUTWINDEBUG=bin/personacmms-debug.exe
+OUTLIN=bin/personacmms
+OUTLINDEBUG=bin/personacmms-debug
 
 #
 PKG := 
@@ -33,10 +35,16 @@ format:
 build: build-windows build-linux
 
 build-windows:
-	GOOS=windows $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUTEXE) github.com/jtcarden0001/personacmms/restapi/cmd/main
+	GOOS=windows $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUTWIN) github.com/jtcarden0001/personacmms/restapi/cmd/main
+
+build-windows-debug:
+	GOOS=windows $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTWINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
 build-linux:
-	GOOS=linux $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUT) github.com/jtcarden0001/personacmms/restapi/cmd/main
+	GOOS=linux $(GOBUILD) -ldflags $(LDFLAGS) -o $(OUTLIN) github.com/jtcarden0001/personacmms/restapi/cmd/main
+
+build-linux-debug:
+	GOOS=linux $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTLINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
 test: unittest
 
