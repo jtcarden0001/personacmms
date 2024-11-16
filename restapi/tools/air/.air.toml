@@ -7,10 +7,12 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
+  ## Customize binary, can setup environment variables when run your app. TODO: centralize port config
+  full_bin = "dlv exec ./bin/personacmms-debug --continue --accept-multiclient --listen=:40000 --headless=true --api-version=2 --log"
   ## Just plain old shell command. You could use `make` as well.
-  cmd = "make build-linux"
+  cmd = "make build-linux-debug"
   ## Binary file yields from `cmd`.
-  bin = "./bin/personacmms"
+  bin = "bin/personacmms-debug"
   ## Watch these filename extensions.
   include_ext = ["go", "tpl", "tmpl", "html"]
   ## Ignore these filename extensions or directories.
@@ -45,8 +47,6 @@ tmp_dir = "tmp"
   # pre_cmd = ["echo 'hello air' > pre_cmd.txt"]
   ## Array of commands to run after ^C
   # post_cmd = ["echo 'hello air' > post_cmd.txt"]
-  ## Customize binary, can setup environment variables when run your app.
-  # full_bin = "APP_ENV=dev APP_USER=air ./tmp/main"
   ## Add additional arguments when running binary (bin/full_bin). Will run './tmp/main hello world'.
   # args_bin = ["hello", "world"]
   ## Watch these directories if you specified.
