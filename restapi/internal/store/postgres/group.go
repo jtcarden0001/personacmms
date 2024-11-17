@@ -16,7 +16,7 @@ type Group interface {
 func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
-	query := `INSERT INTO group (id, title) VALUES ($1, $2) returning id`
+	query := `INSERT INTO assetgroup (id, title) VALUES ($1, $2) returning id`
 	_, err := pg.db.Exec(query, id.String(), grp.Title)
 	if err != nil {
 		return tp.Group{}, err
@@ -27,14 +27,14 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 }
 
 func (pg *Store) DeleteGroup(title string) error {
-	query := `DELETE FROM group WHERE title = $1`
+	query := `DELETE FROM assetgroup WHERE title = $1`
 	_, err := pg.db.Exec(query, title)
 
 	return err
 }
 
 func (pg *Store) ListGroups() ([]tp.Group, error) {
-	query := `SELECT id, title FROM group`
+	query := `SELECT id, title FROM assetgroup`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (pg *Store) ListGroups() ([]tp.Group, error) {
 }
 
 func (pg *Store) GetGroup(title string) (tp.Group, error) {
-	query := `SELECT id, title FROM group WHERE title = $1`
+	query := `SELECT id, title FROM assetgroup WHERE title = $1`
 	var grp tp.Group
 	err := pg.db.QueryRow(query, title).Scan(&grp.Id, &grp.Title)
 	if err != nil {

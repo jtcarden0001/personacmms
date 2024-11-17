@@ -158,6 +158,55 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/groups": {
+            "get": {
+                "description": "List all groups",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset groups",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Group"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a group",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create an asset group",
+                "parameters": [
+                    {
+                        "description": "Group object",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Group"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Group"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -170,6 +219,17 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Group": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
                 "title": {
                     "type": "string"
                 }

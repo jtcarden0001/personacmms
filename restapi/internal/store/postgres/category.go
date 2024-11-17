@@ -8,7 +8,7 @@ import (
 type Category interface {
 	CreateCategory(string, string) (tp.Category, error)
 	DeleteCategory(string) error
-	ListCategory() ([]tp.Category, error)
+	ListCategories() ([]tp.Category, error)
 	GetCategory(string) (tp.Category, error)
 	UpdateCategory(string, string, string) (tp.Category, error)
 }
@@ -36,7 +36,7 @@ func (pg *Store) DeleteCategory(title string) error {
 	return err
 }
 
-func (pg *Store) ListCategory() ([]tp.Category, error) {
+func (pg *Store) ListCategories() ([]tp.Category, error) {
 	query := `SELECT id, title FROM category`
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -44,7 +44,7 @@ func (pg *Store) ListCategory() ([]tp.Category, error) {
 	}
 	defer rows.Close()
 
-	var categories []tp.Category
+	var categories = []tp.Category{}
 	for rows.Next() {
 		var cat tp.Category
 		err = rows.Scan(&cat.Id, &cat.Title)

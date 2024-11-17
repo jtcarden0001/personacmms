@@ -9,6 +9,13 @@ definitions:
     required:
     - title
     type: object
+  types.Group:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -115,6 +122,38 @@ paths:
         "500":
           description: Internal Server Error
       summary: Update an asset category
+  /groups:
+    get:
+      description: List all groups
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Group'
+            type: array
+      summary: List asset groups
+    post:
+      consumes:
+      - application/json
+      description: Create a group
+      parameters:
+      - description: Group object
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/types.Group'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Group'
+      summary: Create an asset group
 securityDefinitions:
   BasicAuth:
     type: basic

@@ -89,10 +89,13 @@ func (h *Api) getCategory(c *gin.Context) {
 //	@Success		200	{object}	[]tp.Category
 //	@Router			/categories [get]
 func (h *Api) listCategories(c *gin.Context) {
-	cats, err := h.app.ListCategory()
+	cats, err := h.app.ListCategories()
 	if err != nil {
 		processAppError(c, err)
 	} else {
+		if len(cats) == 0 {
+			cats = []tp.Category{}
+		}
 		c.IndentedJSON(http.StatusOK, cats) // switch to .JSON() for performance
 	}
 }
