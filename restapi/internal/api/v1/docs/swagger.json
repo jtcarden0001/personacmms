@@ -203,6 +203,66 @@
             }
         },
         "/groups/{groupTitle}": {
+            "get": {
+                "description": "Get a group",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Group"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a group",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Group object",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Group"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Group"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a group",
                 "summary": "Delete an asset group",

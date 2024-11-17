@@ -169,6 +169,46 @@ paths:
         "404":
           description: Not Found
       summary: Delete an asset group
+    get:
+      description: Get a group
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Group'
+      summary: Get an asset group
+    put:
+      consumes:
+      - application/json
+      description: Update a group
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Group object
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/types.Group'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Group'
+      summary: Update an asset group
 securityDefinitions:
   BasicAuth:
     type: basic
