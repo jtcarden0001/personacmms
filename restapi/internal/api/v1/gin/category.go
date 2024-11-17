@@ -8,13 +8,13 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerCategoryRoutes() {
+func (h *Api) registerCategoryRoutes() {
 	baseRoute := fmt.Sprintf("%s/categories", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:categoryTitle", baseRoute)
 
 	h.router.POST(baseRoute, h.createCategory)
 	h.router.DELETE(individualRoute, h.deleteCategory)
-	h.router.GET(baseRoute, h.listCategory)
+	h.router.GET(baseRoute, h.listCategories)
 	h.router.GET(individualRoute, h.getCategory)
 	h.router.PUT(individualRoute, h.updateCategory)
 }
@@ -28,7 +28,7 @@ func (h *HttpApi) registerCategoryRoutes() {
 //	@Produce		json
 //	@Success		201	{object}	tp.Category
 //	@Router			/categories [post]
-func (h *HttpApi) createCategory(c *gin.Context) {
+func (h *Api) createCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -53,7 +53,7 @@ func (h *HttpApi) createCategory(c *gin.Context) {
 //	@Success		204
 //	@Failure		404
 //	@Router			/categories/{categoryTitle} [delete]
-func (h *HttpApi) deleteCategory(c *gin.Context) {
+func (h *Api) deleteCategory(c *gin.Context) {
 	title := c.Param("categoryTitle")
 	err := h.app.DeleteCategory(title)
 	if err != nil {
@@ -71,7 +71,7 @@ func (h *HttpApi) deleteCategory(c *gin.Context) {
 //	@Produce		json
 //	@Success		200	{object}	tp.Category
 //	@Router			/categories/{categoryTitle} [get]
-func (h *HttpApi) getCategory(c *gin.Context) {
+func (h *Api) getCategory(c *gin.Context) {
 	title := c.Param("categoryTitle")
 	cat, err := h.app.GetCategory(title)
 	if err != nil {
@@ -88,7 +88,7 @@ func (h *HttpApi) getCategory(c *gin.Context) {
 //	@Produce		json
 //	@Success		200	{object}	[]tp.Category
 //	@Router			/categories [get]
-func (h *HttpApi) listCategory(c *gin.Context) {
+func (h *Api) listCategories(c *gin.Context) {
 	cats, err := h.app.ListCategory()
 	if err != nil {
 		processAppError(c, err)
@@ -108,7 +108,7 @@ func (h *HttpApi) listCategory(c *gin.Context) {
 //	@Success		200	{object}	tp.Category
 //	@Failure		500
 //	@Router			/categories/{categoryTitle} [put]
-func (h *HttpApi) updateCategory(c *gin.Context) {
+func (h *Api) updateCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

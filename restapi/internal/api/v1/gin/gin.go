@@ -10,7 +10,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "github.com/jtcarden0001/personacmms/restapi/internal/httpapi/v1/docs" // This line is required for swaggo to find docs
+	_ "github.com/jtcarden0001/personacmms/restapi/internal/api/v1/docs" // This line is required for swaggo to find docs
 )
 
 //	@title			PersonaCMMS API
@@ -33,14 +33,14 @@ import (
 //	@externalDocs.description	OpenAPI
 //	@externalDocs.url			https://swagger.io/resources/open-api/
 
-type HttpApi struct {
+type Api struct {
 	app    a.App
 	router *gin.Engine
 }
 
-func New(injectedApp a.App) *HttpApi {
+func New(injectedApp a.App) *Api {
 	ginRouter := gin.Default()
-	ginApi := &HttpApi{
+	ginApi := &Api{
 		app:    injectedApp,
 		router: ginRouter,
 	}
@@ -50,13 +50,13 @@ func New(injectedApp a.App) *HttpApi {
 	return ginApi
 }
 
-func (h *HttpApi) Start() {
+func (h *Api) Start() {
 	h.router.Run(":8080")
 }
 
 var routePrefix = "/api/v1"
 
-func (h *HttpApi) registerRoutes() {
+func (h *Api) registerRoutes() {
 	h.registerConsumableRoutes()
 	h.registerCategoryRoutes()
 	h.registerAssetRoutes()
@@ -71,7 +71,7 @@ func (h *HttpApi) registerRoutes() {
 	h.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
-func (h *HttpApi) configureCORS() {
+func (h *Api) configureCORS() {
 	// CORS for https://foo.com and https://github.com origins, allowing:
 	// - All the methods
 	// - Origin header

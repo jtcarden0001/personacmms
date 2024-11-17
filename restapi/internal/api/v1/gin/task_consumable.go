@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerTaskConsumableRoutes() {
+func (h *Api) registerTaskConsumableRoutes() {
 	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/consumables", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:consumableId", baseRoute)
 
@@ -19,7 +19,7 @@ func (h *HttpApi) registerTaskConsumableRoutes() {
 	h.router.PUT(individualRoute, h.updateTaskConsumable)
 }
 
-func (h *HttpApi) createTaskConsumable(c *gin.Context) {
+func (h *Api) createTaskConsumable(c *gin.Context) {
 	tc := tp.TaskConsumable{}
 	if err := c.BindJSON(&tc); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -48,7 +48,7 @@ func (h *HttpApi) createTaskConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteTaskConsumable(c *gin.Context) {
+func (h *Api) deleteTaskConsumable(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -69,7 +69,7 @@ func (h *HttpApi) deleteTaskConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTaskConsumableByTask(c *gin.Context) {
+func (h *Api) getAllTaskConsumableByTask(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -84,7 +84,7 @@ func (h *HttpApi) getAllTaskConsumableByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getTaskConsumable(c *gin.Context) {
+func (h *Api) getTaskConsumable(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -105,7 +105,7 @@ func (h *HttpApi) getTaskConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateTaskConsumable(c *gin.Context) {
+func (h *Api) updateTaskConsumable(c *gin.Context) {
 	var tc tp.TaskConsumable
 	if err := c.BindJSON(&tc); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

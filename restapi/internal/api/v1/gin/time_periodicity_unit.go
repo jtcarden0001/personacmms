@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerTimePeriodicityUnitRoutes() {
+func (h *Api) registerTimePeriodicityUnitRoutes() {
 	baseRoute := fmt.Sprintf("%s/time-periodicity-units", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:timePeriodicityUnitId", baseRoute)
 
@@ -19,7 +19,7 @@ func (h *HttpApi) registerTimePeriodicityUnitRoutes() {
 	h.router.PUT(individualRoute, h.updateTimePeriodicityUnit)
 }
 
-func (h *HttpApi) createTimePeriodicityUnit(c *gin.Context) {
+func (h *Api) createTimePeriodicityUnit(c *gin.Context) {
 	var tpu tp.TimePeriodicityUnit
 	if err := c.BindJSON(&tpu); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (h *HttpApi) createTimePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteTimePeriodicityUnit(c *gin.Context) {
+func (h *Api) deleteTimePeriodicityUnit(c *gin.Context) {
 	tpuId, err := strconv.Atoi(c.Param("timePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func (h *HttpApi) deleteTimePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTimePeriodicityUnit(c *gin.Context) {
+func (h *Api) getAllTimePeriodicityUnit(c *gin.Context) {
 	tpus, err := h.app.GetAllTimePeriodicityUnit()
 	if err != nil {
 		processAppError(c, err)
@@ -59,7 +59,7 @@ func (h *HttpApi) getAllTimePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getTimePeriodicityUnit(c *gin.Context) {
+func (h *Api) getTimePeriodicityUnit(c *gin.Context) {
 	tpuId, err := strconv.Atoi(c.Param("timePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -74,7 +74,7 @@ func (h *HttpApi) getTimePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateTimePeriodicityUnit(c *gin.Context) {
+func (h *Api) updateTimePeriodicityUnit(c *gin.Context) {
 	tpuId, err := strconv.Atoi(c.Param("timePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

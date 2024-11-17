@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerConsumableRoutes() {
+func (h *Api) registerConsumableRoutes() {
 	baseRoute := fmt.Sprintf("%s/consumables", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:consumableId", baseRoute)
 
@@ -19,7 +19,7 @@ func (h *HttpApi) registerConsumableRoutes() {
 	h.router.PUT(individualRoute, h.updateConsumable) // accepts object id in url, disregards id in body, may revisit this design
 }
 
-func (h *HttpApi) createConsumable(c *gin.Context) {
+func (h *Api) createConsumable(c *gin.Context) {
 	var co tp.Consumable
 	if err := c.BindJSON(&co); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (h *HttpApi) createConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteConsumable(c *gin.Context) {
+func (h *Api) deleteConsumable(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("consumableId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func (h *HttpApi) deleteConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllConsumable(c *gin.Context) {
+func (h *Api) getAllConsumable(c *gin.Context) {
 	consumables, err := h.app.GetAllConsumable()
 	if err != nil {
 		processAppError(c, err)
@@ -59,7 +59,7 @@ func (h *HttpApi) getAllConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getConsumable(c *gin.Context) {
+func (h *Api) getConsumable(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("consumableId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -74,7 +74,7 @@ func (h *HttpApi) getConsumable(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateConsumable(c *gin.Context) {
+func (h *Api) updateConsumable(c *gin.Context) {
 	var co tp.Consumable
 
 	if err := c.BindJSON(&co); err != nil {

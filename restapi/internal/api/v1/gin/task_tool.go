@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *HttpApi) registerTaskToolRoutes() {
+func (h *Api) registerTaskToolRoutes() {
 	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/tools", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
 
@@ -17,7 +17,7 @@ func (h *HttpApi) registerTaskToolRoutes() {
 	h.router.GET(individualRoute, h.getTaskTool)
 }
 
-func (h *HttpApi) createTaskTool(c *gin.Context) {
+func (h *Api) createTaskTool(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -38,7 +38,7 @@ func (h *HttpApi) createTaskTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteTaskTool(c *gin.Context) {
+func (h *Api) deleteTaskTool(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -59,7 +59,7 @@ func (h *HttpApi) deleteTaskTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTaskToolByTask(c *gin.Context) {
+func (h *Api) getAllTaskToolByTask(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -74,7 +74,7 @@ func (h *HttpApi) getAllTaskToolByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getTaskTool(c *gin.Context) {
+func (h *Api) getTaskTool(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

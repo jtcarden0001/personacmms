@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerTaskRoutes() {
+func (h *Api) registerTaskRoutes() {
 	baseAllRoute := fmt.Sprintf("%s/tasks", routePrefix)
 	baseEqRoute := fmt.Sprintf("%s/asset/:assetId/tasks", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:taskId", baseEqRoute)
@@ -21,7 +21,7 @@ func (h *HttpApi) registerTaskRoutes() {
 	h.router.PUT(individualRoute, h.updateTask)
 }
 
-func (h *HttpApi) createTask(c *gin.Context) {
+func (h *Api) createTask(c *gin.Context) {
 	var t tp.Task
 	if err := c.BindJSON(&t); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -43,7 +43,7 @@ func (h *HttpApi) createTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteTask(c *gin.Context) {
+func (h *Api) deleteTask(c *gin.Context) {
 	taskid, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -58,7 +58,7 @@ func (h *HttpApi) deleteTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTask(c *gin.Context) {
+func (h *Api) getAllTask(c *gin.Context) {
 	tasks, err := h.app.GetAllTask()
 	if err != nil {
 		processAppError(c, err)
@@ -67,7 +67,7 @@ func (h *HttpApi) getAllTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllTaskByAsset(c *gin.Context) {
+func (h *Api) getAllTaskByAsset(c *gin.Context) {
 	assetId, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -82,7 +82,7 @@ func (h *HttpApi) getAllTaskByAsset(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getTask(c *gin.Context) {
+func (h *Api) getTask(c *gin.Context) {
 	taskid, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -97,7 +97,7 @@ func (h *HttpApi) getTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateTask(c *gin.Context) {
+func (h *Api) updateTask(c *gin.Context) {
 	var t tp.Task
 	if err := c.BindJSON(&t); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

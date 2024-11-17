@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
+	api "github.com/jtcarden0001/personacmms/restapi/internal/api"
 	application "github.com/jtcarden0001/personacmms/restapi/internal/app"
-	api "github.com/jtcarden0001/personacmms/restapi/internal/httpapi"
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 )
 

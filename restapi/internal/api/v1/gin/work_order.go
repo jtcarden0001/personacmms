@@ -9,7 +9,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerWorkOrderRoutes() {
+func (h *Api) registerWorkOrderRoutes() {
 	baseRoute := fmt.Sprintf("%s/work-orders", routePrefix)
 	baseRouteByTask := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/work-orders", routePrefix)
 	individualRouteByTask := fmt.Sprintf("%s/:workOrderId", baseRouteByTask)
@@ -22,7 +22,7 @@ func (h *HttpApi) registerWorkOrderRoutes() {
 	h.router.PUT(individualRouteByTask, h.updateWorkOrderByTask)
 }
 
-func (h *HttpApi) createWorkOrderByTask(c *gin.Context) {
+func (h *Api) createWorkOrderByTask(c *gin.Context) {
 	taskId, err := strconv.Atoi(c.Param("taskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -45,7 +45,7 @@ func (h *HttpApi) createWorkOrderByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteWorkOrderByTask(c *gin.Context) {
+func (h *Api) deleteWorkOrderByTask(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	workOrderId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -62,7 +62,7 @@ func (h *HttpApi) deleteWorkOrderByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllWorkOrder(c *gin.Context) {
+func (h *Api) getAllWorkOrder(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	woss, err := h.app.GetAllWorkOrder()
@@ -78,7 +78,7 @@ func (h *HttpApi) getAllWorkOrder(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllWorkOrderByTask(c *gin.Context) {
+func (h *Api) getAllWorkOrderByTask(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	woss, err := h.app.GetAllWorkOrder() // TODO: BUG: this is getting all work orders and not filtering by task
@@ -89,7 +89,7 @@ func (h *HttpApi) getAllWorkOrderByTask(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getWorkOrderByTask(c *gin.Context) {
+func (h *Api) getWorkOrderByTask(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	woId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -113,7 +113,7 @@ func (h *HttpApi) getWorkOrderByTask(c *gin.Context) {
 	c.IndentedJSON(200, iwo) // switch to .JSON() for performance
 }
 
-func (h *HttpApi) updateWorkOrderByTask(c *gin.Context) {
+func (h *Api) updateWorkOrderByTask(c *gin.Context) {
 	// while we don't use the taskId, a work order is always associated with a task
 	// should we change the route to exclude the taskId? or should we do any validation on the taskid?
 	woId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -148,7 +148,7 @@ type interpolatedWorkOrder struct {
 	CompletedDate *tm.Time `json:"completedDate"`
 }
 
-func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
+func (h *Api) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
 	var iwoss []interpolatedWorkOrder
 	var err error
 	for _, wo := range woss {
@@ -165,7 +165,7 @@ func (h *HttpApi) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWork
 
 // may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work
 // or do some memoization to reduce the db calls. Will do if performance suffers, no need for premature optimization.
-func (h *HttpApi) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, error) {
+func (h *Api) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, error) {
 	t, err := h.app.GetTask(wo.TaskId)
 	if err != nil {
 		return interpolatedWorkOrder{}, err

@@ -6,27 +6,24 @@ import (
 )
 
 type Group interface {
-	CreateGroup(string) (tp.Group, error)
+	CreateGroup(tp.Group) (tp.Group, error)
 	DeleteGroup(string) error
 	ListGroup() ([]tp.Group, error)
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, string) (tp.Group, error)
 }
 
-func (pg *Store) CreateGroup(title string) (tp.Group, error) {
+func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
+	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := `INSERT INTO group (id, title) VALUES ($1, $2) returning id`
-	_, err := pg.db.Exec(query, id.String(), title)
+	_, err := pg.db.Exec(query, id.String(), grp.Title)
 	if err != nil {
 		return tp.Group{}, err
 	}
 
-	group := tp.Group{
-		Id:    id,
-		Title: title,
-	}
-
-	return group, nil
+	grp.Id = id
+	return grp, nil
 }
 
 func (pg *Store) DeleteGroup(title string) error {

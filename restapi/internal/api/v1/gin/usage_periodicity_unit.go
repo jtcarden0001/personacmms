@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerUsagePeriodicityUnitRoutes() {
+func (h *Api) registerUsagePeriodicityUnitRoutes() {
 	baseRoute := fmt.Sprintf("%s/usage-periodicity-units", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:usagePeriodicityUnitId", baseRoute)
 
@@ -19,7 +19,7 @@ func (h *HttpApi) registerUsagePeriodicityUnitRoutes() {
 	h.router.PUT(individualRoute, h.updateUsagePeriodicityUnit)
 }
 
-func (h *HttpApi) createUsagePeriodicityUnit(c *gin.Context) {
+func (h *Api) createUsagePeriodicityUnit(c *gin.Context) {
 	var upu tp.UsagePeriodicityUnit
 	if err := c.BindJSON(&upu); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (h *HttpApi) createUsagePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteUsagePeriodicityUnit(c *gin.Context) {
+func (h *Api) deleteUsagePeriodicityUnit(c *gin.Context) {
 	upuId, err := strconv.Atoi(c.Param("usagePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func (h *HttpApi) deleteUsagePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllUsagePeriodicityUnit(c *gin.Context) {
+func (h *Api) getAllUsagePeriodicityUnit(c *gin.Context) {
 	upus, err := h.app.GetAllUsagePeriodicityUnit()
 	if err != nil {
 		processAppError(c, err)
@@ -59,7 +59,7 @@ func (h *HttpApi) getAllUsagePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getUsagePeriodicityUnit(c *gin.Context) {
+func (h *Api) getUsagePeriodicityUnit(c *gin.Context) {
 	upuId, err := strconv.Atoi(c.Param("usagePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -74,7 +74,7 @@ func (h *HttpApi) getUsagePeriodicityUnit(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateUsagePeriodicityUnit(c *gin.Context) {
+func (h *Api) updateUsagePeriodicityUnit(c *gin.Context) {
 	upuId, err := strconv.Atoi(c.Param("usagePeriodicityUnitId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

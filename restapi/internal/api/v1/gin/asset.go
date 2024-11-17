@@ -9,7 +9,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerAssetRoutes() {
+func (h *Api) registerAssetRoutes() {
 	baseRoute := fmt.Sprintf("%s/asset", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:assetId", baseRoute)
 
@@ -20,7 +20,7 @@ func (h *HttpApi) registerAssetRoutes() {
 	h.router.PUT(individualRoute, h.updateAsset)
 }
 
-func (h *HttpApi) createAsset(c *gin.Context) {
+func (h *Api) createAsset(c *gin.Context) {
 	var e tp.Asset
 	if err := c.BindJSON(&e); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -36,7 +36,7 @@ func (h *HttpApi) createAsset(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteAsset(c *gin.Context) {
+func (h *Api) deleteAsset(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -51,7 +51,7 @@ func (h *HttpApi) deleteAsset(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllAsset(c *gin.Context) {
+func (h *Api) getAllAsset(c *gin.Context) {
 	asset, err := h.app.GetAllAsset()
 	if err != nil {
 		processAppError(c, err)
@@ -60,7 +60,7 @@ func (h *HttpApi) getAllAsset(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAsset(c *gin.Context) {
+func (h *Api) getAsset(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("assetId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -75,7 +75,7 @@ func (h *HttpApi) getAsset(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateAsset(c *gin.Context) {
+func (h *Api) updateAsset(c *gin.Context) {
 	var e tp.Asset
 
 	if err := c.BindJSON(&e); err != nil {

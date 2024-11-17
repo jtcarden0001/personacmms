@@ -9,7 +9,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerToolRoutes() {
+func (h *Api) registerToolRoutes() {
 	baseRoute := fmt.Sprintf("%s/tools", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:id", baseRoute)
 
@@ -20,7 +20,7 @@ func (h *HttpApi) registerToolRoutes() {
 	h.router.PUT(individualRoute, h.UpdateTool)
 }
 
-func (h *HttpApi) CreateTool(c *gin.Context) {
+func (h *Api) CreateTool(c *gin.Context) {
 	var t tp.Tool
 	if err := c.BindJSON(&t); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -36,7 +36,7 @@ func (h *HttpApi) CreateTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) DeleteTool(c *gin.Context) {
+func (h *Api) DeleteTool(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -51,7 +51,7 @@ func (h *HttpApi) DeleteTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetAllTools(c *gin.Context) {
+func (h *Api) GetAllTools(c *gin.Context) {
 	tools, err := h.app.GetAllTool()
 	if err != nil {
 		processAppError(c, err)
@@ -60,7 +60,7 @@ func (h *HttpApi) GetAllTools(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) GetTool(c *gin.Context) {
+func (h *Api) GetTool(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -75,7 +75,7 @@ func (h *HttpApi) GetTool(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) UpdateTool(c *gin.Context) {
+func (h *Api) UpdateTool(c *gin.Context) {
 	var t tp.Tool
 	if err := c.BindJSON(&t); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

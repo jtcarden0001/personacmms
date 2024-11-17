@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *HttpApi) registerWorkOrderStatusRoutes() {
+func (h *Api) registerWorkOrderStatusRoutes() {
 	baseRoute := fmt.Sprintf("%s/work-order-statuses", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:workOrderStatusId", baseRoute)
 
@@ -19,7 +19,7 @@ func (h *HttpApi) registerWorkOrderStatusRoutes() {
 	h.router.PUT(individualRoute, h.updateWorkOrderStatus)
 }
 
-func (h *HttpApi) createWorkOrderStatus(c *gin.Context) {
+func (h *Api) createWorkOrderStatus(c *gin.Context) {
 	var wos tp.WorkOrderStatus
 	if err := c.BindJSON(&wos); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (h *HttpApi) createWorkOrderStatus(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) deleteWorkOrderStatus(c *gin.Context) {
+func (h *Api) deleteWorkOrderStatus(c *gin.Context) {
 	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func (h *HttpApi) deleteWorkOrderStatus(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getAllWorkOrderStatus(c *gin.Context) {
+func (h *Api) getAllWorkOrderStatus(c *gin.Context) {
 	woss, err := h.app.GetAllWorkOrderStatus()
 	if err != nil {
 		processAppError(c, err)
@@ -59,7 +59,7 @@ func (h *HttpApi) getAllWorkOrderStatus(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) getWorkOrderStatus(c *gin.Context) {
+func (h *Api) getWorkOrderStatus(c *gin.Context) {
 	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -74,7 +74,7 @@ func (h *HttpApi) getWorkOrderStatus(c *gin.Context) {
 	}
 }
 
-func (h *HttpApi) updateWorkOrderStatus(c *gin.Context) {
+func (h *Api) updateWorkOrderStatus(c *gin.Context) {
 	wosId, err := strconv.Atoi(c.Param("workOrderStatusId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
