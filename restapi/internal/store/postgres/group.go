@@ -10,7 +10,7 @@ type Group interface {
 	DeleteGroup(string) error
 	ListGroups() ([]tp.Group, error)
 	GetGroup(string) (tp.Group, error)
-	UpdateGroup(string, string) (tp.Group, error)
+	UpdateGroup(string, tp.Group) (tp.Group, error)
 }
 
 func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
@@ -65,15 +65,13 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 	return grp, nil
 }
 
-func (pg *Store) UpdateGroup(title string, newTitle string) (tp.Group, error) {
-	query := `UPDATE group SET title = $1 WHERE title = $2 returning id`
+func (pg *Store) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, error) {
+	query := `UPDATE assetgroup SET title = $1 WHERE title = $2 returning id, title`
 	var grp tp.Group
-	err := pg.db.QueryRow(query, newTitle, title).Scan(&grp.Id)
+	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&grp.Id, &grp.Title)
 	if err != nil {
 		return tp.Group{}, processDbError(err)
 	}
-
-	grp.Title = newTitle
 
 	return grp, nil
 }

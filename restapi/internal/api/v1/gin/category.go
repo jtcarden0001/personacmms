@@ -105,8 +105,8 @@ func (h *Api) listCategories(c *gin.Context) {
 //	@Summary		Update an asset category
 //	@Description	Update a category
 //	@Accept			json
-//	@Param			categoryTitle	path	string	true	"Category Title"
-//	@Param			category	body	tp.Category	true	"Category object"
+//	@Param			categoryTitle	path	string		true	"Category Title"
+//	@Param			category		body	tp.Category	true	"Category object"
 //	@Produce		json
 //	@Success		200	{object}	tp.Category
 //	@Failure		500
