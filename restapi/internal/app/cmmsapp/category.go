@@ -5,15 +5,15 @@ import (
 )
 
 type Category interface {
-	CreateCategory(string, string) (tp.Category, error)
+	CreateCategory(tp.Category) (tp.Category, error)
 	DeleteCategory(string) error
 	ListCategories() ([]tp.Category, error)
 	GetCategory(string) (tp.Category, error)
-	UpdateCategory(string, string, string) (tp.Category, error)
+	UpdateCategory(string, tp.Category) (tp.Category, error)
 }
 
-func (a *App) CreateCategory(title, description string) (tp.Category, error) {
-	return a.db.CreateCategory(title, description)
+func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
+	return a.db.CreateCategory(cat)
 }
 
 func (a *App) DeleteCategory(title string) error {
@@ -28,6 +28,6 @@ func (a *App) GetCategory(title string) (tp.Category, error) {
 	return a.db.GetCategory(title)
 }
 
-func (a *App) UpdateCategory(oldTitle, newTitle, newDescription string) (tp.Category, error) {
-	return a.db.UpdateCategory(oldTitle, newTitle, newDescription)
+func (a *App) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
+	return a.db.UpdateCategory(oldTitle, cat)
 }

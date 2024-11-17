@@ -6,27 +6,23 @@ import (
 )
 
 type Category interface {
-	CreateCategory(string, string) (tp.Category, error)
+	CreateCategory(tp.Category) (tp.Category, error)
 	DeleteCategory(string) error
 	ListCategories() ([]tp.Category, error)
 	GetCategory(string) (tp.Category, error)
-	UpdateCategory(string, string, string) (tp.Category, error)
+	UpdateCategory(string, tp.Category) (tp.Category, error)
 }
 
-func (pg *Store) CreateCategory(title, description string) (tp.Category, error) {
-	id := uid.New()
-	query := `INSERT INTO category (id, title, description) VALUES ($1, $2, $3) returning id`
-	_, err := pg.db.Exec(query, id.String(), title, description)
+// ignores the id field in the incoming category and will generate a new one.
+func (pg *Store) CreateCategory(cat tp.Category) (tp.Category, error) {
+	cat.Id = uid.New()
+	query := `INSERT INTO category (id, title, description) VALUES ($1, $2, $3)`
+	_, err := pg.db.Exec(query, cat.Id.String(), cat.Title, cat.Description)
 	if err != nil {
 		return tp.Category{}, err
 	}
 
-	category := tp.Category{
-		Id:    id,
-		Title: title,
-	}
-
-	return category, nil
+	return cat, nil
 }
 
 func (pg *Store) DeleteCategory(title string) error {
@@ -37,7 +33,7 @@ func (pg *Store) DeleteCategory(title string) error {
 }
 
 func (pg *Store) ListCategories() ([]tp.Category, error) {
-	query := `SELECT id, title FROM category`
+	query := `SELECT id, title, description FROM category`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -47,7 +43,7 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 	var categories = []tp.Category{}
 	for rows.Next() {
 		var cat tp.Category
-		err = rows.Scan(&cat.Id, &cat.Title)
+		err = rows.Scan(&cat.Id, &cat.Title, &cat.Description)
 		if err != nil {
 			return nil, err
 		}
@@ -68,12 +64,12 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	return cat, nil
 }
 
-func (pg *Store) UpdateCategory(oldTitle, newTitle, newDescription string) (tp.Category, error) {
-	query := `UPDATE category SET title = $1, description = $2 WHERE title = $2`
-	_, err := pg.db.Exec(query, newTitle, newDescription, oldTitle)
+func (pg *Store) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
+	query := `UPDATE category SET title = $1, description = $2 WHERE title = $3 returning id`
+	err := pg.db.QueryRow(query, cat.Title, cat.Description, oldTitle).Scan(&cat.Id)
 	if err != nil {
 		return tp.Category{}, err
 	}
 
-	return pg.GetCategory(newTitle)
+	return cat, nil
 }

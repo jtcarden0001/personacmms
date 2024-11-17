@@ -35,14 +35,8 @@ func (h *Api) createCategory(c *gin.Context) {
 		return
 	}
 
-	cat, err := h.app.CreateCategory(cat.Title, cat.Description)
-	if err != nil {
-		processAppError(c, err)
-		return
-	}
-
-	c.IndentedJSON(http.StatusCreated, cat) // switch to .JSON() for performance
-
+	cat, err := h.app.CreateCategory(cat)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, cat))
 }
 
 // DeleteCategory godoc
@@ -54,31 +48,8 @@ func (h *Api) createCategory(c *gin.Context) {
 //	@Failure		404
 //	@Router			/categories/{categoryTitle} [delete]
 func (h *Api) deleteCategory(c *gin.Context) {
-	title := c.Param("categoryTitle")
-	err := h.app.DeleteCategory(title)
-	if err != nil {
-		processAppError(c, err)
-	}
-
-	c.IndentedJSON(http.StatusNoContent, gin.H{}) // switch to .JSON() for performance
-}
-
-// GetCategory godoc
-//
-//	@Summary		Get an asset category
-//	@Description	Get a category
-//	@Param			categoryTitle	path	string	true	"Category Title"
-//	@Produce		json
-//	@Success		200	{object}	tp.Category
-//	@Router			/categories/{categoryTitle} [get]
-func (h *Api) getCategory(c *gin.Context) {
-	title := c.Param("categoryTitle")
-	cat, err := h.app.GetCategory(title)
-	if err != nil {
-		processAppError(c, err)
-	}
-
-	c.IndentedJSON(http.StatusOK, cat) // switch to .JSON() for performance
+	err := h.app.DeleteCategory(c.Param("categoryTitle"))
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
 // ListCategory godoc
@@ -90,14 +61,20 @@ func (h *Api) getCategory(c *gin.Context) {
 //	@Router			/categories [get]
 func (h *Api) listCategories(c *gin.Context) {
 	cats, err := h.app.ListCategories()
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		if len(cats) == 0 {
-			cats = []tp.Category{}
-		}
-		c.IndentedJSON(http.StatusOK, cats) // switch to .JSON() for performance
-	}
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cats))
+}
+
+// GetCategory godoc
+//
+//	@Summary		Get an asset category
+//	@Description	Get a category
+//	@Param			categoryTitle	path	string	true	"Category Title"
+//	@Produce		json
+//	@Success		200	{object}	tp.Category
+//	@Router			/categories/{categoryTitle} [get]
+func (h *Api) getCategory(c *gin.Context) {
+	cat, err := h.app.GetCategory(c.Param("categoryTitle"))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cat))
 }
 
 // UpdateCategory godoc
@@ -118,11 +95,6 @@ func (h *Api) updateCategory(c *gin.Context) {
 		return
 	}
 
-	oldTitle := c.Param("categoryTitle")
-	newCat, err := h.app.UpdateCategory(oldTitle, cat.Title, cat.Description)
-	if err != nil {
-		processAppError(c, err)
-	}
-
-	c.IndentedJSON(http.StatusOK, newCat) // switch to .JSON() for performance
+	newCat, err := h.app.UpdateCategory(c.Param("categoryTitle"), cat)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, newCat))
 }
