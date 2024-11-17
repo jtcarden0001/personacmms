@@ -46,6 +46,9 @@ build-linux:
 build-linux-debug:
 	GOOS=linux $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTLINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
+swag:
+	swag init -g ../../internal/httpapi/v1/gin/gin.go -o internal/httpapi/v1/docs -d cmd/main,internal/types,internal/httpapi/v1/gin
+
 test: unittest
 
 unittest: 

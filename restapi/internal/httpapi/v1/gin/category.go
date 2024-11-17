@@ -19,6 +19,15 @@ func (h *HttpApi) registerCategoryRoutes() {
 	h.router.PUT(individualRoute, h.updateCategory)
 }
 
+// CreateCategory godoc
+//
+//	@Summary		Create a category
+//	@Description	Create a category
+//	@Accept			json
+//	@Param			category body tp.Category true "Category object"
+//	@Produce		json
+//	@Success		201	{object}	tp.Category
+//	@Router			/categories [post]
 func (h *HttpApi) createCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
@@ -36,6 +45,12 @@ func (h *HttpApi) createCategory(c *gin.Context) {
 
 }
 
+// DeleteCategory godoc
+//
+//	@Summary		Delete a category
+//	@Description	Delete a category
+//	@Success		204
+//	@Router			/categories/{categoryTitle} [delete]
 func (h *HttpApi) deleteCategory(c *gin.Context) {
 	title := c.Param("categoryTitle")
 	err := h.app.DeleteCategory(title)
