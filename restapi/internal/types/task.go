@@ -1,12 +1,7 @@
 package types
 
 type Task struct {
-	Id                       int    `json:"id"`
-	Title                    string `json:"title" binding:"required"`
-	Instructions             string `json:"instructions" binding:"required"`
-	TimePeriodicityQuantity  *int   `json:"timePeriodicityQuantity"`
-	TimePeriodicityUnitId    *int   `json:"timePeriodicityUnitId"`
-	UsagePeriodicityQuantity *int   `json:"usagePeriodicityQuantity"`
-	UsagePeriodicityUnitId   *int   `json:"usagePeriodicityUnitId"`
-	AssetId                  int    `json:"assetId"`
+	Title       string `json:"title" binding:"required"`
+	Id          UUID   `json:"id" swaggerignore:"true"`
+	Description string `json:"description"`
 }
