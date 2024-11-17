@@ -154,6 +154,21 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Create an asset group
+  /groups/{groupTitle}:
+    delete:
+      description: Delete a group
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete an asset group
 securityDefinitions:
   BasicAuth:
     type: basic

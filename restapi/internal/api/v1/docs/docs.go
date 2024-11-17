@@ -207,6 +207,29 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/groups/{groupTitle}": {
+            "delete": {
+                "description": "Delete a group",
+                "summary": "Delete an asset group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {

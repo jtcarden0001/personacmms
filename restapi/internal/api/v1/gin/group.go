@@ -10,10 +10,10 @@ import (
 
 func (h *Api) registerGroupRoutes() {
 	baseRoute := fmt.Sprintf("%s/groups", routePrefix)
-	// individualRoute := fmt.Sprintf("%s/:groupId", baseRoute)
+	individualRoute := fmt.Sprintf("%s/:groupTitle", baseRoute)
 
 	h.router.POST(baseRoute, h.createGroup)
-	// h.router.DELETE(individualRoute, h.deleteGroup)
+	h.router.DELETE(individualRoute, h.deleteGroup)
 	h.router.GET(baseRoute, h.listGroups)
 	// h.router.GET(individualRoute, h.getGroup)
 	// h.router.PUT(individualRoute, h.updateGroup)
@@ -42,6 +42,24 @@ func (h *Api) createGroup(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusCreated, group) // switch to .JSON() for performance
+}
+
+// DeleteGroup godoc
+//
+//	@Summary		Delete an asset group
+//	@Description	Delete a group
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Success		204
+//	@Failure		404
+//	@Router			/groups/{groupTitle} [delete]
+func (h *Api) deleteGroup(c *gin.Context) {
+	title := c.Param("groupTitle")
+	err := h.app.DeleteGroup(title)
+	if err != nil {
+		processAppError(c, err)
+	}
+
+	c.IndentedJSON(http.StatusNoContent, gin.H{}) // switch to .JSON() for performance
 }
 
 // ListGroups godoc

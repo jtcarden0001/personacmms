@@ -18,7 +18,7 @@ func TestCategoryCRUD(t *testing.T) {
 	}
 
 	// List
-	cats, err := testStore.ListCategory()
+	cats, err := testStore.ListCategories()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
 	}

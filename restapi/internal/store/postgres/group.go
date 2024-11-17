@@ -19,7 +19,7 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	query := `INSERT INTO assetgroup (id, title) VALUES ($1, $2) returning id`
 	_, err := pg.db.Exec(query, id.String(), grp.Title)
 	if err != nil {
-		return tp.Group{}, err
+		return tp.Group{}, processDbError(err)
 	}
 
 	grp.Id = id
@@ -30,18 +30,18 @@ func (pg *Store) DeleteGroup(title string) error {
 	query := `DELETE FROM assetgroup WHERE title = $1`
 	_, err := pg.db.Exec(query, title)
 
-	return err
+	return processDbError(err)
 }
 
 func (pg *Store) ListGroups() ([]tp.Group, error) {
+	var groups = []tp.Group{}
 	query := `SELECT id, title FROM assetgroup`
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return groups, processDbError(err)
 	}
 	defer rows.Close()
 
-	var groups []tp.Group
 	for rows.Next() {
 		var grp tp.Group
 		err = rows.Scan(&grp.Id, &grp.Title)
@@ -59,7 +59,7 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 	var grp tp.Group
 	err := pg.db.QueryRow(query, title).Scan(&grp.Id, &grp.Title)
 	if err != nil {
-		return tp.Group{}, err
+		return tp.Group{}, processDbError(err)
 	}
 
 	return grp, nil
@@ -70,7 +70,7 @@ func (pg *Store) UpdateGroup(title string, newTitle string) (tp.Group, error) {
 	var grp tp.Group
 	err := pg.db.QueryRow(query, newTitle, title).Scan(&grp.Id)
 	if err != nil {
-		return tp.Group{}, err
+		return tp.Group{}, processDbError(err)
 	}
 
 	grp.Title = newTitle
