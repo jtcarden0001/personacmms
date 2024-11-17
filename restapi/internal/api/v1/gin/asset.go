@@ -9,13 +9,15 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerAssetRoutes() {
-	baseRoute := fmt.Sprintf("%s/asset", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:assetId", baseRoute)
+// external so it is accessible to AssetTask routes
+var baseAssetRoute = fmt.Sprintf("%s/assets", routePrefix)
 
-	h.router.POST(baseRoute, h.createAsset)
+func (h *Api) registerAssetRoutes() {
+	individualRoute := fmt.Sprintf("%s/:assetId", baseAssetRoute)
+
+	h.router.POST(baseAssetRoute, h.createAsset)
 	h.router.DELETE(individualRoute, h.deleteAsset)
-	h.router.GET(baseRoute, h.getAllAsset)
+	h.router.GET(baseAssetRoute, h.getAllAsset)
 	h.router.GET(individualRoute, h.getAsset)
 	h.router.PUT(individualRoute, h.updateAsset)
 }

@@ -290,6 +290,135 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/tasks": {
+            "get": {
+                "description": "List all tasks",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List tasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Task"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a task",
+                "parameters": [
+                    {
+                        "description": "Task object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Task"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Task"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{taskTitle}": {
+            "get": {
+                "description": "Get a task",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task Title",
+                        "name": "taskTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Task"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task Title",
+                        "name": "taskTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Task"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a task",
+                "summary": "Delete a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task Title",
+                        "name": "taskTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -313,6 +442,20 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Task": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }

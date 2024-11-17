@@ -2,124 +2,98 @@ package gin
 
 import (
 	"fmt"
-	"strconv"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func (h *Api) registerTaskRoutes() {
-	baseAllRoute := fmt.Sprintf("%s/tasks", routePrefix)
-	baseEqRoute := fmt.Sprintf("%s/asset/:assetId/tasks", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:taskId", baseEqRoute)
+	baseRoute := fmt.Sprintf("%s/tasks", routePrefix)
+	individualRoute := fmt.Sprintf("%s/:taskTitle", baseRoute)
 
-	h.router.POST(baseEqRoute, h.createTask)
+	h.router.POST(baseRoute, h.createTask)
 	h.router.DELETE(individualRoute, h.deleteTask)
-	h.router.GET(baseAllRoute, h.getAllTask)
-	h.router.GET(baseEqRoute, h.getAllTaskByAsset)
+	h.router.GET(baseRoute, h.listTasks)
 	h.router.GET(individualRoute, h.getTask)
 	h.router.PUT(individualRoute, h.updateTask)
 }
 
+// CreateTask godoc
+//
+//	@Summary		Create a task
+//	@Description	Create a task
+//	@Accept			json
+//	@Param			task	body	tp.Task	true	"Task object"
+//	@Produce		json
+//	@Success		201	{object}	tp.Task
+//	@Router			/tasks [post]
 func (h *Api) createTask(c *gin.Context) {
-	var t tp.Task
-	if err := c.BindJSON(&t); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var task tp.Task
+	if err := c.BindJSON(&task); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	assetId, err := strconv.Atoi(c.Param("assetId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	id, err := h.app.CreateTask(t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, assetId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		t.Id = id
-		c.IndentedJSON(201, t) // switch to .JSON() for performance
-	}
+	task, err := h.app.CreateTask(task)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, task))
 }
 
+// DeleteTask godoc
+//
+//	@Summary		Delete a task
+//	@Description	Delete a task
+//	@Param			taskTitle	path	string	true	"Task Title"
+//	@Success		204
+//	@Failure		404
+//	@Router			/tasks/{taskTitle} [delete]
 func (h *Api) deleteTask(c *gin.Context) {
-	taskid, err := strconv.Atoi(c.Param("taskId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.DeleteTask(taskid)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
+	err := h.app.DeleteTask(c.Param("taskTitle"))
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-func (h *Api) getAllTask(c *gin.Context) {
-	tasks, err := h.app.GetAllTask()
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, tasks) // switch to .JSON() for performance
-	}
+// ListTasks godoc
+//
+//	@Summary		List tasks
+//	@Description	List all tasks
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Task
+//	@Router			/tasks [get]
+func (h *Api) listTasks(c *gin.Context) {
+	tasks, err := h.app.ListTasks()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tasks))
 }
 
-func (h *Api) getAllTaskByAsset(c *gin.Context) {
-	assetId, err := strconv.Atoi(c.Param("assetId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	tasks, err := h.app.GetAllTaskByAssetId(assetId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, tasks) // switch to .JSON() for performance
-	}
-}
-
+// GetTask godoc
+//
+//	@Summary		Get a task
+//	@Description	Get a task
+//	@Param			taskTitle	path	string	true	"Task Title"
+//	@Produce		json
+//	@Success		200	{object}	tp.Task
+//	@Router			/tasks/{taskTitle} [get]
 func (h *Api) getTask(c *gin.Context) {
-	taskid, err := strconv.Atoi(c.Param("taskId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	task, err := h.app.GetTask(taskid)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, task) // switch to .JSON() for performance
-	}
+	task, err := h.app.GetTask(c.Param("taskTitle"))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, task))
 }
 
+// UpdateTask godoc
+//
+//	@Summary		Update a task
+//	@Description	Update a task
+//	@Accept			json
+//	@Param			taskTitle	path	string	true	"Task Title"
+//	@Param			task		body	tp.Task	true	"Task object"
+//	@Produce		json
+//	@Success		204
+//	@Router			/tasks/{taskTitle} [put]
 func (h *Api) updateTask(c *gin.Context) {
-	var t tp.Task
-	if err := c.BindJSON(&t); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var task tp.Task
+	if err := c.BindJSON(&task); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	assetId, err := strconv.Atoi(c.Param("assetId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	taskid, err := strconv.Atoi(c.Param("taskId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.UpdateTask(taskid, t.Title, t.Instructions, t.TimePeriodicityQuantity, t.TimePeriodicityUnitId, t.UsagePeriodicityQuantity, t.UsagePeriodicityUnitId, assetId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
+	task, err := h.app.UpdateTask(c.Param("taskTitle"), task)
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }

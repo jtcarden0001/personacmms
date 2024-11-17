@@ -3,34 +3,29 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
 type Task interface {
-	CreateTask(string, string, *int, *int, *int, *int, int) (int, error)
-	DeleteTask(int) error
-	GetAllTask() ([]tp.Task, error)
-	GetAllTaskByAssetId(int) ([]tp.Task, error)
-	GetTask(int) (tp.Task, error)
-	UpdateTask(int, string, string, *int, *int, *int, *int, int) error
+	CreateTask(tp.Task) (tp.Task, error)
+	DeleteTask(string) error
+	ListTasks() ([]tp.Task, error)
+	GetTask(string) (tp.Task, error)
+	UpdateTask(string, tp.Task) (tp.Task, error)
 }
 
-func (a *App) CreateTask(title string, instructions string, timePeriodicityQuant *int, timePeriodicityUnitId *int, usagePeriodicityQuant *int, usagePeriodicityUnitId *int, assetId int) (int, error) {
-	return a.db.CreateTask(title, instructions, timePeriodicityQuant, timePeriodicityUnitId, usagePeriodicityQuant, usagePeriodicityUnitId, assetId)
+func (a *App) CreateTask(task tp.Task) (tp.Task, error) {
+	return a.db.CreateTask(task)
 }
 
-func (a *App) DeleteTask(id int) error {
-	return a.db.DeleteTask(id)
+func (a *App) DeleteTask(title string) error {
+	return a.db.DeleteTask(title)
 }
 
-func (a *App) GetAllTask() ([]tp.Task, error) {
-	return a.db.GetAllTask()
+func (a *App) ListTasks() ([]tp.Task, error) {
+	return a.db.ListTasks()
 }
 
-func (a *App) GetAllTaskByAssetId(assetId int) ([]tp.Task, error) {
-	return a.db.GetAllTaskByAssetId(assetId)
+func (a *App) GetTask(title string) (tp.Task, error) {
+	return a.db.GetTask(title)
 }
 
-func (a *App) GetTask(id int) (tp.Task, error) {
-	return a.db.GetTask(id)
-}
-
-func (a *App) UpdateTask(id int, title string, instructions string, timePeriodicityQuant *int, timePeriodicityUnitId *int, usagePeriodicityQuant *int, usagePeriodicityUnitId *int, assetId int) error {
-	return a.db.UpdateTask(id, title, instructions, timePeriodicityQuant, timePeriodicityUnitId, usagePeriodicityQuant, usagePeriodicityUnitId, assetId)
+func (a *App) UpdateTask(oldTitle string, task tp.Task) (tp.Task, error) {
+	return a.db.UpdateTask(oldTitle, task)
 }

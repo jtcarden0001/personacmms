@@ -1,82 +1,80 @@
 package postgres
 
 import (
-	"database/sql"
+	"fmt"
 
+	uid "github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type Task interface {
-	CreateTask(string, string, *int, *int, *int, *int, int) (int, error)
-	DeleteTask(int) error
-	GetAllTask() ([]tp.Task, error)
-	GetAllTaskByAssetId(int) ([]tp.Task, error)
-	GetTask(int) (tp.Task, error)
-	UpdateTask(int, string, string, *int, *int, *int, *int, int) error
+	CreateTask(tp.Task) (tp.Task, error)
+	DeleteTask(string) error
+	ListTasks() ([]tp.Task, error)
+	GetTask(string) (tp.Task, error)
+	UpdateTask(string, tp.Task) (tp.Task, error)
 }
 
-func (pg *Store) CreateTask(title string, instructions string, timeQuant *int, timeUnitId *int, usageQuant *int, usageUnitId *int, assetId int) (int, error) {
-	query := `INSERT INTO task (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ($1, $2, $3, $4, $5, $6, $7) returning id`
-	var id int
-	err := pg.db.QueryRow(query, title, instructions, timeQuant, timeUnitId, usageQuant, usageUnitId, assetId).Scan(&id)
+var taskTableName = "task"
 
-	return id, err
+func (pg *Store) CreateTask(task tp.Task) (tp.Task, error) {
+	task.Id = uid.New()
+	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, taskTableName)
+	_, err := pg.db.Exec(query, task.Id.String(), task.Title, task.Description)
+	if err != nil {
+		return tp.Task{}, err
+	}
+
+	return task, nil
 }
 
-func (pg *Store) DeleteTask(id int) error {
-	query := `DELETE FROM task WHERE id = $1`
-	_, err := pg.db.Exec(query, id)
+func (pg *Store) DeleteTask(title string) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, taskTableName)
+	_, err := pg.db.Exec(query, title)
 
 	return err
 }
 
-func (pg *Store) GetAllTask() ([]tp.Task, error) {
-	query := `SELECT id, title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id FROM task`
+func (pg *Store) ListTasks() ([]tp.Task, error) {
+	query := fmt.Sprintf(`SELECT id, title, description FROM %s`, taskTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	return populateTaskList(rows)
-}
-
-func (pg *Store) GetAllTaskByAssetId(assetId int) ([]tp.Task, error) {
-	query := `SELECT id, title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id FROM task WHERE asset_id = $1`
-	rows, err := pg.db.Query(query, assetId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	return populateTaskList(rows)
-}
-
-func (pg *Store) GetTask(id int) (tp.Task, error) {
-	query := `SELECT id, title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id FROM task WHERE id = $1`
-	var t tp.Task
-	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title, &t.Instructions, &t.TimePeriodicityQuantity, &t.TimePeriodicityUnitId, &t.UsagePeriodicityQuantity, &t.UsagePeriodicityUnitId, &t.AssetId)
-
-	return t, err
-}
-
-func (pg *Store) UpdateTask(id int, title string, instructions string, timeQuant *int, timeUnit *int, usageQuant *int, usageUnit *int, assetId int) error {
-	query := `UPDATE task SET title = $1, instructions = $2, time_periodicity_quantity = $3, time_periodicity_unit_id = $4, usage_periodicity_quantity = $5, usage_periodicity_unit_id = $6, asset_id = $7 WHERE id = $8`
-	_, err := pg.db.Exec(query, title, instructions, timeQuant, timeUnit, usageQuant, usageUnit, assetId, id)
-
-	return err
-}
-
-func populateTaskList(rows *sql.Rows) ([]tp.Task, error) {
-	var tasks []tp.Task
+	var tasks = []tp.Task{}
 	for rows.Next() {
-		var t tp.Task
-		err := rows.Scan(&t.Id, &t.Title, &t.Instructions, &t.TimePeriodicityQuantity, &t.TimePeriodicityUnitId, &t.UsagePeriodicityQuantity, &t.UsagePeriodicityUnitId, &t.AssetId)
+		var task tp.Task
+		err = rows.Scan(&task.Id, &task.Title, &task.Description)
 		if err != nil {
 			return nil, err
 		}
-		tasks = append(tasks, t)
+		tasks = append(tasks, task)
 	}
 
 	return tasks, nil
+}
+
+func (pg *Store) GetTask(title string) (tp.Task, error) {
+	query := fmt.Sprintf(`SELECT id, title, description FROM %s WHERE title = $1`, taskTableName)
+	row := pg.db.QueryRow(query, title)
+
+	var task tp.Task
+	err := row.Scan(&task.Id, &task.Title, &task.Description)
+	if err != nil {
+		return tp.Task{}, err
+	}
+
+	return task, nil
+}
+
+func (pg *Store) UpdateTask(title string, task tp.Task) (tp.Task, error) {
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 returning id`, taskTableName)
+	err := pg.db.QueryRow(query, task.Title, task.Description, title).Scan(&task.Id)
+	if err != nil {
+		return tp.Task{}, err
+	}
+
+	return task, nil
 }
