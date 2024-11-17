@@ -16,7 +16,7 @@ type Category interface {
 func (pg *Store) CreateCategory(title, description string) (tp.Category, error) {
 	id := uid.New()
 	query := `INSERT INTO category (id, title, description) VALUES ($1, $2, $3) returning id`
-	_, err := pg.db.Exec(query, id.String(), title)
+	_, err := pg.db.Exec(query, id.String(), title, description)
 	if err != nil {
 		return tp.Category{}, err
 	}
