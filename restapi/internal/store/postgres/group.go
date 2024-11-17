@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"fmt"
+
 	uid "github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
@@ -13,10 +15,12 @@ type Group interface {
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 }
 
+var groupTableName = "assetgroup"
+
 func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
-	query := `INSERT INTO assetgroup (id, title) VALUES ($1, $2) returning id`
+	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, groupTableName)
 	_, err := pg.db.Exec(query, id.String(), grp.Title)
 	if err != nil {
 		return tp.Group{}, processDbError(err)
@@ -27,7 +31,7 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 }
 
 func (pg *Store) DeleteGroup(title string) error {
-	query := `DELETE FROM assetgroup WHERE title = $1`
+	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, groupTableName)
 	_, err := pg.db.Exec(query, title)
 
 	return processDbError(err)
@@ -35,7 +39,7 @@ func (pg *Store) DeleteGroup(title string) error {
 
 func (pg *Store) ListGroups() ([]tp.Group, error) {
 	var groups = []tp.Group{}
-	query := `SELECT id, title FROM assetgroup`
+	query := fmt.Sprintf(`SELECT id, title FROM %s`, groupTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return groups, processDbError(err)
@@ -55,7 +59,7 @@ func (pg *Store) ListGroups() ([]tp.Group, error) {
 }
 
 func (pg *Store) GetGroup(title string) (tp.Group, error) {
-	query := `SELECT id, title FROM assetgroup WHERE title = $1`
+	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, groupTableName)
 	var grp tp.Group
 	err := pg.db.QueryRow(query, title).Scan(&grp.Id, &grp.Title)
 	if err != nil {
@@ -66,7 +70,7 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 }
 
 func (pg *Store) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, error) {
-	query := `UPDATE assetgroup SET title = $1 WHERE title = $2 returning id, title`
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 returning id, title`, groupTableName)
 	var grp tp.Group
 	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&grp.Id, &grp.Title)
 	if err != nil {
