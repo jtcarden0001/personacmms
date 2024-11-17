@@ -25,6 +25,24 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/categories": {
+            "get": {
+                "description": "List all categories",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Category"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a category",
                 "consumes": [
@@ -33,7 +51,7 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create a category",
+                "summary": "Create an asset category",
                 "parameters": [
                     {
                         "description": "Category object",
@@ -56,12 +74,87 @@ const docTemplate = `{
             }
         },
         "/categories/{categoryTitle}": {
+            "get": {
+                "description": "Get a category",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category Title",
+                        "name": "categoryTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Category"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category Title",
+                        "name": "categoryTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Category object",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Category"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a category",
-                "summary": "Delete a category",
+                "summary": "Delete an asset category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category Title",
+                        "name": "categoryTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }

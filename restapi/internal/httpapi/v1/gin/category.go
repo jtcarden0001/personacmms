@@ -21,10 +21,10 @@ func (h *HttpApi) registerCategoryRoutes() {
 
 // CreateCategory godoc
 //
-//	@Summary		Create a category
+//	@Summary		Create an asset category
 //	@Description	Create a category
 //	@Accept			json
-//	@Param			category body tp.Category true "Category object"
+//	@Param			category	body	tp.Category	true	"Category object"
 //	@Produce		json
 //	@Success		201	{object}	tp.Category
 //	@Router			/categories [post]
@@ -47,9 +47,11 @@ func (h *HttpApi) createCategory(c *gin.Context) {
 
 // DeleteCategory godoc
 //
-//	@Summary		Delete a category
+//	@Summary		Delete an asset category
 //	@Description	Delete a category
+//	@Param			categoryTitle	path	string	true	"Category Title"
 //	@Success		204
+//	@Failure		404
 //	@Router			/categories/{categoryTitle} [delete]
 func (h *HttpApi) deleteCategory(c *gin.Context) {
 	title := c.Param("categoryTitle")
@@ -61,6 +63,14 @@ func (h *HttpApi) deleteCategory(c *gin.Context) {
 	c.IndentedJSON(http.StatusNoContent, gin.H{}) // switch to .JSON() for performance
 }
 
+// GetCategory godoc
+//
+//	@Summary		Get an asset category
+//	@Description	Get a category
+//	@Param			categoryTitle	path	string	true	"Category Title"
+//	@Produce		json
+//	@Success		200	{object}	tp.Category
+//	@Router			/categories/{categoryTitle} [get]
 func (h *HttpApi) getCategory(c *gin.Context) {
 	title := c.Param("categoryTitle")
 	cat, err := h.app.GetCategory(title)
@@ -71,6 +81,13 @@ func (h *HttpApi) getCategory(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, cat) // switch to .JSON() for performance
 }
 
+// ListCategory godoc
+//
+//	@Summary		List asset categories
+//	@Description	List all categories
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Category
+//	@Router			/categories [get]
 func (h *HttpApi) listCategory(c *gin.Context) {
 	cats, err := h.app.ListCategory()
 	if err != nil {
@@ -80,6 +97,17 @@ func (h *HttpApi) listCategory(c *gin.Context) {
 	}
 }
 
+// UpdateCategory godoc
+//
+//	@Summary		Update an asset category
+//	@Description	Update a category
+//	@Accept			json
+//	@Param			categoryTitle	path	string	true	"Category Title"
+//	@Param			category	body	tp.Category	true	"Category object"
+//	@Produce		json
+//	@Success		200	{object}	tp.Category
+//	@Failure		500
+//	@Router			/categories/{categoryTitle} [put]
 func (h *HttpApi) updateCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {

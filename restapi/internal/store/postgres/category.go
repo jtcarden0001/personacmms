@@ -58,9 +58,9 @@ func (pg *Store) ListCategory() ([]tp.Category, error) {
 }
 
 func (pg *Store) GetCategory(title string) (tp.Category, error) {
-	query := `SELECT id, title FROM category WHERE title = $1`
+	query := `SELECT id, title, description FROM category WHERE title = $1`
 	var cat tp.Category
-	err := pg.db.QueryRow(query, title).Scan(&cat.Id, &cat.Title)
+	err := pg.db.QueryRow(query, title).Scan(&cat.Id, &cat.Title, &cat.Description)
 	if err != nil {
 		return tp.Category{}, err
 	}
