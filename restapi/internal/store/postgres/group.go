@@ -8,7 +8,7 @@ import (
 type Group interface {
 	CreateGroup(tp.Group) (tp.Group, error)
 	DeleteGroup(string) error
-	ListGroup() ([]tp.Group, error)
+	ListGroups() ([]tp.Group, error)
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, string) (tp.Group, error)
 }
@@ -33,7 +33,7 @@ func (pg *Store) DeleteGroup(title string) error {
 	return err
 }
 
-func (pg *Store) ListGroup() ([]tp.Group, error) {
+func (pg *Store) ListGroups() ([]tp.Group, error) {
 	query := `SELECT id, title FROM group`
 	rows, err := pg.db.Query(query)
 	if err != nil {
