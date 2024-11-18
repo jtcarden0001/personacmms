@@ -1,5 +1,9 @@
 -- Assumption is this is run on a clean database
 
+INSERT INTO category (title) VALUES ('seed-get-cat');
+INSERT INTO category (title) VALUES ('seed-delete-cat');
+
+/*
 INSERT INTO asset_category (title) VALUES ('Test Category 1');
 INSERT INTO asset_category (title) VALUES ('Test Category 2');
 
@@ -33,3 +37,4 @@ INSERT INTO task_tool (task_id, tool_id) VALUES (1, 1);
 INSERT INTO consumable (title) VALUES ('Test Consumable 1');
 
 INSERT INTO task_consumable (task_id, consumable_id, quantity_note) VALUES (1, 1, '1');
+*/

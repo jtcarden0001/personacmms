@@ -2,67 +2,149 @@ package test
 
 import (
 	"testing"
+
+	"github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func TestCategoryCRUD(t *testing.T) {
+func TestCategoryCreate(t *testing.T) {
+	store := InitializeStore("testcategorycreate")
+
 	// Create
-	cat1, err := testStore.CreateCategory("test category", "test description")
+	cat := types.Category{
+		Title:       "testcategory1",
+		Description: "test description",
+	}
+
+	returnCat, err := store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	// create a second category
-	cat2, err := testStore.CreateCategory("test category 2", "test description 2")
+	if returnCat.Title != cat.Title {
+		t.Errorf("Create() failed: expected %s, got %s", cat.Title, returnCat.Title)
+	}
+
+	if returnCat.Description != cat.Description {
+		t.Errorf("Create() failed: expected %s, got %s", cat.Description, returnCat.Description)
+	}
+}
+
+func TestCategoryDelete(t *testing.T) {
+	store := InitializeStore("testcategorydelete")
+
+	// Delete
+	cat := types.Category{
+		Title:       "testcategory1",
+		Description: "test description",
+	}
+	_, err := store.CreateCategory(cat)
+	if err != nil {
+		t.Errorf("Create() failed: %v", err)
+	}
+
+	err = store.DeleteCategory(cat.Title)
+	if err != nil {
+		t.Errorf("Delete() failed: %v", err)
+	}
+
+	// Get
+	_, err = store.GetCategory(cat.Title)
+	if err == nil {
+		t.Errorf("Get() failed: expected error, got nil")
+	}
+}
+
+func TestCategoryList(t *testing.T) {
+	store := InitializeStore("testcategorylist")
+
+	// List
+	cats, err := store.ListCategories()
+	if err != nil {
+		t.Errorf("List() failed: %v", err)
+	}
+
+	if len(cats) != 0 {
+		t.Errorf("ListCategory() failed: expected 0, got %d", len(cats))
+	}
+
+	// Create
+	cat := types.Category{
+		Title:       "testcategory1",
+		Description: "test description",
+	}
+	_, err = store.CreateCategory(cat)
+	if err != nil {
+		t.Errorf("Create() failed: %v", err)
+	}
+
+	cat.Title = "testcategory2"
+	_, err = store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// List
-	cats, err := testStore.ListCategories()
+	cats, err = store.ListCategories()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
 	}
+
 	if len(cats) != 2 {
 		t.Errorf("ListCategory() failed: expected 2, got %d", len(cats))
 	}
+}
+
+func TestCategoryGet(t *testing.T) {
+	store := InitializeStore("testcategoryget")
 
 	// Get
-	getCat, err := testStore.GetCategory(cat1.Title)
+	cat := types.Category{
+		Title:       "testcategory1",
+		Description: "test description",
+	}
+	_, err := store.CreateCategory(cat)
+	if err != nil {
+		t.Errorf("Create() failed: %v", err)
+	}
+
+	returnCat, err := store.GetCategory(cat.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
-	if (getCat.Id != cat1.Id) || (getCat.Title != cat1.Title) {
-		t.Errorf("GetCategory() failed: expected %d, got %d", cat1.Id, getCat.Id)
+
+	if returnCat.Title != cat.Title {
+		t.Errorf("Get() failed: expected %s, got %s", cat.Title, returnCat.Title)
 	}
 
+	if returnCat.Description != cat.Description {
+		t.Errorf("Get() failed: expected %s, got %s", cat.Description, returnCat.Description)
+	}
+}
+
+func TestCategoryUpdate(t *testing.T) {
+	store := InitializeStore("testcategoryupdate")
+
 	// Update
-	upCat, err := testStore.UpdateCategory(cat1.Title, "test category 3", "test description 3")
+	cat := types.Category{
+		Title:       "testcategory1",
+		Description: "test description",
+	}
+	_, err := store.CreateCategory(cat)
+	if err != nil {
+		t.Errorf("Create() failed: %v", err)
+	}
+
+	cat.Description = "new description"
+	returnCat, err := store.UpdateCategory(cat.Title, cat)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	// Get
-	getCat, err = testStore.GetCategory(upCat.Title)
-	if err != nil {
-		t.Errorf("Get() failed: %v", err)
-	}
-	if (upCat.Id != getCat.Id) || (upCat.Title != getCat.Title) {
-		t.Errorf("GetCategory() failed: expected %d, got %d", getCat.Id, upCat.Id)
+	if returnCat.Title != cat.Title {
+		t.Errorf("Update() failed: expected %s, got %s", cat.Title, returnCat.Title)
 	}
 
-	// Delete
-	err = testStore.DeleteCategory(upCat.Title)
-	if err != nil {
-		t.Errorf("Delete() failed: %v", err)
+	if returnCat.Description != cat.Description {
+		t.Errorf("Update() failed: expected %s, got %s", cat.Description, returnCat.Description)
 	}
-
-	err = testStore.DeleteCategory(cat2.Title)
-	if err != nil {
-		t.Errorf("Delete() failed: %v", err)
-	}
-
-	// err = teardownTable("asset_category")
-	// if err != nil {
-	// 	t.Errorf("teardownTable(asset_category) failed: %v", err)
-	// }
 }

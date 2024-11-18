@@ -29,13 +29,13 @@ func (h *Api) createAsset(c *gin.Context) {
 		return
 	}
 
-	id, err := h.app.CreateAsset(e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		e.Id = id
-		c.IndentedJSON(http.StatusCreated, e) // switch to .JSON() for performance
-	}
+	// id, err := h.app.CreateAsset(e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryTitle)
+	// if err != nil {
+	// 	processAppError(c, err)
+	// } else {
+	// 	e.Id = id
+	// 	c.IndentedJSON(http.StatusCreated, e) // switch to .JSON() for performance
+	// }
 }
 
 func (h *Api) deleteAsset(c *gin.Context) {
@@ -85,17 +85,17 @@ func (h *Api) updateAsset(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
+	// id, err := strconv.Atoi(c.Param("id"))
+	// if err != nil {
+	// 	c.JSON(400, gin.H{"error": err.Error()})
+	// 	return
+	// }
 
-	e.Id = id // ignoring the id in the body and using the id in the url
-	err = h.app.UpdateAsset(e.Id, e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(http.StatusOK, e) // switch to .JSON() for performance
-	}
+	// e.Id = id // ignoring the id in the body and using the id in the url
+	// err = h.app.UpdateAsset(e.Id, e.Title, e.Year, e.Make, e.ModelNumber, e.Description, e.CategoryId)
+	// if err != nil {
+	// 	processAppError(c, err)
+	// } else {
+	// 	c.IndentedJSON(http.StatusOK, e) // switch to .JSON() for performance
+	// }
 }

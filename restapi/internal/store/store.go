@@ -19,18 +19,14 @@ type Store interface {
 	imp.UsagePeriodicityUnit
 	imp.WorkOrder
 	imp.WorkOrderStatus
-}
-
-type StoreTest interface {
-	Store
-	CleanTable(string) error
-	ResetSequence(string, int) error
+	imp.Exec
 }
 
 func New() Store {
 	return imp.New()
 }
 
-func NewTest() StoreTest {
-	return imp.NewTest()
+// used for testing
+func NewWithDb(dbName string) Store {
+	return imp.NewWithDb(dbName)
 }

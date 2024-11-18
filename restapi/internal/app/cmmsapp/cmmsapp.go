@@ -9,7 +9,3 @@ type App struct {
 func New(injectedStore st.Store) *App {
 	return &App{db: injectedStore}
 }
-
-func NewTest(injectedStore st.StoreTest) *App {
-	return &App{db: injectedStore}
-}

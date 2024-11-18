@@ -13,7 +13,7 @@ services:
       - "40000:40000"
     environment:
       - DATABASE_HOST=dev-pcmms-db
-      # - DATABASE_PORT=5432 # replace with ${PCMMS_DB_PORT} and implement in app if we want to customize db port
+      - DATABASE_PORT=${PCMMS_DB_PORT} # replace with ${PCMMS_DB_PORT} and implement in app if we want to customize db port
       - DATABASE_USER=${PCMMS_DB_USER} 
       - DATABASE_PASSWORD=${PCMMS_DB_PASSWORD} 
       - DATABASE_NAME=${PCMMS_DB_NAME} 
@@ -30,11 +30,12 @@ services:
     container_name: dev-pcmms-db
     expose:
       # TODO: move port configuration to centralized config
-      - "5432"
+      - "${PCMMS_DB_PORT}"
     environment:
       - POSTGRES_USER=${PCMMS_DB_USER} 
       - POSTGRES_PASSWORD=${PCMMS_DB_PASSWORD} 
       - POSTGRES_DB=${PCMMS_DB_NAME} 
+      - PGPORT=${PCMMS_DB_PORT}
     volumes: 
       - dev-db-data:/var/lib/postgresql/data
       - ../../internal/store/postgres/ddl/init.sql:/docker-entrypoint-initdb.d/01-init.sql

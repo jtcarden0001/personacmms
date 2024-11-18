@@ -38,7 +38,7 @@ func (pg *Store) GetAllAsset() ([]tp.Asset, error) {
 	var Asset []tp.Asset
 	for rows.Next() {
 		var e tp.Asset
-		err = rows.Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryId)
+		err = rows.Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryTitle)
 		if err != nil {
 			return nil, err
 		}
@@ -51,7 +51,7 @@ func (pg *Store) GetAllAsset() ([]tp.Asset, error) {
 func (pg *Store) GetAsset(id int) (tp.Asset, error) {
 	query := `SELECT id, title, year, make, model_number, description, category_id FROM Asset WHERE id = $1`
 	var e tp.Asset
-	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryId)
+	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryTitle)
 
 	return e, err
 }

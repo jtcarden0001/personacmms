@@ -28,7 +28,3 @@ type AppTest interface {
 func New(injectedStore st.Store) App {
 	return imp.New(injectedStore)
 }
-
-func NewTest(injectedStore st.StoreTest) AppTest {
-	return imp.NewTest(injectedStore)
-}

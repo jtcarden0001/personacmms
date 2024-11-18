@@ -14,17 +14,14 @@ type Store struct {
 	db   *sql.DB
 }
 
-var prodDbName = "personacmms-prod"
-var testDbName = "personacmms-test"
-
-// All of the entity store code is structured almost exactly the same.  Probably a way to reduce code using generics or something.
-// TODO: look into above
+// TODO: All of the entity store code is structured almost exactly the same.  Probably a way to reduce code using generics or something.
 func New() *Store {
-	return getStore(prodDbName)
+	return getStore("")
 }
 
-func NewTest() *Store {
-	return getStore(testDbName)
+// used for testing
+func NewWithDb(dbName string) *Store {
+	return getStore(dbName)
 }
 
 func getStore(dbName string) *Store {
@@ -32,11 +29,14 @@ func getStore(dbName string) *Store {
 	pgUser := os.Getenv("DATABASE_USER")
 	pgPass := os.Getenv("DATABASE_PASSWORD")
 	pgHost := os.Getenv("DATABASE_HOST")
-	//pgPort := os.Getenv("DATABASE_PORT")
+	pgPort := os.Getenv("DATABASE_PORT")
+	if dbName == "" {
+		dbName = os.Getenv("DATABASE_NAME")
+	}
 
-	connStr := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", pgUser, pgPass, pgHost, dbName)
+	connStr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", pgUser, pgPass, pgHost, pgPort, dbName)
 
-	Db, err := sql.Open(pgUser, connStr)
+	Db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,20 +47,11 @@ func getStore(dbName string) *Store {
 	}
 }
 
-func (pg *Store) ResetSequence(table string, id int) error {
-	query := fmt.Sprintf("ALTER SEQUENCE %s_id_seq RESTART WITH %d", table, id)
-	_, err := pg.db.Exec(query)
-
-	return err
+type Exec interface {
+	Exec(string) error
 }
 
-func (pg *Store) CleanTable(tableName string) error {
-	// very important to prevent accidental deletion of production data
-	if pg.name != testDbName {
-		return fmt.Errorf("clean table for table %s failed on db: %s, cleaning is only allowable on db: %s", tableName, pg.name, testDbName)
-	}
-
-	query := fmt.Sprintf("DELETE FROM %s", tableName)
+func (pg *Store) Exec(query string) error {
 	_, err := pg.db.Exec(query)
 	return err
 }
