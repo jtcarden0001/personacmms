@@ -12,7 +12,7 @@ A backend service hosting the core of the PersonaCMMS functionality.
 
 **DB schema:**
 
-![DBSCHEMA](assets/db_schema.png)
+![DBSCHEMA](docs/images/db_schema.png)
 
 ## TODO
 * move these TODOs into GitHub issues
