@@ -94,34 +94,7 @@ func TestCategoryList(t *testing.T) {
 	}
 }
 
-func TestCategoryGet(t *testing.T) {
-	store := InitializeStore("testcategoryget")
-
-	// Get
-	cat := types.Category{
-		Title:       "testcategory1",
-		Description: "test description",
-	}
-	_, err := store.CreateCategory(cat)
-	if err != nil {
-		t.Errorf("Create() failed: %v", err)
-	}
-
-	returnCat, err := store.GetCategory(cat.Title)
-	if err != nil {
-		t.Errorf("Get() failed: %v", err)
-	}
-
-	if returnCat.Title != cat.Title {
-		t.Errorf("Get() failed: expected %s, got %s", cat.Title, returnCat.Title)
-	}
-
-	if returnCat.Description != cat.Description {
-		t.Errorf("Get() failed: expected %s, got %s", cat.Description, returnCat.Description)
-	}
-}
-
-func TestCategoryUpdate(t *testing.T) {
+func TestCategoryUpdateGet(t *testing.T) {
 	store := InitializeStore("testcategoryupdate")
 
 	// Update
@@ -140,11 +113,16 @@ func TestCategoryUpdate(t *testing.T) {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	if returnCat.Title != cat.Title {
+	getCat, err := store.GetCategory(cat.Title)
+	if err != nil {
+		t.Errorf("Get() failed: %v", err)
+	}
+
+	if returnCat.Title != cat.Title || getCat.Title != cat.Title {
 		t.Errorf("Update() failed: expected %s, got %s", cat.Title, returnCat.Title)
 	}
 
-	if returnCat.Description != cat.Description {
+	if returnCat.Description != cat.Description || getCat.Description != cat.Description {
 		t.Errorf("Update() failed: expected %s, got %s", cat.Description, returnCat.Description)
 	}
 }

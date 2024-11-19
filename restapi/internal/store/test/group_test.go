@@ -112,6 +112,9 @@ func TestGroupUpdateGet(t *testing.T) {
 
 	// Get
 	getGroup, err := store.GetGroup(group.Title)
+	if err != nil {
+		t.Errorf("Get() failed: %v", err)
+	}
 
 	if returnGroup.Title != group.Title || getGroup.Title != group.Title {
 		t.Errorf("Get() failed: expected %s, got %s", group.Title, returnGroup.Title)
