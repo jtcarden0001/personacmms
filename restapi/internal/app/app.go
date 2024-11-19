@@ -16,7 +16,7 @@ type App interface {
 	imp.Task
 	imp.TimeUnit
 	imp.Tool
-	imp.UsagePeriodicityUnit
+	imp.UsageUnit
 	imp.WorkOrderStatus
 	imp.WorkOrder
 }

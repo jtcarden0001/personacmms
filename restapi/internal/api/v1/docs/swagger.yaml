@@ -39,6 +39,13 @@ definitions:
     required:
     - title
     type: object
+  types.UsageUnit:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -485,6 +492,81 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeUnit'
       summary: Update a time unit
+  /usage-units:
+    get:
+      description: List all usage units
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.UsageUnit'
+            type: array
+      summary: List usage units
+    post:
+      consumes:
+      - application/json
+      description: Create a usage unit
+      parameters:
+      - description: Usage Unit object
+        in: body
+        name: usageUnit
+        required: true
+        schema:
+          $ref: '#/definitions/types.UsageUnit'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.UsageUnit'
+      summary: Create a usage unit
+  /usage-units/{usageUnitTitle}:
+    delete:
+      description: Delete a usage unit
+      parameters:
+      - description: Usage Unit Title
+        in: path
+        name: usageUnitTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a usage unit
+    get:
+      description: Get a usage unit
+      parameters:
+      - description: Usage Unit Title
+        in: path
+        name: usageUnitTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UsageUnit'
+      summary: Get a usage unit
+    put:
+      consumes:
+      - application/json
+      description: Update a usage unit
+      parameters:
+      - description: Usage Unit Title
+        in: path
+        name: usageUnitTitle
+        required: true
+        type: string
+      responses: {}
+      summary: Update a usage unit
 securityDefinitions:
   BasicAuth:
     type: basic

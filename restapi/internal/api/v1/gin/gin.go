@@ -66,7 +66,7 @@ func (h *Api) registerRoutes() {
 	h.registerTaskRoutes()
 	h.registerTimeUnitRoutes()
 	h.registerToolRoutes()
-	h.registerUsagePeriodicityUnitRoutes()
+	h.registerUsageUnitRoutes()
 	h.registerWorkOrderStatusRoutes()
 	h.registerWorkOrderRoutes()
 	h.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

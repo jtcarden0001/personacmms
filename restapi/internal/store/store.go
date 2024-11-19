@@ -16,7 +16,7 @@ type Store interface {
 	imp.TaskTool
 	imp.TimeUnit
 	imp.Tool
-	imp.UsagePeriodicityUnit
+	imp.UsageUnit
 	imp.WorkOrder
 	imp.WorkOrderStatus
 	imp.Exec

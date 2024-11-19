@@ -674,6 +674,119 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/usage-units": {
+            "get": {
+                "description": "List all usage units",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List usage units",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.UsageUnit"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a usage unit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a usage unit",
+                "parameters": [
+                    {
+                        "description": "Usage Unit object",
+                        "name": "usageUnit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageUnit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageUnit"
+                        }
+                    }
+                }
+            }
+        },
+        "/usage-units/{usageUnitTitle}": {
+            "get": {
+                "description": "Get a usage unit",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a usage unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Usage Unit Title",
+                        "name": "usageUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageUnit"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a usage unit",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Update a usage unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Usage Unit Title",
+                        "name": "usageUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Delete a usage unit",
+                "summary": "Delete a usage unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Usage Unit Title",
+                        "name": "usageUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -728,6 +841,17 @@ const docTemplate = `{
             }
         },
         "types.TimeUnit": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.UsageUnit": {
             "type": "object",
             "required": [
                 "title"
