@@ -1,41 +1,51 @@
 package postgres
 
 import (
+	"fmt"
+
+	uid "github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type Consumable interface {
-	CreateConsumable(string) (int, error)
-	DeleteConsumable(int) error
-	GetAllConsumable() ([]tp.Consumable, error)
-	GetConsumable(int) (tp.Consumable, error)
-	UpdateConsumable(int, string) error
+	CreateConsumable(tp.Consumable) (tp.Consumable, error)
+	DeleteConsumable(string) error
+	ListConsumables() ([]tp.Consumable, error)
+	GetConsumable(string) (tp.Consumable, error)
+	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
 }
 
-func (pg *Store) CreateConsumable(title string) (int, error) {
-	query := "INSERT INTO consumable (title) VALUES ($1) RETURNING id"
-	var id int
-	err := pg.db.QueryRow(query, title).Scan(&id)
+var consumableTableName = "consumable"
 
-	return id, err
+func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
+	//TODO: allow for group creation with a specified id ?
+	id := uid.New()
+	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, consumableTableName)
+	_, err := pg.db.Exec(query, id.String(), c.Title)
+	if err != nil {
+		return tp.Consumable{}, processDbError(err)
+	}
+
+	c.Id = id
+	return c, nil
 }
 
-func (pg *Store) DeleteConsumable(id int) error {
-	query := "DELETE FROM consumable WHERE id = $1"
-	_, err := pg.db.Exec(query, id)
+func (pg *Store) DeleteConsumable(title string) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, consumableTableName)
+	_, err := pg.db.Exec(query, title)
 
-	return err
+	return processDbError(err)
 }
 
-func (pg *Store) GetAllConsumable() ([]tp.Consumable, error) {
-	query := "SELECT id, title FROM consumable"
+func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
+	var consumables = []tp.Consumable{}
+	query := fmt.Sprintf(`SELECT id, title FROM %s`, consumableTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return consumables, processDbError(err)
 	}
 	defer rows.Close()
 
-	var consumables []tp.Consumable
 	for rows.Next() {
 		var c tp.Consumable
 		err = rows.Scan(&c.Id, &c.Title)
@@ -45,20 +55,26 @@ func (pg *Store) GetAllConsumable() ([]tp.Consumable, error) {
 		consumables = append(consumables, c)
 	}
 
-	return consumables, err
+	return consumables, nil
 }
 
-func (pg *Store) GetConsumable(id int) (tp.Consumable, error) {
-	query := "SELECT id, title FROM consumable WHERE id = $1"
+func (pg *Store) GetConsumable(title string) (tp.Consumable, error) {
 	var c tp.Consumable
-	err := pg.db.QueryRow(query, id).Scan(&c.Id, &c.Title)
+	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, consumableTableName)
+	err := pg.db.QueryRow(query, title).Scan(&c.Id, &c.Title)
+	if err != nil {
+		return tp.Consumable{}, processDbError(err)
+	}
 
-	return c, err
+	return c, nil
 }
 
-func (pg *Store) UpdateConsumable(id int, title string) error {
-	query := "UPDATE consumable SET title = $1 WHERE id = $2"
-	_, err := pg.db.Exec(query, title, id)
+func (pg *Store) UpdateConsumable(title string, c tp.Consumable) (tp.Consumable, error) {
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, consumableTableName)
+	_, err := pg.db.Exec(query, c.Title, title)
+	if err != nil {
+		return tp.Consumable{}, processDbError(err)
+	}
 
-	return err
+	return c, nil
 }

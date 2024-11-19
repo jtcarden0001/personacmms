@@ -1,6 +1,6 @@
 package types
 
 type Consumable struct {
-	Id    int    `json:"id"`
 	Title string `json:"title" binding:"required"`
+	Id    UUID   `json:"id" swaggerignore:"true"`
 }

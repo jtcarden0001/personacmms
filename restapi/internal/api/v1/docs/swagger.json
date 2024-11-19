@@ -153,6 +153,138 @@
                 }
             }
         },
+        "/consumables": {
+            "get": {
+                "description": "List all consumables",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List consumables",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Consumable"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a consumable",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a consumable",
+                "parameters": [
+                    {
+                        "description": "Consumable object",
+                        "name": "consumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                }
+            }
+        },
+        "/consumables/{consumableTitle}": {
+            "get": {
+                "description": "Get a consumable",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a consumable",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Consumable object",
+                        "name": "consumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a consumable",
+                "summary": "Delete a consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/groups": {
             "get": {
                 "description": "List all groups",
@@ -548,6 +680,17 @@
                 "description": {
                     "type": "string"
                 },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Consumable": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
                 "title": {
                     "type": "string"
                 }

@@ -2,7 +2,7 @@ package gin
 
 import (
 	"fmt"
-	"strconv"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
@@ -10,88 +10,90 @@ import (
 
 func (h *Api) registerConsumableRoutes() {
 	baseRoute := fmt.Sprintf("%s/consumables", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:consumableId", baseRoute)
+	individualRoute := fmt.Sprintf("%s/:consumableTitle", baseRoute)
 
 	h.router.POST(baseRoute, h.createConsumable)
 	h.router.DELETE(individualRoute, h.deleteConsumable)
-	h.router.GET(baseRoute, h.getAllConsumable)
+	h.router.GET(baseRoute, h.listConsumables)
 	h.router.GET(individualRoute, h.getConsumable)
-	h.router.PUT(individualRoute, h.updateConsumable) // accepts object id in url, disregards id in body, may revisit this design
+	h.router.PUT(individualRoute, h.updateConsumable)
 }
 
+// CreateConsumable godoc
+//
+//	@Summary		Create a consumable
+//	@Description	Create a consumable
+//	@Accept			json
+//	@Param			consumable	body	tp.Consumable	true	"Consumable object"
+//	@Produce		json
+//	@Success		201	{object}	tp.Consumable
+//	@Router			/consumables [post]
 func (h *Api) createConsumable(c *gin.Context) {
-	var co tp.Consumable
-	if err := c.BindJSON(&co); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var consumable tp.Consumable
+	if err := c.BindJSON(&consumable); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.app.CreateConsumable(co.Title)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		co.Id = id
-		c.IndentedJSON(201, co) // switch to .JSON() for performance
-	}
+	consumable, err := h.app.CreateConsumable(consumable)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, consumable))
 }
 
+// DeleteConsumable godoc
+//
+//	@Summary		Delete a consumable
+//	@Description	Delete a consumable
+//	@Param			consumableTitle	path	string	true	"Consumable ID"
+//	@Success		204
+//	@Failure		404
+//	@Router			/consumables/{consumableTitle} [delete]
 func (h *Api) deleteConsumable(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("consumableId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.DeleteConsumable(id)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
+	err := h.app.DeleteConsumable(c.Param("consumableTitle"))
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-func (h *Api) getAllConsumable(c *gin.Context) {
-	consumables, err := h.app.GetAllConsumable()
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, consumables) // switch to .JSON() for performance
-	}
+// ListConsumables godoc
+//
+//	@Summary		List consumables
+//	@Description	List all consumables
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Consumable
+//	@Router			/consumables [get]
+func (h *Api) listConsumables(c *gin.Context) {
+	consumables, err := h.app.ListConsumables()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumables))
 }
 
+// GetConsumable godoc
+//
+//	@Summary		Get a consumable
+//	@Description	Get a consumable
+//	@Param			consumableTitle	path	string	true	"Consumable ID"
+//	@Produce		json
+//	@Success		200	{object}	tp.Consumable
+//	@Router			/consumables/{consumableTitle} [get]
 func (h *Api) getConsumable(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("consumableId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	consumable, err := h.app.GetConsumable(id)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, consumable) // switch to .JSON() for performance
-	}
+	consumable, err := h.app.GetConsumable(c.Param("consumableTitle"))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
 }
 
+// UpdateConsumable godoc
+//
+//	@Summary		Update a consumable
+//	@Description	Update a consumable
+//	@Accept			json
+//	@Param			consumableTitle	path	string		true	"Consumable ID"
+//	@Param			consumable	body	tp.Consumable	true	"Consumable object"
+//	@Produce		json
+//	@Success		200	{object}	tp.Consumable
+//	@Router			/consumables/{consumableTitle} [put]
 func (h *Api) updateConsumable(c *gin.Context) {
-	var co tp.Consumable
-
-	if err := c.BindJSON(&co); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var consumable tp.Consumable
+	if err := c.BindJSON(&consumable); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("consumableId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.UpdateConsumable(id, co.Title)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
+	consumable, err := h.app.UpdateConsumable(c.Param("consumableTitle"), consumable)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
 }
