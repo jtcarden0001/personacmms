@@ -18,8 +18,6 @@ import (
 // TODO: there is alot of postgres leaked from the store implementation. The clean approach
 // will be to decouple the store test code from the implementation.  This is good enough for now.
 
-var db *sql.DB
-
 func TestMain(m *testing.M) {
 	// uses a sensible default on windows (tcp/http) and linux/osx (socket)
 	pool, err := dockertest.NewPool("")
@@ -53,6 +51,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("Could not start resource: %s", err)
 	}
+	defer resource.Close()
 
 	hostAndPort := resource.GetHostPort("5432/tcp")
 	host, port, err := net.SplitHostPort(hostAndPort)
@@ -67,6 +66,7 @@ func TestMain(m *testing.M) {
 	resource.Expire(120) // Tell docker to hard kill the container in 120 seconds
 	// exponential backoff-retry, because the application in the container might not be ready to accept connections yet
 	pool.MaxWait = 120 * time.Second
+	var db *sql.DB
 	if err = pool.Retry(func() error {
 		db, err = sql.Open("postgres", databaseUrl)
 		if err != nil {
