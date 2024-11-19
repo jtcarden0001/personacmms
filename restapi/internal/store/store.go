@@ -14,7 +14,7 @@ type Store interface {
 	imp.Task
 	imp.TaskConsumable
 	imp.TaskTool
-	imp.TimePeriodicityUnit
+	imp.TimeUnit
 	imp.Tool
 	imp.UsagePeriodicityUnit
 	imp.WorkOrder

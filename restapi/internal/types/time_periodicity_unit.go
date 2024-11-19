@@ -1,6 +1,6 @@
 package types
 
-type TimePeriodicityUnit struct {
+type TimeUnit struct {
 	Id    int    `json:"id"`
 	Title string `json:"title" binding:"required"`
 }
