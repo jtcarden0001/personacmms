@@ -413,6 +413,129 @@
                     }
                 }
             }
+        },
+        "/time-units": {
+            "get": {
+                "description": "List all time units",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List time units",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.TimeUnit"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a time unit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a time unit",
+                "parameters": [
+                    {
+                        "description": "Time Unit object",
+                        "name": "timeUnit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeUnit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeUnit"
+                        }
+                    }
+                }
+            }
+        },
+        "/time-units/{timeUnitTitle}": {
+            "get": {
+                "description": "Get a time unit",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a time unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Time Unit Title",
+                        "name": "timeUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeUnit"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a time unit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a time unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Time Unit Title",
+                        "name": "timeUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeUnit"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a time unit",
+                "summary": "Delete a time unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Time Unit Title",
+                        "name": "timeUnitTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -450,6 +573,17 @@
                 "description": {
                     "type": "string"
                 },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TimeUnit": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
                 "title": {
                     "type": "string"
                 }

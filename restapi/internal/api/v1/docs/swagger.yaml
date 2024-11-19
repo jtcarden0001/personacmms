@@ -25,6 +25,13 @@ definitions:
     required:
     - title
     type: object
+  types.TimeUnit:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -303,6 +310,87 @@ paths:
         "204":
           description: No Content
       summary: Update a task
+  /time-units:
+    get:
+      description: List all time units
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.TimeUnit'
+            type: array
+      summary: List time units
+    post:
+      consumes:
+      - application/json
+      description: Create a time unit
+      parameters:
+      - description: Time Unit object
+        in: body
+        name: timeUnit
+        required: true
+        schema:
+          $ref: '#/definitions/types.TimeUnit'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TimeUnit'
+      summary: Create a time unit
+  /time-units/{timeUnitTitle}:
+    delete:
+      description: Delete a time unit
+      parameters:
+      - description: Time Unit Title
+        in: path
+        name: timeUnitTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a time unit
+    get:
+      description: Get a time unit
+      parameters:
+      - description: Time Unit Title
+        in: path
+        name: timeUnitTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeUnit'
+      summary: Get a time unit
+    put:
+      consumes:
+      - application/json
+      description: Update a time unit
+      parameters:
+      - description: Time Unit Title
+        in: path
+        name: timeUnitTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeUnit'
+      summary: Update a time unit
 securityDefinitions:
   BasicAuth:
     type: basic
