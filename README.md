@@ -1,4 +1,4 @@
-# PersonaCMMS - Personal Asset Maintenance Management
+# PersonaCMMS - Personal Maintenance Management
 ![PERSONACMMSBANNER](docs/images/PersonaCMMS.png)
 # Motivation
 As is common, I have accumulated items that require periodic and corrective maintenance: "Assets". These assets include my house, vehicles, generator, recreational vehicles, etc.
