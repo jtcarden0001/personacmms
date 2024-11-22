@@ -3,29 +3,29 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
 type WorkOrderStatus interface {
-	CreateWorkOrderStatus(string) (int, error)
-	DeleteWorkOrderStatus(int) error
-	GetAllWorkOrderStatus() ([]tp.WorkOrderStatus, error)
-	GetWorkOrderStatus(int) (tp.WorkOrderStatus, error)
-	UpdateWorkOrderStatus(int, string) error
+	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
+	DeleteWorkOrderStatus(title string) error
+	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
+	GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error)
+	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
 }
 
-func (a *App) CreateWorkOrderStatus(title string) (int, error) {
-	return a.db.CreateWorkOrderStatus(title)
+func (a *App) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
+	return a.db.CreateWorkOrderStatus(wos)
 }
 
-func (a *App) DeleteWorkOrderStatus(id int) error {
-	return a.db.DeleteWorkOrderStatus(id)
+func (a *App) DeleteWorkOrderStatus(title string) error {
+	return a.db.DeleteWorkOrderStatus(title)
 }
 
-func (a *App) GetAllWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
-	return a.db.GetAllWorkOrderStatus()
+func (a *App) ListWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
+	return a.db.ListWorkOrderStatus()
 }
 
-func (a *App) GetWorkOrderStatus(id int) (tp.WorkOrderStatus, error) {
-	return a.db.GetWorkOrderStatus(id)
+func (a *App) GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error) {
+	return a.db.GetWorkOrderStatus(title)
 }
 
-func (a *App) UpdateWorkOrderStatus(id int, title string) error {
-	return a.db.UpdateWorkOrderStatus(id, title)
+func (a *App) UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
+	return a.db.UpdateWorkOrderStatus(title, wos)
 }

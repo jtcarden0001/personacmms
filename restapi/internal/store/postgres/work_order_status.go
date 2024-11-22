@@ -1,65 +1,80 @@
 package postgres
 
 import (
+	"fmt"
+
+	uid "github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type WorkOrderStatus interface {
-	CreateWorkOrderStatus(string) (int, error)
-	DeleteWorkOrderStatus(int) error
-	GetAllWorkOrderStatus() ([]tp.WorkOrderStatus, error)
-	GetWorkOrderStatus(int) (tp.WorkOrderStatus, error)
-	UpdateWorkOrderStatus(int, string) error
+	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
+	DeleteWorkOrderStatus(title string) error
+	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
+	GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error)
+	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
 }
 
-func (pg *Store) CreateWorkOrderStatus(title string) (int, error) {
-	query := `INSERT INTO work_order_status (title) VALUES ($1) RETURNING id`
-	var id int
-	err := pg.db.QueryRow(query, title).Scan(&id)
+var workOrderStatusTableName = "workorderstatus"
 
-	return id, err
-}
-
-func (pg *Store) DeleteWorkOrderStatus(id int) error {
-	query := `DELETE FROM work_order_status WHERE id = $1`
-	_, err := pg.db.Exec(query, id)
-
-	return err
-}
-
-func (pg *Store) GetAllWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
-	query := `SELECT id, title FROM work_order_status`
-	rows, err := pg.db.Query(query)
+func (s *Store) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
+	//TODO: allow for group creation with a specified id ?
+	id := uid.New()
+	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2)`, workOrderStatusTableName)
+	_, err := s.db.Exec(query, id.String(), wos.Title)
 	if err != nil {
-		return nil, err
+		return tp.WorkOrderStatus{}, processDbError(err)
+	}
+
+	wos.Id = id
+	return wos, nil
+}
+
+func (s *Store) DeleteWorkOrderStatus(title string) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, workOrderStatusTableName)
+	_, err := s.db.Exec(query, title)
+
+	return processDbError(err)
+}
+
+func (s *Store) ListWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
+	var workOrderStatuses = []tp.WorkOrderStatus{}
+	query := fmt.Sprintf(`SELECT id, title FROM %s`, workOrderStatusTableName)
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return workOrderStatuses, processDbError(err)
 	}
 	defer rows.Close()
 
-	var statuses []tp.WorkOrderStatus
 	for rows.Next() {
-		var status tp.WorkOrderStatus
-		err = rows.Scan(&status.Id, &status.Title)
+		var wos tp.WorkOrderStatus
+		err = rows.Scan(&wos.Id, &wos.Title)
 		if err != nil {
 			return nil, err
 		}
-
-		statuses = append(statuses, status)
+		workOrderStatuses = append(workOrderStatuses, wos)
 	}
 
-	return statuses, err
+	return workOrderStatuses, nil
 }
 
-func (pg *Store) GetWorkOrderStatus(id int) (tp.WorkOrderStatus, error) {
-	query := `SELECT id, title FROM work_order_status WHERE id = $1`
-	var status tp.WorkOrderStatus
-	err := pg.db.QueryRow(query, id).Scan(&status.Id, &status.Title)
+func (s *Store) GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error) {
+	var wos tp.WorkOrderStatus
+	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, workOrderStatusTableName)
+	err := s.db.QueryRow(query, title).Scan(&wos.Id, &wos.Title)
+	if err != nil {
+		return tp.WorkOrderStatus{}, processDbError(err)
+	}
 
-	return status, err
+	return wos, nil
 }
 
-func (pg *Store) UpdateWorkOrderStatus(id int, name string) error {
-	query := `UPDATE work_order_status SET title = $1 WHERE id = $2`
-	_, err := pg.db.Exec(query, name, id)
+func (s *Store) UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, workOrderStatusTableName)
+	_, err := s.db.Exec(query, wos.Title, title)
+	if err != nil {
+		return tp.WorkOrderStatus{}, processDbError(err)
+	}
 
-	return err
+	return wos, nil
 }

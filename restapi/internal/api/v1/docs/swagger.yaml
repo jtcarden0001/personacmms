@@ -46,6 +46,13 @@ definitions:
     required:
     - title
     type: object
+  types.WorkOrderStatus:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -567,6 +574,93 @@ paths:
         type: string
       responses: {}
       summary: Update a usage unit
+  /work-order-statuses:
+    get:
+      description: List all work order statuses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.WorkOrderStatus'
+            type: array
+      summary: List work order statuses
+    post:
+      consumes:
+      - application/json
+      description: Create a work order status
+      parameters:
+      - description: Work Order Status object
+        in: body
+        name: workOrderStatus
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrderStatus'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.WorkOrderStatus'
+      summary: Create a work order status
+  /work-order-statuses/{workOrderStatusTitle}:
+    delete:
+      description: Delete a work order status
+      parameters:
+      - description: Work Order Status Title
+        in: path
+        name: workOrderStatusTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a work order status
+    get:
+      description: Get a work order status
+      parameters:
+      - description: Work Order Status Title
+        in: path
+        name: workOrderStatusTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrderStatus'
+      summary: Get a work order status
+    put:
+      consumes:
+      - application/json
+      description: Update a work order status
+      parameters:
+      - description: Work Order Status Title
+        in: path
+        name: workOrderStatusTitle
+        required: true
+        type: string
+      - description: Work Order Status object
+        in: body
+        name: workOrderStatus
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrderStatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrderStatus'
+      summary: Update a work order status
 securityDefinitions:
   BasicAuth:
     type: basic
