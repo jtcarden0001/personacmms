@@ -1,43 +1,13 @@
+# PersonaCMMS - Personal Asset Maintenance Management
 ![PERSONACMMSBANNER](docs/images/PersonaCMMS.png)
-# personacmms
-Personal computer maintenance management system
-* An application to aid in tracking, recording, and reminding me about periodic maintenance for all the things I don't currently maintain properly around my house.
+# Motivation
+As is common, I have accumulated items that require periodic and corrective maintenance: "Assets". These assets include my house, vehicles, generator, recreational vehicles, etc.
 
-### Developer Environment Setup
+So I went searching for off the shelf solutions to maintain my maintenance history, remind me for new maintenance, and where I can take notes about the nuanced tools and materials I need for each task for each asset.  I tried a few but they were more geared toward enterprise applications and just were not the simple experience I desired for maintaining my personal assets.
 
-- wsl setup
-
-- vscode install
-    - extensions
-    - debugging
-- postgresql install
-    - apt
-- postgresql setup
-    - https://neon.tech/postgresql/postgresql-getting-started/install-postgresql-linux
-    - db creation - personacmms-test, personacmms
-    - environment variable configuration
+PersonaCMMS is an application where you can enter your assets, enter their maintenance tasks, check back periodically for reminders, and maintain the maintenance history for each in one pace. The intent is to eliminate the cognitive load of maintaining your assets, and life.
 
 
-### Build
 
 
-### Test
 
-
-### Deploy
-
-projects found within: 
-### restapi: A REST api to serve state and run background tasks on the data as business rules require
-
-
-### webui: a web based interface.
-* Stack: 
-    * CSS: TailwindCSS + DaisyUI + HeroIcons
-    * JS Framework: SvelteKit
-
-* TODO
-    * Complete design in Figma
-    * Build out design in SvelteKit app
-    * Make UI responsive for mobile rendering
-
-### cli: a command line based interface cmmsctl
