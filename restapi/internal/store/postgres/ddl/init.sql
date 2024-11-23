@@ -47,14 +47,19 @@ CREATE TABLE "asset_task" (
   "id" uuid,
   "unique_instructions" varchar,
   "asset_id" uuid NOT NULL,
-  "preventativetask_id" uuid NOT NULL,
+  "preventativetask_id" uuid, 
+  "correctivetask_id" uuid,
   PRIMARY KEY ("id"),
   CONSTRAINT "FK_asset_task.asset_id"
     FOREIGN KEY ("asset_id")
       REFERENCES "asset"("id"),
   CONSTRAINT "FK_asset_task.preventativetask_id"
     FOREIGN KEY ("preventativetask_id")
-      REFERENCES "preventativetask"("id")
+      REFERENCES "preventativetask"("id"),
+  CONSTRAINT "FK_asset_task.correctivetask_id"
+    FOREIGN KEY ("correctivetask_id")
+      REFERENCES "correctivetask"("id"),
+  CONSTRAINT chk_only_one_is_not_null CHECK (num_nonnulls("preventativetask_id", "correctivetask_id") = 1)
 );
 
 CREATE TABLE "tool" (
