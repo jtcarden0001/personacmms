@@ -36,6 +36,13 @@ CREATE TABLE "preventativetask" (
   PRIMARY KEY ("title")
 );
 
+CREATE TABLE "correctivetask" (
+  "title" varchar,
+  "id" uuid NOT NULL UNIQUE,
+  "description" varchar,
+  PRIMARY KEY ("title")
+);
+
 CREATE TABLE "asset_task" (
   "id" uuid,
   "unique_instructions" varchar,

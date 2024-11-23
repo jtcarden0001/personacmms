@@ -10,6 +10,7 @@ type Store interface {
 	imp.Asset
 	imp.Category
 	imp.Consumable
+	imp.CorrectiveTask
 	imp.Group
 	imp.PreventativeTask
 	imp.PreventativeTaskConsumable

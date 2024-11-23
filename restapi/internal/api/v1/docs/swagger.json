@@ -285,6 +285,119 @@
                 }
             }
         },
+        "/correctiveTasks": {
+            "get": {
+                "description": "List all correctiveTasks",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List correctiveTasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.CorrectiveTask"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a correctiveTask",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a correctiveTask",
+                "parameters": [
+                    {
+                        "description": "CorrectiveTask object",
+                        "name": "correctiveTask",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CorrectiveTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.CorrectiveTask"
+                        }
+                    }
+                }
+            }
+        },
+        "/correctiveTasks/{correctiveTaskTitle}": {
+            "get": {
+                "description": "Get a correctiveTask",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a correctiveTask",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CorrectiveTask Title",
+                        "name": "correctiveTaskTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.CorrectiveTask"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a correctiveTask",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Update a correctiveTask",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CorrectiveTask Title",
+                        "name": "correctiveTaskTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Delete a correctiveTask",
+                "summary": "Delete a correctiveTask",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CorrectiveTask Title",
+                        "name": "correctiveTaskTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/groups": {
             "get": {
                 "description": "List all groups",
@@ -936,6 +1049,20 @@
                 "title"
             ],
             "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.CorrectiveTask": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }

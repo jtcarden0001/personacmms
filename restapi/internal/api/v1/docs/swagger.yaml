@@ -16,6 +16,15 @@ definitions:
     required:
     - title
     type: object
+  types.CorrectiveTask:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - title
+    type: object
   types.Group:
     properties:
       title:
@@ -246,6 +255,81 @@ paths:
           schema:
             $ref: '#/definitions/types.Consumable'
       summary: Update a consumable
+  /correctiveTasks:
+    get:
+      description: List all correctiveTasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.CorrectiveTask'
+            type: array
+      summary: List correctiveTasks
+    post:
+      consumes:
+      - application/json
+      description: Create a correctiveTask
+      parameters:
+      - description: CorrectiveTask object
+        in: body
+        name: correctiveTask
+        required: true
+        schema:
+          $ref: '#/definitions/types.CorrectiveTask'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.CorrectiveTask'
+      summary: Create a correctiveTask
+  /correctiveTasks/{correctiveTaskTitle}:
+    delete:
+      description: Delete a correctiveTask
+      parameters:
+      - description: CorrectiveTask Title
+        in: path
+        name: correctiveTaskTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a correctiveTask
+    get:
+      description: Get a correctiveTask
+      parameters:
+      - description: CorrectiveTask Title
+        in: path
+        name: correctiveTaskTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CorrectiveTask'
+      summary: Get a correctiveTask
+    put:
+      consumes:
+      - application/json
+      description: Update a correctiveTask
+      parameters:
+      - description: CorrectiveTask Title
+        in: path
+        name: correctiveTaskTitle
+        required: true
+        type: string
+      responses: {}
+      summary: Update a correctiveTask
   /groups:
     get:
       description: List all groups

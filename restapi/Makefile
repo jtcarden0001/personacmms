@@ -19,7 +19,7 @@ OUTLINDEBUG=bin/personacmms-debug
 #
 PKG := 
 
-all: tidy format build test
+all: tidy format swag build test
 
 clean:
 	go clean
