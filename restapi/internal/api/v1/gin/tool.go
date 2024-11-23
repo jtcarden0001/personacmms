@@ -3,7 +3,6 @@ package gin
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
@@ -11,88 +10,89 @@ import (
 
 func (h *Api) registerToolRoutes() {
 	baseRoute := fmt.Sprintf("%s/tools", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:id", baseRoute)
+	individualRoute := fmt.Sprintf("%s/:toolTitle", baseRoute)
 
 	h.router.POST(baseRoute, h.CreateTool)
 	h.router.DELETE(individualRoute, h.DeleteTool)
-	h.router.GET(baseRoute, h.GetAllTools)
+	h.router.GET(baseRoute, h.ListTools)
 	h.router.GET(individualRoute, h.GetTool)
 	h.router.PUT(individualRoute, h.UpdateTool)
 }
 
+// CreateTool godoc
+//
+//	@Summary		Create a tool
+//	@Description	Create a tool
+//	@Accept			json
+//	@Param			tool	body	tp.Tool	true	"Tool object"
+//	@Produce		json
+//	@Success		201	{object}	tp.Tool
+//	@Router			/tools [post]
 func (h *Api) CreateTool(c *gin.Context) {
-	var t tp.Tool
-	if err := c.BindJSON(&t); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var tool tp.Tool
+	if err := c.BindJSON(&tool); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.app.CreateTool(t.Title, t.Size)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		t.Id = id
-		c.IndentedJSON(http.StatusCreated, t)
-	}
+	tool, err := h.app.CreateTool(tool)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, tool))
 }
 
+// DeleteTool godoc
+//
+//	@Summary		Delete a tool
+//	@Description	Delete a tool
+//	@Param			toolTitle	path	string	true	"Tool Title"
+//	@Success		204
+//	@Failure		404
+//	@Router			/tools/{toolTitle} [delete]
 func (h *Api) DeleteTool(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.DeleteTool(id)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(http.StatusNoContent, gin.H{})
-	}
+	err := h.app.DeleteTool(c.Param("toolTitle"))
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-func (h *Api) GetAllTools(c *gin.Context) {
-	tools, err := h.app.GetAllTool()
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(http.StatusOK, tools)
-	}
+// ListTools godoc
+//
+//	@Summary		List tools
+//	@Description	List all tools
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Tool
+//	@Router			/tools [get]
+func (h *Api) ListTools(c *gin.Context) {
+	tools, err := h.app.ListTools()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tools))
 }
 
+// GetTool godoc
+//
+//	@Summary		Get a tool
+//	@Description	Get a tool
+//	@Param			toolTitle	path	string	true	"Tool Title"
+//	@Produce		json
+//	@Success		200	{object}	tp.Tool
+//	@Router			/tools/{toolTitle} [get]
 func (h *Api) GetTool(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	tool, err := h.app.GetTool(id)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(http.StatusOK, tool)
-	}
+	tool, err := h.app.GetTool(c.Param("toolTitle"))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }
 
+// UpdateTool godoc
+//
+//	@Summary		Update a tool
+//	@Description	Update a tool
+//	@Accept			json
+//	@Param			toolTitle	path	string	true	"Tool Title"
+//	@Produce		json
+//	@Success		200	{object}	tp.Tool
+//	@Router			/tools/{toolTitle} [put]
 func (h *Api) UpdateTool(c *gin.Context) {
-	var t tp.Tool
-	if err := c.BindJSON(&t); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	var tool tp.Tool
+	if err := c.BindJSON(&tool); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	t.Id = id
-	err = h.app.UpdateTool(t.Id, t.Title, t.Size)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(http.StatusOK, t)
-	}
+	tool, err := h.app.UpdateTool(c.Param("toolTitle"), tool)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }

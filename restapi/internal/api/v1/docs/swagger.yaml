@@ -48,6 +48,16 @@ definitions:
     required:
     - title
     type: object
+  types.Tool:
+    properties:
+      size:
+        type: string
+      title:
+        type: string
+    required:
+    - size
+    - title
+    type: object
   types.UsageUnit:
     properties:
       title:
@@ -583,6 +593,87 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeUnit'
       summary: Update a time unit
+  /tools:
+    get:
+      description: List all tools
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Tool'
+            type: array
+      summary: List tools
+    post:
+      consumes:
+      - application/json
+      description: Create a tool
+      parameters:
+      - description: Tool object
+        in: body
+        name: tool
+        required: true
+        schema:
+          $ref: '#/definitions/types.Tool'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Tool'
+      summary: Create a tool
+  /tools/{toolTitle}:
+    delete:
+      description: Delete a tool
+      parameters:
+      - description: Tool Title
+        in: path
+        name: toolTitle
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a tool
+    get:
+      description: Get a tool
+      parameters:
+      - description: Tool Title
+        in: path
+        name: toolTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Tool'
+      summary: Get a tool
+    put:
+      consumes:
+      - application/json
+      description: Update a tool
+      parameters:
+      - description: Tool Title
+        in: path
+        name: toolTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Tool'
+      summary: Update a tool
   /usage-units:
     get:
       description: List all usage units

@@ -788,6 +788,129 @@ const docTemplate = `{
                 }
             }
         },
+        "/tools": {
+            "get": {
+                "description": "List all tools",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List tools",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Tool"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a tool",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a tool",
+                "parameters": [
+                    {
+                        "description": "Tool object",
+                        "name": "tool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Tool"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Tool"
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/{toolTitle}": {
+            "get": {
+                "description": "Get a tool",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tool Title",
+                        "name": "toolTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Tool"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a tool",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tool Title",
+                        "name": "toolTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Tool"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a tool",
+                "summary": "Delete a tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tool Title",
+                        "name": "toolTitle",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/usage-units": {
             "get": {
                 "description": "List all usage units",
@@ -1105,6 +1228,21 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Tool": {
+            "type": "object",
+            "required": [
+                "size",
+                "title"
+            ],
+            "properties": {
+                "size": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }

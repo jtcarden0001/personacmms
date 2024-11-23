@@ -3,29 +3,29 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
 type Tool interface {
-	CreateTool(string, string) (int, error)
-	DeleteTool(int) error
-	GetAllTool() ([]tp.Tool, error)
-	GetTool(int) (tp.Tool, error)
-	UpdateTool(int, string, string) error
+	CreateTool(tp.Tool) (tp.Tool, error)
+	DeleteTool(string) error
+	ListTools() ([]tp.Tool, error)
+	GetTool(string) (tp.Tool, error)
+	UpdateTool(string, tp.Tool) (tp.Tool, error)
 }
 
-func (cmms *App) CreateTool(title string, size string) (int, error) {
-	return cmms.db.CreateTool(title, size)
+func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
+	return a.db.CreateTool(tool)
 }
 
-func (cmms *App) DeleteTool(id int) error {
-	return cmms.db.DeleteTool(id)
+func (a *App) DeleteTool(title string) error {
+	return a.db.DeleteTool(title)
 }
 
-func (cmms *App) GetAllTool() ([]tp.Tool, error) {
-	return cmms.db.GetAllTool()
+func (a *App) ListTools() ([]tp.Tool, error) {
+	return a.db.ListTools()
 }
 
-func (cmms *App) GetTool(id int) (tp.Tool, error) {
-	return cmms.db.GetTool(id)
+func (a *App) GetTool(title string) (tp.Tool, error) {
+	return a.db.GetTool(title)
 }
 
-func (cmms *App) UpdateTool(id int, title string, size string) error {
-	return cmms.db.UpdateTool(id, title, size)
+func (a *App) UpdateTool(oldTitle string, tool tp.Tool) (tp.Tool, error) {
+	return a.db.UpdateTool(oldTitle, tool)
 }
