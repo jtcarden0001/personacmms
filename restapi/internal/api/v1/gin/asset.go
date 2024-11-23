@@ -10,16 +10,17 @@ import (
 )
 
 // external so it is accessible to AssetPreventativeTask routes
-var baseAssetRoute = fmt.Sprintf("%s/assets", routePrefix)
+var baseAssetRoute = fmt.Sprintf("%s/assets", indGroupRoute)
+var assetTitle = "assetTitle"
+var indAssetRoute = fmt.Sprintf("%s/:%s", baseAssetRoute, assetTitle)
 
 func (h *Api) registerAssetRoutes() {
-	individualRoute := fmt.Sprintf("%s/:assetId", baseAssetRoute)
 
 	h.router.POST(baseAssetRoute, h.createAsset)
-	h.router.DELETE(individualRoute, h.deleteAsset)
+	h.router.DELETE(indAssetRoute, h.deleteAsset)
 	h.router.GET(baseAssetRoute, h.getAllAsset)
-	h.router.GET(individualRoute, h.getAsset)
-	h.router.PUT(individualRoute, h.updateAsset)
+	h.router.GET(indAssetRoute, h.getAsset)
+	h.router.PUT(indAssetRoute, h.updateAsset)
 }
 
 func (h *Api) createAsset(c *gin.Context) {
@@ -39,7 +40,7 @@ func (h *Api) createAsset(c *gin.Context) {
 }
 
 func (h *Api) deleteAsset(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("assetId"))
+	id, err := strconv.Atoi(c.Param(assetTitle))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -63,7 +64,7 @@ func (h *Api) getAllAsset(c *gin.Context) {
 }
 
 func (h *Api) getAsset(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("assetId"))
+	id, err := strconv.Atoi(c.Param(assetTitle))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return

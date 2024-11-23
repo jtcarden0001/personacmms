@@ -21,7 +21,7 @@ func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, consumableTableName)
-	_, err := pg.db.Exec(query, id.String(), c.Title)
+	_, err := pg.db.Exec(query, id, c.Title)
 	if err != nil {
 		return tp.Consumable{}, processDbError(err)
 	}

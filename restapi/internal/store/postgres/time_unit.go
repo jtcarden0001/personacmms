@@ -21,7 +21,7 @@ func (pg *Store) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, timeUnitTableName)
-	_, err := pg.db.Exec(query, id.String(), tu.Title)
+	_, err := pg.db.Exec(query, id, tu.Title)
 	if err != nil {
 		return tp.TimeUnit{}, processDbError(err)
 	}

@@ -26,12 +26,18 @@ clean:
 	rm -rf bin
 
 .PHONY: tidy
+
+# clean up and organize
 tidy:
 	go mod tidy
 
 format:
 	gofmt -s -w internal/ cmd/ 
 
+swag:
+	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types,internal/api/v1/gin
+
+# build
 build: build-windows build-linux
 
 build-windows:
@@ -46,11 +52,16 @@ build-linux:
 build-linux-debug:
 	GOOS=linux $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTLINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
-swag:
-	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types,internal/api/v1/gin
-
+# test
 test: unittest
 
 unittest: 
 	$(GOTEST) ./internal/...
+
+# run
+dev-up:
+	docker-compose -f ./tools/docker/dev.compose.yaml up --build -d
+
+dev-down:
+	docker-compose -f ./tools/docker/dev.compose.yaml down -v
 

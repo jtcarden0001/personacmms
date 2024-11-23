@@ -21,7 +21,7 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, groupTableName)
-	_, err := pg.db.Exec(query, id.String(), grp.Title)
+	_, err := pg.db.Exec(query, id, grp.Title)
 	if err != nil {
 		return tp.Group{}, processDbError(err)
 	}

@@ -12,6 +12,8 @@ type Asset interface {
 	UpdateAsset(int, string, int, string, string, string, int) error
 }
 
+var assetTableName = "asset"
+
 func (pg *Store) CreateAsset(title string, year int, make, modelNumber, description string, categoryId int) (int, error) {
 	query := `INSERT INTO Asset (title, year, make, model_number, description, category_id) VALUES ($1, $2, $3, $4, $5, $6) returning id`
 	var id int
@@ -60,5 +62,11 @@ func (pg *Store) UpdateAsset(id int, title string, year int, make, modelNumber, 
 	query := `UPDATE Asset SET title = $1, year = $2, make = $3, model_number = $4, description = $6, category = $7 WHERE id = $8`
 	_, err := pg.db.Exec(query, title, year, make, modelNumber, description, categoryId, id)
 
+	return err
+}
+
+func (pg *Store) validateAsset(groupTitle string, assetTitle string) error {
+	query := `SELECT id FROM $1 WHERE title = $2 AND group_title = $3`
+	_, err := pg.db.Exec(query, assetTableName, assetTitle, groupTitle)
 	return err
 }

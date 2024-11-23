@@ -58,8 +58,7 @@ CREATE TABLE "asset_task" (
       REFERENCES "preventativetask"("id"),
   CONSTRAINT "FK_asset_task.correctivetask_id"
     FOREIGN KEY ("correctivetask_id")
-      REFERENCES "correctivetask"("id"),
-  CONSTRAINT chk_only_one_is_not_null CHECK (num_nonnulls("preventativetask_id", "correctivetask_id") = 1)
+      REFERENCES "correctivetask"("id")
 );
 
 CREATE TABLE "tool" (

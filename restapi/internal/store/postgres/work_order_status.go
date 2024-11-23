@@ -21,7 +21,7 @@ func (s *Store) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatu
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2)`, workOrderStatusTableName)
-	_, err := s.db.Exec(query, id.String(), wos.Title)
+	_, err := s.db.Exec(query, id, wos.Title)
 	if err != nil {
 		return tp.WorkOrderStatus{}, processDbError(err)
 	}

@@ -20,7 +20,7 @@ var correctiveTaskTableName = "correctivetask"
 func (pg *Store) CreateCorrectiveTask(correctiveTask tp.CorrectiveTask) (tp.CorrectiveTask, error) {
 	correctiveTask.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, correctiveTaskTableName)
-	_, err := pg.db.Exec(query, correctiveTask.Id.String(), correctiveTask.Title, correctiveTask.Description)
+	_, err := pg.db.Exec(query, correctiveTask.Id, correctiveTask.Title, correctiveTask.Description)
 	if err != nil {
 		return tp.CorrectiveTask{}, err
 	}

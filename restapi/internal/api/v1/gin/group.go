@@ -8,15 +8,17 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerGroupRoutes() {
-	baseRoute := fmt.Sprintf("%s/groups", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:groupTitle", baseRoute)
+var baseGroupRoute = fmt.Sprintf("%s/groups", routePrefix)
+var groupTitle = "groupTitle"
+var indGroupRoute = fmt.Sprintf("%s/:%s", baseGroupRoute, groupTitle)
 
-	h.router.POST(baseRoute, h.createGroup)
-	h.router.DELETE(individualRoute, h.deleteGroup)
-	h.router.GET(baseRoute, h.listGroups)
-	h.router.GET(individualRoute, h.getGroup)
-	h.router.PUT(individualRoute, h.updateGroup)
+func (h *Api) registerGroupRoutes() {
+
+	h.router.POST(baseGroupRoute, h.createGroup)
+	h.router.DELETE(indGroupRoute, h.deleteGroup)
+	h.router.GET(baseGroupRoute, h.listGroups)
+	h.router.GET(indGroupRoute, h.getGroup)
+	h.router.PUT(indGroupRoute, h.updateGroup)
 }
 
 // CreateGroup godoc
@@ -48,7 +50,7 @@ func (h *Api) createGroup(c *gin.Context) {
 //	@Failure		404
 //	@Router			/groups/{groupTitle} [delete]
 func (h *Api) deleteGroup(c *gin.Context) {
-	err := h.app.DeleteGroup(c.Param("groupTitle"))
+	err := h.app.DeleteGroup(c.Param(groupTitle))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -73,7 +75,7 @@ func (h *Api) listGroups(c *gin.Context) {
 //	@Success		200	{object}	tp.Group
 //	@Router			/groups/{groupTitle} [get]
 func (h *Api) getGroup(c *gin.Context) {
-	group, err := h.app.GetGroup(c.Param("groupTitle"))
+	group, err := h.app.GetGroup(c.Param(groupTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, group))
 }
 
@@ -94,6 +96,6 @@ func (h *Api) updateGroup(c *gin.Context) {
 		return
 	}
 
-	group, err := h.app.UpdateGroup(c.Param("groupTitle"), group)
+	group, err := h.app.UpdateGroup(c.Param(groupTitle), group)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, group))
 }

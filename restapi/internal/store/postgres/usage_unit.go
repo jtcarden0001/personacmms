@@ -21,7 +21,7 @@ func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, usageUnitTableName)
-	_, err := pg.db.Exec(query, id.String(), uu.Title)
+	_, err := pg.db.Exec(query, id, uu.Title)
 	if err != nil {
 		return tp.UsageUnit{}, processDbError(err)
 	}

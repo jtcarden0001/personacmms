@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  types.AssetTask:
+    properties:
+      taskId:
+        type: string
+      uniqueInstructions:
+        type: string
+    type: object
   types.Category:
     properties:
       description:
@@ -427,6 +434,144 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Update an asset group
+  /groups/{groupTitle}/assets/{assetTitle}/tasks:
+    get:
+      description: List all asset tasks
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.AssetTask'
+            type: array
+      summary: List asset tasks
+    post:
+      consumes:
+      - application/json
+      description: Create an asset task
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task object
+        in: body
+        name: assetTask
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTask'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTask'
+      summary: Create an asset task
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}:
+    delete:
+      description: Delete an asset task
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete an asset task
+    get:
+      description: Get an asset task
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.AssetTask'
+      summary: Get an asset task
+    put:
+      consumes:
+      - application/json
+      description: Update an asset task
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Asset Task object
+        in: body
+        name: assetTask
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.AssetTask'
+      summary: Update an asset task
   /preventativeTasks:
     get:
       description: List all preventativeTasks

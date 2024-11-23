@@ -20,7 +20,7 @@ var preventativeTaskTableName = "preventativeTask"
 func (pg *Store) CreatePreventativeTask(preventativeTask tp.PreventativeTask) (tp.PreventativeTask, error) {
 	preventativeTask.Id = uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, preventativeTaskTableName)
-	_, err := pg.db.Exec(query, preventativeTask.Id.String(), preventativeTask.Title, preventativeTask.Description)
+	_, err := pg.db.Exec(query, preventativeTask.Id, preventativeTask.Title, preventativeTask.Description)
 	if err != nil {
 		return tp.PreventativeTask{}, err
 	}

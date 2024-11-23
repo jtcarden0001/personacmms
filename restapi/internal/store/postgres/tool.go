@@ -20,7 +20,7 @@ var toolTableName = "tool"
 func (pg *Store) CreateTool(tool tp.Tool) (tp.Tool, error) {
 	tool.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, size) VALUES ($1, $2, $3)`, toolTableName)
-	_, err := pg.db.Exec(query, tool.Id.String(), tool.Title, tool.Size)
+	_, err := pg.db.Exec(query, tool.Id, tool.Title, tool.Size)
 	if err != nil {
 		return tp.Tool{}, err
 	}

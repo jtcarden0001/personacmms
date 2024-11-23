@@ -8,6 +8,7 @@ import imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 // implementation specific but tbd....
 type Store interface {
 	imp.Asset
+	imp.AssetTask
 	imp.Category
 	imp.Consumable
 	imp.CorrectiveTask

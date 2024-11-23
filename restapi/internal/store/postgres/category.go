@@ -21,7 +21,7 @@ var categoryTableName = "category"
 func (pg *Store) CreateCategory(cat tp.Category) (tp.Category, error) {
 	cat.Id = uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
-	_, err := pg.db.Exec(query, cat.Id.String(), cat.Title, cat.Description)
+	_, err := pg.db.Exec(query, cat.Id, cat.Title, cat.Description)
 	if err != nil {
 		return tp.Category{}, err
 	}
