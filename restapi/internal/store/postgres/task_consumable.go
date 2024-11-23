@@ -6,76 +6,76 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type TaskConsumable interface {
-	CreateTaskConsumable(int, int, string) error
-	DeleteTaskConsumable(int, int) error
-	GetAllTaskConsumable() ([]tp.TaskConsumable, error)
-	GetAllTaskConsumableByTaskId(int) ([]tp.TaskConsumable, error)
-	GetTaskConsumable(int, int) (tp.TaskConsumable, error)
-	UpdateTaskConsumable(int, int, string) error
+type PreventativeTaskConsumable interface {
+	CreatePreventativeTaskConsumable(int, int, string) error
+	DeletePreventativeTaskConsumable(int, int) error
+	GetAllPreventativeTaskConsumable() ([]tp.PreventativeTaskConsumable, error)
+	GetAllPreventativeTaskConsumableByPreventativeTaskId(int) ([]tp.PreventativeTaskConsumable, error)
+	GetPreventativeTaskConsumable(int, int) (tp.PreventativeTaskConsumable, error)
+	UpdatePreventativeTaskConsumable(int, int, string) error
 }
 
-func (pg *Store) CreateTaskConsumable(taskId int, consumableId int, quantity string) error {
-	query := `INSERT INTO task_consumable (task_id, consumable_id, quantity_note) VALUES ($1, $2, $3)`
-	_, err := pg.db.Exec(query, taskId, consumableId, quantity)
+func (pg *Store) CreatePreventativeTaskConsumable(preventativeTaskId int, consumableId int, quantity string) error {
+	query := `INSERT INTO preventativeTask_consumable (preventativeTask_id, consumable_id, quantity_note) VALUES ($1, $2, $3)`
+	_, err := pg.db.Exec(query, preventativeTaskId, consumableId, quantity)
 
 	return err
 }
 
-func (pg *Store) DeleteTaskConsumable(taskId int, consumableId int) error {
-	query := `DELETE FROM task_consumable WHERE task_id = $1 AND consumable_id = $2`
-	_, err := pg.db.Exec(query, taskId, consumableId)
+func (pg *Store) DeletePreventativeTaskConsumable(preventativeTaskId int, consumableId int) error {
+	query := `DELETE FROM preventativeTask_consumable WHERE preventativeTask_id = $1 AND consumable_id = $2`
+	_, err := pg.db.Exec(query, preventativeTaskId, consumableId)
 
 	return err
 }
 
-func (pg *Store) GetAllTaskConsumable() ([]tp.TaskConsumable, error) {
-	query := `SELECT task_id, consumable_id, quantity_note FROM task_consumable`
+func (pg *Store) GetAllPreventativeTaskConsumable() ([]tp.PreventativeTaskConsumable, error) {
+	query := `SELECT preventativeTask_id, consumable_id, quantity_note FROM preventativeTask_consumable`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	return populateTaskConsumableList(rows)
+	return populatePreventativeTaskConsumableList(rows)
 }
 
-func (pg *Store) GetAllTaskConsumableByTaskId(taskId int) ([]tp.TaskConsumable, error) {
-	query := `SELECT task_id, consumable_id, quantity_note FROM task_consumable WHERE task_id = $1`
-	rows, err := pg.db.Query(query, taskId)
+func (pg *Store) GetAllPreventativeTaskConsumableByPreventativeTaskId(preventativeTaskId int) ([]tp.PreventativeTaskConsumable, error) {
+	query := `SELECT preventativeTask_id, consumable_id, quantity_note FROM preventativeTask_consumable WHERE preventativeTask_id = $1`
+	rows, err := pg.db.Query(query, preventativeTaskId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	return populateTaskConsumableList(rows)
+	return populatePreventativeTaskConsumableList(rows)
 }
 
-func (pg *Store) GetTaskConsumable(consumableId int, taskId int) (tp.TaskConsumable, error) {
-	query := `SELECT task_id, consumable_id, quantity_note FROM task_consumable WHERE task_id = $1 AND consumable_id = $2`
-	var tc tp.TaskConsumable
-	err := pg.db.QueryRow(query, taskId, consumableId).Scan(&tc.TaskId, &tc.ConsumableId, &tc.QuantityNote)
+func (pg *Store) GetPreventativeTaskConsumable(consumableId int, preventativeTaskId int) (tp.PreventativeTaskConsumable, error) {
+	query := `SELECT preventativeTask_id, consumable_id, quantity_note FROM preventativeTask_consumable WHERE preventativeTask_id = $1 AND consumable_id = $2`
+	var tc tp.PreventativeTaskConsumable
+	err := pg.db.QueryRow(query, preventativeTaskId, consumableId).Scan(&tc.PreventativeTaskId, &tc.ConsumableId, &tc.QuantityNote)
 
 	return tc, err
 }
 
-func (pg *Store) UpdateTaskConsumable(taskId int, consumableId int, quantity string) error {
-	query := `UPDATE task_consumable SET quantity_note = $1 WHERE task_id = $2 AND consumable_id = $3`
-	_, err := pg.db.Exec(query, quantity, taskId, consumableId)
+func (pg *Store) UpdatePreventativeTaskConsumable(preventativeTaskId int, consumableId int, quantity string) error {
+	query := `UPDATE preventativeTask_consumable SET quantity_note = $1 WHERE preventativeTask_id = $2 AND consumable_id = $3`
+	_, err := pg.db.Exec(query, quantity, preventativeTaskId, consumableId)
 
 	return err
 }
 
-func populateTaskConsumableList(rows *sql.Rows) ([]tp.TaskConsumable, error) {
-	var taskConsumables []tp.TaskConsumable
+func populatePreventativeTaskConsumableList(rows *sql.Rows) ([]tp.PreventativeTaskConsumable, error) {
+	var preventativeTaskConsumables []tp.PreventativeTaskConsumable
 	for rows.Next() {
-		var tc tp.TaskConsumable
-		err := rows.Scan(&tc.TaskId, &tc.ConsumableId, &tc.QuantityNote)
+		var tc tp.PreventativeTaskConsumable
+		err := rows.Scan(&tc.PreventativeTaskId, &tc.ConsumableId, &tc.QuantityNote)
 		if err != nil {
 			return nil, err
 		}
-		taskConsumables = append(taskConsumables, tc)
+		preventativeTaskConsumables = append(preventativeTaskConsumables, tc)
 	}
 
-	return taskConsumables, nil
+	return preventativeTaskConsumables, nil
 }

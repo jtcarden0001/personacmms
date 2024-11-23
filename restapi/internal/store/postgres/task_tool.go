@@ -6,68 +6,68 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type TaskTool interface {
-	CreateTaskTool(int, int) error
-	DeleteTaskTool(int, int) error
-	GetAllTaskTool() ([]tp.TaskTool, error)
-	GetAllTaskToolByTaskId(int) ([]tp.TaskTool, error)
-	GetTaskTool(int, int) (tp.TaskTool, error)
+type PreventativeTaskTool interface {
+	CreatePreventativeTaskTool(int, int) error
+	DeletePreventativeTaskTool(int, int) error
+	GetAllPreventativeTaskTool() ([]tp.PreventativeTaskTool, error)
+	GetAllPreventativeTaskToolByPreventativeTaskId(int) ([]tp.PreventativeTaskTool, error)
+	GetPreventativeTaskTool(int, int) (tp.PreventativeTaskTool, error)
 }
 
-func (pg *Store) CreateTaskTool(taskId int, toolId int) error {
-	query := `INSERT INTO task_tool (task_id, tool_id) VALUES ($1, $2)`
-	_, err := pg.db.Exec(query, taskId, toolId)
+func (pg *Store) CreatePreventativeTaskTool(preventativeTaskId int, toolId int) error {
+	query := `INSERT INTO preventativeTask_tool (preventativeTask_id, tool_id) VALUES ($1, $2)`
+	_, err := pg.db.Exec(query, preventativeTaskId, toolId)
 
 	return err
 }
 
-func (pg *Store) DeleteTaskTool(taskId int, toolId int) error {
-	query := `DELETE FROM task_tool WHERE task_id = $1 AND tool_id = $2`
-	_, err := pg.db.Exec(query, taskId, toolId)
+func (pg *Store) DeletePreventativeTaskTool(preventativeTaskId int, toolId int) error {
+	query := `DELETE FROM preventativeTask_tool WHERE preventativeTask_id = $1 AND tool_id = $2`
+	_, err := pg.db.Exec(query, preventativeTaskId, toolId)
 
 	return err
 }
 
-func (pg *Store) GetAllTaskTool() ([]tp.TaskTool, error) {
-	query := `SELECT task_id, tool_id FROM task_tool`
+func (pg *Store) GetAllPreventativeTaskTool() ([]tp.PreventativeTaskTool, error) {
+	query := `SELECT preventativeTask_id, tool_id FROM preventativeTask_tool`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	return populateTaskToolList(rows)
+	return populatePreventativeTaskToolList(rows)
 }
 
-func (pg *Store) GetAllTaskToolByTaskId(taskId int) ([]tp.TaskTool, error) {
-	query := `SELECT task_id, tool_id FROM task_tool WHERE task_id = $1`
-	rows, err := pg.db.Query(query, taskId)
+func (pg *Store) GetAllPreventativeTaskToolByPreventativeTaskId(preventativeTaskId int) ([]tp.PreventativeTaskTool, error) {
+	query := `SELECT preventativeTask_id, tool_id FROM preventativeTask_tool WHERE preventativeTask_id = $1`
+	rows, err := pg.db.Query(query, preventativeTaskId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	return populateTaskToolList(rows)
+	return populatePreventativeTaskToolList(rows)
 }
 
-func (pg *Store) GetTaskTool(taskId int, toolId int) (tp.TaskTool, error) {
-	query := `SELECT task_id, tool_id FROM task_tool WHERE task_id = $1 AND tool_id = $2`
-	var tc tp.TaskTool
-	err := pg.db.QueryRow(query, taskId, toolId).Scan(&tc.TaskId, &tc.ToolId)
+func (pg *Store) GetPreventativeTaskTool(preventativeTaskId int, toolId int) (tp.PreventativeTaskTool, error) {
+	query := `SELECT preventativeTask_id, tool_id FROM preventativeTask_tool WHERE preventativeTask_id = $1 AND tool_id = $2`
+	var tc tp.PreventativeTaskTool
+	err := pg.db.QueryRow(query, preventativeTaskId, toolId).Scan(&tc.PreventativeTaskId, &tc.ToolId)
 
 	return tc, err
 }
 
-func populateTaskToolList(rows *sql.Rows) ([]tp.TaskTool, error) {
-	var TaskTools []tp.TaskTool
+func populatePreventativeTaskToolList(rows *sql.Rows) ([]tp.PreventativeTaskTool, error) {
+	var PreventativeTaskTools []tp.PreventativeTaskTool
 	for rows.Next() {
-		var tc tp.TaskTool
-		err := rows.Scan(&tc.TaskId, &tc.ToolId)
+		var tc tp.PreventativeTaskTool
+		err := rows.Scan(&tc.PreventativeTaskId, &tc.ToolId)
 		if err != nil {
 			return nil, err
 		}
-		TaskTools = append(TaskTools, tc)
+		PreventativeTaskTools = append(PreventativeTaskTools, tc)
 	}
 
-	return TaskTools, nil
+	return PreventativeTaskTools, nil
 }

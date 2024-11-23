@@ -17,10 +17,10 @@ type WorkOrder interface {
 	UpdateWorkOrder(int, int, tm.Time, *tm.Time) error
 }
 
-func (pg *Store) CreateWorkOrder(taskId int, statusId int, createdDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
-	query := `INSERT INTO work_order (task_id, status_id, create_date, complete_date) VALUES ($1, $2, $3, $4) RETURNING id`
+func (pg *Store) CreateWorkOrder(preventativeTaskId int, statusId int, createdDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
+	query := `INSERT INTO work_order (preventativeTask_id, status_id, create_date, complete_date) VALUES ($1, $2, $3, $4) RETURNING id`
 	var id int
-	err := pg.db.QueryRow(query, taskId, statusId, createdDateTime, CompleteDateTime).Scan(&id)
+	err := pg.db.QueryRow(query, preventativeTaskId, statusId, createdDateTime, CompleteDateTime).Scan(&id)
 
 	return id, err
 }
@@ -33,7 +33,7 @@ func (pg *Store) DeleteWorkOrder(id int) error {
 }
 
 func (pg *Store) GetAllWorkOrder() ([]tp.WorkOrder, error) {
-	query := `SELECT id, task_id, status_id, create_date, complete_date FROM work_order`
+	query := `SELECT id, preventativeTask_id, status_id, create_date, complete_date FROM work_order`
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (pg *Store) GetAllWorkOrder() ([]tp.WorkOrder, error) {
 	var orders []tp.WorkOrder
 	for rows.Next() {
 		var wo tp.WorkOrder
-		err = rows.Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+		err = rows.Scan(&wo.Id, &wo.PreventativeTaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
 		if err != nil {
 			return nil, err
 		}
@@ -59,16 +59,16 @@ func (pg *Store) GetAllWorkOrderByAssetId(assetId int) ([]tp.WorkOrder, error) {
 }
 
 func (pg *Store) GetWorkOrder(id int) (tp.WorkOrder, error) {
-	query := `SELECT id, task_id, status_id, create_date, complete_date FROM work_order WHERE id = $1`
+	query := `SELECT id, preventativeTask_id, status_id, create_date, complete_date FROM work_order WHERE id = $1`
 	var wo tp.WorkOrder
-	err := pg.db.QueryRow(query, id).Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+	err := pg.db.QueryRow(query, id).Scan(&wo.Id, &wo.PreventativeTaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
 
 	return wo, err
 }
 
 func (pg *Store) UpdateWorkOrder(id int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
-	// A work order is only associated with 1 task, the ability to update the taskId on a work order doesn't make sense
-	// as it is just a status descriptor to a task that needs to be completed
+	// A work order is only associated with 1 preventativeTask, the ability to update the preventativeTaskId on a work order doesn't make sense
+	// as it is just a status descriptor to a preventativeTask that needs to be completed
 	query := `UPDATE work_order SET status_id = $1, create_date = $2, complete_date = $3 WHERE id = $4`
 	_, err := pg.db.Exec(query, statusId, startDateTime, CompleteDateTime, id)
 

@@ -19,7 +19,7 @@ A backend service hosting the core of the PersonaCMMS functionality.
 * Implement proper error propagation up from store layer through app layer to api layer
 * Implement proper app layer error handling in the api layer (correct http status codes, etc.)
 * Implement integration testing for REST calls through all the layers
-* Implement app layer task frequency scanning / work order creation
+* Implement app layer preventativeTask frequency scanning / work order creation
 * create a dockerfile to containerize the app
 * add consistent logging
     * log levels (Err, Warn, Info, Debug)

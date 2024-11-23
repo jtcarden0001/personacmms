@@ -11,9 +11,9 @@ type App interface {
 	imp.Category
 	imp.Consumable
 	imp.Group
-	imp.TaskConsumable
-	imp.TaskTool
-	imp.Task
+	imp.PreventativeTaskConsumable
+	imp.PreventativeTaskTool
+	imp.PreventativeTask
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit

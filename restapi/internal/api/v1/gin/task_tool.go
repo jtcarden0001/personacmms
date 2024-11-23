@@ -7,18 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Api) registerTaskToolRoutes() {
-	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/tools", routePrefix)
+func (h *Api) registerPreventativeTaskToolRoutes() {
+	baseRoute := fmt.Sprintf("%s/asset/:assetId/preventativeTasks/:preventativeTaskId/tools", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:toolId", baseRoute)
 
-	h.router.POST(individualRoute, h.createTaskTool)
-	h.router.DELETE(individualRoute, h.deleteTaskTool)
-	h.router.GET(baseRoute, h.getAllTaskToolByTask)
-	h.router.GET(individualRoute, h.getTaskTool)
+	h.router.POST(individualRoute, h.createPreventativeTaskTool)
+	h.router.DELETE(individualRoute, h.deletePreventativeTaskTool)
+	h.router.GET(baseRoute, h.getAllPreventativeTaskToolByPreventativeTask)
+	h.router.GET(individualRoute, h.getPreventativeTaskTool)
 }
 
-func (h *Api) createTaskTool(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) createPreventativeTaskTool(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -30,7 +30,7 @@ func (h *Api) createTaskTool(c *gin.Context) {
 		return
 	}
 
-	err = h.app.CreateTaskTool(taskId, toolId)
+	err = h.app.CreatePreventativeTaskTool(preventativeTaskId, toolId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -38,8 +38,8 @@ func (h *Api) createTaskTool(c *gin.Context) {
 	}
 }
 
-func (h *Api) deleteTaskTool(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) deletePreventativeTaskTool(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -51,7 +51,7 @@ func (h *Api) deleteTaskTool(c *gin.Context) {
 		return
 	}
 
-	err = h.app.DeleteTaskTool(taskId, toolId)
+	err = h.app.DeletePreventativeTaskTool(preventativeTaskId, toolId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -59,23 +59,23 @@ func (h *Api) deleteTaskTool(c *gin.Context) {
 	}
 }
 
-func (h *Api) getAllTaskToolByTask(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) getAllPreventativeTaskToolByPreventativeTask(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	taskTools, err := h.app.GetAllTaskToolByTaskId(taskId)
+	preventativeTaskTools, err := h.app.GetAllPreventativeTaskToolByPreventativeTaskId(preventativeTaskId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskTools) // switch to .JSON() for performance
+		c.IndentedJSON(200, preventativeTaskTools) // switch to .JSON() for performance
 	}
 }
 
-func (h *Api) getTaskTool(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) getPreventativeTaskTool(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -87,10 +87,10 @@ func (h *Api) getTaskTool(c *gin.Context) {
 		return
 	}
 
-	taskTool, err := h.app.GetTaskTool(taskId, toolId)
+	preventativeTaskTool, err := h.app.GetPreventativeTaskTool(preventativeTaskId, toolId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskTool) // switch to .JSON() for performance
+		c.IndentedJSON(200, preventativeTaskTool) // switch to .JSON() for performance
 	}
 }

@@ -23,7 +23,7 @@ definitions:
     required:
     - title
     type: object
-  types.Task:
+  types.PreventativeTask:
     properties:
       description:
         type: string
@@ -333,9 +333,9 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Update an asset group
-  /tasks:
+  /preventativeTasks:
     get:
-      description: List all tasks
+      description: List all preventativeTasks
       produces:
       - application/json
       responses:
@@ -343,35 +343,35 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Task'
+              $ref: '#/definitions/types.PreventativeTask'
             type: array
-      summary: List tasks
+      summary: List preventativeTasks
     post:
       consumes:
       - application/json
-      description: Create a task
+      description: Create a preventativeTask
       parameters:
-      - description: Task object
+      - description: PreventativeTask object
         in: body
-        name: task
+        name: preventativeTask
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/types.PreventativeTask'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Task'
-      summary: Create a task
-  /tasks/{taskTitle}:
+            $ref: '#/definitions/types.PreventativeTask'
+      summary: Create a preventativeTask
+  /preventativeTasks/{preventativeTaskTitle}:
     delete:
-      description: Delete a task
+      description: Delete a preventativeTask
       parameters:
-      - description: Task Title
+      - description: PreventativeTask Title
         in: path
-        name: taskTitle
+        name: preventativeTaskTitle
         required: true
         type: string
       responses:
@@ -379,13 +379,13 @@ paths:
           description: No Content
         "404":
           description: Not Found
-      summary: Delete a task
+      summary: Delete a preventativeTask
     get:
-      description: Get a task
+      description: Get a preventativeTask
       parameters:
-      - description: Task Title
+      - description: PreventativeTask Title
         in: path
-        name: taskTitle
+        name: preventativeTaskTitle
         required: true
         type: string
       produces:
@@ -394,30 +394,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Task'
-      summary: Get a task
+            $ref: '#/definitions/types.PreventativeTask'
+      summary: Get a preventativeTask
     put:
       consumes:
       - application/json
-      description: Update a task
+      description: Update a preventativeTask
       parameters:
-      - description: Task Title
+      - description: PreventativeTask Title
         in: path
-        name: taskTitle
+        name: preventativeTaskTitle
         required: true
         type: string
-      - description: Task object
+      - description: PreventativeTask object
         in: body
-        name: task
+        name: preventativeTask
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/types.PreventativeTask'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
-      summary: Update a task
+      summary: Update a preventativeTask
   /time-units:
     get:
       description: List all time units

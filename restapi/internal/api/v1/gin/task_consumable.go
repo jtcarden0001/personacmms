@@ -8,30 +8,30 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerTaskConsumableRoutes() {
-	baseRoute := fmt.Sprintf("%s/asset/:assetId/tasks/:taskId/consumables", routePrefix)
+func (h *Api) registerPreventativeTaskConsumableRoutes() {
+	baseRoute := fmt.Sprintf("%s/asset/:assetId/preventativeTasks/:preventativeTaskId/consumables", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:consumableId", baseRoute)
 
-	h.router.POST(individualRoute, h.createTaskConsumable)
-	h.router.DELETE(individualRoute, h.deleteTaskConsumable)
-	h.router.GET(baseRoute, h.getAllTaskConsumableByTask)
-	h.router.GET(individualRoute, h.getTaskConsumable)
-	h.router.PUT(individualRoute, h.updateTaskConsumable)
+	h.router.POST(individualRoute, h.createPreventativeTaskConsumable)
+	h.router.DELETE(individualRoute, h.deletePreventativeTaskConsumable)
+	h.router.GET(baseRoute, h.getAllPreventativeTaskConsumableByPreventativeTask)
+	h.router.GET(individualRoute, h.getPreventativeTaskConsumable)
+	h.router.PUT(individualRoute, h.updatePreventativeTaskConsumable)
 }
 
-func (h *Api) createTaskConsumable(c *gin.Context) {
-	tc := tp.TaskConsumable{}
+func (h *Api) createPreventativeTaskConsumable(c *gin.Context) {
+	tc := tp.PreventativeTaskConsumable{}
 	if err := c.BindJSON(&tc); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	tc.TaskId = taskId
+	tc.PreventativeTaskId = preventativeTaskId
 
 	consumableId, err := strconv.Atoi(c.Param("consumableId"))
 	if err != nil {
@@ -40,7 +40,7 @@ func (h *Api) createTaskConsumable(c *gin.Context) {
 	}
 	tc.ConsumableId = consumableId
 
-	err = h.app.CreateTaskConsumable(tc.TaskId, tc.ConsumableId, tc.QuantityNote)
+	err = h.app.CreatePreventativeTaskConsumable(tc.PreventativeTaskId, tc.ConsumableId, tc.QuantityNote)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -48,8 +48,8 @@ func (h *Api) createTaskConsumable(c *gin.Context) {
 	}
 }
 
-func (h *Api) deleteTaskConsumable(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) deletePreventativeTaskConsumable(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -61,7 +61,7 @@ func (h *Api) deleteTaskConsumable(c *gin.Context) {
 		return
 	}
 
-	err = h.app.DeleteTaskConsumable(taskId, consumableId)
+	err = h.app.DeletePreventativeTaskConsumable(preventativeTaskId, consumableId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -69,23 +69,23 @@ func (h *Api) deleteTaskConsumable(c *gin.Context) {
 	}
 }
 
-func (h *Api) getAllTaskConsumableByTask(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) getAllPreventativeTaskConsumableByPreventativeTask(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	taskConsumables, err := h.app.GetAllTaskConsumableByTaskId(taskId)
+	preventativeTaskConsumables, err := h.app.GetAllPreventativeTaskConsumableByPreventativeTaskId(preventativeTaskId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskConsumables) // switch to .JSON() for performance
+		c.IndentedJSON(200, preventativeTaskConsumables) // switch to .JSON() for performance
 	}
 }
 
-func (h *Api) getTaskConsumable(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+func (h *Api) getPreventativeTaskConsumable(c *gin.Context) {
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -97,27 +97,27 @@ func (h *Api) getTaskConsumable(c *gin.Context) {
 		return
 	}
 
-	taskConsumable, err := h.app.GetTaskConsumable(taskId, consumableId)
+	preventativeTaskConsumable, err := h.app.GetPreventativeTaskConsumable(preventativeTaskId, consumableId)
 	if err != nil {
 		processAppError(c, err)
 	} else {
-		c.IndentedJSON(200, taskConsumable) // switch to .JSON() for performance
+		c.IndentedJSON(200, preventativeTaskConsumable) // switch to .JSON() for performance
 	}
 }
 
-func (h *Api) updateTaskConsumable(c *gin.Context) {
-	var tc tp.TaskConsumable
+func (h *Api) updatePreventativeTaskConsumable(c *gin.Context) {
+	var tc tp.PreventativeTaskConsumable
 	if err := c.BindJSON(&tc); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	tc.TaskId = taskId
+	tc.PreventativeTaskId = preventativeTaskId
 
 	consumableId, err := strconv.Atoi(c.Param("consumableId"))
 	if err != nil {
@@ -126,7 +126,7 @@ func (h *Api) updateTaskConsumable(c *gin.Context) {
 	}
 	tc.ConsumableId = consumableId
 
-	err = h.app.UpdateTaskConsumable(tc.TaskId, tc.ConsumableId, tc.QuantityNote)
+	err = h.app.UpdatePreventativeTaskConsumable(tc.PreventativeTaskId, tc.ConsumableId, tc.QuantityNote)
 	if err != nil {
 		processAppError(c, err)
 	} else {

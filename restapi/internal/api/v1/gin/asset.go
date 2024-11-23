@@ -9,7 +9,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// external so it is accessible to AssetTask routes
+// external so it is accessible to AssetPreventativeTask routes
 var baseAssetRoute = fmt.Sprintf("%s/assets", routePrefix)
 
 func (h *Api) registerAssetRoutes() {

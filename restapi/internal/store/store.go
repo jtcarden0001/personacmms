@@ -11,9 +11,9 @@ type Store interface {
 	imp.Category
 	imp.Consumable
 	imp.Group
-	imp.Task
-	imp.TaskConsumable
-	imp.TaskTool
+	imp.PreventativeTask
+	imp.PreventativeTaskConsumable
+	imp.PreventativeTaskTool
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit

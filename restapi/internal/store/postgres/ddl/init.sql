@@ -29,7 +29,7 @@ CREATE TABLE "asset" (
       REFERENCES "category"("title")
 );
 
-CREATE TABLE "task" (
+CREATE TABLE "preventativetask" (
   "title" varchar,
   "id" uuid NOT NULL UNIQUE,
   "description" varchar,
@@ -40,14 +40,14 @@ CREATE TABLE "asset_task" (
   "id" uuid,
   "unique_instructions" varchar,
   "asset_id" uuid NOT NULL,
-  "task_id" uuid NOT NULL,
+  "preventativetask_id" uuid NOT NULL,
   PRIMARY KEY ("id"),
   CONSTRAINT "FK_asset_task.asset_id"
     FOREIGN KEY ("asset_id")
       REFERENCES "asset"("id"),
-  CONSTRAINT "FK_asset_task.task_id"
-    FOREIGN KEY ("task_id")
-      REFERENCES "task"("id")
+  CONSTRAINT "FK_asset_task.preventativetask_id"
+    FOREIGN KEY ("preventativetask_id")
+      REFERENCES "preventativetask"("id")
 );
 
 CREATE TABLE "tool" (
