@@ -13,8 +13,6 @@ type Store interface {
 	imp.Consumable
 	imp.Group
 	imp.Task
-	imp.TaskConsumable
-	imp.TaskTool
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit

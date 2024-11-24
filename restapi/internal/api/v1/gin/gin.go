@@ -62,8 +62,6 @@ func (h *Api) registerRoutes() {
 	h.registerCategoryRoutes()
 	h.registerConsumableRoutes()
 	h.registerGroupRoutes()
-	h.registerTaskConsumableRoutes()
-	h.registerTaskToolRoutes()
 	h.registerTaskRoutes()
 	h.registerTimeUnitRoutes()
 	h.registerToolRoutes()

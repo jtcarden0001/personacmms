@@ -3,9 +3,12 @@ package types
 import tm "time"
 
 type WorkOrder struct {
-	Id            int      `json:"id"`
-	TaskId        int      `json:"preventativeTaskId" binding:"required"`
-	StatusId      int      `json:"statusId" binding:"required"`
-	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
-	CompletedDate *tm.Time `json:"completedDate"`
+	Id              UUID     `json:"id" swaggerignore:"true"`
+	CreatedDate     tm.Time  `json:"createdDate" swaggerignore:"true"`
+	CompletedDate   *tm.Time `json:"completedDate"`
+	Notes           *string  `json:"notes"`
+	CumulativeMiles *int     `json:"cumulativeMiles"`
+	CumulativeHours *int     `json:"cumulativeHours"`
+	AssetTaskId     UUID     `json:"AssetTaskId" swaggerignore:"true"`
+	StatusTitle     string   `json:"statusId" binding:"required"`
 }

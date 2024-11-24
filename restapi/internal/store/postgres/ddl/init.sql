@@ -28,7 +28,7 @@ CREATE TABLE task (
   title varchar,
   id uuid NOT NULL UNIQUE,
   description varchar,
-  type int,
+  type varchar,
   PRIMARY KEY (title)
 );
 

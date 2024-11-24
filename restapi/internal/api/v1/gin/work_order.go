@@ -2,193 +2,115 @@ package gin
 
 import (
 	"fmt"
-	"strconv"
-	tm "time"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// start with long routes then evaluate short routes later
+var baseLongWorkOrderRoute = fmt.Sprintf("%s/workorders", indAssetTaskRoute)
+var workOrderId = "workOrderId"
+var indLongWorkOrderRoute = fmt.Sprintf("%s/:workOrderId", baseLongWorkOrderRoute)
+
 func (h *Api) registerWorkOrderRoutes() {
-	// baseRoute := fmt.Sprintf("%s/work-orders", routePrefix)
-	baseRouteByTask := fmt.Sprintf("%s/asset/:assetId/preventativeTasks/:preventativeTaskId/work-orders", routePrefix)
-	individualRouteByTask := fmt.Sprintf("%s/:workOrderId", baseRouteByTask)
-
-	h.router.POST(baseRouteByTask, h.createWorkOrderByTask)
-	h.router.DELETE(individualRouteByTask, h.deleteWorkOrderByTask)
-	// h.router.GET(baseRoute, h.getAllWorkOrder)
-	// h.router.GET(baseRouteByTask, h.getAllWorkOrderByTask)
-	// h.router.GET(individualRouteByTask, h.getWorkOrderByTask)
-	h.router.PUT(individualRouteByTask, h.updateWorkOrderByTask)
+	h.router.POST(baseLongWorkOrderRoute, h.createWorkOrder)
+	h.router.DELETE(indLongWorkOrderRoute, h.deleteAssetTaskWorkOrder)
+	h.router.GET(baseLongWorkOrderRoute, h.listAssetTaskWorkOrders)
+	h.router.GET(indLongWorkOrderRoute, h.getAssetTaskWorkOrder)
+	h.router.PUT(indLongWorkOrderRoute, h.updateAssetTaskWorkOrder)
 }
 
-func (h *Api) createWorkOrderByTask(c *gin.Context) {
-	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+// CreateWorkOrder godoc
+//
+//	@Summary		Create a work order
+//	@Description	Create a work order
+//	@Accept			json
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
+//	@Produce		json
+//	@Success		201	{object}	tp.WorkOrder
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders [post]
+func (h *Api) createWorkOrder(c *gin.Context) {
+	var workOrder tp.WorkOrder
+	if err := c.BindJSON(&workOrder); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var wo tp.WorkOrder
-	if err := c.BindJSON(&wo); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	workOrder, err := h.app.CreateWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), workOrder)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, workOrder))
+}
+
+// DeleteAssetTaskWorkOrder godoc
+//
+//	@Summary		Delete an asset task work order
+//	@Description	Delete an asset task work order
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Success		204
+//	@Failure		404
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [delete]
+func (h *Api) deleteAssetTaskWorkOrder(c *gin.Context) {
+	err := h.app.DeleteAssetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(workOrderId))
+	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
+}
+
+// ListAssetTaskWorkOrders godoc
+//
+//	@Summary		List asset task work orders
+//	@Description	List all asset task work orders
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Produce		json
+//	@Success		200	{object}	[]tp.WorkOrder
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders [get]
+func (h *Api) listAssetTaskWorkOrders(c *gin.Context) {
+	workOrders, err := h.app.ListAssetTaskWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
+}
+
+// GetAssetTaskWorkOrder godoc
+//
+//	@Summary		Get an asset task work order
+//	@Description	Get an asset task work order
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Produce		json
+//	@Success		200	{object}	tp.WorkOrder
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [get]
+func (h *Api) getAssetTaskWorkOrder(c *gin.Context) {
+	workOrder, err := h.app.GetAssetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(workOrderId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
+}
+
+// UpdateAssetTaskWorkOrder godoc
+//
+//	@Summary		Update an asset task work order
+//	@Description	Update an asset task work order
+//	@Accept			json
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
+//	@Produce		json
+//	@Success		200	{object}	tp.WorkOrder
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [put]
+func (h *Api) updateAssetTaskWorkOrder(c *gin.Context) {
+	var workOrder tp.WorkOrder
+	if err := c.BindJSON(&workOrder); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	wo.TaskId = preventativeTaskId
-	id, err := h.app.CreateWorkOrder(wo.TaskId, wo.StatusId, wo.CreatedDate, wo.CompletedDate)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		wo.Id = id
-		c.IndentedJSON(201, wo) // switch to .JSON() for performance
-	}
+	workOrder, err := h.app.UpdateAssetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(workOrderId), workOrder)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }
-
-func (h *Api) deleteWorkOrderByTask(c *gin.Context) {
-	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
-	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
-	workOrderId, err := strconv.Atoi(c.Param("workOrderId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.app.DeleteWorkOrder(workOrderId)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
-}
-
-// func (h *Api) getAllWorkOrder(c *gin.Context) {
-// 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
-// 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
-// 	woss, err := h.app.GetAllWorkOrder()
-// 	if err != nil {
-// 		processAppError(c, err)
-// 	} else {
-// 		iwoss, err := h.interpolateWorkOrders(woss)
-// 		if err != nil {
-// 			processAppError(c, err)
-// 		} else {
-// 			c.IndentedJSON(200, iwoss) // switch to .JSON() for performance
-// 		}
-// 	}
-// }
-
-func (h *Api) getAllWorkOrderByTask(c *gin.Context) {
-	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
-	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
-	woss, err := h.app.GetAllWorkOrder() // TODO: BUG: this is getting all work orders and not filtering by preventativeTask
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(200, woss) // switch to .JSON() for performance
-	}
-}
-
-// func (h *Api) getWorkOrderByTask(c *gin.Context) {
-// 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
-// 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
-// 	woId, err := strconv.Atoi(c.Param("workOrderId"))
-// 	if err != nil {
-// 		c.JSON(400, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	wo, err := h.app.GetWorkOrder(woId)
-// 	if err != nil {
-// 		processAppError(c, err)
-// 		return
-// 	}
-
-// 	iwo, err := h.interpolateWorkOrder(wo)
-// 	if err != nil {
-// 		processAppError(c, err)
-// 		return
-// 	}
-
-// 	c.IndentedJSON(200, iwo) // switch to .JSON() for performance
-// }
-
-func (h *Api) updateWorkOrderByTask(c *gin.Context) {
-	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
-	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
-	woId, err := strconv.Atoi(c.Param("workOrderId"))
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	var wo tp.WorkOrder
-	if err := c.BindJSON(&wo); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	wo.Id = woId
-	err = h.app.UpdateWorkOrder(wo.Id, wo.StatusId, wo.CreatedDate, wo.CompletedDate)
-	if err != nil {
-		processAppError(c, err)
-	} else {
-		c.IndentedJSON(204, gin.H{}) // switch to .JSON() for performance
-	}
-}
-
-type interpolatedWorkOrder struct {
-	Id            int      `json:"id"`
-	TaskId        int      `json:"preventativeTaskId"`
-	TaskTitle     string   `json:"preventativeTaskTitle" binding:"required"`
-	StatusTitle   string   `json:"statusTitle" binding:"required"`
-	AssetId       int      `json:"assetId" binding:"required"`
-	AssetTitle    string   `json:"assetTitle" binding:"required"`
-	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
-	CompletedDate *tm.Time `json:"completedDate"`
-}
-
-// func (h *Api) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
-// 	var iwoss []interpolatedWorkOrder
-// 	var err error
-// 	for _, wo := range woss {
-// 		iwo, err := h.interpolateWorkOrder(wo)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-
-// 		iwoss = append(iwoss, iwo)
-// 	}
-
-// 	return iwoss, err
-// }
-
-// may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work
-// or do some memoization to reduce the db calls. Will do if performance suffers, no need for premature optimization.
-// func (h *Api) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, error) {
-// 	t, err := h.app.GetTask(wo.TaskId)
-// 	if err != nil {
-// 		return interpolatedWorkOrder{}, err
-// 	}
-
-// 	e, err := h.app.GetAsset(t.AssetId)
-// 	if err != nil {
-// 		return interpolatedWorkOrder{}, err
-// 	}
-
-// 	s, err := h.app.GetWorkOrderStatus(wo.StatusId)
-// 	if err != nil {
-// 		return interpolatedWorkOrder{}, err
-// 	}
-
-// 	return interpolatedWorkOrder{
-// 		Id:            wo.Id,
-// 		TaskId:        wo.TaskId,
-// 		TaskTitle:     t.Title,
-// 		StatusTitle:   s.Title,
-// 		AssetId:       t.AssetId,
-// 		AssetTitle:    e.Title,
-// 		CreatedDate:   wo.CreatedDate,
-// 		CompletedDate: wo.CompletedDate,
-// 	}, nil
-// }

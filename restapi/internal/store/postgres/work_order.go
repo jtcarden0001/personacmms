@@ -1,76 +1,110 @@
 package postgres
 
 import (
-	"errors"
+	"fmt"
 
-	tm "time"
-
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type WorkOrder interface {
-	CreateWorkOrder(int, int, tm.Time, *tm.Time) (int, error)
-	DeleteWorkOrder(int) error
-	GetAllWorkOrder() ([]tp.WorkOrder, error)
-	GetAllWorkOrderByAssetId(int) ([]tp.WorkOrder, error)
-	GetWorkOrder(int) (tp.WorkOrder, error)
-	UpdateWorkOrder(int, int, tm.Time, *tm.Time) error
+	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(tp.UUID) error
+	ListAssetTaskWorkOrders(tp.UUID) ([]tp.WorkOrder, error)
+	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
+	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
-func (pg *Store) CreateWorkOrder(preventativeTaskId int, statusId int, createdDateTime tm.Time, CompleteDateTime *tm.Time) (int, error) {
-	query := `INSERT INTO work_order (preventativeTask_id, status_id, create_date, complete_date) VALUES ($1, $2, $3, $4) RETURNING id`
-	var id int
-	err := pg.db.QueryRow(query, preventativeTaskId, statusId, createdDateTime, CompleteDateTime).Scan(&id)
+var workOrderTable = "work_order"
 
-	return id, err
+func (pg *Store) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
+	wo.Id = uuid.New()
+	query := fmt.Sprintf(`INSERT INTO %s (
+		id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title
+	) VALUES (
+		$1, $2, $3, $4, $5, $6, $7, $8
+	)`, workOrderTable)
+
+	_, err := pg.db.Exec(
+		query,
+		wo.Id,
+		wo.CreatedDate,
+		wo.CompletedDate,
+		wo.Notes,
+		wo.CumulativeMiles,
+		wo.CumulativeHours,
+		wo.AssetTaskId,
+		wo.StatusTitle,
+	)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
+
+	return wo, nil
 }
 
-func (pg *Store) DeleteWorkOrder(id int) error {
-	query := `DELETE FROM work_order WHERE id = $1`
-	_, err := pg.db.Exec(query, id)
-
+func (pg *Store) DeleteWorkOrder(woId tp.UUID) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, workOrderTable)
+	_, err := pg.db.Exec(query, woId)
 	return err
 }
 
-func (pg *Store) GetAllWorkOrder() ([]tp.WorkOrder, error) {
-	query := `SELECT id, preventativeTask_id, status_id, create_date, complete_date FROM work_order`
-	rows, err := pg.db.Query(query)
+func (pg *Store) ListAssetTaskWorkOrders(atId tp.UUID) ([]tp.WorkOrder, error) {
+	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s WHERE assettask_id = $1`, workOrderTable)
+	rows, err := pg.db.Query(query, atId)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var orders []tp.WorkOrder
+	workOrders := []tp.WorkOrder{}
 	for rows.Next() {
 		var wo tp.WorkOrder
-		err = rows.Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+		err = rows.Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.AssetTaskId, &wo.StatusTitle)
 		if err != nil {
 			return nil, err
 		}
-
-		orders = append(orders, wo)
+		workOrders = append(workOrders, wo)
 	}
 
-	return orders, err
+	return workOrders, nil
 }
 
-func (pg *Store) GetAllWorkOrderByAssetId(assetId int) ([]tp.WorkOrder, error) {
-	return []tp.WorkOrder{}, errors.New("not implemented")
-}
-
-func (pg *Store) GetWorkOrder(id int) (tp.WorkOrder, error) {
-	query := `SELECT id, preventativeTask_id, status_id, create_date, complete_date FROM work_order WHERE id = $1`
+func (pg *Store) GetWorkOrder(woId tp.UUID) (tp.WorkOrder, error) {
 	var wo tp.WorkOrder
-	err := pg.db.QueryRow(query, id).Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s WHERE id = $1`, workOrderTable)
+	err := pg.db.QueryRow(query, woId).Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.AssetTaskId, &wo.StatusTitle)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
 
-	return wo, err
+	return wo, nil
 }
 
-func (pg *Store) UpdateWorkOrder(id int, statusId int, startDateTime tm.Time, CompleteDateTime *tm.Time) error {
-	// A work order is only associated with 1 preventativeTask, the ability to update the preventativeTaskId on a work order doesn't make sense
-	// as it is just a status descriptor to a preventativeTask that needs to be completed
-	query := `UPDATE work_order SET status_id = $1, create_date = $2, complete_date = $3 WHERE id = $4`
-	_, err := pg.db.Exec(query, statusId, startDateTime, CompleteDateTime, id)
+func (pg *Store) UpdateWorkOrder(woId tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {
+	query := fmt.Sprintf(`UPDATE %s SET 
+		created_date = $2, 
+		completed_date = $3, 
+		notes = $4, 
+		cumulative_miles = $5, 
+		cumulative_hours = $6, 
+		assettask_id = $7, 
+		status_title = $8 
+		WHERE id = $1`, workOrderTable)
 
-	return err
+	_, err := pg.db.Exec(
+		query,
+		woId,
+		wo.CreatedDate,
+		wo.CompletedDate,
+		wo.Notes,
+		wo.CumulativeMiles,
+		wo.CumulativeHours,
+		wo.AssetTaskId,
+		wo.StatusTitle,
+	)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
+
+	return wo, nil
 }
