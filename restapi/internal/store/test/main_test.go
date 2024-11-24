@@ -126,7 +126,12 @@ func convertToSet(arr []string) map[string]struct{} {
 	return set
 }
 
-func compareEntitiesExcludingFields(t *testing.T, expected interface{}, actual interface{}, fields map[string]struct{}) {
+func compEntities(t *testing.T, expected interface{}, actual interface{}) {
+	// exclude no fields
+	compEntitiesExcludeFields(t, expected, actual, make(map[string]struct{}))
+}
+
+func compEntitiesExcludeFields(t *testing.T, expected interface{}, actual interface{}, fields map[string]struct{}) {
 	// Compare all properties except for the specified fields
 	expectedValue := reflect.ValueOf(expected)
 	actualValue := reflect.ValueOf(actual)
@@ -142,6 +147,30 @@ func compareEntitiesExcludingFields(t *testing.T, expected interface{}, actual i
 
 		if !reflect.DeepEqual(expectedField, actualField) {
 			t.Errorf("Create() failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		}
+	}
+}
+
+func compEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updated interface{}, fields map[string]struct{}) {
+	// Compare all properties make sure fields are different
+	initalValue := reflect.ValueOf(inital)
+	updatedValue := reflect.ValueOf(updated)
+
+	for i := 0; i < initalValue.NumField(); i++ {
+		field := initalValue.Type().Field(i)
+		different := false
+		if _, ok := fields[field.Name]; ok {
+			different = true
+		}
+
+		initalField := initalValue.Field(i).Interface()
+		updatedField := updatedValue.Field(i).Interface()
+
+		compResult := reflect.DeepEqual(initalField, updatedField)
+		if different && compResult {
+			t.Errorf("Compare failed: expected %v for field %s to be different, got %v", initalField, field.Name, updatedField)
+		} else if !different && !compResult {
+			t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
 		}
 	}
 }

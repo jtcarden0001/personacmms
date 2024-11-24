@@ -22,7 +22,7 @@ func TestAssetCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := convertToSet([]string{"Id"})
-	compareEntitiesExcludingFields(t, asset, returnedAsset, fieldsToExclude)
+	compEntitiesExcludeFields(t, asset, returnedAsset, fieldsToExclude)
 }
 
 func TestAssetDelete(t *testing.T) {
@@ -99,7 +99,7 @@ func TestAssetList(t *testing.T) {
 
 	for title, asset := range assetMap {
 		fieldsToExclude := convertToSet([]string{"Id"})
-		compareEntitiesExcludingFields(t, asset, newAssetMap[title], fieldsToExclude)
+		compEntitiesExcludeFields(t, asset, newAssetMap[title], fieldsToExclude)
 	}
 }
 
@@ -111,22 +111,21 @@ func TestAssetUpdateGet(t *testing.T) {
 
 	// Create
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
-	_, err := store.CreateAsset(groupTitle, asset)
+	createAsset, err := store.CreateAsset(groupTitle, asset)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
 
 	// Update
-	ua := getTestAsset(groupTitle, categoryTitle, "2")
-	updatedAsset, err := store.UpdateAsset(groupTitle, asset.Title, ua)
+	asset.Title = "updated title"
+	asset.Year = 2022
+	updatedAsset, err := store.UpdateAsset(groupTitle, createAsset.Title, asset)
 	if err != nil {
 		t.Errorf("UpdateAsset() failed: %v", err)
 	}
 
-	// Spot check a field (description) to ensure the update worked
-	if updatedAsset.Description == asset.Description {
-		t.Errorf("UpdateAsset() failed: expected description to be updated, got %s", updatedAsset.Description)
-	}
+	differentFields := convertToSet([]string{"Title", "Year"})
+	compEntitiesFieldsShouldBeDifferent(t, createAsset, updatedAsset, differentFields)
 
 	// Get
 	returnedAsset, err := store.GetAsset(groupTitle, updatedAsset.Title)
@@ -134,8 +133,7 @@ func TestAssetUpdateGet(t *testing.T) {
 		t.Errorf("GetAsset() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
-	compareEntitiesExcludingFields(t, updatedAsset, returnedAsset, fieldsToExclude)
+	compEntities(t, updatedAsset, returnedAsset)
 }
 
 func setupAssetDependencies(t *testing.T, store store.Store, suffix string) (string, string) {

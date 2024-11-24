@@ -22,7 +22,7 @@ func TestTaskCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := convertToSet([]string{"Id"})
-	compareEntitiesExcludingFields(t, task, returntask, fieldsToExclude)
+	compEntitiesExcludeFields(t, task, returntask, fieldsToExclude)
 }
 
 func TestTaskDelete(t *testing.T) {
@@ -107,7 +107,7 @@ func TestTaskList(t *testing.T) {
 
 	for title, task := range taskMap {
 		fieldsToExclude := convertToSet([]string{"Id"})
-		compareEntitiesExcludingFields(t, task, newTaskMap[title], fieldsToExclude)
+		compEntitiesExcludeFields(t, task, newTaskMap[title], fieldsToExclude)
 	}
 }
 
@@ -119,7 +119,7 @@ func TestTaskUpdateGet(t *testing.T) {
 		Title:       "testtask1",
 		Description: "test description",
 	}
-	_, err := store.CreateTask(task)
+	createTask, err := store.CreateTask(task)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -129,6 +129,9 @@ func TestTaskUpdateGet(t *testing.T) {
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
+
+	diffFields := convertToSet([]string{"Description"})
+	compEntitiesExcludeFields(t, createTask, returntask, diffFields)
 
 	gettask, err := store.GetTask(task.Title)
 	if err != nil {

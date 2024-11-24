@@ -26,7 +26,7 @@ func TestAssetTaskCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := convertToSet([]string{"Id"})
-	compareEntitiesExcludingFields(t, at, returnedAssetTask, fieldsToExclude)
+	compEntitiesExcludeFields(t, at, returnedAssetTask, fieldsToExclude)
 }
 
 func TestAssetTaskDelete(t *testing.T) {
@@ -120,8 +120,7 @@ func TestAssetTaskList(t *testing.T) {
 
 	// compare the 2 maps
 	for title, assetTask := range assetTaskMap {
-		// exclude no fields
-		compareEntitiesExcludingFields(t, assetTask, newAssetTaskMap[title], map[string]struct{}{})
+		compEntities(t, assetTask, newAssetTaskMap[title])
 	}
 }
 
@@ -152,13 +151,8 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 		t.Errorf("UpdateAssetTask() failed: %v", err)
 	}
 
-	if updateAt.Title == createAt.Title {
-		t.Errorf("UpdateAssetTask() failed: expected %v, got %v", updateAt.Title, createAt.Title)
-	}
-
-	if updateAt.UniqueInstructions == createAt.UniqueInstructions {
-		t.Errorf("UpdateAssetTask() failed: expected %v, got %v", updateAt.UniqueInstructions, createAt.UniqueInstructions)
-	}
+	fields := convertToSet([]string{"Title", "UniqueInstructions"})
+	compEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
 
 	// Get
 	getAt, err := store.GetAssetTask(groupTitle, categoryTitle, updateAt.Id)
@@ -166,8 +160,7 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 		t.Errorf("GetAssetTask() failed: %v", err)
 	}
 
-	// exclude no fields
-	compareEntitiesExcludingFields(t, updateAt, getAt, map[string]struct{}{})
+	compEntities(t, updateAt, getAt)
 }
 
 func setupAssetTaskDependencies(t *testing.T, store store.Store, groupTitle string, categoryTitle string, assetTitle string) tp.UUID {

@@ -21,7 +21,7 @@ func TestCategoryCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := convertToSet([]string{"Id"})
-	compareEntitiesExcludingFields(t, cat, returnCat, fieldsToExclude)
+	compEntitiesExcludeFields(t, cat, returnCat, fieldsToExclude)
 }
 
 func TestCategoryDelete(t *testing.T) {
@@ -102,7 +102,8 @@ func TestCategoryList(t *testing.T) {
 
 	// compare the two maps
 	for key, cat := range catMap {
-		compareEntitiesExcludingFields(t, cat, newCatMap[key], map[string]struct{}{"Id": {}})
+		fieldsToExclude := convertToSet([]string{"Id"})
+		compEntitiesExcludeFields(t, cat, newCatMap[key], fieldsToExclude)
 	}
 }
 
@@ -119,15 +120,14 @@ func TestCategoryUpdateGet(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	createCat.Description = "new description"
-	updateCat, err := store.UpdateCategory(cat.Title, createCat)
+	cat.Description = "new description"
+	updateCat, err := store.UpdateCategory(cat.Title, cat)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	if updateCat.Description == cat.Description {
-		t.Errorf("Update() failed: expected %v, got %v", cat.Description, updateCat.Description)
-	}
+	differentFields := convertToSet([]string{"Description"})
+	compEntitiesFieldsShouldBeDifferent(t, createCat, updateCat, differentFields)
 
 	getCat, err := store.GetCategory(cat.Title)
 	if err != nil {
@@ -135,5 +135,5 @@ func TestCategoryUpdateGet(t *testing.T) {
 	}
 
 	// exclude no fields
-	compareEntitiesExcludingFields(t, updateCat, getCat, map[string]struct{}{})
+	compEntities(t, updateCat, getCat)
 }

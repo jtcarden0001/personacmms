@@ -93,9 +93,9 @@ func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asse
 	query := fmt.Sprintf(`
 		UPDATE %s 
 		SET year = $1, make = $2, model_number = $3, serial_number = $4, description = $5, category_title = $6, title = $7 
-		WHERE title = $8 AND group_title = $9`, assetTableName)
+		WHERE title = $8 AND group_title = $9 returning id`, assetTableName)
 
-	_, err := pg.db.Exec(
+	err := pg.db.QueryRow(
 		query,
 		asset.Year,
 		asset.Make,
@@ -106,7 +106,7 @@ func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asse
 		asset.Title,
 		assetTitle,
 		groupTitle,
-	)
+	).Scan(&asset.Id)
 	if err != nil {
 		return tp.Asset{}, err
 	}
