@@ -3,30 +3,21 @@ package postgres
 import (
 	"fmt"
 
-	uid "github.com/google/uuid"
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type Category interface {
-	CreateCategory(tp.Category) (tp.Category, error)
-	DeleteCategory(string) error
-	ListCategories() ([]tp.Category, error)
-	GetCategory(string) (tp.Category, error)
-	UpdateCategory(string, tp.Category) (tp.Category, error)
-}
-
 var categoryTableName = "category"
 
-// ignores the id field in the incoming category and will generate a new one.
-func (pg *Store) CreateCategory(cat tp.Category) (tp.Category, error) {
-	cat.Id = uid.New()
+func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
+	category.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
-	_, err := pg.db.Exec(query, cat.Id, cat.Title, cat.Description)
+	_, err := pg.db.Exec(query, category.Id, category.Title, category.Description)
 	if err != nil {
 		return tp.Category{}, err
 	}
 
-	return cat, nil
+	return category, nil
 }
 
 func (pg *Store) DeleteCategory(title string) error {
@@ -46,12 +37,13 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 
 	var categories = []tp.Category{}
 	for rows.Next() {
-		var cat tp.Category
-		err = rows.Scan(&cat.Id, &cat.Title, &cat.Description)
+		var category tp.Category
+		err = rows.Scan(&category.Id, &category.Title, &category.Description)
 		if err != nil {
 			return nil, err
 		}
-		categories = append(categories, cat)
+
+		categories = append(categories, category)
 	}
 
 	return categories, nil
@@ -59,21 +51,23 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 
 func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	query := fmt.Sprintf(`SELECT id, title, description FROM %s WHERE title = $1`, categoryTableName)
-	var cat tp.Category
-	err := pg.db.QueryRow(query, title).Scan(&cat.Id, &cat.Title, &cat.Description)
+	row := pg.db.QueryRow(query, title)
+
+	var category tp.Category
+	err := row.Scan(&category.Id, &category.Title, &category.Description)
 	if err != nil {
 		return tp.Category{}, err
 	}
 
-	return cat, nil
+	return category, nil
 }
 
-func (pg *Store) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
+func (pg *Store) UpdateCategory(title string, category tp.Category) (tp.Category, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 returning id`, categoryTableName)
-	err := pg.db.QueryRow(query, cat.Title, cat.Description, oldTitle).Scan(&cat.Id)
+	err := pg.db.QueryRow(query, category.Title, category.Description, title).Scan(&category.Id)
 	if err != nil {
 		return tp.Category{}, err
 	}
 
-	return cat, nil
+	return category, nil
 }

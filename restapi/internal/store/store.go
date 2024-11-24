@@ -1,6 +1,9 @@
 package store
 
-import imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
+import (
+	imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+)
 
 // these embedded interfaces are not implementation specific but it's easier keeping related code (interface + implementation) together.
 // I will move these to a common location (out of imp) if I field the idea of another implementation or find a need.
@@ -9,14 +12,28 @@ import imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 type Store interface {
 	imp.Asset
 	imp.AssetTask
-	imp.Category
+
+	// category
+	CreateCategory(tp.Category) (tp.Category, error)
+	DeleteCategory(string) error
+	ListCategories() ([]tp.Category, error)
+	GetCategory(string) (tp.Category, error)
+	UpdateCategory(string, tp.Category) (tp.Category, error)
+
 	imp.Consumable
 	imp.Group
 	imp.Task
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit
-	imp.WorkOrder
+
+	// work order
+	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(tp.UUID) error
+	ListAssetTaskWorkOrders(tp.UUID) ([]tp.WorkOrder, error)
+	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
+	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
+
 	imp.WorkOrderStatus
 	imp.Exec
 }
