@@ -49,9 +49,9 @@ func (pg *Store) DeleteWorkOrder(woId tp.UUID) error {
 	return err
 }
 
-func (pg *Store) ListAssetTaskWorkOrders(atId tp.UUID) ([]tp.WorkOrder, error) {
-	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s WHERE assettask_id = $1`, workOrderTable)
-	rows, err := pg.db.Query(query, atId)
+func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
+	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s`, workOrderTable)
+	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}

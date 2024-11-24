@@ -37,7 +37,20 @@ func (a *App) ListAssetTaskWorkOrders(groupTitle string, assetTitle string, atId
 		return []tp.WorkOrder{}, err
 	}
 
-	return a.db.ListAssetTaskWorkOrders(atIdParsed)
+	allWorkOrders, err := a.db.ListWorkOrders()
+	if err != nil {
+		return []tp.WorkOrder{}, err
+	}
+
+	// filter work orders by asset task id
+	var assetTaskWorkOrders []tp.WorkOrder
+	for _, wo := range allWorkOrders {
+		if wo.AssetTaskId == atIdParsed {
+			assetTaskWorkOrders = append(assetTaskWorkOrders, wo)
+		}
+	}
+
+	return assetTaskWorkOrders, nil
 }
 
 func (a *App) GetAssetTaskWorkOrder(groupTitle string, assetTitle string, atId string, woId string) (tp.WorkOrder, error) {

@@ -20,7 +20,13 @@ type Store interface {
 	GetCategory(string) (tp.Category, error)
 	UpdateCategory(string, tp.Category) (tp.Category, error)
 
-	imp.Consumable
+	// consumable
+	CreateConsumable(tp.Consumable) (tp.Consumable, error)
+	DeleteConsumable(string) error
+	ListConsumables() ([]tp.Consumable, error)
+	GetConsumable(string) (tp.Consumable, error)
+	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
+
 	imp.Group
 	imp.Task
 	imp.TimeUnit
@@ -30,7 +36,7 @@ type Store interface {
 	// work order
 	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
 	DeleteWorkOrder(tp.UUID) error
-	ListAssetTaskWorkOrders(tp.UUID) ([]tp.WorkOrder, error)
+	ListWorkOrders() ([]tp.WorkOrder, error)
 	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
 	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 
