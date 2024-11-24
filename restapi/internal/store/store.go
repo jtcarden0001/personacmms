@@ -11,11 +11,10 @@ type Store interface {
 	imp.AssetTask
 	imp.Category
 	imp.Consumable
-	imp.CorrectiveTask
 	imp.Group
-	imp.PreventativeTask
-	imp.PreventativeTaskConsumable
-	imp.PreventativeTaskTool
+	imp.Task
+	imp.TaskConsumable
+	imp.TaskTool
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit

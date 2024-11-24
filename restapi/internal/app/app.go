@@ -11,11 +11,10 @@ type App interface {
 	imp.AssetTask
 	imp.Category
 	imp.Consumable
-	imp.CorrectiveTask
 	imp.Group
-	imp.PreventativeTaskConsumable
-	imp.PreventativeTaskTool
-	imp.PreventativeTask
+	imp.TaskConsumable
+	imp.TaskTool
+	imp.Task
 	imp.TimeUnit
 	imp.Tool
 	imp.UsageUnit

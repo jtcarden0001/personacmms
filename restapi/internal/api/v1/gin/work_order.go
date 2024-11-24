@@ -11,18 +11,18 @@ import (
 
 func (h *Api) registerWorkOrderRoutes() {
 	// baseRoute := fmt.Sprintf("%s/work-orders", routePrefix)
-	baseRouteByPreventativeTask := fmt.Sprintf("%s/asset/:assetId/preventativeTasks/:preventativeTaskId/work-orders", routePrefix)
-	individualRouteByPreventativeTask := fmt.Sprintf("%s/:workOrderId", baseRouteByPreventativeTask)
+	baseRouteByTask := fmt.Sprintf("%s/asset/:assetId/preventativeTasks/:preventativeTaskId/work-orders", routePrefix)
+	individualRouteByTask := fmt.Sprintf("%s/:workOrderId", baseRouteByTask)
 
-	h.router.POST(baseRouteByPreventativeTask, h.createWorkOrderByPreventativeTask)
-	h.router.DELETE(individualRouteByPreventativeTask, h.deleteWorkOrderByPreventativeTask)
+	h.router.POST(baseRouteByTask, h.createWorkOrderByTask)
+	h.router.DELETE(individualRouteByTask, h.deleteWorkOrderByTask)
 	// h.router.GET(baseRoute, h.getAllWorkOrder)
-	// h.router.GET(baseRouteByPreventativeTask, h.getAllWorkOrderByPreventativeTask)
-	// h.router.GET(individualRouteByPreventativeTask, h.getWorkOrderByPreventativeTask)
-	h.router.PUT(individualRouteByPreventativeTask, h.updateWorkOrderByPreventativeTask)
+	// h.router.GET(baseRouteByTask, h.getAllWorkOrderByTask)
+	// h.router.GET(individualRouteByTask, h.getWorkOrderByTask)
+	h.router.PUT(individualRouteByTask, h.updateWorkOrderByTask)
 }
 
-func (h *Api) createWorkOrderByPreventativeTask(c *gin.Context) {
+func (h *Api) createWorkOrderByTask(c *gin.Context) {
 	preventativeTaskId, err := strconv.Atoi(c.Param("preventativeTaskId"))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -35,8 +35,8 @@ func (h *Api) createWorkOrderByPreventativeTask(c *gin.Context) {
 		return
 	}
 
-	wo.PreventativeTaskId = preventativeTaskId
-	id, err := h.app.CreateWorkOrder(wo.PreventativeTaskId, wo.StatusId, wo.CreatedDate, wo.CompletedDate)
+	wo.TaskId = preventativeTaskId
+	id, err := h.app.CreateWorkOrder(wo.TaskId, wo.StatusId, wo.CreatedDate, wo.CompletedDate)
 	if err != nil {
 		processAppError(c, err)
 	} else {
@@ -45,7 +45,7 @@ func (h *Api) createWorkOrderByPreventativeTask(c *gin.Context) {
 	}
 }
 
-func (h *Api) deleteWorkOrderByPreventativeTask(c *gin.Context) {
+func (h *Api) deleteWorkOrderByTask(c *gin.Context) {
 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
 	workOrderId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -78,7 +78,7 @@ func (h *Api) deleteWorkOrderByPreventativeTask(c *gin.Context) {
 // 	}
 // }
 
-func (h *Api) getAllWorkOrderByPreventativeTask(c *gin.Context) {
+func (h *Api) getAllWorkOrderByTask(c *gin.Context) {
 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
 	woss, err := h.app.GetAllWorkOrder() // TODO: BUG: this is getting all work orders and not filtering by preventativeTask
@@ -89,7 +89,7 @@ func (h *Api) getAllWorkOrderByPreventativeTask(c *gin.Context) {
 	}
 }
 
-// func (h *Api) getWorkOrderByPreventativeTask(c *gin.Context) {
+// func (h *Api) getWorkOrderByTask(c *gin.Context) {
 // 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
 // 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
 // 	woId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -113,7 +113,7 @@ func (h *Api) getAllWorkOrderByPreventativeTask(c *gin.Context) {
 // 	c.IndentedJSON(200, iwo) // switch to .JSON() for performance
 // }
 
-func (h *Api) updateWorkOrderByPreventativeTask(c *gin.Context) {
+func (h *Api) updateWorkOrderByTask(c *gin.Context) {
 	// while we don't use the preventativeTaskId, a work order is always associated with a preventativeTask
 	// should we change the route to exclude the preventativeTaskId? or should we do any validation on the preventativeTaskid?
 	woId, err := strconv.Atoi(c.Param("workOrderId"))
@@ -138,14 +138,14 @@ func (h *Api) updateWorkOrderByPreventativeTask(c *gin.Context) {
 }
 
 type interpolatedWorkOrder struct {
-	Id                    int      `json:"id"`
-	PreventativeTaskId    int      `json:"preventativeTaskId"`
-	PreventativeTaskTitle string   `json:"preventativeTaskTitle" binding:"required"`
-	StatusTitle           string   `json:"statusTitle" binding:"required"`
-	AssetId               int      `json:"assetId" binding:"required"`
-	AssetTitle            string   `json:"assetTitle" binding:"required"`
-	CreatedDate           tm.Time  `json:"createdDate" binding:"required"`
-	CompletedDate         *tm.Time `json:"completedDate"`
+	Id            int      `json:"id"`
+	TaskId        int      `json:"preventativeTaskId"`
+	TaskTitle     string   `json:"preventativeTaskTitle" binding:"required"`
+	StatusTitle   string   `json:"statusTitle" binding:"required"`
+	AssetId       int      `json:"assetId" binding:"required"`
+	AssetTitle    string   `json:"assetTitle" binding:"required"`
+	CreatedDate   tm.Time  `json:"createdDate" binding:"required"`
+	CompletedDate *tm.Time `json:"completedDate"`
 }
 
 // func (h *Api) interpolateWorkOrders(woss []tp.WorkOrder) ([]interpolatedWorkOrder, error) {
@@ -166,7 +166,7 @@ type interpolatedWorkOrder struct {
 // may want to move this interpolation logic down the stack to reduce db calls and allow db joins to do the work
 // or do some memoization to reduce the db calls. Will do if performance suffers, no need for premature optimization.
 // func (h *Api) interpolateWorkOrder(wo tp.WorkOrder) (interpolatedWorkOrder, error) {
-// 	t, err := h.app.GetPreventativeTask(wo.PreventativeTaskId)
+// 	t, err := h.app.GetTask(wo.TaskId)
 // 	if err != nil {
 // 		return interpolatedWorkOrder{}, err
 // 	}
@@ -183,8 +183,8 @@ type interpolatedWorkOrder struct {
 
 // 	return interpolatedWorkOrder{
 // 		Id:            wo.Id,
-// 		PreventativeTaskId:        wo.PreventativeTaskId,
-// 		PreventativeTaskTitle:     t.Title,
+// 		TaskId:        wo.TaskId,
+// 		TaskTitle:     t.Title,
 // 		StatusTitle:   s.Title,
 // 		AssetId:       t.AssetId,
 // 		AssetTitle:    e.Title,

@@ -43,7 +43,7 @@ func (pg *Store) GetAllWorkOrder() ([]tp.WorkOrder, error) {
 	var orders []tp.WorkOrder
 	for rows.Next() {
 		var wo tp.WorkOrder
-		err = rows.Scan(&wo.Id, &wo.PreventativeTaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+		err = rows.Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +61,7 @@ func (pg *Store) GetAllWorkOrderByAssetId(assetId int) ([]tp.WorkOrder, error) {
 func (pg *Store) GetWorkOrder(id int) (tp.WorkOrder, error) {
 	query := `SELECT id, preventativeTask_id, status_id, create_date, complete_date FROM work_order WHERE id = $1`
 	var wo tp.WorkOrder
-	err := pg.db.QueryRow(query, id).Scan(&wo.Id, &wo.PreventativeTaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
+	err := pg.db.QueryRow(query, id).Scan(&wo.Id, &wo.TaskId, &wo.StatusId, &wo.CreatedDate, &wo.CompletedDate)
 
 	return wo, err
 }

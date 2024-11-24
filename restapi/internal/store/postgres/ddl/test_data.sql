@@ -19,8 +19,8 @@ INSERT INTO time_periodicity_unit (title) VALUES ('Week');
 INSERT INTO time_periodicity_unit (title) VALUES ('Month');
 INSERT INTO time_periodicity_unit (title) VALUES ('Year');
 
-INSERT INTO preventativeTask (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test PreventativeTask 1', 'Test Instructions 1', 1, 1, 1, 1, 1);
-INSERT INTO preventativeTask (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test PreventativeTask 2', 'Test Instructions 2', 2, 2, 2, 2, 2);
+INSERT INTO preventativeTask (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test Task 1', 'Test Instructions 1', 1, 1, 1, 1, 1);
+INSERT INTO preventativeTask (title, instructions, time_periodicity_quantity, time_periodicity_unit_id, usage_periodicity_quantity, usage_periodicity_unit_id, asset_id) VALUES ('Test Task 2', 'Test Instructions 2', 2, 2, 2, 2, 2);
 
 /* TODO: make this some kind of enum that is sourced from one place */
 INSERT INTO work_order_status (title) VALUES ('New');

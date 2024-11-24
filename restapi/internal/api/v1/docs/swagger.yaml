@@ -4,6 +4,8 @@ definitions:
     properties:
       taskId:
         type: string
+      title:
+        type: string
       uniqueInstructions:
         type: string
     type: object
@@ -23,15 +25,6 @@ definitions:
     required:
     - title
     type: object
-  types.CorrectiveTask:
-    properties:
-      description:
-        type: string
-      title:
-        type: string
-    required:
-    - title
-    type: object
   types.Group:
     properties:
       title:
@@ -39,12 +32,14 @@ definitions:
     required:
     - title
     type: object
-  types.PreventativeTask:
+  types.Task:
     properties:
       description:
         type: string
       title:
         type: string
+      type:
+        type: integer
     required:
     - title
     type: object
@@ -272,81 +267,6 @@ paths:
           schema:
             $ref: '#/definitions/types.Consumable'
       summary: Update a consumable
-  /correctiveTasks:
-    get:
-      description: List all correctiveTasks
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.CorrectiveTask'
-            type: array
-      summary: List correctiveTasks
-    post:
-      consumes:
-      - application/json
-      description: Create a correctiveTask
-      parameters:
-      - description: CorrectiveTask object
-        in: body
-        name: correctiveTask
-        required: true
-        schema:
-          $ref: '#/definitions/types.CorrectiveTask'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.CorrectiveTask'
-      summary: Create a correctiveTask
-  /correctiveTasks/{correctiveTaskTitle}:
-    delete:
-      description: Delete a correctiveTask
-      parameters:
-      - description: CorrectiveTask Title
-        in: path
-        name: correctiveTaskTitle
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      summary: Delete a correctiveTask
-    get:
-      description: Get a correctiveTask
-      parameters:
-      - description: CorrectiveTask Title
-        in: path
-        name: correctiveTaskTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.CorrectiveTask'
-      summary: Get a correctiveTask
-    put:
-      consumes:
-      - application/json
-      description: Update a correctiveTask
-      parameters:
-      - description: CorrectiveTask Title
-        in: path
-        name: correctiveTaskTitle
-        required: true
-        type: string
-      responses: {}
-      summary: Update a correctiveTask
   /groups:
     get:
       description: List all groups
@@ -572,9 +492,9 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Update an asset task
-  /preventativeTasks:
+  /tasks:
     get:
-      description: List all preventativeTasks
+      description: List all tasks
       produces:
       - application/json
       responses:
@@ -582,35 +502,35 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.PreventativeTask'
+              $ref: '#/definitions/types.Task'
             type: array
-      summary: List preventativeTasks
+      summary: List tasks
     post:
       consumes:
       - application/json
-      description: Create a preventativeTask
+      description: Create a task
       parameters:
-      - description: PreventativeTask object
+      - description: Task object
         in: body
-        name: preventativeTask
+        name: task
         required: true
         schema:
-          $ref: '#/definitions/types.PreventativeTask'
+          $ref: '#/definitions/types.Task'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.PreventativeTask'
-      summary: Create a preventativeTask
-  /preventativeTasks/{preventativeTaskTitle}:
+            $ref: '#/definitions/types.Task'
+      summary: Create a task
+  /tasks/{taskTitle}:
     delete:
-      description: Delete a preventativeTask
+      description: Delete a task
       parameters:
-      - description: PreventativeTask Title
+      - description: Task Title
         in: path
-        name: preventativeTaskTitle
+        name: taskTitle
         required: true
         type: string
       responses:
@@ -618,13 +538,13 @@ paths:
           description: No Content
         "404":
           description: Not Found
-      summary: Delete a preventativeTask
+      summary: Delete a task
     get:
-      description: Get a preventativeTask
+      description: Get a task
       parameters:
-      - description: PreventativeTask Title
+      - description: Task Title
         in: path
-        name: preventativeTaskTitle
+        name: taskTitle
         required: true
         type: string
       produces:
@@ -633,30 +553,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.PreventativeTask'
-      summary: Get a preventativeTask
+            $ref: '#/definitions/types.Task'
+      summary: Get a task
     put:
       consumes:
       - application/json
-      description: Update a preventativeTask
+      description: Update a task
       parameters:
-      - description: PreventativeTask Title
+      - description: Task Title
         in: path
-        name: preventativeTaskTitle
+        name: taskTitle
         required: true
         type: string
-      - description: PreventativeTask object
+      - description: Task object
         in: body
-        name: preventativeTask
+        name: task
         required: true
         schema:
-          $ref: '#/definitions/types.PreventativeTask'
+          $ref: '#/definitions/types.Task'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
-      summary: Update a preventativeTask
+      summary: Update a task
   /time-units:
     get:
       description: List all time units

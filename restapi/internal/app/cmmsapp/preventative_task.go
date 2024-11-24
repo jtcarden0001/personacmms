@@ -2,30 +2,30 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
-type PreventativeTask interface {
-	CreatePreventativeTask(tp.PreventativeTask) (tp.PreventativeTask, error)
-	DeletePreventativeTask(string) error
-	ListPreventativeTasks() ([]tp.PreventativeTask, error)
-	GetPreventativeTask(string) (tp.PreventativeTask, error)
-	UpdatePreventativeTask(string, tp.PreventativeTask) (tp.PreventativeTask, error)
+type Task interface {
+	CreateTask(tp.Task) (tp.Task, error)
+	DeleteTask(string) error
+	ListTasks() ([]tp.Task, error)
+	GetTask(string) (tp.Task, error)
+	UpdateTask(string, tp.Task) (tp.Task, error)
 }
 
-func (a *App) CreatePreventativeTask(preventativeTask tp.PreventativeTask) (tp.PreventativeTask, error) {
-	return a.db.CreatePreventativeTask(preventativeTask)
+func (a *App) CreateTask(task tp.Task) (tp.Task, error) {
+	return a.db.CreateTask(task)
 }
 
-func (a *App) DeletePreventativeTask(title string) error {
-	return a.db.DeletePreventativeTask(title)
+func (a *App) DeleteTask(title string) error {
+	return a.db.DeleteTask(title)
 }
 
-func (a *App) ListPreventativeTasks() ([]tp.PreventativeTask, error) {
-	return a.db.ListPreventativeTasks()
+func (a *App) ListTasks() ([]tp.Task, error) {
+	return a.db.ListTasks()
 }
 
-func (a *App) GetPreventativeTask(title string) (tp.PreventativeTask, error) {
-	return a.db.GetPreventativeTask(title)
+func (a *App) GetTask(title string) (tp.Task, error) {
+	return a.db.GetTask(title)
 }
 
-func (a *App) UpdatePreventativeTask(oldTitle string, preventativeTask tp.PreventativeTask) (tp.PreventativeTask, error) {
-	return a.db.UpdatePreventativeTask(oldTitle, preventativeTask)
+func (a *App) UpdateTask(oldTitle string, task tp.Task) (tp.Task, error) {
+	return a.db.UpdateTask(oldTitle, task)
 }

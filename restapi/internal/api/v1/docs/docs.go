@@ -291,119 +291,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/correctiveTasks": {
-            "get": {
-                "description": "List all correctiveTasks",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List correctiveTasks",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/types.CorrectiveTask"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a correctiveTask",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a correctiveTask",
-                "parameters": [
-                    {
-                        "description": "CorrectiveTask object",
-                        "name": "correctiveTask",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.CorrectiveTask"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.CorrectiveTask"
-                        }
-                    }
-                }
-            }
-        },
-        "/correctiveTasks/{correctiveTaskTitle}": {
-            "get": {
-                "description": "Get a correctiveTask",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a correctiveTask",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "CorrectiveTask Title",
-                        "name": "correctiveTaskTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.CorrectiveTask"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update a correctiveTask",
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Update a correctiveTask",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "CorrectiveTask Title",
-                        "name": "correctiveTaskTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "description": "Delete a correctiveTask",
-                "summary": "Delete a correctiveTask",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "CorrectiveTask Title",
-                        "name": "correctiveTaskTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
         "/groups": {
             "get": {
                 "description": "List all groups",
@@ -740,42 +627,42 @@ const docTemplate = `{
                 }
             }
         },
-        "/preventativeTasks": {
+        "/tasks": {
             "get": {
-                "description": "List all preventativeTasks",
+                "description": "List all tasks",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List preventativeTasks",
+                "summary": "List tasks",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.PreventativeTask"
+                                "$ref": "#/definitions/types.Task"
                             }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Create a preventativeTask",
+                "description": "Create a task",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create a preventativeTask",
+                "summary": "Create a task",
                 "parameters": [
                     {
-                        "description": "PreventativeTask object",
-                        "name": "preventativeTask",
+                        "description": "Task object",
+                        "name": "task",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.PreventativeTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 ],
@@ -783,24 +670,24 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.PreventativeTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 }
             }
         },
-        "/preventativeTasks/{preventativeTaskTitle}": {
+        "/tasks/{taskTitle}": {
             "get": {
-                "description": "Get a preventativeTask",
+                "description": "Get a task",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a preventativeTask",
+                "summary": "Get a task",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "PreventativeTask Title",
-                        "name": "preventativeTaskTitle",
+                        "description": "Task Title",
+                        "name": "taskTitle",
                         "in": "path",
                         "required": true
                     }
@@ -809,35 +696,35 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.PreventativeTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update a preventativeTask",
+                "description": "Update a task",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a preventativeTask",
+                "summary": "Update a task",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "PreventativeTask Title",
-                        "name": "preventativeTaskTitle",
+                        "description": "Task Title",
+                        "name": "taskTitle",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "PreventativeTask object",
-                        "name": "preventativeTask",
+                        "description": "Task object",
+                        "name": "task",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.PreventativeTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 ],
@@ -848,13 +735,13 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete a preventativeTask",
-                "summary": "Delete a preventativeTask",
+                "description": "Delete a task",
+                "summary": "Delete a task",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "PreventativeTask Title",
-                        "name": "preventativeTaskTitle",
+                        "description": "Task Title",
+                        "name": "taskTitle",
                         "in": "path",
                         "required": true
                     }
@@ -1368,6 +1255,9 @@ const docTemplate = `{
                 "taskId": {
                     "type": "string"
                 },
+                "title": {
+                    "type": "string"
+                },
                 "uniqueInstructions": {
                     "type": "string"
                 }
@@ -1398,20 +1288,6 @@ const docTemplate = `{
                 }
             }
         },
-        "types.CorrectiveTask": {
-            "type": "object",
-            "required": [
-                "title"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
         "types.Group": {
             "type": "object",
             "required": [
@@ -1423,7 +1299,7 @@ const docTemplate = `{
                 }
             }
         },
-        "types.PreventativeTask": {
+        "types.Task": {
             "type": "object",
             "required": [
                 "title"
@@ -1434,6 +1310,9 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },

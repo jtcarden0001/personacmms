@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
@@ -22,8 +24,8 @@ func (pg *Store) CreateAssetTask(groupTitle string, assetTitle string, at tp.Ass
 	}
 
 	at.Id = uuid.New()
-	query := `INSERT INTO $1 (id, unique_instructions, asset_id, unique_instructions, task_id) VALUES ($2, $3, $4, $5, $6)`
-	_, err = pg.db.Exec(query, assetTaskTable, at.Id, at.UniqueInstructions, at.AssetId, at.TaskId)
+	query := fmt.Sprintf(`INSERT INTO %s (id, title, unique_instructions, asset_id, task_id) VALUES ($1, $2, $3, $4, $5)`, assetTaskTable)
+	_, err = pg.db.Exec(query, at.Id, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId)
 	if err != nil {
 		return tp.AssetTask{}, err
 	}
@@ -37,8 +39,8 @@ func (pg *Store) DeleteAssetTask(groupTitle string, assetTitle string, atId tp.U
 		return err
 	}
 
-	query := `DELETE FROM $1 WHERE id = $2`
-	_, err = pg.db.Exec(query, assetTaskTable, atId)
+	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, assetTaskTable)
+	_, err = pg.db.Exec(query, atId)
 	if err != nil {
 		return err
 	}
@@ -52,8 +54,8 @@ func (pg *Store) ListAssetTasks(groupTitle string, assetTitle string) ([]tp.Asse
 		return nil, err
 	}
 
-	query := `SELECT id, unique_instructions, asset_id, task_id FROM $1`
-	rows, err := pg.db.Query(query, assetTaskTable)
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, task_id FROM %s`, assetTaskTable)
+	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +64,7 @@ func (pg *Store) ListAssetTasks(groupTitle string, assetTitle string) ([]tp.Asse
 	var at []tp.AssetTask
 	for rows.Next() {
 		var e tp.AssetTask
-		err = rows.Scan(&e.Id, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
+		err = rows.Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
 		if err != nil {
 			return nil, err
 		}
@@ -78,9 +80,9 @@ func (pg *Store) GetAssetTask(groupTitle string, assetTitle string, atId tp.UUID
 		return tp.AssetTask{}, err
 	}
 
-	query := `SELECT id, unique_instructions, asset_id, task_id FROM $1 WHERE id = $2`
+	query := `SELECT id, title, unique_instructions, asset_id, task_id FROM $1 WHERE id = $2`
 	var e tp.AssetTask
-	err = pg.db.QueryRow(query, assetTaskTable, atId).Scan(&e.Id, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
+	err = pg.db.QueryRow(query, assetTaskTable, atId).Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
 	if err != nil {
 		return tp.AssetTask{}, err
 	}
@@ -94,8 +96,8 @@ func (pg *Store) UpdateAssetTask(groupTitle string, assetTitle string, atId tp.U
 		return tp.AssetTask{}, err
 	}
 
-	query := `UPDATE $1 SET unique_instructions = $2, asset_id = $3, task_id = $4 WHERE id = $5`
-	_, err = pg.db.Exec(query, assetTaskTable, at.UniqueInstructions, at.AssetId, at.TaskId, atId)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, task_id = $4 WHERE id = $5`, assetTaskTable)
+	_, err = pg.db.Exec(query, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId, atId)
 	if err != nil {
 		return tp.AssetTask{}, err
 	}

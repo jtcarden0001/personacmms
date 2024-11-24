@@ -1,181 +1,124 @@
-CREATE TABLE "category" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  "description" varchar,
-  PRIMARY KEY ("title")
-  );
-
-CREATE TABLE "assetgroup" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  PRIMARY KEY ("title")
-  );
-
-CREATE TABLE "asset" (
-  "group_title" varchar,
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  "year" int,
-  "make" varchar,
-  "model_number" varchar,
-  "serial_number" varchar,
-  "description" varchar,
-  "category_title" varchar,
-  PRIMARY KEY ("group_title", "title"),
-  CONSTRAINT "FK_asset.group_title"
-    FOREIGN KEY ("group_title")
-      REFERENCES "assetgroup"("title"),
-  CONSTRAINT "FK_asset.category_title"
-    FOREIGN KEY ("category_title")
-      REFERENCES "category"("title")
+CREATE TABLE category (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  description varchar,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "preventativetask" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  "description" varchar,
-  PRIMARY KEY ("title")
+CREATE TABLE assetgroup (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "correctivetask" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  "description" varchar,
-  PRIMARY KEY ("title")
+CREATE TABLE asset (
+  group_title varchar REFERENCES assetgroup(title),
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  year int,
+  make varchar,
+  model_number varchar,
+  serial_number varchar,
+  description varchar,
+  category_title varchar REFERENCES category(title),
+  PRIMARY KEY (group_title, title)
 );
 
-CREATE TABLE "asset_task" (
-  "id" uuid,
-  "unique_instructions" varchar,
-  "asset_id" uuid NOT NULL,
-  "preventativetask_id" uuid, 
-  "correctivetask_id" uuid,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "FK_asset_task.asset_id"
-    FOREIGN KEY ("asset_id")
-      REFERENCES "asset"("id"),
-  CONSTRAINT "FK_asset_task.preventativetask_id"
-    FOREIGN KEY ("preventativetask_id")
-      REFERENCES "preventativetask"("id"),
-  CONSTRAINT "FK_asset_task.correctivetask_id"
-    FOREIGN KEY ("correctivetask_id")
-      REFERENCES "correctivetask"("id")
+CREATE TABLE task (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  description varchar,
+  type int,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "tool" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  "size" varchar,
-  PRIMARY KEY ("title")
+CREATE TABLE asset_task (
+  id uuid,
+  title varchar,
+  unique_instructions varchar,
+  asset_id uuid NOT NULL REFERENCES asset(id),
+  task_id uuid, 
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE "assettask_tool" (
-  "assettask_id" uuid NOT NULL,
-  "tool_id" uuid NOT NULL,
-  PRIMARY KEY ("assettask_id", "tool_id"),
-  CONSTRAINT "FK_assettask_tool.asset_task_id"
-    FOREIGN KEY ("assettask_id")
-      REFERENCES "asset_task"("id"),
-  CONSTRAINT "FK_assettask_tool.tool_id"
-    FOREIGN KEY ("tool_id")
-      REFERENCES "tool"("id")
+CREATE TABLE tool (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  size varchar,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "consumable" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  PRIMARY KEY ("title")
+CREATE TABLE assettask_tool (
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  tool_id uuid NOT NULL REFERENCES tool(id),
+  PRIMARY KEY (assettask_id, tool_id)
 );
 
-CREATE TABLE "assettask_consumable" (
-  "assettask_id" uuid NOT NULL,
-  "consumable_id" uuid NOT NULL,
-  "quantity_note" varchar NOT NULL,
-  PRIMARY KEY ("assettask_id", "consumable_id"),
-  CONSTRAINT "FK_assettask_consumable.asset_task_id"
-    FOREIGN KEY ("assettask_id")
-      REFERENCES "asset_task"("id"),
-  CONSTRAINT "FK_assettask_consumable.consumable_id"
-    FOREIGN KEY ("consumable_id")
-      REFERENCES "consumable"("id")
+CREATE TABLE consumable (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "timeunit" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  PRIMARY KEY ("title")
+CREATE TABLE assettask_consumable (
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  consumable_id uuid NOT NULL REFERENCES consumable(id),
+  quantity_note varchar NOT NULL,
+  PRIMARY KEY (assettask_id, consumable_id)
 );
 
-CREATE TABLE "timetrigger" (
-  "id" uuid,
-  "quanitity" int NOT NULL,
-  "timeunit_title" varchar NOT NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "FK_timetrigger.timeunit_title"
-    FOREIGN KEY ("timeunit_title")
-      REFERENCES "timeunit"("title")
+CREATE TABLE timeunit (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "assettask_timetrigger" (
-  "assettask_id" uuid NOT NULL,
-  "timetrigger_id" uuid NOT NULL,
-  CONSTRAINT "FK_assettask_timetrigger.asset_task_id"
-    FOREIGN KEY ("assettask_id")
-      REFERENCES "asset_task"("id"),
-  CONSTRAINT "FK_assettask_timetrigger.timetrigger_id"
-    FOREIGN KEY ("timetrigger_id")
-      REFERENCES "timetrigger"("id")
+CREATE TABLE timetrigger (
+  id uuid,
+  quanitity int NOT NULL,
+  timeunit_title varchar NOT NULL REFERENCES timeunit(title),
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE "usageunit" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  PRIMARY KEY ("title")
+CREATE TABLE assettask_timetrigger (
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  timetrigger_id uuid NOT NULL REFERENCES timetrigger(id)
 );
 
-CREATE TABLE "usagetrigger" (
-  "id" uuid,
-  "quanitity" int NOT NULL,
-  "usageunit_title" varchar NOT NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "FK_usagetrigger.usageunit_title"
-    FOREIGN KEY ("usageunit_title")
-      REFERENCES "usageunit"("title")
+CREATE TABLE usageunit (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  PRIMARY KEY (title)
 );
 
-CREATE TABLE "assettask_usagetrigger" (
-  "asset_task_id" uuid NOT NULL,
-  "usagetrigger_id" uuid NOT NULL,
-  CONSTRAINT "FK_assettask_usagetrigger.asset_task_id"
-    FOREIGN KEY ("asset_task_id")
-      REFERENCES "asset_task"("id"),
-  CONSTRAINT "FK_assettask_usagetrigger.usagetrigger_id"
-    FOREIGN KEY ("usagetrigger_id")
-      REFERENCES "usagetrigger"("id")
+CREATE TABLE usagetrigger (
+  id uuid,
+  quanitity int NOT NULL,
+  usageunit_title varchar NOT NULL REFERENCES usageunit(title),
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE "workorderstatus" (
-  "title" varchar,
-  "id" uuid NOT NULL UNIQUE,
-  PRIMARY KEY ("title")
+CREATE TABLE assettask_usagetrigger (
+  asset_task_id uuid NOT NULL REFERENCES asset_task(id),
+  usagetrigger_id uuid NOT NULL REFERENCES usagetrigger(id)
 );
 
-CREATE TABLE "workorder" (
-  "id" uuid,
-  "created_date" timestamptz NOT NULL,
-  "completed_date" timestamptz,
-  "notes" varchar,
-  "cumulative_mileage" int, 
-  "cumulative_hours" int,
-  "assettask_id" uuid NOT NULL,
-  "status_title" varchar NOT NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "FK_workorder.status_title"
-    FOREIGN KEY ("status_title")
-      REFERENCES "workorderstatus"("title"),
-  CONSTRAINT "FK_workorder.assettask_id"
-    FOREIGN KEY ("assettask_id")
-      REFERENCES "asset_task"("id")
+CREATE TABLE workorderstatus (
+  title varchar,
+  id uuid NOT NULL UNIQUE,
+  PRIMARY KEY (title)
+);
+
+CREATE TABLE workorder (
+  id uuid,
+  created_date timestamptz NOT NULL,
+  completed_date timestamptz,
+  notes varchar,
+  cumulative_mileage int, 
+  cumulative_hours int,
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  status_title varchar NOT NULL REFERENCES workorderstatus(title),
+  PRIMARY KEY (id)
 );
 
 /* static data not modified by app */
