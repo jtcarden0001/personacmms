@@ -47,10 +47,6 @@ func getStore(dbName string) *Store {
 	}
 }
 
-type Exec interface {
-	Exec(string) error
-}
-
 func (pg *Store) Exec(query string) error {
 	_, err := pg.db.Exec(query)
 	return err
