@@ -5,21 +5,40 @@ import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 type Asset interface {
 	CreateAsset(string, tp.Asset) (tp.Asset, error)
 	DeleteAsset(string, string) error
-	ListAsset(string) ([]tp.Asset, error)
+	ListAssets(string) ([]tp.Asset, error)
 	GetAsset(string, string) (tp.Asset, error)
 	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
 }
 
 func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
-	return a.db.CreateAsset(groupTitle, asset)
+	// TODO: validate group
+
+	return a.db.CreateAsset(asset)
 }
 
 func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
+	// TODO: validate group
+
 	return a.db.DeleteAsset(groupTitle, assetTitle)
 }
 
-func (a *App) ListAsset(groupTitle string) ([]tp.Asset, error) {
-	return a.db.ListAsset(groupTitle)
+func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
+	// TODO: validate group
+
+	assets, err := a.db.ListAssets()
+	if err != nil {
+		return []tp.Asset{}, err
+	}
+
+	// filter assets by group title
+	var groupAssets []tp.Asset
+	for _, asset := range assets {
+		if asset.GroupTitle == groupTitle {
+			groupAssets = append(groupAssets, asset)
+		}
+	}
+
+	return groupAssets, nil
 }
 
 func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {

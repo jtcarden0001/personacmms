@@ -7,14 +7,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type WorkOrderStatus interface {
-	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
-	DeleteWorkOrderStatus(title string) error
-	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
-	GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error)
-	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
-}
-
 var workOrderStatusTableName = "workorderstatus"
 
 func (s *Store) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
@@ -37,7 +29,7 @@ func (s *Store) DeleteWorkOrderStatus(title string) error {
 	return processDbError(err)
 }
 
-func (s *Store) ListWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
+func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
 	var workOrderStatuses = []tp.WorkOrderStatus{}
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, workOrderStatusTableName)
 	rows, err := s.db.Query(query)

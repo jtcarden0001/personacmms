@@ -19,7 +19,7 @@ func (a *App) DeleteWorkOrderStatus(title string) error {
 }
 
 func (a *App) ListWorkOrderStatus() ([]tp.WorkOrderStatus, error) {
-	return a.db.ListWorkOrderStatus()
+	return a.db.ListWorkOrderStatuses()
 }
 
 func (a *App) GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error) {

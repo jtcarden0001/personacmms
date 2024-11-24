@@ -37,7 +37,7 @@ func (h *Api) deleteAsset(c *gin.Context) {
 }
 
 func (h *Api) getAllAsset(c *gin.Context) {
-	asset, err := h.app.ListAsset(c.Param(groupTitle))
+	asset, err := h.app.ListAssets(c.Param(groupTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, asset))
 }
 

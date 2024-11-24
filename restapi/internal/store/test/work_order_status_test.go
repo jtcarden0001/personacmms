@@ -58,7 +58,7 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 func TestListWorkOrderStatus(t *testing.T) {
 	store := InitializeStore("testlistworkorderstatus")
 
-	initWOS, err := store.ListWorkOrderStatus()
+	initWOS, err := store.ListWorkOrderStatuses()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
 	}
@@ -82,7 +82,7 @@ func TestListWorkOrderStatus(t *testing.T) {
 	}
 
 	// List
-	workOrderStatuses, err := store.ListWorkOrderStatus()
+	workOrderStatuses, err := store.ListWorkOrderStatuses()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
 	}

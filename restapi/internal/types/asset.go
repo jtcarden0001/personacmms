@@ -1,7 +1,7 @@
 package types
 
 type Asset struct {
-	GroupTitle    string `json:"groupTitle" binding:"required"`
+	GroupTitle    string `json:"groupTitle" swaggerignore:"true"`
 	Title         string `json:"title" binding:"required"`
 	Id            UUID   `json:"id" swaggerignore:"true"`
 	Year          int    `json:"year"`

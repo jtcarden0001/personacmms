@@ -20,7 +20,7 @@ func TestAssetTaskCreate(t *testing.T) {
 		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
 	}
-	returnedAssetTask, err := store.CreateAssetTask(groupTitle, categoryTitle, at)
+	returnedAssetTask, err := store.CreateAssetTask(at)
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
@@ -43,18 +43,18 @@ func TestAssetTaskDelete(t *testing.T) {
 		UniqueInstructions: "test instructions",
 	}
 
-	at, err := store.CreateAssetTask(groupTitle, categoryTitle, at)
+	at, err := store.CreateAssetTask(at)
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
 
-	err = store.DeleteAssetTask(groupTitle, categoryTitle, at.Id)
+	err = store.DeleteAssetTask(at.Id)
 	if err != nil {
 		t.Errorf("DeleteAssetTask() failed: %v", err)
 	}
 
 	// Get
-	_, err = store.GetAssetTask(groupTitle, categoryTitle, at.Id)
+	_, err = store.GetAssetTask(at.Id)
 	if err == nil {
 		t.Errorf("GetAssetTask() failed: expected error, got nil")
 	}
@@ -68,7 +68,7 @@ func TestAssetTaskList(t *testing.T) {
 	assetId := setupAssetTaskDependencies(t, store, groupTitle, categoryTitle, "1")
 
 	// List
-	assetTasks, err := store.ListAssetTasks(groupTitle, categoryTitle)
+	assetTasks, err := store.ListAssetTasks()
 	if err != nil {
 		t.Errorf("ListAssetTasks() failed: %v", err)
 	}
@@ -92,18 +92,18 @@ func TestAssetTaskList(t *testing.T) {
 	}
 
 	// Create the assetTasks
-	assetTaskMap["testassettask1"], err = store.CreateAssetTask(groupTitle, categoryTitle, assetTaskMap["testassettask1"])
+	assetTaskMap["testassettask1"], err = store.CreateAssetTask(assetTaskMap["testassettask1"])
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
 
-	assetTaskMap["testassettask2"], err = store.CreateAssetTask(groupTitle, categoryTitle, assetTaskMap["testassettask2"])
+	assetTaskMap["testassettask2"], err = store.CreateAssetTask(assetTaskMap["testassettask2"])
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
 
 	// List
-	newAssetTasks, err := store.ListAssetTasks(groupTitle, categoryTitle)
+	newAssetTasks, err := store.ListAssetTasks()
 	if err != nil {
 		t.Errorf("ListAssetTasks() failed: %v", err)
 	}
@@ -138,7 +138,7 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 		UniqueInstructions: "test instructions",
 	}
 
-	createAt, err := store.CreateAssetTask(groupTitle, categoryTitle, at)
+	createAt, err := store.CreateAssetTask(at)
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
@@ -146,7 +146,7 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 	// Update
 	at.Title = "testassettask1updated"
 	at.UniqueInstructions = "test instructions updated"
-	updateAt, err := store.UpdateAssetTask(groupTitle, categoryTitle, createAt.Id, at)
+	updateAt, err := store.UpdateAssetTask(createAt.Id, at)
 	if err != nil {
 		t.Errorf("UpdateAssetTask() failed: %v", err)
 	}
@@ -155,7 +155,7 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 	compEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
 
 	// Get
-	getAt, err := store.GetAssetTask(groupTitle, categoryTitle, updateAt.Id)
+	getAt, err := store.GetAssetTask(updateAt.Id)
 	if err != nil {
 		t.Errorf("GetAssetTask() failed: %v", err)
 	}
@@ -166,7 +166,7 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 func setupAssetTaskDependencies(t *testing.T, store store.Store, groupTitle string, categoryTitle string, assetTitle string) tp.UUID {
 	// create an asset
 	asset := getTestAsset(groupTitle, categoryTitle, assetTitle)
-	asset, err := store.CreateAsset(groupTitle, asset)
+	asset, err := store.CreateAsset(asset)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}

@@ -16,7 +16,7 @@ func TestAssetCreate(t *testing.T) {
 
 	// Create
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
-	returnedAsset, err := store.CreateAsset(groupTitle, asset)
+	returnedAsset, err := store.CreateAsset(asset)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
@@ -33,7 +33,7 @@ func TestAssetDelete(t *testing.T) {
 
 	// Delete
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
-	_, err := store.CreateAsset(groupTitle, asset)
+	_, err := store.CreateAsset(asset)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
@@ -57,7 +57,7 @@ func TestAssetList(t *testing.T) {
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
 
 	// original List
-	assets, err := store.ListAsset(groupTitle)
+	assets, err := store.ListAssets()
 	if err != nil {
 		t.Errorf("ListAsset() failed: %v", err)
 	}
@@ -72,18 +72,18 @@ func TestAssetList(t *testing.T) {
 	assetMap["testasset1"] = getTestAsset(groupTitle, categoryTitle, "1")
 	assetMap["testasset2"] = getTestAsset(groupTitle, categoryTitle, "2")
 
-	_, err = store.CreateAsset(groupTitle, assetMap["testasset1"])
+	_, err = store.CreateAsset(assetMap["testasset1"])
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
 
-	_, err = store.CreateAsset(groupTitle, assetMap["testasset2"])
+	_, err = store.CreateAsset(assetMap["testasset2"])
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
 
 	// List, compare the length to the original list+2 and compare the new listed assets with the expected assets
-	assets, err = store.ListAsset(groupTitle)
+	assets, err = store.ListAssets()
 	if err != nil {
 		t.Errorf("ListAsset() failed: %v", err)
 	}
@@ -111,7 +111,7 @@ func TestAssetUpdateGet(t *testing.T) {
 
 	// Create
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
-	createAsset, err := store.CreateAsset(groupTitle, asset)
+	createAsset, err := store.CreateAsset(asset)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}

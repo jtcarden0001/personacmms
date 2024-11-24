@@ -5,13 +5,20 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// these embedded interfaces are not implementation specific but it's easier keeping related code (interface + implementation) together.
-// I will move these to a common location (out of imp) if I field the idea of another implementation or find a need.
-// there is probably a way to greatly reduce the code quantity and generalize the interface implementation, just making the query strings
-// implementation specific but tbd....
 type Store interface {
-	imp.Asset
-	imp.AssetTask
+	// asset
+	CreateAsset(tp.Asset) (tp.Asset, error)
+	DeleteAsset(string, string) error
+	ListAssets() ([]tp.Asset, error)
+	GetAsset(string, string) (tp.Asset, error)
+	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
+
+	// asset task
+	CreateAssetTask(tp.AssetTask) (tp.AssetTask, error)
+	DeleteAssetTask(tp.UUID) error
+	ListAssetTasks() ([]tp.AssetTask, error)
+	GetAssetTask(tp.UUID) (tp.AssetTask, error)
+	UpdateAssetTask(tp.UUID, tp.AssetTask) (tp.AssetTask, error)
 
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)
@@ -34,8 +41,19 @@ type Store interface {
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 
-	imp.Task
-	imp.TimeUnit
+	// task
+	CreateTask(tp.Task) (tp.Task, error)
+	DeleteTask(string) error
+	ListTasks() ([]tp.Task, error)
+	GetTask(string) (tp.Task, error)
+	UpdateTask(string, tp.Task) (tp.Task, error)
+
+	// time unit
+	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
+	DeleteTimeUnit(string) error
+	ListTimeUnits() ([]tp.TimeUnit, error)
+	GetTimeUnit(string) (tp.TimeUnit, error)
+	UpdateTimeUnit(string, tp.TimeUnit) (tp.TimeUnit, error)
 
 	// tool
 	CreateTool(tp.Tool) (tp.Tool, error)
@@ -58,8 +76,15 @@ type Store interface {
 	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
 	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 
-	imp.WorkOrderStatus
-	imp.Exec
+	// work order status
+	CreateWorkOrderStatus(tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
+	DeleteWorkOrderStatus(string) error
+	ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error)
+	GetWorkOrderStatus(string) (tp.WorkOrderStatus, error)
+	UpdateWorkOrderStatus(string, tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
+
+	// utilities
+	Exec(string) error
 }
 
 func New() Store {
