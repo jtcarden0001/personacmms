@@ -21,7 +21,8 @@ func TestAssetCreate(t *testing.T) {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
 
-	compareEntitiesExcludingId(t, asset, returnedAsset)
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compareEntitiesExcludingFields(t, asset, returnedAsset, fieldsToExclude)
 }
 
 func TestAssetDelete(t *testing.T) {
@@ -97,7 +98,8 @@ func TestAssetList(t *testing.T) {
 	}
 
 	for title, asset := range assetMap {
-		compareEntitiesExcludingId(t, asset, newAssetMap[title])
+		fieldsToExclude := convertToSet([]string{"Id"})
+		compareEntitiesExcludingFields(t, asset, newAssetMap[title], fieldsToExclude)
 	}
 }
 
@@ -132,8 +134,8 @@ func TestAssetUpdateGet(t *testing.T) {
 		t.Errorf("GetAsset() failed: %v", err)
 	}
 
-	compareEntitiesExcludingId(t, updatedAsset, returnedAsset)
-
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compareEntitiesExcludingFields(t, updatedAsset, returnedAsset, fieldsToExclude)
 }
 
 func setupAssetDependencies(t *testing.T, store store.Store, suffix string) (string, string) {

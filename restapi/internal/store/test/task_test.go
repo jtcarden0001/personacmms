@@ -21,7 +21,8 @@ func TestTaskCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	compareEntitiesExcludingId(t, task, returntask)
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compareEntitiesExcludingFields(t, task, returntask, fieldsToExclude)
 }
 
 func TestTaskDelete(t *testing.T) {
@@ -105,7 +106,8 @@ func TestTaskList(t *testing.T) {
 	}
 
 	for title, task := range taskMap {
-		compareEntitiesExcludingId(t, task, newTaskMap[title])
+		fieldsToExclude := convertToSet([]string{"Id"})
+		compareEntitiesExcludingFields(t, task, newTaskMap[title], fieldsToExclude)
 	}
 }
 

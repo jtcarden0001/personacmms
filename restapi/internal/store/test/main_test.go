@@ -118,33 +118,24 @@ func InitializeStore(dbName string) st.Store {
 	return store
 }
 
-func compareEntitiesExcludingId(t *testing.T, expected interface{}, actual interface{}) {
-	// Compare all properties except for the ID
-	expectedValue := reflect.ValueOf(expected)
-	actualValue := reflect.ValueOf(actual)
-
-	for i := 0; i < expectedValue.NumField(); i++ {
-		field := expectedValue.Type().Field(i)
-		if field.Name == "Id" {
-			continue
-		}
-
-		expectedField := expectedValue.Field(i).Interface()
-		actualField := actualValue.Field(i).Interface()
-
-		if !reflect.DeepEqual(expectedField, actualField) {
-			t.Errorf("Create() failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
-		}
+func convertToSet(arr []string) map[string]struct{} {
+	set := make(map[string]struct{})
+	for _, v := range arr {
+		set[v] = struct{}{}
 	}
+	return set
 }
 
-func compareEntitiesIncludingId(t *testing.T, expected interface{}, actual interface{}) {
-	// Compare all properties including the ID
+func compareEntitiesExcludingFields(t *testing.T, expected interface{}, actual interface{}, fields map[string]struct{}) {
+	// Compare all properties except for the specified fields
 	expectedValue := reflect.ValueOf(expected)
 	actualValue := reflect.ValueOf(actual)
 
 	for i := 0; i < expectedValue.NumField(); i++ {
 		field := expectedValue.Type().Field(i)
+		if _, ok := fields[field.Name]; ok {
+			continue
+		}
 
 		expectedField := expectedValue.Field(i).Interface()
 		actualField := actualValue.Field(i).Interface()

@@ -20,7 +20,8 @@ func TestCategoryCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	compareEntitiesExcludingId(t, cat, returnCat)
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compareEntitiesExcludingFields(t, cat, returnCat, fieldsToExclude)
 }
 
 func TestCategoryDelete(t *testing.T) {
@@ -101,7 +102,7 @@ func TestCategoryList(t *testing.T) {
 
 	// compare the two maps
 	for key, cat := range catMap {
-		compareEntitiesExcludingId(t, cat, newCatMap[key])
+		compareEntitiesExcludingFields(t, cat, newCatMap[key], map[string]struct{}{"Id": {}})
 	}
 }
 
@@ -133,5 +134,6 @@ func TestCategoryUpdateGet(t *testing.T) {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	compareEntitiesIncludingId(t, updateCat, getCat)
+	// exclude no fields
+	compareEntitiesExcludingFields(t, updateCat, getCat, map[string]struct{}{})
 }

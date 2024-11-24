@@ -80,9 +80,9 @@ func (pg *Store) GetAssetTask(groupTitle string, assetTitle string, atId tp.UUID
 		return tp.AssetTask{}, err
 	}
 
-	query := `SELECT id, title, unique_instructions, asset_id, task_id FROM $1 WHERE id = $2`
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, task_id FROM %s WHERE id = $1`, assetTaskTable)
 	var e tp.AssetTask
-	err = pg.db.QueryRow(query, assetTaskTable, atId).Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
+	err = pg.db.QueryRow(query, atId).Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
 	if err != nil {
 		return tp.AssetTask{}, err
 	}
@@ -96,8 +96,8 @@ func (pg *Store) UpdateAssetTask(groupTitle string, assetTitle string, atId tp.U
 		return tp.AssetTask{}, err
 	}
 
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, task_id = $4 WHERE id = $5`, assetTaskTable)
-	_, err = pg.db.Exec(query, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId, atId)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, task_id = $4 WHERE id = $5 returning id`, assetTaskTable)
+	err = pg.db.QueryRow(query, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId, atId).Scan(&at.Id)
 	if err != nil {
 		return tp.AssetTask{}, err
 	}
