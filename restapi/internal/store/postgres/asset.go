@@ -1,72 +1,123 @@
 package postgres
 
 import (
+	"fmt"
+
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 type Asset interface {
-	CreateAsset(string, int, string, string, string, int) (int, error)
-	DeleteAsset(int) error
-	GetAllAsset() ([]tp.Asset, error)
-	GetAsset(int) (tp.Asset, error)
-	UpdateAsset(int, string, int, string, string, string, int) error
+	CreateAsset(string, tp.Asset) (tp.Asset, error)
+	DeleteAsset(string, string) error
+	ListAsset(string) ([]tp.Asset, error)
+	GetAsset(string, string) (tp.Asset, error)
+	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
 }
 
 var assetTableName = "asset"
 
-func (pg *Store) CreateAsset(title string, year int, make, modelNumber, description string, categoryId int) (int, error) {
-	query := `INSERT INTO Asset (title, year, make, model_number, description, category_id) VALUES ($1, $2, $3, $4, $5, $6) returning id`
-	var id int
-	err := pg.db.QueryRow(query, title, year, make, modelNumber, description, categoryId).Scan(&id)
+func (pg *Store) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
+	asset.Id = uuid.New()
+	// TODO: make this line length more tenable
+	query := fmt.Sprintf(`
+		INSERT INTO %s (
+			id, title, group_title, year, make, model_number, serial_number, description, category_title
+		) VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8, $9
+		)`, assetTableName)
 
-	return id, err
+	_, err := pg.db.Exec(query, asset.Id, asset.Title, groupTitle, asset.Year, asset.Make, asset.ModelNumber, asset.SerialNumber, asset.Description, asset.CategoryTitle)
+	if err != nil {
+		return tp.Asset{}, err
+	}
+
+	return asset, nil
 }
 
-func (pg *Store) DeleteAsset(id int) error {
-	query := `DELETE FROM Asset WHERE id = $1`
-	_, err := pg.db.Exec(query, id)
-
+func (pg *Store) DeleteAsset(groupTitle string, assetTitle string) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
+	_, err := pg.db.Exec(query, assetTitle, groupTitle)
 	return err
 }
 
-func (pg *Store) GetAllAsset() ([]tp.Asset, error) {
-	query := `SELECT id, title, year, make, model_number, description, category_id FROM Asset`
-	rows, err := pg.db.Query(query)
+func (pg *Store) ListAsset(groupTitle string) ([]tp.Asset, error) {
+	query := fmt.Sprintf(`
+		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
+		FROM %s 
+		WHERE group_title = $1`, assetTableName)
+	rows, err := pg.db.Query(query, groupTitle)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var Asset []tp.Asset
+	assets := []tp.Asset{}
 	for rows.Next() {
-		var e tp.Asset
-		err = rows.Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryTitle)
+		var asset tp.Asset
+		err = rows.Scan(&asset.GroupTitle, &asset.Title, &asset.Id, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description, &asset.CategoryTitle)
 		if err != nil {
 			return nil, err
 		}
-		Asset = append(Asset, e)
+		assets = append(assets, asset)
 	}
 
-	return Asset, nil
+	return assets, nil
 }
 
-func (pg *Store) GetAsset(id int) (tp.Asset, error) {
-	query := `SELECT id, title, year, make, model_number, description, category_id FROM Asset WHERE id = $1`
-	var e tp.Asset
-	err := pg.db.QueryRow(query, id).Scan(&e.Id, &e.Title, &e.Year, &e.Make, &e.ModelNumber, &e.Description, &e.CategoryTitle)
+func (pg *Store) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
+	var asset tp.Asset
+	query := fmt.Sprintf(`
+		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
+		FROM %s 
+		WHERE title = $1 AND group_title = $2`, assetTableName)
 
-	return e, err
+	err := pg.db.QueryRow(query, assetTitle, groupTitle).Scan(
+		&asset.GroupTitle,
+		&asset.Title,
+		&asset.Id,
+		&asset.Year,
+		&asset.Make,
+		&asset.ModelNumber,
+		&asset.SerialNumber,
+		&asset.Description,
+		&asset.CategoryTitle,
+	)
+	if err != nil {
+		return tp.Asset{}, err
+	}
+
+	return asset, nil
 }
 
-func (pg *Store) UpdateAsset(id int, title string, year int, make, modelNumber, description string, categoryId int) error {
-	query := `UPDATE Asset SET title = $1, year = $2, make = $3, model_number = $4, description = $6, category = $7 WHERE id = $8`
-	_, err := pg.db.Exec(query, title, year, make, modelNumber, description, categoryId, id)
+func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
+	query := fmt.Sprintf(`
+		UPDATE %s 
+		SET year = $1, make = $2, model_number = $3, serial_number = $4, description = $5, category_title = $6, title = $7 
+		WHERE title = $8 AND group_title = $9`, assetTableName)
 
-	return err
+	_, err := pg.db.Exec(
+		query,
+		asset.Year,
+		asset.Make,
+		asset.ModelNumber,
+		asset.SerialNumber,
+		asset.Description,
+		asset.CategoryTitle,
+		asset.Title,
+		assetTitle,
+		groupTitle,
+	)
+	if err != nil {
+		return tp.Asset{}, err
+	}
+
+	return asset, nil
 }
 
+// TODO: I think this logic should be in the application layer, removing validation from the store layer
+// and allowing it to purely make database calls based on input.
 func (pg *Store) validateAsset(groupTitle string, assetTitle string) error {
-	query := `SELECT id FROM $1 WHERE title = $2 AND group_title = $3`
-	_, err := pg.db.Exec(query, assetTableName, assetTitle, groupTitle)
+	query := fmt.Sprintf(`SELECT id FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
+	_, err := pg.db.Exec(query, assetTitle, groupTitle)
 	return err
 }

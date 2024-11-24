@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
@@ -115,4 +116,41 @@ func InitializeStore(dbName string) st.Store {
 	}
 
 	return store
+}
+
+func compareEntitiesExcludingId(t *testing.T, expected interface{}, actual interface{}) {
+	// Compare all properties except for the ID
+	expectedValue := reflect.ValueOf(expected)
+	actualValue := reflect.ValueOf(actual)
+
+	for i := 0; i < expectedValue.NumField(); i++ {
+		field := expectedValue.Type().Field(i)
+		if field.Name == "Id" {
+			continue
+		}
+
+		expectedField := expectedValue.Field(i).Interface()
+		actualField := actualValue.Field(i).Interface()
+
+		if !reflect.DeepEqual(expectedField, actualField) {
+			t.Errorf("Create() failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		}
+	}
+}
+
+func compareEntitiesIncludingId(t *testing.T, expected interface{}, actual interface{}) {
+	// Compare all properties including the ID
+	expectedValue := reflect.ValueOf(expected)
+	actualValue := reflect.ValueOf(actual)
+
+	for i := 0; i < expectedValue.NumField(); i++ {
+		field := expectedValue.Type().Field(i)
+
+		expectedField := expectedValue.Field(i).Interface()
+		actualField := actualValue.Field(i).Interface()
+
+		if !reflect.DeepEqual(expectedField, actualField) {
+			t.Errorf("Create() failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		}
+	}
 }

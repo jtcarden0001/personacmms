@@ -3,14 +3,14 @@ package test
 import (
 	"testing"
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func TestCategoryCreate(t *testing.T) {
 	store := InitializeStore("testcategorycreate")
 
 	// Create
-	cat := types.Category{
+	cat := tp.Category{
 		Title:       "testcategory1",
 		Description: "test description",
 	}
@@ -20,20 +20,14 @@ func TestCategoryCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	if returnCat.Title != cat.Title {
-		t.Errorf("Create() failed: expected %s, got %s", cat.Title, returnCat.Title)
-	}
-
-	if returnCat.Description != cat.Description {
-		t.Errorf("Create() failed: expected %s, got %s", cat.Description, returnCat.Description)
-	}
+	compareEntitiesExcludingId(t, cat, returnCat)
 }
 
 func TestCategoryDelete(t *testing.T) {
 	store := InitializeStore("testcategorydelete")
 
 	// Delete
-	cat := types.Category{
+	cat := tp.Category{
 		Title:       "testcategory1",
 		Description: "test description",
 	}
@@ -63,34 +57,51 @@ func TestCategoryList(t *testing.T) {
 		t.Errorf("List() failed: %v", err)
 	}
 
-	if len(cats) != 0 {
-		t.Errorf("ListCategory() failed: expected 0, got %d", len(cats))
+	// create a map of the categories title: tp.category
+	catMap := make(map[string]tp.Category)
+	for _, cat := range cats {
+		catMap[cat.Title] = cat
 	}
 
-	// Create
-	cat := types.Category{
+	catMap["testcategory1"] = tp.Category{
 		Title:       "testcategory1",
 		Description: "test description",
 	}
-	_, err = store.CreateCategory(cat)
+
+	catMap["testcategory2"] = tp.Category{
+		Title:       "testcategory2",
+		Description: "test description",
+	}
+
+	// create the 2 new categories
+	_, err = store.CreateCategory(catMap["testcategory1"])
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	cat.Title = "testcategory2"
-	_, err = store.CreateCategory(cat)
+	_, err = store.CreateCategory(catMap["testcategory2"])
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// List
-	cats, err = store.ListCategories()
+	newCats, err := store.ListCategories()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
 	}
 
-	if len(cats) != 2 {
-		t.Errorf("ListCategory() failed: expected 2, got %d", len(cats))
+	if len(newCats) != len(cats)+2 {
+		t.Errorf("List() failed: expected %d, got %d", len(cats)+2, len(newCats))
+	}
+
+	newCatMap := make(map[string]tp.Category)
+	for _, cat := range newCats {
+		newCatMap[cat.Title] = cat
+	}
+
+	// compare the two maps
+	for key, cat := range catMap {
+		compareEntitiesExcludingId(t, cat, newCatMap[key])
 	}
 }
 
@@ -98,19 +109,23 @@ func TestCategoryUpdateGet(t *testing.T) {
 	store := InitializeStore("testcategoryupdate")
 
 	// Update
-	cat := types.Category{
+	cat := tp.Category{
 		Title:       "testcategory1",
 		Description: "test description",
 	}
-	_, err := store.CreateCategory(cat)
+	createCat, err := store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	cat.Description = "new description"
-	returnCat, err := store.UpdateCategory(cat.Title, cat)
+	createCat.Description = "new description"
+	updateCat, err := store.UpdateCategory(cat.Title, createCat)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
+	}
+
+	if updateCat.Description == cat.Description {
+		t.Errorf("Update() failed: expected %v, got %v", cat.Description, updateCat.Description)
 	}
 
 	getCat, err := store.GetCategory(cat.Title)
@@ -118,11 +133,5 @@ func TestCategoryUpdateGet(t *testing.T) {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	if returnCat.Title != cat.Title || getCat.Title != cat.Title {
-		t.Errorf("Update() failed: expected %s, got %s", cat.Title, returnCat.Title)
-	}
-
-	if returnCat.Description != cat.Description || getCat.Description != cat.Description {
-		t.Errorf("Update() failed: expected %s, got %s", cat.Description, returnCat.Description)
-	}
+	compareEntitiesIncludingId(t, updateCat, getCat)
 }

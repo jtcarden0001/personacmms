@@ -18,6 +18,7 @@ CREATE TABLE "asset" (
   "year" int,
   "make" varchar,
   "model_number" varchar,
+  "serial_number" varchar,
   "description" varchar,
   "category_title" varchar,
   PRIMARY KEY ("group_title", "title"),
