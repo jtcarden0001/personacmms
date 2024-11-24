@@ -7,14 +7,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type UsageUnit interface {
-	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
-	DeleteUsageUnit(string) error
-	ListUsageUnits() ([]tp.UsageUnit, error)
-	GetUsageUnit(string) (tp.UsageUnit, error)
-	UpdateUsageUnit(string, tp.UsageUnit) (tp.UsageUnit, error)
-}
-
 var usageUnitTableName = "usageunit"
 
 func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {

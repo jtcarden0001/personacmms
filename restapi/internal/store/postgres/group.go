@@ -7,14 +7,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type Group interface {
-	CreateGroup(tp.Group) (tp.Group, error)
-	DeleteGroup(string) error
-	ListGroups() ([]tp.Group, error)
-	GetGroup(string) (tp.Group, error)
-	UpdateGroup(string, tp.Group) (tp.Group, error)
-}
-
 var groupTableName = "assetgroup"
 
 func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {

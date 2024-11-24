@@ -27,11 +27,29 @@ type Store interface {
 	GetConsumable(string) (tp.Consumable, error)
 	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
 
-	imp.Group
+	// group
+	CreateGroup(tp.Group) (tp.Group, error)
+	DeleteGroup(string) error
+	ListGroups() ([]tp.Group, error)
+	GetGroup(string) (tp.Group, error)
+	UpdateGroup(string, tp.Group) (tp.Group, error)
+
 	imp.Task
 	imp.TimeUnit
-	imp.Tool
-	imp.UsageUnit
+
+	// tool
+	CreateTool(tp.Tool) (tp.Tool, error)
+	DeleteTool(string) error
+	ListTools() ([]tp.Tool, error)
+	GetTool(string) (tp.Tool, error)
+	UpdateTool(string, tp.Tool) (tp.Tool, error)
+
+	// usage unit
+	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
+	DeleteUsageUnit(string) error
+	ListUsageUnits() ([]tp.UsageUnit, error)
+	GetUsageUnit(string) (tp.UsageUnit, error)
+	UpdateUsageUnit(string, tp.UsageUnit) (tp.UsageUnit, error)
 
 	// work order
 	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)

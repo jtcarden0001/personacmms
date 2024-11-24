@@ -7,14 +7,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type Tool interface {
-	CreateTool(tp.Tool) (tp.Tool, error)
-	DeleteTool(string) error
-	ListTools() ([]tp.Tool, error)
-	GetTool(string) (tp.Tool, error)
-	UpdateTool(string, tp.Tool) (tp.Tool, error)
-}
-
 var toolTableName = "tool"
 
 func (pg *Store) CreateTool(tool tp.Tool) (tp.Tool, error) {
