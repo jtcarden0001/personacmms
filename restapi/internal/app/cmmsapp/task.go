@@ -2,14 +2,6 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
-type Task interface {
-	CreateTask(tp.Task) (tp.Task, error)
-	DeleteTask(string) error
-	ListTasks() ([]tp.Task, error)
-	GetTask(string) (tp.Task, error)
-	UpdateTask(string, tp.Task) (tp.Task, error)
-}
-
 func (a *App) CreateTask(task tp.Task) (tp.Task, error) {
 	return a.db.CreateTask(task)
 }

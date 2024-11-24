@@ -2,14 +2,6 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
-type Consumable interface {
-	CreateConsumable(tp.Consumable) (tp.Consumable, error)
-	DeleteConsumable(string) error
-	ListConsumables() ([]tp.Consumable, error)
-	GetConsumable(string) (tp.Consumable, error)
-	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
-}
-
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
 	return a.db.CreateConsumable(consumable)
 }

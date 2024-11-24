@@ -5,14 +5,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type WorkOrder interface {
-	CreateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteAssetTaskWorkOrder(string, string, string, string) error
-	ListAssetTaskWorkOrders(string, string, string) ([]tp.WorkOrder, error)
-	GetAssetTaskWorkOrder(string, string, string, string) (tp.WorkOrder, error)
-	UpdateAssetTaskWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
-}
-
 func (a *App) CreateWorkOrder(groupTitle string, assetTitle string, assetTaskId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	//TODO: validate and populate workorder
 

@@ -2,14 +2,6 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
-type WorkOrderStatus interface {
-	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
-	DeleteWorkOrderStatus(title string) error
-	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
-	GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error)
-	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
-}
-
 func (a *App) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
 	return a.db.CreateWorkOrderStatus(wos)
 }

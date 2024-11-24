@@ -5,6 +5,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// Store layer implements persistence for the application.
 type Store interface {
 	// asset
 	CreateAsset(tp.Asset) (tp.Asset, error)

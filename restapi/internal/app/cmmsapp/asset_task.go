@@ -5,14 +5,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-type AssetTask interface {
-	CreateAssetTask(string, string, tp.AssetTask) (tp.AssetTask, error)
-	DeleteAssetTask(string, string, string) error
-	ListAssetTasks(string, string) ([]tp.AssetTask, error)
-	GetAssetTask(string, string, string) (tp.AssetTask, error)
-	UpdateAssetTask(string, string, string, tp.AssetTask) (tp.AssetTask, error)
-}
-
 func (a *App) CreateAssetTask(groupTitle string, assetTitle string, at tp.AssetTask) (tp.AssetTask, error) {
 	// TODO: validate and populate asset task
 
