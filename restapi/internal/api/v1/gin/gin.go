@@ -51,7 +51,7 @@ func New(injectedApp a.App) *Api {
 }
 
 func (h *Api) Start() {
-	h.router.Run(":8080")
+	h.router.Run(":8080") //TODO: source this from configuration
 }
 
 var routePrefix = "/api/v1"
@@ -61,10 +61,13 @@ func (h *Api) registerRoutes() {
 	h.registerAssetTaskRoutes()
 	h.registerCategoryRoutes()
 	h.registerConsumableRoutes()
+	h.registerDateTriggerRoutes()
 	h.registerGroupRoutes()
 	h.registerTaskRoutes()
+	h.registerTimeTriggerRoutes()
 	h.registerTimeUnitRoutes()
 	h.registerToolRoutes()
+	h.registerUsageTriggerRoutes()
 	h.registerUsageUnitRoutes()
 	h.registerWorkOrderStatusRoutes()
 	h.registerWorkOrderRoutes()

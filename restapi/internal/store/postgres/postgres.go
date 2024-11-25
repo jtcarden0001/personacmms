@@ -51,3 +51,7 @@ func (pg *Store) Exec(query string) error {
 	_, err := pg.db.Exec(query)
 	return err
 }
+
+func (pg *Store) Close() error {
+	return pg.db.Close()
+}

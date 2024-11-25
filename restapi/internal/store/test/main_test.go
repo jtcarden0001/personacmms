@@ -119,6 +119,14 @@ func InitializeStore(dbName string) st.Store {
 	return store
 }
 
+func CloseStore(store st.Store, dbName string) {
+	store.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
+	err := store.Close()
+	if err != nil {
+		log.Fatalf("Could not close store: %s", err)
+	}
+}
+
 func convertToSet(arr []string) map[string]struct{} {
 	set := make(map[string]struct{})
 	for _, v := range arr {
@@ -166,12 +174,17 @@ func compEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updat
 
 		initalField := initalValue.Field(i).Interface()
 		updatedField := updatedValue.Field(i).Interface()
-
-		compResult := reflect.DeepEqual(initalField, updatedField)
-		if different && compResult {
-			t.Errorf("Compare failed: expected %v for field %s to be different, got %v", initalField, field.Name, updatedField)
-		} else if !different && !compResult {
-			t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
+		if field.Name == "Date" {
+			if !initalField.(time.Time).Equal(updatedField.(time.Time)) {
+				t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
+			}
+		} else {
+			compResult := reflect.DeepEqual(initalField, updatedField)
+			if different && compResult {
+				t.Errorf("Compare failed: expected %v for field %s to be different, got %v", initalField, field.Name, updatedField)
+			} else if !different && !compResult {
+				t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
+			}
 		}
 	}
 }

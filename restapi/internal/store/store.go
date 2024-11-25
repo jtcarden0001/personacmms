@@ -35,6 +35,13 @@ type Store interface {
 	GetConsumable(string) (tp.Consumable, error)
 	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
 
+	// date trigger
+	CreateDateTrigger(tp.DateTrigger) (tp.DateTrigger, error)
+	DeleteDateTrigger(tp.UUID) error
+	ListDateTriggers() ([]tp.DateTrigger, error)
+	GetDateTrigger(tp.UUID) (tp.DateTrigger, error)
+	UpdateDateTrigger(tp.UUID, tp.DateTrigger) (tp.DateTrigger, error)
+
 	// group
 	CreateGroup(tp.Group) (tp.Group, error)
 	DeleteGroup(string) error
@@ -100,6 +107,7 @@ type Store interface {
 
 	// utilities
 	Exec(string) error
+	Close() error
 }
 
 func New() Store {

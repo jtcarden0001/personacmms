@@ -8,7 +8,9 @@ import (
 )
 
 func TestConsumableCreate(t *testing.T) {
-	store := InitializeStore("testconsumablecreate")
+	dbName := "testconsumablecreate"
+	store := InitializeStore(dbName)
+	defer CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{
@@ -30,7 +32,9 @@ func TestConsumableCreate(t *testing.T) {
 }
 
 func TestConsumableDelete(t *testing.T) {
-	store := InitializeStore("testconsumabledelete")
+	dbName := "testconsumabledelete"
+	store := InitializeStore(dbName)
+	defer CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{
@@ -56,7 +60,9 @@ func TestConsumableDelete(t *testing.T) {
 }
 
 func TestConsumableList(t *testing.T) {
-	store := InitializeStore("testconsumablelist")
+	dbName := "testconsumablelist"
+	store := InitializeStore(dbName)
+	defer CloseStore(store, dbName)
 
 	// List
 	consumables, err := store.ListConsumables()
@@ -98,7 +104,9 @@ func TestConsumableList(t *testing.T) {
 }
 
 func TestConsumableUpdateGet(t *testing.T) {
-	store := InitializeStore("testconsumableupdateget")
+	dbName := "testconsumableupdateget"
+	store := InitializeStore(dbName)
+	defer CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{

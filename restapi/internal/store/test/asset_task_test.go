@@ -8,7 +8,9 @@ import (
 )
 
 func TestAssetTaskCreate(t *testing.T) {
-	store := InitializeStore("testassettaskcreate")
+	dbname := "testassettaskcreate"
+	store := InitializeStore(dbname)
+	defer CloseStore(store, dbname)
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -30,7 +32,9 @@ func TestAssetTaskCreate(t *testing.T) {
 }
 
 func TestAssetTaskDelete(t *testing.T) {
-	store := InitializeStore("testassettaskdelete")
+	dbname := "testassettaskdelete"
+	store := InitializeStore(dbname)
+	defer CloseStore(store, dbname)
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -61,7 +65,9 @@ func TestAssetTaskDelete(t *testing.T) {
 }
 
 func TestAssetTaskList(t *testing.T) {
-	store := InitializeStore("testassettasklist")
+	dbname := "testassettasklist"
+	store := InitializeStore(dbname)
+	defer CloseStore(store, dbname)
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -125,7 +131,9 @@ func TestAssetTaskList(t *testing.T) {
 }
 
 func TestAssetTaskUpdateGet(t *testing.T) {
-	store := InitializeStore("testassettaskupdateget")
+	dbname := "testassettaskupdateget"
+	store := InitializeStore(dbname)
+	defer CloseStore(store, dbname)
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")

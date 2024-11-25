@@ -36,6 +36,13 @@ type App interface {
 	GetConsumable(string) (tp.Consumable, error)
 	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
 
+	// date trigger
+	CreateDateTrigger(string, string, string, tp.DateTrigger) (tp.DateTrigger, error)
+	DeleteDateTrigger(string, string, string, string) error
+	ListDateTriggers(string, string, string) ([]tp.DateTrigger, error)
+	GetDateTrigger(string, string, string, string) (tp.DateTrigger, error)
+	UpdateDateTrigger(string, string, string, string, tp.DateTrigger) (tp.DateTrigger, error)
+
 	// group
 	CreateGroup(tp.Group) (tp.Group, error)
 	DeleteGroup(string) error
