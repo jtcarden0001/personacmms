@@ -866,6 +866,245 @@ const docTemplate = `{
                 }
             }
         },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers": {
+            "get": {
+                "description": "List usage triggers",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List usage triggers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.UsageTrigger"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a usage trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a usage trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Usage Trigger object",
+                        "name": "usageTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageTrigger"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId}": {
+            "get": {
+                "description": "Get a usage trigger",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a usage trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Usage Trigger Id",
+                        "name": "usageTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageTrigger"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a usage trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a usage trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Usage Trigger Id",
+                        "name": "usageTriggerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Usage Trigger object",
+                        "name": "usageTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.UsageTrigger"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a usage trigger",
+                "summary": "Delete a usage trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Usage Trigger Id",
+                        "name": "usageTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders": {
             "get": {
                 "description": "List all asset task work orders",
@@ -1523,6 +1762,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.UsageTrigger": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "usage_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "usage_unit": {
                     "type": "string"
                 }
             }

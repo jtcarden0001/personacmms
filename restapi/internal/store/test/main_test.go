@@ -10,6 +10,7 @@ import (
 	"time"
 
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
@@ -173,4 +174,19 @@ func compEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updat
 			t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
 		}
 	}
+}
+
+func setupTriggerDependencies(t *testing.T, store st.Store, identifier string) tp.UUID {
+	gpTitle, catTitle := setupAssetDependencies(t, store, identifier)
+	assetId := setupAssetTaskDependencies(t, store, gpTitle, catTitle, identifier)
+	at := tp.AssetTask{
+		Title:              fmt.Sprintf("AssetTask %s", identifier),
+		UniqueInstructions: fmt.Sprintf("AssetTask %s instructions", identifier),
+		AssetId:            assetId,
+	}
+	at, err := store.CreateAssetTask(at)
+	if err != nil {
+		t.Errorf("CreateAssetTask() failed: %v", err)
+	}
+	return at.Id
 }

@@ -1,10 +1,8 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/store"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -12,7 +10,7 @@ func TestTimeTriggerCreate(t *testing.T) {
 	store := InitializeStore("testtimetriggercreate")
 
 	// setup
-	assetTaskId := setupTimeTriggerDependencies(t, store, "1")
+	assetTaskId := setupTriggerDependencies(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -31,7 +29,7 @@ func TestTimeTriggerDelete(t *testing.T) {
 	store := InitializeStore("testtimetriggerdelete")
 
 	// setup
-	assetTaskId := setupTimeTriggerDependencies(t, store, "1")
+	assetTaskId := setupTriggerDependencies(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -69,7 +67,7 @@ func TestTimeTriggerList(t *testing.T) {
 	}
 
 	// setup
-	assetTaskId := setupTimeTriggerDependencies(t, store, "1")
+	assetTaskId := setupTriggerDependencies(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -111,7 +109,7 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 	store := InitializeStore("testtimetriggerupdateget")
 
 	// setup
-	assetTaskId := setupTimeTriggerDependencies(t, store, "1")
+	assetTaskId := setupTriggerDependencies(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -139,19 +137,4 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updatedTt, tt)
-}
-
-func setupTimeTriggerDependencies(t *testing.T, store store.Store, identifier string) tp.UUID {
-	gpTitle, catTitle := setupAssetDependencies(t, store, identifier)
-	assetId := setupAssetTaskDependencies(t, store, gpTitle, catTitle, identifier)
-	at := tp.AssetTask{
-		Title:              fmt.Sprintf("AssetTask %s", identifier),
-		UniqueInstructions: fmt.Sprintf("AssetTask %s instructions", identifier),
-		AssetId:            assetId,
-	}
-	at, err := store.CreateAssetTask(at)
-	if err != nil {
-		t.Errorf("CreateAssetTask() failed: %v", err)
-	}
-	return at.Id
 }

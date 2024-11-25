@@ -71,6 +71,13 @@ type App interface {
 	GetTool(string) (tp.Tool, error)
 	UpdateTool(string, tp.Tool) (tp.Tool, error)
 
+	// usage trigger
+	CreateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
+	DeleteUsageTrigger(string, string, string, string) error
+	ListUsageTriggers(string, string, string) ([]tp.UsageTrigger, error)
+	GetUsageTrigger(string, string, string, string) (tp.UsageTrigger, error)
+	UpdateUsageTrigger(string, string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
+
 	// usage unit
 	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
 	DeleteUsageUnit(string) error

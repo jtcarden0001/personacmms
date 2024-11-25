@@ -3,15 +3,14 @@ package test
 import (
 	"testing"
 
-	"github.com/google/uuid"
-	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func TestUsageUnitCreate(t *testing.T) {
 	store := InitializeStore("testusageunitcreate")
 
 	// Create
-	usageUnit := types.UsageUnit{
+	usageUnit := tp.UsageUnit{
 		Title: "testusageunit1",
 	}
 
@@ -20,20 +19,15 @@ func TestUsageUnitCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	if returnedUnit.Title != usageUnit.Title {
-		t.Errorf("Create() failed: expected %s, got %s", usageUnit.Title, returnedUnit.Title)
-	}
-
-	if returnedUnit.Id == uuid.Nil {
-		t.Errorf("Create() failed: expected non-empty ID, got empty")
-	}
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compEntitiesExcludeFields(t, usageUnit, returnedUnit, fieldsToExclude)
 }
 
 func TestUsageUnitDelete(t *testing.T) {
 	store := InitializeStore("testusageunitdelete")
 
 	// Create
-	usageUnit := types.UsageUnit{
+	usageUnit := tp.UsageUnit{
 		Title: "testusageunit1",
 	}
 
@@ -64,25 +58,29 @@ func TestUsageUnitList(t *testing.T) {
 		t.Errorf("List() failed: %v", err)
 	}
 
-	if len(units) != 0 {
-		t.Errorf("List() failed: expected 0, got %d", len(units))
+	// convert output to a map
+	unitMap := make(map[string]tp.UsageUnit)
+	for _, unit := range units {
+		unitMap[unit.Title] = unit
 	}
 
 	// Create
-	usageUnit := types.UsageUnit{
+	usageUnit := tp.UsageUnit{
 		Title: "testusageunit1",
 	}
-
-	_, err = store.CreateUsageUnit(usageUnit)
+	u1, err := store.CreateUsageUnit(usageUnit)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
+	unitMap[u1.Title] = u1
 
+	// Create
 	usageUnit.Title = "testusageunit2"
-	_, err = store.CreateUsageUnit(usageUnit)
+	u2, err := store.CreateUsageUnit(usageUnit)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
+	unitMap[u2.Title] = u2
 
 	// List
 	units, err = store.ListUsageUnits()
@@ -90,9 +88,13 @@ func TestUsageUnitList(t *testing.T) {
 		t.Errorf("List() failed: %v", err)
 	}
 
-	expected := 2
-	if len(units) != expected {
-		t.Errorf("List() failed: expected %d units, got %d", expected, len(units))
+	if len(units) != len(unitMap) {
+		t.Errorf("List() failed: expected %d, got %d", len(unitMap), len(units))
+	}
+
+	// compare
+	for _, unit := range units {
+		compEntities(t, unit, unitMap[unit.Title])
 	}
 }
 
@@ -100,7 +102,7 @@ func TestUsageUnitUpdateGet(t *testing.T) {
 	store := InitializeStore("testusageunitupdateget")
 
 	// Create
-	usageUnit := types.UsageUnit{
+	usageUnit := tp.UsageUnit{
 		Title: "testusageunit1",
 	}
 

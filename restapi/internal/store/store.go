@@ -70,6 +70,13 @@ type Store interface {
 	GetTool(string) (tp.Tool, error)
 	UpdateTool(string, tp.Tool) (tp.Tool, error)
 
+	// usage trigger
+	CreateUsageTrigger(tp.UsageTrigger) (tp.UsageTrigger, error)
+	DeleteUsageTrigger(tp.UUID) error
+	ListUsageTriggers() ([]tp.UsageTrigger, error)
+	GetUsageTrigger(tp.UUID) (tp.UsageTrigger, error)
+	UpdateUsageTrigger(tp.UUID, tp.UsageTrigger) (tp.UsageTrigger, error)
+
 	// usage unit
 	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
 	DeleteUsageUnit(string) error

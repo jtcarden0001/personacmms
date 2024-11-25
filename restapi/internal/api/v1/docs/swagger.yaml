@@ -70,6 +70,16 @@ definitions:
     - size
     - title
     type: object
+  types.UsageTrigger:
+    properties:
+      quantity:
+        type: integer
+      usage_unit:
+        type: string
+    required:
+    - quantity
+    - usage_unit
+    type: object
   types.UsageUnit:
     properties:
       title:
@@ -680,6 +690,169 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeTrigger'
       summary: Update a time trigger
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers:
+    get:
+      description: List usage triggers
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.UsageTrigger'
+            type: array
+      summary: List usage triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a usage trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Usage Trigger object
+        in: body
+        name: usageTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.UsageTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+      summary: Create a usage trigger
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId}:
+    delete:
+      description: Delete a usage trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a usage trigger
+    get:
+      description: Get a usage trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+      summary: Get a usage trigger
+    put:
+      consumes:
+      - application/json
+      description: Update a usage trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      - description: Usage Trigger object
+        in: body
+        name: usageTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.UsageTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+      summary: Update a usage trigger
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders:
     get:
       description: List all asset task work orders
