@@ -77,12 +77,8 @@ CREATE TABLE timetrigger (
   id uuid,
   quanitity int NOT NULL,
   timeunit_title varchar NOT NULL REFERENCES timeunit(title),
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE assettask_timetrigger (
   assettask_id uuid NOT NULL REFERENCES asset_task(id),
-  timetrigger_id uuid NOT NULL REFERENCES timetrigger(id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE usageunit (
@@ -95,12 +91,15 @@ CREATE TABLE usagetrigger (
   id uuid,
   quanitity int NOT NULL,
   usageunit_title varchar NOT NULL REFERENCES usageunit(title),
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
   PRIMARY KEY (id)
 );
 
-CREATE TABLE assettask_usagetrigger (
-  asset_task_id uuid NOT NULL REFERENCES asset_task(id),
-  usagetrigger_id uuid NOT NULL REFERENCES usagetrigger(id)
+CREATE TABLE datetrigger (
+  id uuid,
+  date timestamptz NOT NULL,
+  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE workorderstatus (

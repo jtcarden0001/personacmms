@@ -627,6 +627,245 @@ const docTemplate = `{
                 }
             }
         },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders": {
+            "get": {
+                "description": "List all asset task work orders",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset task work orders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.WorkOrder"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a work order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a work order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Work Order object",
+                        "name": "workOrder",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId}": {
+            "get": {
+                "description": "Get an asset task work order",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset task work order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Work Order Id",
+                        "name": "workOrderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an asset task work order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset task work order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Work Order Id",
+                        "name": "workOrderId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Work Order object",
+                        "name": "workOrder",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an asset task work order",
+                "summary": "Delete an asset task work order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Work Order Id",
+                        "name": "workOrderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/tasks": {
             "get": {
                 "description": "List all tasks",
@@ -774,109 +1013,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Create a time unit",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a time unit",
-                "parameters": [
-                    {
-                        "description": "Time Unit object",
-                        "name": "timeUnit",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.TimeUnit"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.TimeUnit"
-                        }
-                    }
-                }
-            }
-        },
-        "/time-units/{timeUnitTitle}": {
-            "get": {
-                "description": "Get a time unit",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a time unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Time Unit Title",
-                        "name": "timeUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.TimeUnit"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update a time unit",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a time unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Time Unit Title",
-                        "name": "timeUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.TimeUnit"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a time unit",
-                "summary": "Delete a time unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Time Unit Title",
-                        "name": "timeUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
             }
         },
         "/tools": {
@@ -1018,99 +1154,6 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.UsageUnit"
                             }
                         }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a usage unit",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a usage unit",
-                "parameters": [
-                    {
-                        "description": "Usage Unit object",
-                        "name": "usageUnit",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.UsageUnit"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.UsageUnit"
-                        }
-                    }
-                }
-            }
-        },
-        "/usage-units/{usageUnitTitle}": {
-            "get": {
-                "description": "Get a usage unit",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a usage unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Usage Unit Title",
-                        "name": "usageUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.UsageUnit"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update a usage unit",
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Update a usage unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Usage Unit Title",
-                        "name": "usageUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "description": "Delete a usage unit",
-                "summary": "Delete a usage unit",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Usage Unit Title",
-                        "name": "usageUnitTitle",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "404": {
-                        "description": "Not Found"
                     }
                 }
             }
@@ -1312,7 +1355,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
@@ -1349,6 +1392,29 @@ const docTemplate = `{
             ],
             "properties": {
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.WorkOrder": {
+            "type": "object",
+            "required": [
+                "statusId"
+            ],
+            "properties": {
+                "completedDate": {
+                    "type": "string"
+                },
+                "cumulativeHours": {
+                    "type": "integer"
+                },
+                "cumulativeMiles": {
+                    "type": "integer"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "statusId": {
                     "type": "string"
                 }
             }

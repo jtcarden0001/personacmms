@@ -39,7 +39,7 @@ definitions:
       title:
         type: string
       type:
-        type: integer
+        type: string
     required:
     - title
     type: object
@@ -66,6 +66,21 @@ definitions:
         type: string
     required:
     - title
+    type: object
+  types.WorkOrder:
+    properties:
+      completedDate:
+        type: string
+      cumulativeHours:
+        type: integer
+      cumulativeMiles:
+        type: integer
+      notes:
+        type: string
+      statusId:
+        type: string
+    required:
+    - statusId
     type: object
   types.WorkOrderStatus:
     properties:
@@ -492,6 +507,169 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Update an asset task
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders:
+    get:
+      description: List all asset task work orders
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.WorkOrder'
+            type: array
+      summary: List asset task work orders
+    post:
+      consumes:
+      - application/json
+      description: Create a work order
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Work Order object
+        in: body
+        name: workOrder
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrder'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+      summary: Create a work order
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId}:
+    delete:
+      description: Delete an asset task work order
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete an asset task work order
+    get:
+      description: Get an asset task work order
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+      summary: Get an asset task work order
+    put:
+      consumes:
+      - application/json
+      description: Update an asset task work order
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Work Order object
+        in: body
+        name: workOrder
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+      summary: Update an asset task work order
   /tasks:
     get:
       description: List all tasks
@@ -590,74 +768,6 @@ paths:
               $ref: '#/definitions/types.TimeUnit'
             type: array
       summary: List time units
-    post:
-      consumes:
-      - application/json
-      description: Create a time unit
-      parameters:
-      - description: Time Unit object
-        in: body
-        name: timeUnit
-        required: true
-        schema:
-          $ref: '#/definitions/types.TimeUnit'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TimeUnit'
-      summary: Create a time unit
-  /time-units/{timeUnitTitle}:
-    delete:
-      description: Delete a time unit
-      parameters:
-      - description: Time Unit Title
-        in: path
-        name: timeUnitTitle
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      summary: Delete a time unit
-    get:
-      description: Get a time unit
-      parameters:
-      - description: Time Unit Title
-        in: path
-        name: timeUnitTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TimeUnit'
-      summary: Get a time unit
-    put:
-      consumes:
-      - application/json
-      description: Update a time unit
-      parameters:
-      - description: Time Unit Title
-        in: path
-        name: timeUnitTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TimeUnit'
-      summary: Update a time unit
   /tools:
     get:
       description: List all tools
@@ -752,68 +862,6 @@ paths:
               $ref: '#/definitions/types.UsageUnit'
             type: array
       summary: List usage units
-    post:
-      consumes:
-      - application/json
-      description: Create a usage unit
-      parameters:
-      - description: Usage Unit object
-        in: body
-        name: usageUnit
-        required: true
-        schema:
-          $ref: '#/definitions/types.UsageUnit'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.UsageUnit'
-      summary: Create a usage unit
-  /usage-units/{usageUnitTitle}:
-    delete:
-      description: Delete a usage unit
-      parameters:
-      - description: Usage Unit Title
-        in: path
-        name: usageUnitTitle
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      summary: Delete a usage unit
-    get:
-      description: Get a usage unit
-      parameters:
-      - description: Usage Unit Title
-        in: path
-        name: usageUnitTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.UsageUnit'
-      summary: Get a usage unit
-    put:
-      consumes:
-      - application/json
-      description: Update a usage unit
-      parameters:
-      - description: Usage Unit Title
-        in: path
-        name: usageUnitTitle
-        required: true
-        type: string
-      responses: {}
-      summary: Update a usage unit
   /work-order-statuses:
     get:
       description: List all work order statuses
