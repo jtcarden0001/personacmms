@@ -50,6 +50,13 @@ type App interface {
 	GetTask(string) (tp.Task, error)
 	UpdateTask(string, tp.Task) (tp.Task, error)
 
+	// time trigger
+	CreateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
+	DeleteTimeTrigger(string, string, string, string) error
+	ListTimeTriggers(string, string, string) ([]tp.TimeTrigger, error)
+	GetTimeTrigger(string, string, string, string) (tp.TimeTrigger, error)
+	UpdateTimeTrigger(string, string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
+
 	// time unit
 	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
 	DeleteTimeUnit(string) error

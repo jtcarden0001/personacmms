@@ -627,6 +627,245 @@ const docTemplate = `{
                 }
             }
         },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers": {
+            "get": {
+                "description": "List all time triggers",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List time triggers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.TimeTrigger"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a time trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a time trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Time Trigger object",
+                        "name": "timeTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeTrigger"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId}": {
+            "get": {
+                "description": "Get a time trigger",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a time trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Time Trigger Id",
+                        "name": "timeTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeTrigger"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a time trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a time trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Time Trigger Id",
+                        "name": "timeTriggerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Time Trigger object",
+                        "name": "timeTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.TimeTrigger"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a time trigger",
+                "summary": "Delete a time trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Time Trigger Id",
+                        "name": "timeTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders": {
             "get": {
                 "description": "List all asset task work orders",
@@ -1355,6 +1594,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TimeTrigger": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "time_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "time_unit": {
                     "type": "string"
                 }
             }

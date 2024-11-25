@@ -75,7 +75,7 @@ CREATE TABLE timeunit (
 
 CREATE TABLE timetrigger (
   id uuid,
-  quanitity int NOT NULL,
+  quantity int NOT NULL,
   timeunit_title varchar NOT NULL REFERENCES timeunit(title),
   assettask_id uuid NOT NULL REFERENCES asset_task(id),
   PRIMARY KEY (id)
@@ -89,7 +89,7 @@ CREATE TABLE usageunit (
 
 CREATE TABLE usagetrigger (
   id uuid,
-  quanitity int NOT NULL,
+  quantity int NOT NULL,
   usageunit_title varchar NOT NULL REFERENCES usageunit(title),
   assettask_id uuid NOT NULL REFERENCES asset_task(id),
   PRIMARY KEY (id)
@@ -123,10 +123,10 @@ CREATE TABLE workorder (
 /* static data not modified by app */
 
 /* TODO: make this some kind of enum that is sourced from one place */
-INSERT INTO timeunit (id, title) VALUES ('4137d18f-d548-4d75-b84b-5a92d36acbc7', 'Day');
-INSERT INTO timeunit (id, title) VALUES ('8deb9996-d0a2-4c3d-b551-de07f9d4b91b','Week');
-INSERT INTO timeunit (id, title) VALUES ('e85451ba-f3e2-41a2-85e3-97aa782e76b8','Month');
-INSERT INTO timeunit (id, title) VALUES ('f14475db-e969-4fb6-af55-341110e29df6','Year');
+INSERT INTO timeunit (id, title) VALUES ('4137d18f-d548-4d75-b84b-5a92d36acbc7', 'day');
+INSERT INTO timeunit (id, title) VALUES ('8deb9996-d0a2-4c3d-b551-de07f9d4b91b','week');
+INSERT INTO timeunit (id, title) VALUES ('e85451ba-f3e2-41a2-85e3-97aa782e76b8','month');
+INSERT INTO timeunit (id, title) VALUES ('f14475db-e969-4fb6-af55-341110e29df6','year');
 
 /* TODO: make this some kind of enum that is sourced from one place */
 INSERT INTO workorderstatus (id, title) VALUES ('a0f7f76f-9b1b-4758-83d9-bc42da07fbe7','New');

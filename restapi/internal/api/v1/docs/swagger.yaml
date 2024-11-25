@@ -43,6 +43,16 @@ definitions:
     required:
     - title
     type: object
+  types.TimeTrigger:
+    properties:
+      quantity:
+        type: integer
+      time_unit:
+        type: string
+    required:
+    - quantity
+    - time_unit
+    type: object
   types.TimeUnit:
     properties:
       title:
@@ -507,6 +517,169 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Update an asset task
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers:
+    get:
+      description: List all time triggers
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.TimeTrigger'
+            type: array
+      summary: List time triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a time trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Time Trigger object
+        in: body
+        name: timeTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.TimeTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+      summary: Create a time trigger
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId}:
+    delete:
+      description: Delete a time trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a time trigger
+    get:
+      description: Get a time trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+      summary: Get a time trigger
+    put:
+      consumes:
+      - application/json
+      description: Update a time trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      - description: Time Trigger object
+        in: body
+        name: timeTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.TimeTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+      summary: Update a time trigger
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders:
     get:
       description: List all asset task work orders

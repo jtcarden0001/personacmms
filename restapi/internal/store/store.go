@@ -49,6 +49,13 @@ type Store interface {
 	GetTask(string) (tp.Task, error)
 	UpdateTask(string, tp.Task) (tp.Task, error)
 
+	// time trigger
+	CreateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
+	DeleteTimeTrigger(tp.UUID) error
+	ListTimeTriggers() ([]tp.TimeTrigger, error)
+	GetTimeTrigger(tp.UUID) (tp.TimeTrigger, error)
+	UpdateTimeTrigger(tp.UUID, tp.TimeTrigger) (tp.TimeTrigger, error)
+
 	// time unit
 	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
 	DeleteTimeUnit(string) error
