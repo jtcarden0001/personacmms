@@ -8,15 +8,17 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerToolRoutes() {
-	baseRoute := fmt.Sprintf("%s/tools", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:toolTitle", baseRoute)
+var baseToolRoute = fmt.Sprintf("%s/tools", routePrefix)
+var toolTitle = "ToolTitle"
+var individualToolRoute = fmt.Sprintf("%s/:%s", baseToolRoute, toolTitle)
 
-	h.router.POST(baseRoute, h.CreateTool)
-	h.router.DELETE(individualRoute, h.DeleteTool)
-	h.router.GET(baseRoute, h.ListTools)
-	h.router.GET(individualRoute, h.GetTool)
-	h.router.PUT(individualRoute, h.UpdateTool)
+func (h *Api) registerToolRoutes() {
+
+	h.router.POST(baseToolRoute, h.CreateTool)
+	h.router.DELETE(individualToolRoute, h.DeleteTool)
+	h.router.GET(baseToolRoute, h.ListTools)
+	h.router.GET(individualToolRoute, h.GetTool)
+	h.router.PUT(individualToolRoute, h.UpdateTool)
 }
 
 // CreateTool godoc
@@ -48,7 +50,7 @@ func (h *Api) CreateTool(c *gin.Context) {
 //	@Failure		404
 //	@Router			/tools/{toolTitle} [delete]
 func (h *Api) DeleteTool(c *gin.Context) {
-	err := h.app.DeleteTool(c.Param("toolTitle"))
+	err := h.app.DeleteTool(c.Param(toolTitle))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -73,7 +75,7 @@ func (h *Api) ListTools(c *gin.Context) {
 //	@Success		200	{object}	tp.Tool
 //	@Router			/tools/{toolTitle} [get]
 func (h *Api) GetTool(c *gin.Context) {
-	tool, err := h.app.GetTool(c.Param("toolTitle"))
+	tool, err := h.app.GetTool(c.Param(toolTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }
 
@@ -93,6 +95,6 @@ func (h *Api) UpdateTool(c *gin.Context) {
 		return
 	}
 
-	tool, err := h.app.UpdateTool(c.Param("toolTitle"), tool)
+	tool, err := h.app.UpdateTool(c.Param(toolTitle), tool)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }

@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-var baseTimeTriggerRoute = fmt.Sprintf("%s/timetriggers", indAssetTaskRoute)
+var baseTimeTriggerRoute = fmt.Sprintf("%s/time-triggers", indAssetTaskRoute)
 var timeTriggerId = "TimeTriggerId"
 var indTimeTriggerRoute = fmt.Sprintf("%s/:%s", baseTimeTriggerRoute, timeTriggerId)
 
@@ -31,7 +31,7 @@ func (h *Api) registerTimeTriggerRoutes() {
 //	@Param			timeTrigger	body	tp.TimeTrigger	true	"Time Trigger object"
 //	@Produce		json
 //	@Success		201	{object}	tp.TimeTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers [post]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers [post]
 func (h *Api) createTimeTrigger(c *gin.Context) {
 	var timeTrigger tp.TimeTrigger
 	if err := c.BindJSON(&timeTrigger); err != nil {
@@ -53,7 +53,7 @@ func (h *Api) createTimeTrigger(c *gin.Context) {
 //	@Param			timeTriggerId	path	string	true	"Time Trigger Id"
 //	@Success		204
 //	@Failure		404
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId} [delete]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId} [delete]
 func (h *Api) deleteTimeTrigger(c *gin.Context) {
 	err := h.app.DeleteTimeTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(timeTriggerId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
@@ -69,7 +69,7 @@ func (h *Api) deleteTimeTrigger(c *gin.Context) {
 //	@Param			timeTriggerId	path	string	true	"Time Trigger Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.TimeTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId} [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId} [get]
 func (h *Api) getTimeTrigger(c *gin.Context) {
 	timeTrigger, err := h.app.GetTimeTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(timeTriggerId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeTrigger))
@@ -84,7 +84,7 @@ func (h *Api) getTimeTrigger(c *gin.Context) {
 //	@Param			assetTaskId	path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.TimeTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers [get]
 func (h *Api) listTimeTriggers(c *gin.Context) {
 	timeTriggers, err := h.app.ListTimeTriggers(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeTriggers))
@@ -102,7 +102,7 @@ func (h *Api) listTimeTriggers(c *gin.Context) {
 //	@Param			timeTrigger	body	tp.TimeTrigger	true	"Time Trigger object"
 //	@Produce		json
 //	@Success		200	{object}	tp.TimeTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId} [put]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId} [put]
 func (h *Api) updateTimeTrigger(c *gin.Context) {
 	var timeTrigger tp.TimeTrigger
 	if err := c.BindJSON(&timeTrigger); err != nil {

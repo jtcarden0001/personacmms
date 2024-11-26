@@ -22,6 +22,13 @@ type App interface {
 	GetAssetTask(string, string, string) (tp.AssetTask, error)
 	UpdateAssetTask(string, string, string, tp.AssetTask) (tp.AssetTask, error)
 
+	// asset task tools
+	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
+	CreateAssetTaskToolWithValidation(string, string, string, string) (tp.AssetTaskTool, error)
+	DeleteAssetTaskTool(string, string, string, string) error
+	ListAssetTaskTools(string, string, string) ([]tp.AssetTaskTool, error)
+	GetAssetTaskTool(string, string, string, string) (tp.AssetTaskTool, error)
+
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)
 	DeleteCategory(string) error

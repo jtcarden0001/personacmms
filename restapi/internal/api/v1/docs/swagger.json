@@ -18,6 +18,37 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/asset-task-tools": {
+            "post": {
+                "description": "Create a relationship between an asset task and a tool with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a tool with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Tool object",
+                        "name": "assetTaskTool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskTool"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskTool"
+                        }
+                    }
+                }
+            }
+        },
         "/categories": {
             "get": {
                 "description": "List all categories",
@@ -417,7 +448,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks": {
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks": {
             "get": {
                 "description": "List all asset tasks",
                 "produces": [
@@ -496,7 +527,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}": {
             "get": {
                 "description": "Get an asset task",
                 "produces": [
@@ -621,7 +652,423 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers": {
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools": {
+            "get": {
+                "description": "List all asset task tools",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset task tools",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.AssetTaskTool"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools/{toolId}": {
+            "get": {
+                "description": "Get an asset task tool",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset task tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskTool"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a relationship between an asset task and a tool with path parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a tool with path parameters",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskTool"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a relationship between an asset task and a tool",
+                "summary": "Delete a relationship between an asset task and a tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers": {
+            "get": {
+                "description": "List date triggers",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List date triggers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.DateTrigger"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a date trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a date trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Date Trigger object",
+                        "name": "dateTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.DateTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.DateTrigger"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId}": {
+            "get": {
+                "description": "Get a date trigger",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a date trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date Trigger Id",
+                        "name": "dateTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.DateTrigger"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a date trigger",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a date trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date Trigger Id",
+                        "name": "dateTriggerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Date Trigger object",
+                        "name": "dateTrigger",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.DateTrigger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.DateTrigger"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a date trigger",
+                "summary": "Delete a date trigger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date Trigger Id",
+                        "name": "dateTriggerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers": {
             "get": {
                 "description": "List all time triggers",
                 "produces": [
@@ -714,7 +1161,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId}": {
             "get": {
                 "description": "Get a time trigger",
                 "produces": [
@@ -860,7 +1307,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers": {
             "get": {
                 "description": "List usage triggers",
                 "produces": [
@@ -953,7 +1400,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId}": {
             "get": {
                 "description": "Get a usage trigger",
                 "produces": [
@@ -1099,7 +1546,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders": {
             "get": {
                 "description": "List all asset task work orders",
                 "produces": [
@@ -1192,7 +1639,7 @@
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId}": {
             "get": {
                 "description": "Get an asset task work order",
                 "produces": [
@@ -1666,6 +2113,21 @@
                 }
             }
         },
+        "types.AssetTaskTool": {
+            "type": "object",
+            "required": [
+                "assetTaskId",
+                "toolId"
+            ],
+            "properties": {
+                "assetTaskId": {
+                    "type": "string"
+                },
+                "toolId": {
+                    "type": "string"
+                }
+            }
+        },
         "types.Category": {
             "type": "object",
             "required": [
@@ -1687,6 +2149,14 @@
             ],
             "properties": {
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.DateTrigger": {
+            "type": "object",
+            "properties": {
+                "date": {
                     "type": "string"
                 }
             }

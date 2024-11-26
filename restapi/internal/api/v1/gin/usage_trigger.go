@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-var baseUsageTriggerRoute = fmt.Sprintf("%s/usagetriggers", indAssetTaskRoute)
+var baseUsageTriggerRoute = fmt.Sprintf("%s/usage-triggers", indAssetTaskRoute)
 var usageTriggerId = "UsageTriggerId"
 var indUsageTriggerRoute = fmt.Sprintf("%s/:%s", baseUsageTriggerRoute, usageTriggerId)
 
@@ -31,7 +31,7 @@ func (h *Api) registerUsageTriggerRoutes() {
 //	@Param			usageTrigger	body	tp.UsageTrigger	true	"Usage Trigger object"
 //	@Produce		json
 //	@Success		201	{object}	tp.UsageTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers [post]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers [post]
 func (h *Api) createUsageTrigger(c *gin.Context) {
 	var usageTrigger tp.UsageTrigger
 	if err := c.BindJSON(&usageTrigger); err != nil {
@@ -53,7 +53,7 @@ func (h *Api) createUsageTrigger(c *gin.Context) {
 //	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
 //	@Success		204
 //	@Failure		404
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId} [delete]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId} [delete]
 func (h *Api) deleteUsageTrigger(c *gin.Context) {
 	err := h.app.DeleteUsageTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(usageTriggerId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
@@ -69,7 +69,7 @@ func (h *Api) deleteUsageTrigger(c *gin.Context) {
 //	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.UsageTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId} [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId} [get]
 func (h *Api) getUsageTrigger(c *gin.Context) {
 	usageTrigger, err := h.app.GetUsageTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(usageTriggerId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, usageTrigger))
@@ -84,7 +84,7 @@ func (h *Api) getUsageTrigger(c *gin.Context) {
 //	@Param			assetTaskId	path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.UsageTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers [get]
 func (h *Api) listUsageTriggers(c *gin.Context) {
 	usageTriggers, err := h.app.ListUsageTriggers(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, usageTriggers))
@@ -102,7 +102,7 @@ func (h *Api) listUsageTriggers(c *gin.Context) {
 //	@Param			usageTrigger	body	tp.UsageTrigger	true	"Usage Trigger object"
 //	@Produce		json
 //	@Success		200	{object}	tp.UsageTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId} [put]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId} [put]
 func (h *Api) updateUsageTrigger(c *gin.Context) {
 	var usageTrigger tp.UsageTrigger
 	if err := c.BindJSON(&usageTrigger); err != nil {

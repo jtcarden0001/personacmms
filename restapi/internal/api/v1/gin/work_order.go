@@ -9,7 +9,7 @@ import (
 )
 
 // start with long routes then evaluate short routes later
-var baseLongWorkOrderRoute = fmt.Sprintf("%s/workorders", indAssetTaskRoute)
+var baseLongWorkOrderRoute = fmt.Sprintf("%s/work-orders", indAssetTaskRoute)
 var workOrderId = "workOrderId"
 var indLongWorkOrderRoute = fmt.Sprintf("%s/:workOrderId", baseLongWorkOrderRoute)
 
@@ -32,7 +32,7 @@ func (h *Api) registerWorkOrderRoutes() {
 //	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
 //	@Success		201	{object}	tp.WorkOrder
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders [post]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders [post]
 func (h *Api) createWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
 	if err := c.BindJSON(&workOrder); err != nil {
@@ -54,7 +54,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
 //	@Failure		404
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [delete]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId} [delete]
 func (h *Api) deleteAssetTaskWorkOrder(c *gin.Context) {
 	err := h.app.DeleteAssetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
@@ -69,7 +69,7 @@ func (h *Api) deleteAssetTaskWorkOrder(c *gin.Context) {
 //	@Param			assetTaskId	path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.WorkOrder
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders [get]
 func (h *Api) listAssetTaskWorkOrders(c *gin.Context) {
 	workOrders, err := h.app.ListAssetTaskWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
@@ -85,7 +85,7 @@ func (h *Api) listAssetTaskWorkOrders(c *gin.Context) {
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.WorkOrder
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId} [get]
 func (h *Api) getAssetTaskWorkOrder(c *gin.Context) {
 	workOrder, err := h.app.GetAssetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
@@ -103,7 +103,7 @@ func (h *Api) getAssetTaskWorkOrder(c *gin.Context) {
 //	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
 //	@Success		200	{object}	tp.WorkOrder
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId} [put]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId} [put]
 func (h *Api) updateAssetTaskWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
 	if err := c.BindJSON(&workOrder); err != nil {

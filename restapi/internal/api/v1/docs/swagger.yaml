@@ -9,6 +9,16 @@ definitions:
       uniqueInstructions:
         type: string
     type: object
+  types.AssetTaskTool:
+    properties:
+      assetTaskId:
+        type: string
+      toolId:
+        type: string
+    required:
+    - assetTaskId
+    - toolId
+    type: object
   types.Category:
     properties:
       description:
@@ -24,6 +34,11 @@ definitions:
         type: string
     required:
     - title
+    type: object
+  types.DateTrigger:
+    properties:
+      date:
+        type: string
     type: object
   types.Group:
     properties:
@@ -126,6 +141,27 @@ info:
   title: PersonaCMMS API
   version: "1.0"
 paths:
+  /asset-task-tools:
+    post:
+      consumes:
+      - application/json
+      description: Create a relationship between an asset task and a tool with json
+        body
+      parameters:
+      - description: Asset Task Tool object
+        in: body
+        name: assetTaskTool
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTaskTool'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskTool'
+      summary: Create a relationship between an asset task and a tool with json body
   /categories:
     get:
       description: List all categories
@@ -389,7 +425,7 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Update an asset group
-  /groups/{groupTitle}/assets/{assetTitle}/tasks:
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks:
     get:
       description: List all asset tasks
       parameters:
@@ -442,7 +478,7 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Create an asset task
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}:
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}:
     delete:
       description: Delete an asset task
       parameters:
@@ -527,7 +563,292 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Update an asset task
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers:
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools:
+    get:
+      description: List all asset task tools
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.AssetTaskTool'
+            type: array
+      summary: List asset task tools
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools/{toolId}:
+    delete:
+      description: Delete a relationship between an asset task and a tool
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a relationship between an asset task and a tool
+    get:
+      description: Get an asset task tool
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.AssetTaskTool'
+      summary: Get an asset task tool
+    post:
+      description: Create a relationship between an asset task and a tool with path
+        parameters
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskTool'
+      summary: Create a relationship between an asset task and a tool with path parameters
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers:
+    get:
+      description: List date triggers
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.DateTrigger'
+            type: array
+      summary: List date triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a date trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Date Trigger object
+        in: body
+        name: dateTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.DateTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+      summary: Create a date trigger
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId}:
+    delete:
+      description: Delete a date trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a date trigger
+    get:
+      description: Get a date trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+      summary: Get a date trigger
+    put:
+      consumes:
+      - application/json
+      description: Update a date trigger
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      - description: Date Trigger object
+        in: body
+        name: dateTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.DateTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+      summary: Update a date trigger
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers:
     get:
       description: List all time triggers
       parameters:
@@ -590,7 +911,7 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeTrigger'
       summary: Create a time trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/timetriggers/{timeTriggerId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId}:
     delete:
       description: Delete a time trigger
       parameters:
@@ -690,7 +1011,7 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeTrigger'
       summary: Update a time trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers:
     get:
       description: List usage triggers
       parameters:
@@ -753,7 +1074,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UsageTrigger'
       summary: Create a usage trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usagetriggers/{usageTriggerId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId}:
     delete:
       description: Delete a usage trigger
       parameters:
@@ -853,7 +1174,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UsageTrigger'
       summary: Update a usage trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders:
     get:
       description: List all asset task work orders
       parameters:
@@ -916,7 +1237,7 @@ paths:
           schema:
             $ref: '#/definitions/types.WorkOrder'
       summary: Create a work order
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/workorders/{workOrderId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId}:
     delete:
       description: Delete an asset task work order
       parameters:

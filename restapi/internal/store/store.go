@@ -21,6 +21,12 @@ type Store interface {
 	GetAssetTask(tp.UUID) (tp.AssetTask, error)
 	UpdateAssetTask(tp.UUID, tp.AssetTask) (tp.AssetTask, error)
 
+	// asset task tool
+	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
+	DeleteAssetTaskTool(tp.UUID, tp.UUID) error
+	ListAssetTaskTools() ([]tp.AssetTaskTool, error)
+	GetAssetTaskTool(tp.UUID, tp.UUID) (tp.AssetTaskTool, error)
+
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)
 	DeleteCategory(string) error

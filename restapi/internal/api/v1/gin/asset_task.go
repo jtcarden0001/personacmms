@@ -8,11 +8,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-var baseAssetTaskRoute = fmt.Sprintf("%s/tasks", indAssetRoute)
+var baseAssetTaskRoute = fmt.Sprintf("%s/asset-tasks", indAssetRoute)
 var assetTaskId = "AssetTaskId"
 var indAssetTaskRoute = fmt.Sprintf("%s/:%s", baseAssetTaskRoute, assetTaskId)
 
-// general route that treats all asset tasks the same, can CRUD any type through this route
+// general route that treats all asset asset-tasks the same, can CRUD any type through this route
 func (h *Api) registerAssetTaskRoutes() {
 	h.router.POST(baseAssetTaskRoute, h.createAssetTask)
 	h.router.DELETE(indAssetTaskRoute, h.deleteAssetTask)
@@ -31,7 +31,7 @@ func (h *Api) registerAssetTaskRoutes() {
 //	@Param			assetTask	body	tp.AssetTask	true	"Asset Task object"
 //	@Produce		json
 //	@Success		201	{object}	tp.AssetTask
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [post]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/asset-tasks [post]
 func (h *Api) createAssetTask(c *gin.Context) {
 	var assetTask tp.AssetTask
 	if err := c.BindJSON(&assetTask); err != nil {
@@ -52,7 +52,7 @@ func (h *Api) createAssetTask(c *gin.Context) {
 //	@Param			assetTaskId	path	string	true	"Asset Task Id"
 //	@Success		204
 //	@Failure		404
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId} [delete]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId} [delete]
 func (h *Api) deleteAssetTask(c *gin.Context) {
 	err := h.app.DeleteAssetTask(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
@@ -66,7 +66,7 @@ func (h *Api) deleteAssetTask(c *gin.Context) {
 //	@Param			assetTitle	path	string	true	"Asset Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.AssetTask
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/asset-tasks [get]
 func (h *Api) listAssetTasks(c *gin.Context) {
 	assetTasks, err := h.app.ListAssetTasks(c.Param(groupTitle), c.Param(assetTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, assetTasks))
@@ -81,7 +81,7 @@ func (h *Api) listAssetTasks(c *gin.Context) {
 //	@Param			assetTaskId	path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.AssetTask
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId} [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId} [get]
 func (h *Api) getAssetTask(c *gin.Context) {
 	assetTask, err := h.app.GetAssetTask(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, assetTask))
@@ -98,7 +98,7 @@ func (h *Api) getAssetTask(c *gin.Context) {
 //	@Param			assetTask	body	tp.AssetTask	true	"Asset Task object"
 //	@Produce		json
 //	@Success		200	{object}	tp.AssetTask
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId} [put]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId} [put]
 func (h *Api) updateAssetTask(c *gin.Context) {
 	var assetTask tp.AssetTask
 	if err := c.BindJSON(&assetTask); err != nil {

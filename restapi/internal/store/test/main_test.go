@@ -235,6 +235,18 @@ func setupCategory(t *testing.T, store st.Store, identifier string) string {
 	return category.Title
 }
 
+func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
+	tool := tp.Tool{
+		Title: fmt.Sprintf("Tool %s", identifier),
+		Size:  fmt.Sprintf("Tool %s Size", identifier),
+	}
+	tool, err := store.CreateTool(tool)
+	if err != nil {
+		t.Errorf("CreateTool() failed: %v", err)
+	}
+	return tool.Id
+}
+
 func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 	groupTitle := setupGroup(t, store, identifier)
 	categoryTitle := setupCategory(t, store, identifier)
