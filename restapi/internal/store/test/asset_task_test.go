@@ -11,14 +11,12 @@ func TestAssetTaskCreate(t *testing.T) {
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
 
-	// setup
-	assetId := setupAsset(t, store, "1")
-
 	// Create
 	at := tp.AssetTask{
 		Title:              "testassettask1",
-		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
+		AssetId:            setupAsset(t, store, "1"),
+		TaskId:             setupTask(t, store, "1"),
 	}
 	returnedAssetTask, err := store.CreateAssetTask(at)
 	if err != nil {
@@ -34,14 +32,12 @@ func TestAssetTaskDelete(t *testing.T) {
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
 
-	// setup
-	assetId := setupAsset(t, store, "1")
-
 	// Create
 	at := tp.AssetTask{
 		Title:              "testassettask1",
-		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
+		AssetId:            setupAsset(t, store, "1"),
+		TaskId:             setupTask(t, store, "1"),
 	}
 
 	at, err := store.CreateAssetTask(at)
@@ -66,9 +62,6 @@ func TestAssetTaskList(t *testing.T) {
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
 
-	// setup
-	assetId := setupAsset(t, store, "1")
-
 	// List
 	assetTasks, err := store.ListAssetTasks()
 	if err != nil {
@@ -83,14 +76,16 @@ func TestAssetTaskList(t *testing.T) {
 
 	assetTaskMap["testassettask1"] = tp.AssetTask{
 		Title:              "testassettask1",
-		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
+		AssetId:            setupAsset(t, store, "1"),
+		TaskId:             setupTask(t, store, "1"),
 	}
 
 	assetTaskMap["testassettask2"] = tp.AssetTask{
 		Title:              "testassettask2",
-		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
+		AssetId:            setupAsset(t, store, "2"),
+		TaskId:             setupTask(t, store, "2"),
 	}
 
 	// Create the assetTasks
@@ -131,14 +126,12 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
 
-	// setup
-	assetId := setupAsset(t, store, "1")
-
 	// Create
 	at := tp.AssetTask{
 		Title:              "testassettask1",
-		AssetId:            assetId,
 		UniqueInstructions: "test instructions",
+		AssetId:            setupAsset(t, store, "1"),
+		TaskId:             setupTask(t, store, "1"),
 	}
 
 	createAt, err := store.CreateAssetTask(at)
@@ -149,12 +142,14 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 	// Update
 	at.Title = "testassettask1updated"
 	at.UniqueInstructions = "test instructions updated"
+	at.AssetId = setupAsset(t, store, "2")
+	at.TaskId = setupTask(t, store, "2")
 	updateAt, err := store.UpdateAssetTask(createAt.Id, at)
 	if err != nil {
 		t.Errorf("UpdateAssetTask() failed: %v", err)
 	}
 
-	fields := convertToSet([]string{"Title", "UniqueInstructions"})
+	fields := convertToSet([]string{"Title", "UniqueInstructions", "AssetId", "TaskId"})
 	compEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
 
 	// Get

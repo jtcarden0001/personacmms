@@ -2,17 +2,20 @@ package test
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/store"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func TestAssetCreate(t *testing.T) {
-	store := initializeStore("testassetcreate")
+	dbName := "testassetcreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
+	groupTitle := setupGroup(t, store, "1")
+	categoryTitle := setupCategory(t, store, "1")
 
 	// Create
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
@@ -26,10 +29,13 @@ func TestAssetCreate(t *testing.T) {
 }
 
 func TestAssetDelete(t *testing.T) {
-	store := initializeStore("testassetdelete")
+	dbName := "testassetdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
+	groupTitle := setupGroup(t, store, "1")
+	categoryTitle := setupCategory(t, store, "1")
 
 	// Delete
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
@@ -51,10 +57,13 @@ func TestAssetDelete(t *testing.T) {
 }
 
 func TestAssetList(t *testing.T) {
-	store := initializeStore("testassetlist")
+	dbName := "testassetlist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
+	groupTitle := setupGroup(t, store, "1")
+	categoryTitle := setupCategory(t, store, "1")
 
 	// original List
 	assets, err := store.ListAssets()
@@ -69,18 +78,19 @@ func TestAssetList(t *testing.T) {
 	}
 
 	// add 2 assets to the map and create them
-	assetMap["testasset1"] = getTestAsset(groupTitle, categoryTitle, "1")
-	assetMap["testasset2"] = getTestAsset(groupTitle, categoryTitle, "2")
-
-	_, err = store.CreateAsset(assetMap["testasset1"])
+	asset1 := getTestAsset(groupTitle, categoryTitle, "1")
+	createAsset1, err := store.CreateAsset(asset1)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
+	assetMap[createAsset1.Title] = createAsset1
 
-	_, err = store.CreateAsset(assetMap["testasset2"])
+	asset2 := getTestAsset(groupTitle, categoryTitle, "2")
+	createAsset2, err := store.CreateAsset(asset2)
 	if err != nil {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
+	assetMap[createAsset2.Title] = createAsset2
 
 	// List, compare the length to the original list+2 and compare the new listed assets with the expected assets
 	assets, err = store.ListAssets()
@@ -104,10 +114,13 @@ func TestAssetList(t *testing.T) {
 }
 
 func TestAssetUpdateGet(t *testing.T) {
-	store := initializeStore("testassetupdateget")
+	dbName := "testassetupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
+	groupTitle := setupGroup(t, store, "1")
+	categoryTitle := setupCategory(t, store, "1")
 
 	// Create
 	asset := getTestAsset(groupTitle, categoryTitle, "1")
@@ -117,14 +130,14 @@ func TestAssetUpdateGet(t *testing.T) {
 	}
 
 	// Update
-	asset.Title = "updated title"
-	asset.Year = 2022
+	asset = getTestAsset(groupTitle, categoryTitle, "2")
+	asset.Id = createAsset.Id
 	updatedAsset, err := store.UpdateAsset(groupTitle, createAsset.Title, asset)
 	if err != nil {
 		t.Errorf("UpdateAsset() failed: %v", err)
 	}
 
-	differentFields := convertToSet([]string{"Title", "Year"})
+	differentFields := convertToSet([]string{"Title", "Year", "Make", "ModelNumber", "SerialNumber", "Description"})
 	compEntitiesFieldsShouldBeDifferent(t, createAsset, updatedAsset, differentFields)
 
 	// Get
@@ -136,32 +149,11 @@ func TestAssetUpdateGet(t *testing.T) {
 	compEntities(t, updatedAsset, returnedAsset)
 }
 
-func setupAssetDependencies(t *testing.T, store store.Store, suffix string) (string, string) {
-	group := tp.Group{
-		Title: fmt.Sprintf("testgroup%s", suffix),
-	}
-	_, err := store.CreateGroup(group)
-	if err != nil {
-		t.Errorf("CreateGroup() failed: %v", err)
-	}
-
-	category := tp.Category{
-		Title:       fmt.Sprintf("testcategory%s", suffix),
-		Description: fmt.Sprintf("test description %s", suffix),
-	}
-	_, err = store.CreateCategory(category)
-	if err != nil {
-		t.Errorf("CreateCategory() failed: %v", err)
-	}
-
-	return group.Title, category.Title
-}
-
 func getTestAsset(groupTitle string, categoryTitle string, suffix string) tp.Asset {
 	return tp.Asset{
-		Title:         fmt.Sprintf("testasset%s", suffix),
 		GroupTitle:    groupTitle,
-		Year:          2021,
+		Title:         fmt.Sprintf("testasset%s", suffix),
+		Year:          func() int { year, _ := strconv.Atoi(fmt.Sprintf("202%s", suffix)); return year }(),
 		Description:   fmt.Sprintf("test description %s", suffix),
 		Make:          fmt.Sprintf("test make %s", suffix),
 		ModelNumber:   fmt.Sprintf("test model number %s", suffix),

@@ -7,7 +7,9 @@ import (
 )
 
 func TestTaskCreate(t *testing.T) {
-	store := initializeStore("testpreventativetaskcreate")
+	dbName := "testtaskcreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	task := tp.Task{
@@ -26,7 +28,9 @@ func TestTaskCreate(t *testing.T) {
 }
 
 func TestTaskDelete(t *testing.T) {
-	store := initializeStore("testpreventativetaskdelete")
+	dbName := "testtaskdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Delete
 	task := tp.Task{
@@ -51,7 +55,9 @@ func TestTaskDelete(t *testing.T) {
 }
 
 func TestTaskList(t *testing.T) {
-	store := initializeStore("testpreventativetasklist")
+	dbName := "testtasklist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// List
 	tasks, err := store.ListTasks()
@@ -112,7 +118,9 @@ func TestTaskList(t *testing.T) {
 }
 
 func TestTaskUpdateGet(t *testing.T) {
-	store := initializeStore("testpreventativetaskupdate")
+	dbName := "testtaskupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Update
 	task := tp.Task{

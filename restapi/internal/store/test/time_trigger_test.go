@@ -7,7 +7,9 @@ import (
 )
 
 func TestTimeTriggerCreate(t *testing.T) {
-	store := initializeStore("testtimetriggercreate")
+	dbName := "testtimetriggercreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")
@@ -26,7 +28,9 @@ func TestTimeTriggerCreate(t *testing.T) {
 }
 
 func TestTimeTriggerDelete(t *testing.T) {
-	store := initializeStore("testtimetriggerdelete")
+	dbName := "testtimetriggerdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")
@@ -52,7 +56,9 @@ func TestTimeTriggerDelete(t *testing.T) {
 }
 
 func TestTimeTriggerList(t *testing.T) {
-	store := initializeStore("testtimetriggerlist")
+	dbName := "testtimetriggerlist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// List
 	tts, err := store.ListTimeTriggers()
@@ -106,7 +112,9 @@ func TestTimeTriggerList(t *testing.T) {
 }
 
 func TestTimeTriggerUpdateGet(t *testing.T) {
-	store := initializeStore("testtimetriggerupdateget")
+	dbName := "testtimetriggerupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")

@@ -7,7 +7,9 @@ import (
 )
 
 func TestUsageUnitCreate(t *testing.T) {
-	store := initializeStore("testusageunitcreate")
+	dbName := "testusageunitcreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{
@@ -24,7 +26,9 @@ func TestUsageUnitCreate(t *testing.T) {
 }
 
 func TestUsageUnitDelete(t *testing.T) {
-	store := initializeStore("testusageunitdelete")
+	dbName := "testusageunitdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{
@@ -50,7 +54,9 @@ func TestUsageUnitDelete(t *testing.T) {
 }
 
 func TestUsageUnitList(t *testing.T) {
-	store := initializeStore("testusageunitlist")
+	dbName := "testusageunitlist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// List
 	units, err := store.ListUsageUnits()
@@ -99,7 +105,9 @@ func TestUsageUnitList(t *testing.T) {
 }
 
 func TestUsageUnitUpdateGet(t *testing.T) {
-	store := initializeStore("testusageunitupdateget")
+	dbName := "testusageunitupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{

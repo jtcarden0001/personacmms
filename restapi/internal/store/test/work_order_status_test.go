@@ -8,7 +8,9 @@ import (
 )
 
 func TestCreateWorkOrderStatus(t *testing.T) {
-	store := initializeStore("testcreateworkorderstatus")
+	dbName := "testcreateworkorderstatus"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	workOrderStatus := types.WorkOrderStatus{
@@ -30,7 +32,9 @@ func TestCreateWorkOrderStatus(t *testing.T) {
 }
 
 func TestDeleteWorkOrderStatus(t *testing.T) {
-	store := initializeStore("testdeleteworkorderstatus")
+	dbName := "testdeleteworkorderstatus"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	workOrderStatus := types.WorkOrderStatus{
@@ -56,7 +60,9 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 }
 
 func TestListWorkOrderStatus(t *testing.T) {
-	store := initializeStore("testlistworkorderstatus")
+	dbName := "testlistworkorderstatus"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	initWOS, err := store.ListWorkOrderStatuses()
 	if err != nil {
@@ -93,7 +99,9 @@ func TestListWorkOrderStatus(t *testing.T) {
 }
 
 func TestGetWorkOrderStatus(t *testing.T) {
-	store := initializeStore("testgetworkorderstatus")
+	dbName := "testgetworkorderstatus"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	workOrderStatus := types.WorkOrderStatus{
@@ -121,7 +129,9 @@ func TestGetWorkOrderStatus(t *testing.T) {
 }
 
 func TestUpdateWorkOrderStatus(t *testing.T) {
-	store := initializeStore("testupdateworkorderstatus")
+	dbName := "testupdateworkorderstatus"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	workOrderStatus := types.WorkOrderStatus{

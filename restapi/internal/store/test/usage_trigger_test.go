@@ -7,7 +7,9 @@ import (
 )
 
 func TestUsageTriggerCreate(t *testing.T) {
-	store := initializeStore("testusagetriggercreate")
+	dbName := "testusagetriggercreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")
@@ -26,7 +28,9 @@ func TestUsageTriggerCreate(t *testing.T) {
 }
 
 func TestUsageTriggerDelete(t *testing.T) {
-	store := initializeStore("testusagetriggerdelete")
+	dbName := "testusagetriggerdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")
@@ -52,7 +56,9 @@ func TestUsageTriggerDelete(t *testing.T) {
 }
 
 func TestUsageTriggerList(t *testing.T) {
-	store := initializeStore("testusagetriggerlist")
+	dbName := "testusagetriggerlist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// List
 	uts, err := store.ListUsageTriggers()
@@ -106,7 +112,9 @@ func TestUsageTriggerList(t *testing.T) {
 }
 
 func TestUsageTriggerUpdateGet(t *testing.T) {
-	store := initializeStore("testusagetriggerupdateget")
+	dbName := "testusagetriggerupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
 	assetTaskId := setupAssetTask(t, store, "1")

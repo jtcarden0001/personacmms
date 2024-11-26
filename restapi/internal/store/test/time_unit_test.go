@@ -10,7 +10,9 @@ import (
 var preseedTimeUnitCount = 4
 
 func TestTimeUnitCreate(t *testing.T) {
-	store := initializeStore("testtimeunitcreate")
+	dbName := "testtimeunitcreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -32,7 +34,9 @@ func TestTimeUnitCreate(t *testing.T) {
 }
 
 func TestTimeUnitDelete(t *testing.T) {
-	store := initializeStore("testtimeunitdelete")
+	dbName := "testtimeunitdelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -58,9 +62,11 @@ func TestTimeUnitDelete(t *testing.T) {
 }
 
 func TestTimeUnitList(t *testing.T) {
-	store := initializeStore("testtimeunitlist")
+	dbName := "testtimeunitlist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
-	//List
+	// List
 	timeUnits, err := store.ListTimeUnits()
 	if err != nil {
 		t.Errorf("List() failed: %v", err)
@@ -92,7 +98,9 @@ func TestTimeUnitList(t *testing.T) {
 }
 
 func TestTimeUnitUpdateGet(t *testing.T) {
-	store := initializeStore("testtimeunitupdateget")
+	dbName := "testtimeunitupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{

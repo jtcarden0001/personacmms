@@ -7,7 +7,9 @@ import (
 )
 
 func TestCategoryCreate(t *testing.T) {
-	store := initializeStore("testcategorycreate")
+	dbName := "testcategorycreate"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Create
 	cat := tp.Category{
@@ -25,7 +27,9 @@ func TestCategoryCreate(t *testing.T) {
 }
 
 func TestCategoryDelete(t *testing.T) {
-	store := initializeStore("testcategorydelete")
+	dbName := "testcategorydelete"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Delete
 	cat := tp.Category{
@@ -50,7 +54,9 @@ func TestCategoryDelete(t *testing.T) {
 }
 
 func TestCategoryList(t *testing.T) {
-	store := initializeStore("testcategorylist")
+	dbName := "testcategorylist"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// List
 	cats, err := store.ListCategories()
@@ -108,7 +114,9 @@ func TestCategoryList(t *testing.T) {
 }
 
 func TestCategoryUpdateGet(t *testing.T) {
-	store := initializeStore("testcategoryupdate")
+	dbName := "testcategoryupdateget"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// Update
 	cat := tp.Category{

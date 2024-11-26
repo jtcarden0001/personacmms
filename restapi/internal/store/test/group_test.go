@@ -8,7 +8,9 @@ import (
 )
 
 func TestGroupCreate(t *testing.T) {
-	store := initializeStore("testgroupcreate")
+	dbname := "testgroupcreate"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// Create
 	group := types.Group{
@@ -30,7 +32,9 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
-	store := initializeStore("testgroupdelete")
+	dbname := "testgroupdelete"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// Delete
 	group := types.Group{
@@ -54,7 +58,9 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroupList(t *testing.T) {
-	store := initializeStore("testgrouplist")
+	dbname := "testgrouplist"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// List
 	groups, err := store.ListGroups()
@@ -88,12 +94,14 @@ func TestGroupList(t *testing.T) {
 	}
 
 	if len(groups) != 2 {
-		t.Errorf("List() failed: expected 1, got %d", len(groups))
+		t.Errorf("List() failed: expected 2, got %d", len(groups))
 	}
 }
 
 func TestGroupUpdateGet(t *testing.T) {
-	store := initializeStore("testgroupupdateget")
+	dbname := "testgroupupdateget"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// Update
 	group := types.Group{
