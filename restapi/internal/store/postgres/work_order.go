@@ -15,7 +15,7 @@ type WorkOrder interface {
 	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
-var workOrderTable = "work_order"
+var workOrderTable = "workorder"
 
 func (pg *Store) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 	wo.Id = uuid.New()

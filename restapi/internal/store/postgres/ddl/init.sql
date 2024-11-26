@@ -113,7 +113,7 @@ CREATE TABLE workorder (
   created_date timestamptz NOT NULL,
   completed_date timestamptz,
   notes varchar,
-  cumulative_mileage int, 
+  cumulative_miles int, 
   cumulative_hours int,
   assettask_id uuid NOT NULL REFERENCES asset_task(id),
   status_title varchar NOT NULL REFERENCES workorderstatus(title),

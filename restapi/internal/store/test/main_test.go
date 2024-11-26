@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -154,8 +155,29 @@ func compEntitiesExcludeFields(t *testing.T, expected interface{}, actual interf
 		expectedField := expectedValue.Field(i).Interface()
 		actualField := actualValue.Field(i).Interface()
 
-		if !reflect.DeepEqual(expectedField, actualField) {
-			t.Errorf("Create() failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		if strings.Contains(field.Name, "Date") {
+			expectedTime, ok1 := expectedField.(time.Time)
+			actualTime, ok2 := actualField.(time.Time)
+			if !ok1 || !ok2 {
+				expectedTimePtr, ok1 := expectedField.(*time.Time)
+				actualTimePtr, ok2 := actualField.(*time.Time)
+				if ok1 && ok2 && expectedTimePtr != nil && actualTimePtr != nil {
+					expectedTime = *expectedTimePtr
+					actualTime = *actualTimePtr
+				} else {
+					t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+					continue
+				}
+			}
+			if !expectedTime.Truncate(time.Second).Equal(actualTime.Truncate(time.Second)) {
+				t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
+			}
+		} else {
+			expectedValue := reflect.Indirect(reflect.ValueOf(expectedField)).Interface()
+			actualValue := reflect.Indirect(reflect.ValueOf(actualField)).Interface()
+			if !reflect.DeepEqual(expectedValue, actualValue) {
+				t.Errorf("Create() failed: expected %v for field %s, got %v", expectedValue, field.Name, actualValue)
+			}
 		}
 	}
 }

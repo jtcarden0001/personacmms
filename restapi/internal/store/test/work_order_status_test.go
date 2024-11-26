@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func TestCreateWorkOrderStatus(t *testing.T) {
@@ -13,7 +13,7 @@ func TestCreateWorkOrderStatus(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// Create
-	workOrderStatus := types.WorkOrderStatus{
+	workOrderStatus := tp.WorkOrderStatus{
 		Title: "testworkorderstatus1",
 	}
 
@@ -37,7 +37,7 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// Create
-	workOrderStatus := types.WorkOrderStatus{
+	workOrderStatus := tp.WorkOrderStatus{
 		Title: "testworkorderstatus1",
 	}
 
@@ -72,7 +72,7 @@ func TestListWorkOrderStatus(t *testing.T) {
 	count := len(initWOS)
 
 	// Create
-	workOrderStatus := types.WorkOrderStatus{
+	workOrderStatus := tp.WorkOrderStatus{
 		Title: "testworkorderstatus1",
 	}
 
@@ -104,7 +104,7 @@ func TestGetWorkOrderStatus(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// Create
-	workOrderStatus := types.WorkOrderStatus{
+	workOrderStatus := tp.WorkOrderStatus{
 		Title: "testworkorderstatus1",
 	}
 
@@ -134,7 +134,7 @@ func TestUpdateWorkOrderStatus(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// Create
-	workOrderStatus := types.WorkOrderStatus{
+	workOrderStatus := tp.WorkOrderStatus{
 		Title: "testworkorderstatus1",
 	}
 
