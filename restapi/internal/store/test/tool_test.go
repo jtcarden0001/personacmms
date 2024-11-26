@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateTool(t *testing.T) {
-	store := InitializeStore("testcreatetool")
+	store := initializeStore("testcreatetool")
 
 	// Create
 	tool := tp.Tool{
@@ -35,7 +35,7 @@ func TestCreateTool(t *testing.T) {
 }
 
 func TestDeleteTool(t *testing.T) {
-	store := InitializeStore("testdeletetool")
+	store := initializeStore("testdeletetool")
 
 	// Create
 	tool := tp.Tool{
@@ -62,7 +62,7 @@ func TestDeleteTool(t *testing.T) {
 }
 
 func TestListTool(t *testing.T) {
-	store := InitializeStore("testlisttool")
+	store := initializeStore("testlisttool")
 
 	// List
 	tools, err := store.ListTools()
@@ -101,7 +101,7 @@ func TestListTool(t *testing.T) {
 }
 
 func TestUpdateGetTool(t *testing.T) {
-	store := InitializeStore("testupdategettool")
+	store := initializeStore("testupdategettool")
 
 	// Create
 	tool := tp.Tool{

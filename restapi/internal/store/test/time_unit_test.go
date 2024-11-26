@@ -10,7 +10,7 @@ import (
 var preseedTimeUnitCount = 4
 
 func TestTimeUnitCreate(t *testing.T) {
-	store := InitializeStore("testtimeunitcreate")
+	store := initializeStore("testtimeunitcreate")
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -32,7 +32,7 @@ func TestTimeUnitCreate(t *testing.T) {
 }
 
 func TestTimeUnitDelete(t *testing.T) {
-	store := InitializeStore("testtimeunitdelete")
+	store := initializeStore("testtimeunitdelete")
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -58,7 +58,7 @@ func TestTimeUnitDelete(t *testing.T) {
 }
 
 func TestTimeUnitList(t *testing.T) {
-	store := InitializeStore("testtimeunitlist")
+	store := initializeStore("testtimeunitlist")
 
 	//List
 	timeUnits, err := store.ListTimeUnits()
@@ -92,7 +92,7 @@ func TestTimeUnitList(t *testing.T) {
 }
 
 func TestTimeUnitUpdateGet(t *testing.T) {
-	store := InitializeStore("testtimeunitupdateget")
+	store := initializeStore("testtimeunitupdateget")
 
 	// Create
 	timeUnit := types.TimeUnit{

@@ -9,7 +9,7 @@ import (
 )
 
 func TestAssetCreate(t *testing.T) {
-	store := InitializeStore("testassetcreate")
+	store := initializeStore("testassetcreate")
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -26,7 +26,7 @@ func TestAssetCreate(t *testing.T) {
 }
 
 func TestAssetDelete(t *testing.T) {
-	store := InitializeStore("testassetdelete")
+	store := initializeStore("testassetdelete")
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -51,7 +51,7 @@ func TestAssetDelete(t *testing.T) {
 }
 
 func TestAssetList(t *testing.T) {
-	store := InitializeStore("testassetlist")
+	store := initializeStore("testassetlist")
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
@@ -104,7 +104,7 @@ func TestAssetList(t *testing.T) {
 }
 
 func TestAssetUpdateGet(t *testing.T) {
-	store := InitializeStore("testassetupdateget")
+	store := initializeStore("testassetupdateget")
 
 	// setup
 	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")

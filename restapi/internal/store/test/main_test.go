@@ -89,7 +89,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func InitializeStore(dbName string) st.Store {
+func initializeStore(dbName string) st.Store {
 	conninfo := fmt.Sprintf("user=%s password=%s host=%s port=%s sslmode=disable",
 		os.Getenv("DATABASE_USER"),
 		os.Getenv("DATABASE_PASSWORD"),
@@ -119,7 +119,7 @@ func InitializeStore(dbName string) st.Store {
 	return store
 }
 
-func CloseStore(store st.Store, dbName string) {
+func closeStore(store st.Store, dbName string) {
 	store.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
 	err := store.Close()
 	if err != nil {
@@ -174,6 +174,7 @@ func compEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updat
 
 		initalField := initalValue.Field(i).Interface()
 		updatedField := updatedValue.Field(i).Interface()
+		// Time based comparisons have drift that causes DeepEqual to fail for some reason
 		if field.Name == "Date" {
 			if !initalField.(time.Time).Equal(updatedField.(time.Time)) {
 				t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
@@ -189,17 +190,70 @@ func compEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updat
 	}
 }
 
-func setupTriggerDependencies(t *testing.T, store st.Store, identifier string) tp.UUID {
-	gpTitle, catTitle := setupAssetDependencies(t, store, identifier)
-	assetId := setupAssetTaskDependencies(t, store, gpTitle, catTitle, identifier)
-	at := tp.AssetTask{
+func setupGroup(t *testing.T, store st.Store, identifier string) string {
+	group := tp.Group{
+		Title: fmt.Sprintf("Group %s", identifier),
+	}
+	group, err := store.CreateGroup(group)
+	if err != nil {
+		t.Errorf("CreateGroup() failed: %v", err)
+	}
+	return group.Title
+}
+
+func setupCategory(t *testing.T, store st.Store, identifier string) string {
+	category := tp.Category{
+		Title:       fmt.Sprintf("Category %s", identifier),
+		Description: fmt.Sprintf("Category %s description", identifier),
+	}
+	category, err := store.CreateCategory(category)
+	if err != nil {
+		t.Errorf("CreateCategory() failed: %v", err)
+	}
+	return category.Title
+}
+
+func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
+	groupTitle := setupGroup(t, store, identifier)
+	categoryTitle := setupCategory(t, store, identifier)
+	asset := tp.Asset{
+		Title:         fmt.Sprintf("Asset %s", identifier),
+		Description:   fmt.Sprintf("Asset %s description", identifier),
+		GroupTitle:    groupTitle,
+		CategoryTitle: categoryTitle,
+	}
+	asset, err := store.CreateAsset(asset)
+	if err != nil {
+		t.Errorf("CreateAsset() failed: %v", err)
+	}
+	return asset.Id
+}
+
+func setupTask(t *testing.T, store st.Store, identifier string) tp.UUID {
+	task := tp.Task{
+		Title:       fmt.Sprintf("Task %s", identifier),
+		Description: fmt.Sprintf("Task %s description", identifier),
+		Type:        tp.TaskTypePreventative,
+	}
+	task, err := store.CreateTask(task)
+	if err != nil {
+		t.Errorf("CreateTask() failed: %v", err)
+	}
+	return task.Id
+}
+
+func setupAssetTask(t *testing.T, store st.Store, identifier string) tp.UUID {
+	assetId := setupAsset(t, store, identifier)
+	taskId := setupTask(t, store, identifier)
+	assetTask := tp.AssetTask{
 		Title:              fmt.Sprintf("AssetTask %s", identifier),
 		UniqueInstructions: fmt.Sprintf("AssetTask %s instructions", identifier),
 		AssetId:            assetId,
+		TaskId:             taskId,
 	}
-	at, err := store.CreateAssetTask(at)
+	assetTask, err := store.CreateAssetTask(assetTask)
 	if err != nil {
 		t.Errorf("CreateAssetTask() failed: %v", err)
 	}
-	return at.Id
+	return assetTask.Id
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestGroupCreate(t *testing.T) {
-	store := InitializeStore("testgroupcreate")
+	store := initializeStore("testgroupcreate")
 
 	// Create
 	group := types.Group{
@@ -30,7 +30,7 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
-	store := InitializeStore("testgroupdelete")
+	store := initializeStore("testgroupdelete")
 
 	// Delete
 	group := types.Group{
@@ -54,7 +54,7 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroupList(t *testing.T) {
-	store := InitializeStore("testgrouplist")
+	store := initializeStore("testgrouplist")
 
 	// List
 	groups, err := store.ListGroups()
@@ -93,7 +93,7 @@ func TestGroupList(t *testing.T) {
 }
 
 func TestGroupUpdateGet(t *testing.T) {
-	store := InitializeStore("testgroupupdateget")
+	store := initializeStore("testgroupupdateget")
 
 	// Update
 	group := types.Group{

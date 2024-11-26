@@ -3,18 +3,16 @@ package test
 import (
 	"testing"
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/store"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
 func TestAssetTaskCreate(t *testing.T) {
 	dbname := "testassettaskcreate"
-	store := InitializeStore(dbname)
-	defer CloseStore(store, dbname)
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
-	assetId := setupAssetTaskDependencies(t, store, groupTitle, categoryTitle, "1")
+	assetId := setupAsset(t, store, "1")
 
 	// Create
 	at := tp.AssetTask{
@@ -33,12 +31,11 @@ func TestAssetTaskCreate(t *testing.T) {
 
 func TestAssetTaskDelete(t *testing.T) {
 	dbname := "testassettaskdelete"
-	store := InitializeStore(dbname)
-	defer CloseStore(store, dbname)
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
-	assetId := setupAssetTaskDependencies(t, store, groupTitle, categoryTitle, "1")
+	assetId := setupAsset(t, store, "1")
 
 	// Create
 	at := tp.AssetTask{
@@ -66,12 +63,11 @@ func TestAssetTaskDelete(t *testing.T) {
 
 func TestAssetTaskList(t *testing.T) {
 	dbname := "testassettasklist"
-	store := InitializeStore(dbname)
-	defer CloseStore(store, dbname)
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
-	assetId := setupAssetTaskDependencies(t, store, groupTitle, categoryTitle, "1")
+	assetId := setupAsset(t, store, "1")
 
 	// List
 	assetTasks, err := store.ListAssetTasks()
@@ -132,12 +128,11 @@ func TestAssetTaskList(t *testing.T) {
 
 func TestAssetTaskUpdateGet(t *testing.T) {
 	dbname := "testassettaskupdateget"
-	store := InitializeStore(dbname)
-	defer CloseStore(store, dbname)
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
 
 	// setup
-	groupTitle, categoryTitle := setupAssetDependencies(t, store, "1")
-	assetId := setupAssetTaskDependencies(t, store, groupTitle, categoryTitle, "1")
+	assetId := setupAsset(t, store, "1")
 
 	// Create
 	at := tp.AssetTask{
@@ -169,15 +164,4 @@ func TestAssetTaskUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updateAt, getAt)
-}
-
-func setupAssetTaskDependencies(t *testing.T, store store.Store, groupTitle string, categoryTitle string, assetTitle string) tp.UUID {
-	// create an asset
-	asset := getTestAsset(groupTitle, categoryTitle, assetTitle)
-	asset, err := store.CreateAsset(asset)
-	if err != nil {
-		t.Errorf("CreateAsset() failed: %v", err)
-	}
-
-	return asset.Id
 }

@@ -9,11 +9,11 @@ import (
 
 func TestDateTriggerCreate(t *testing.T) {
 	var dbName = "testdatetriggercreate"
-	store := InitializeStore(dbName)
-	defer CloseStore(store, dbName)
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	dt := tp.DateTrigger{
 		Date:        time.Now().AddDate(1, 0, 0),
 		AssetTaskId: assetTaskId,
@@ -29,11 +29,11 @@ func TestDateTriggerCreate(t *testing.T) {
 
 func TestDateTriggerDelete(t *testing.T) {
 	var dbName = "testdatetriggerdelete"
-	store := InitializeStore(dbName)
-	defer CloseStore(store, dbName)
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	dt := tp.DateTrigger{
 		Date:        time.Now().AddDate(1, 0, 0),
 		AssetTaskId: assetTaskId,
@@ -56,11 +56,11 @@ func TestDateTriggerDelete(t *testing.T) {
 
 func TestDateTriggerList(t *testing.T) {
 	var dbName = "testdatetriggerlist"
-	store := InitializeStore(dbName)
-	defer CloseStore(store, dbName)
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 
 	// list
 	dts, err := store.ListDateTriggers()
@@ -107,11 +107,11 @@ func TestDateTriggerList(t *testing.T) {
 
 func TestDateTriggerUpdateGet(t *testing.T) {
 	var dbName = "testdatetriggerupdateget"
-	store := InitializeStore(dbName)
-	defer CloseStore(store, dbName)
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	dt := tp.DateTrigger{
 		Date:        time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
 		AssetTaskId: assetTaskId,

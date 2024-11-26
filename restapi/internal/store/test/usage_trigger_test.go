@@ -7,10 +7,10 @@ import (
 )
 
 func TestUsageTriggerCreate(t *testing.T) {
-	store := InitializeStore("testusagetriggercreate")
+	store := initializeStore("testusagetriggercreate")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	ut := tp.UsageTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -26,10 +26,10 @@ func TestUsageTriggerCreate(t *testing.T) {
 }
 
 func TestUsageTriggerDelete(t *testing.T) {
-	store := InitializeStore("testusagetriggerdelete")
+	store := initializeStore("testusagetriggerdelete")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	ut := tp.UsageTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -52,7 +52,7 @@ func TestUsageTriggerDelete(t *testing.T) {
 }
 
 func TestUsageTriggerList(t *testing.T) {
-	store := InitializeStore("testusagetriggerlist")
+	store := initializeStore("testusagetriggerlist")
 
 	// List
 	uts, err := store.ListUsageTriggers()
@@ -67,7 +67,7 @@ func TestUsageTriggerList(t *testing.T) {
 	}
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	ut := tp.UsageTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -106,10 +106,10 @@ func TestUsageTriggerList(t *testing.T) {
 }
 
 func TestUsageTriggerUpdateGet(t *testing.T) {
-	store := InitializeStore("testusagetriggerupdateget")
+	store := initializeStore("testusagetriggerupdateget")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	ut := tp.UsageTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,

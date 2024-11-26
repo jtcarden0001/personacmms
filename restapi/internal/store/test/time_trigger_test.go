@@ -7,10 +7,10 @@ import (
 )
 
 func TestTimeTriggerCreate(t *testing.T) {
-	store := InitializeStore("testtimetriggercreate")
+	store := initializeStore("testtimetriggercreate")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -26,10 +26,10 @@ func TestTimeTriggerCreate(t *testing.T) {
 }
 
 func TestTimeTriggerDelete(t *testing.T) {
-	store := InitializeStore("testtimetriggerdelete")
+	store := initializeStore("testtimetriggerdelete")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -52,7 +52,7 @@ func TestTimeTriggerDelete(t *testing.T) {
 }
 
 func TestTimeTriggerList(t *testing.T) {
-	store := InitializeStore("testtimetriggerlist")
+	store := initializeStore("testtimetriggerlist")
 
 	// List
 	tts, err := store.ListTimeTriggers()
@@ -67,7 +67,7 @@ func TestTimeTriggerList(t *testing.T) {
 	}
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
@@ -106,10 +106,10 @@ func TestTimeTriggerList(t *testing.T) {
 }
 
 func TestTimeTriggerUpdateGet(t *testing.T) {
-	store := InitializeStore("testtimetriggerupdateget")
+	store := initializeStore("testtimetriggerupdateget")
 
 	// setup
-	assetTaskId := setupTriggerDependencies(t, store, "1")
+	assetTaskId := setupAssetTask(t, store, "1")
 	tt := tp.TimeTrigger{
 		AssetTaskId: assetTaskId,
 		Quantity:    30,
