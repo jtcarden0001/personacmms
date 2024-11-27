@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var categoryTableName = "category"
@@ -56,7 +57,7 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	var category tp.Category
 	err := row.Scan(&category.Id, &category.Title, &category.Description)
 	if err != nil {
-		return tp.Category{}, err
+		return tp.Category{}, errors.Wrapf(handleDbError(err), "the category with title %s does not exist", title)
 	}
 
 	return category, nil

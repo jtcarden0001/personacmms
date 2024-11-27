@@ -1,8 +1,10 @@
 package test
 
 import (
+	"errors"
 	"testing"
 
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -144,4 +146,20 @@ func TestCategoryUpdateGet(t *testing.T) {
 
 	// exclude no fields
 	compEntities(t, updateCat, getCat)
+}
+
+func TestCategoryNotFound(t *testing.T) {
+	dbName := "testcategorynotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	_, err := store.GetCategory("notfound")
+	if !errors.Is(err, ae.ErrNotFound) {
+		t.Errorf("Get() failed: expected ErrNotFound, got %v", err)
+	}
+
+	err = store.DeleteCategory("notfound")
+	if !errors.Is(err, ae.ErrNotFound) {
+		t.Errorf("Delete() failed: expected ErrNotFound, got %v", err)
+	}
 }

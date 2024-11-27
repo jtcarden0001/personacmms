@@ -15,7 +15,7 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, groupTableName)
 	_, err := pg.db.Exec(query, id, grp.Title)
 	if err != nil {
-		return tp.Group{}, processDbError(err)
+		return tp.Group{}, handleDbError(err)
 	}
 
 	grp.Id = id
@@ -26,7 +26,7 @@ func (pg *Store) DeleteGroup(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, groupTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return processDbError(err)
+	return handleDbError(err)
 }
 
 func (pg *Store) ListGroups() ([]tp.Group, error) {
@@ -34,7 +34,7 @@ func (pg *Store) ListGroups() ([]tp.Group, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, groupTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return groups, processDbError(err)
+		return groups, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -55,7 +55,7 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 	var grp tp.Group
 	err := pg.db.QueryRow(query, title).Scan(&grp.Id, &grp.Title)
 	if err != nil {
-		return tp.Group{}, processDbError(err)
+		return tp.Group{}, handleDbError(err)
 	}
 
 	return grp, nil
@@ -66,7 +66,7 @@ func (pg *Store) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, erro
 	var grp tp.Group
 	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&grp.Id, &grp.Title)
 	if err != nil {
-		return tp.Group{}, processDbError(err)
+		return tp.Group{}, handleDbError(err)
 	}
 
 	return grp, nil

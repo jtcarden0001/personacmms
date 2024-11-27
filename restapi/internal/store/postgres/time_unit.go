@@ -15,7 +15,7 @@ func (pg *Store) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, timeUnitTableName)
 	_, err := pg.db.Exec(query, id, tu.Title)
 	if err != nil {
-		return tp.TimeUnit{}, processDbError(err)
+		return tp.TimeUnit{}, handleDbError(err)
 	}
 
 	tu.Id = id
@@ -26,7 +26,7 @@ func (pg *Store) DeleteTimeUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, timeUnitTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return processDbError(err)
+	return handleDbError(err)
 }
 
 func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
@@ -34,7 +34,7 @@ func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, timeUnitTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return timeUnits, processDbError(err)
+		return timeUnits, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -55,7 +55,7 @@ func (pg *Store) GetTimeUnit(title string) (tp.TimeUnit, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, timeUnitTableName)
 	err := pg.db.QueryRow(query, title).Scan(&tu.Id, &tu.Title)
 	if err != nil {
-		return tp.TimeUnit{}, processDbError(err)
+		return tp.TimeUnit{}, handleDbError(err)
 	}
 
 	return tu, nil
@@ -65,7 +65,7 @@ func (pg *Store) UpdateTimeUnit(title string, tu tp.TimeUnit) (tp.TimeUnit, erro
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, timeUnitTableName)
 	_, err := pg.db.Exec(query, tu.Title, title)
 	if err != nil {
-		return tp.TimeUnit{}, processDbError(err)
+		return tp.TimeUnit{}, handleDbError(err)
 	}
 
 	return tu, nil
