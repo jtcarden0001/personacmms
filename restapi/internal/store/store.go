@@ -21,6 +21,13 @@ type Store interface {
 	GetAssetTask(tp.UUID) (tp.AssetTask, error)
 	UpdateAssetTask(tp.UUID, tp.AssetTask) (tp.AssetTask, error)
 
+	// asset task consumable
+	CreateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
+	DeleteAssetTaskConsumable(tp.UUID, tp.UUID) error
+	ListAssetTaskConsumables() ([]tp.AssetTaskConsumable, error)
+	GetAssetTaskConsumable(tp.UUID, tp.UUID) (tp.AssetTaskConsumable, error)
+	UpdateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
+
 	// asset task tool
 	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
 	DeleteAssetTaskTool(tp.UUID, tp.UUID) error

@@ -22,6 +22,15 @@ type App interface {
 	GetAssetTask(string, string, string) (tp.AssetTask, error)
 	UpdateAssetTask(string, string, string, tp.AssetTask) (tp.AssetTask, error)
 
+	// asset task consumable
+	CreateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
+	CreateAssetTaskConsumableWithValidation(string, string, string, string, string) (tp.AssetTaskConsumable, error)
+	DeleteAssetTaskConsumable(string, string, string, string) error
+	ListAssetTaskConsumables(string, string, string) ([]tp.AssetTaskConsumable, error)
+	GetAssetTaskConsumable(string, string, string, string) (tp.AssetTaskConsumable, error)
+	UpdateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
+	UpdateAssetTaskConsumableWithValidation(string, string, string, string, string) (tp.AssetTaskConsumable, error)
+
 	// asset task tools
 	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
 	CreateAssetTaskToolWithValidation(string, string, string, string) (tp.AssetTaskTool, error)

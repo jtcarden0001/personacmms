@@ -9,7 +9,7 @@ import (
 )
 
 var rootAssetTaskToolRoute = fmt.Sprintf("%s/asset-task-tools", routePrefix)
-var assetTaskToolRoute = fmt.Sprintf("%s/tools", baseAssetTaskRoute)
+var assetTaskToolRoute = fmt.Sprintf("%s/tools", indAssetTaskRoute)
 var toolId = "ToolId"
 var indAssetTaskToolRoute = fmt.Sprintf("%s/:%s", assetTaskToolRoute, toolId)
 

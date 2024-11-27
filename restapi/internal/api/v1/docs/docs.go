@@ -24,6 +24,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/asset-task-consumables": {
+            "post": {
+                "description": "Create a relationship between an asset task and a consumable with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a consumable with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "assetTaskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                }
+            }
+        },
         "/asset-task-tools": {
             "post": {
                 "description": "Create a relationship between an asset task and a tool with json body",
@@ -234,6 +265,37 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
+                        }
+                    }
+                }
+            }
+        },
+        "/consumables/{consumableId}": {
+            "put": {
+                "description": "Update an asset task consumable with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset task consumable with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "assetTaskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
                         }
                     }
                 }
@@ -644,6 +706,249 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Asset Task Id",
                         "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables": {
+            "get": {
+                "description": "List all asset task consumables",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset task consumables",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task ID",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.AssetTaskConsumable"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables/{consumableId}": {
+            "get": {
+                "description": "Get an asset task consumable",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset task consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task ID",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an asset task consumable with path parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset task consumable with path parameters",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task ID",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "assetTaskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumableForPath"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a relationship between an asset task and a consumable with path parameters",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a consumable with path parameters",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task ID",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "assetTaskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumableForPath"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an asset task consumable",
+                "summary": "Delete an asset task consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task ID",
+                        "name": "assetTaskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Consumable ID",
+                        "name": "consumableId",
                         "in": "path",
                         "required": true
                     }
@@ -2115,6 +2420,36 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "uniqueInstructions": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AssetTaskConsumable": {
+            "type": "object",
+            "required": [
+                "assetTaskId",
+                "consumableId",
+                "quantityNote"
+            ],
+            "properties": {
+                "assetTaskId": {
+                    "type": "string"
+                },
+                "consumableId": {
+                    "type": "string"
+                },
+                "quantityNote": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AssetTaskConsumableForPath": {
+            "type": "object",
+            "required": [
+                "quantityNote"
+            ],
+            "properties": {
+                "quantityNote": {
                     "type": "string"
                 }
             }

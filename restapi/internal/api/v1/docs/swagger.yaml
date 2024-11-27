@@ -9,6 +9,26 @@ definitions:
       uniqueInstructions:
         type: string
     type: object
+  types.AssetTaskConsumable:
+    properties:
+      assetTaskId:
+        type: string
+      consumableId:
+        type: string
+      quantityNote:
+        type: string
+    required:
+    - assetTaskId
+    - consumableId
+    - quantityNote
+    type: object
+  types.AssetTaskConsumableForPath:
+    properties:
+      quantityNote:
+        type: string
+    required:
+    - quantityNote
+    type: object
   types.AssetTaskTool:
     properties:
       assetTaskId:
@@ -141,6 +161,28 @@ info:
   title: PersonaCMMS API
   version: "1.0"
 paths:
+  /asset-task-consumables:
+    post:
+      consumes:
+      - application/json
+      description: Create a relationship between an asset task and a consumable with
+        json body
+      parameters:
+      - description: Asset Task Consumable object
+        in: body
+        name: assetTaskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTaskConsumable'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskConsumable'
+      summary: Create a relationship between an asset task and a consumable with json
+        body
   /asset-task-tools:
     post:
       consumes:
@@ -283,6 +325,26 @@ paths:
           schema:
             $ref: '#/definitions/types.Consumable'
       summary: Create a consumable
+  /consumables/{consumableId}:
+    put:
+      consumes:
+      - application/json
+      description: Update an asset task consumable with json body
+      parameters:
+      - description: Asset Task Consumable object
+        in: body
+        name: assetTaskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTaskConsumable'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskConsumable'
+      summary: Update an asset task consumable with json body
   /consumables/{consumableTitle}:
     delete:
       description: Delete a consumable
@@ -563,6 +625,174 @@ paths:
           schema:
             $ref: '#/definitions/types.AssetTask'
       summary: Update an asset task
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables:
+    get:
+      description: List all asset task consumables
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task ID
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.AssetTaskConsumable'
+            type: array
+      summary: List asset task consumables
+  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables/{consumableId}:
+    delete:
+      description: Delete an asset task consumable
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task ID
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Consumable ID
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete an asset task consumable
+    get:
+      description: Get an asset task consumable
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task ID
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Consumable ID
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.AssetTaskConsumable'
+      summary: Get an asset task consumable
+    post:
+      consumes:
+      - application/json
+      description: Create a relationship between an asset task and a consumable with
+        path parameters
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task ID
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Consumable ID
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      - description: Asset Task Consumable object
+        in: body
+        name: assetTaskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTaskConsumableForPath'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskConsumable'
+      summary: Create a relationship between an asset task and a consumable with path
+        parameters
+    put:
+      description: Update an asset task consumable with path parameters
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task ID
+        in: path
+        name: assetTaskId
+        required: true
+        type: string
+      - description: Consumable ID
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      - description: Asset Task Consumable object
+        in: body
+        name: assetTaskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.AssetTaskConsumableForPath'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.AssetTaskConsumable'
+      summary: Update an asset task consumable with path parameters
   /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools:
     get:
       description: List all asset task tools

@@ -235,6 +235,17 @@ func setupCategory(t *testing.T, store st.Store, identifier string) string {
 	return category.Title
 }
 
+func setupConsumable(t *testing.T, store st.Store, identifier string) tp.UUID {
+	consumable := tp.Consumable{
+		Title: fmt.Sprintf("Consumable %s", identifier),
+	}
+	consumable, err := store.CreateConsumable(consumable)
+	if err != nil {
+		t.Errorf("CreateConsumable() failed: %v", err)
+	}
+	return consumable.Id
+}
+
 func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
 	tool := tp.Tool{
 		Title: fmt.Sprintf("Tool %s", identifier),
