@@ -67,7 +67,7 @@ func (h *Api) listCategories(c *gin.Context) {
 // GetCategory godoc
 //
 //	@Summary		Get an asset category
-//	@Description	Get a category
+//	@Description	Get an asset category
 //	@Param			categoryTitle	path	string	true	"Category Title"
 //	@Produce		json
 //	@Success		200	{object}	tp.Category

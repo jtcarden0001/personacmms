@@ -19,7 +19,7 @@ OUTLINDEBUG=bin/personacmms-debug
 #
 PKG := 
 
-all: tidy format swag build test
+all: clean tidy format swag build test
 
 clean:
 	go clean
@@ -59,7 +59,7 @@ unittest:
 	$(GOTEST) ./internal/...
 
 # run
-dev-up:
+dev-up: clean
 	docker-compose -f ./tools/docker/dev.compose.yaml up --build -d
 
 dev-down:

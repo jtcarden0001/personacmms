@@ -137,7 +137,7 @@ const docTemplate = `{
         },
         "/categories/{categoryTitle}": {
             "get": {
-                "description": "Get a category",
+                "description": "Get an asset category",
                 "produces": [
                     "application/json"
                 ],
