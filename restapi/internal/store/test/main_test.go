@@ -121,7 +121,9 @@ func initializeStore(dbName string) st.Store {
 }
 
 func closeStore(store st.Store, dbName string) {
-	store.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
+	// cannnot drop the database because the connection is still open
+	// store.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
+	_ = dbName
 	err := store.Close()
 	if err != nil {
 		log.Fatalf("Could not close store: %s", err)

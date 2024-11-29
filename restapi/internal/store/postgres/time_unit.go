@@ -42,7 +42,7 @@ func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
 		var tu tp.TimeUnit
 		err = rows.Scan(&tu.Id, &tu.Title)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		timeUnits = append(timeUnits, tu)
 	}

@@ -42,7 +42,7 @@ func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
 		var wos tp.WorkOrderStatus
 		err = rows.Scan(&wos.Id, &wos.Title)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		workOrderStatuses = append(workOrderStatuses, wos)
 	}

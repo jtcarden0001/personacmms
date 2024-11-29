@@ -14,7 +14,7 @@ func (pg *Store) CreateTask(task tp.Task) (tp.Task, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description, type) VALUES ($1, $2, $3, $4)`, taskTableName)
 	_, err := pg.db.Exec(query, task.Id, task.Title, task.Description, task.Type)
 	if err != nil {
-		return tp.Task{}, err
+		return tp.Task{}, handleDbError(err)
 	}
 
 	return task, nil
@@ -24,14 +24,14 @@ func (pg *Store) DeleteTask(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, taskTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return err
+	return handleDbError(err)
 }
 
 func (pg *Store) ListTasks() ([]tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, description, type FROM %s`, taskTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -40,7 +40,7 @@ func (pg *Store) ListTasks() ([]tp.Task, error) {
 		var task tp.Task
 		err = rows.Scan(&task.Id, &task.Title, &task.Description, &task.Type)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		tasks = append(tasks, task)
 	}
@@ -55,7 +55,7 @@ func (pg *Store) GetTask(title string) (tp.Task, error) {
 	var task tp.Task
 	err := row.Scan(&task.Id, &task.Title, &task.Description, &task.Type)
 	if err != nil {
-		return tp.Task{}, err
+		return tp.Task{}, handleDbError(err)
 	}
 
 	return task, nil
@@ -65,7 +65,7 @@ func (pg *Store) UpdateTask(title string, task tp.Task) (tp.Task, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2, type = $3 WHERE title = $4 returning id`, taskTableName)
 	err := pg.db.QueryRow(query, task.Title, task.Description, task.Type, task.Title).Scan(&task.Id)
 	if err != nil {
-		return tp.Task{}, err
+		return tp.Task{}, handleDbError(err)
 	}
 
 	return task, nil

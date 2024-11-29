@@ -42,7 +42,7 @@ func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
 		var c tp.Consumable
 		err = rows.Scan(&c.Id, &c.Title)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		consumables = append(consumables, c)
 	}

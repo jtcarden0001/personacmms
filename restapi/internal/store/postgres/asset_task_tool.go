@@ -12,7 +12,7 @@ func (pg *Store) CreateAssetTaskTool(tool tp.AssetTaskTool) (tp.AssetTaskTool, e
 	query := fmt.Sprintf("INSERT INTO %s (assettask_id, tool_id) VALUES ($1, $2)", assetTaskToolTable)
 	_, err := pg.db.Exec(query, tool.AssetTaskId, tool.ToolId)
 	if err != nil {
-		return tp.AssetTaskTool{}, err
+		return tp.AssetTaskTool{}, handleDbError(err)
 	}
 
 	return tool, nil
@@ -22,7 +22,7 @@ func (pg *Store) DeleteAssetTaskTool(atId, tId tp.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE assettask_id = $1 AND tool_id = $2", assetTaskToolTable)
 	_, err := pg.db.Exec(query, atId, tId)
 	if err != nil {
-		return err
+		return handleDbError(err)
 	}
 
 	return nil
@@ -32,7 +32,7 @@ func (pg *Store) ListAssetTaskTools() ([]tp.AssetTaskTool, error) {
 	query := fmt.Sprintf("SELECT assettask_id, tool_id FROM %s", assetTaskToolTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -41,7 +41,7 @@ func (pg *Store) ListAssetTaskTools() ([]tp.AssetTaskTool, error) {
 		var e tp.AssetTaskTool
 		err = rows.Scan(&e.AssetTaskId, &e.ToolId)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		at = append(at, e)
 	}
@@ -54,7 +54,7 @@ func (pg *Store) GetAssetTaskTool(atId, tId tp.UUID) (tp.AssetTaskTool, error) {
 	var e tp.AssetTaskTool
 	err := pg.db.QueryRow(query, atId, tId).Scan(&e.AssetTaskId, &e.ToolId)
 	if err != nil {
-		return tp.AssetTaskTool{}, err
+		return tp.AssetTaskTool{}, handleDbError(err)
 	}
 
 	return e, nil

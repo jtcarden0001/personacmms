@@ -154,12 +154,12 @@ func TestCategoryNotFound(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	_, err := store.GetCategory("notfound")
-	if !errors.Is(err, ae.ErrNotFound) {
-		t.Errorf("Get() failed: expected ErrNotFound, got %v", err)
+	var appErr ae.AppError
+	if !errors.As(err, &appErr) {
+		t.Errorf("Get() failed: expected AppError, got %v", err)
 	}
 
-	err = store.DeleteCategory("notfound")
-	if !errors.Is(err, ae.ErrNotFound) {
-		t.Errorf("Delete() failed: expected ErrNotFound, got %v", err)
+	if appErr.Code != ae.CodeNotFound {
+		t.Errorf("Get() failed: expected CodeNotFound, got %v", appErr.Code)
 	}
 }

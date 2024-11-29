@@ -42,7 +42,7 @@ func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
 		var uu tp.UsageUnit
 		err = rows.Scan(&uu.Id, &uu.Title)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		usageUnits = append(usageUnits, uu)
 	}

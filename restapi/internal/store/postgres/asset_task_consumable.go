@@ -12,7 +12,7 @@ func (pg *Store) CreateAssetTaskConsumable(consumable tp.AssetTaskConsumable) (t
 	query := fmt.Sprintf("INSERT INTO %s (assettask_id, consumable_id, quantity_note) VALUES ($1, $2, $3)", assetTaskConsumableTable)
 	_, err := pg.db.Exec(query, consumable.AssetTaskId, consumable.ConsumableId, consumable.QuantityNote)
 	if err != nil {
-		return tp.AssetTaskConsumable{}, err
+		return tp.AssetTaskConsumable{}, handleDbError(err)
 	}
 
 	return consumable, nil
@@ -22,7 +22,7 @@ func (pg *Store) DeleteAssetTaskConsumable(atId, cId tp.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE assettask_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
 	_, err := pg.db.Exec(query, atId, cId)
 	if err != nil {
-		return err
+		return handleDbError(err)
 	}
 
 	return nil
@@ -32,7 +32,7 @@ func (pg *Store) ListAssetTaskConsumables() ([]tp.AssetTaskConsumable, error) {
 	query := fmt.Sprintf("SELECT assettask_id, consumable_id, quantity_note FROM %s", assetTaskConsumableTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -41,7 +41,7 @@ func (pg *Store) ListAssetTaskConsumables() ([]tp.AssetTaskConsumable, error) {
 		var e tp.AssetTaskConsumable
 		err = rows.Scan(&e.AssetTaskId, &e.ConsumableId, &e.QuantityNote)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		at = append(at, e)
 	}
@@ -54,7 +54,7 @@ func (pg *Store) GetAssetTaskConsumable(atId, cId tp.UUID) (tp.AssetTaskConsumab
 	var e tp.AssetTaskConsumable
 	err := pg.db.QueryRow(query, atId, cId).Scan(&e.AssetTaskId, &e.ConsumableId, &e.QuantityNote)
 	if err != nil {
-		return tp.AssetTaskConsumable{}, err
+		return tp.AssetTaskConsumable{}, handleDbError(err)
 	}
 
 	return e, nil
@@ -64,7 +64,7 @@ func (pg *Store) UpdateAssetTaskConsumable(atc tp.AssetTaskConsumable) (tp.Asset
 	query := fmt.Sprintf("UPDATE %s SET quantity_note = $1 WHERE assettask_id = $2 AND consumable_id = $3", assetTaskConsumableTable)
 	_, err := pg.db.Exec(query, atc.QuantityNote, atc.AssetTaskId, atc.ConsumableId)
 	if err != nil {
-		return tp.AssetTaskConsumable{}, err
+		return tp.AssetTaskConsumable{}, handleDbError(err)
 	}
 
 	return atc, nil

@@ -14,7 +14,7 @@ func (s *Store) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, quantity, timeunit_title, assettask_id) VALUES ($1, $2, $3, $4)`, timeTriggerTableName)
 	_, err := s.db.Exec(query, tt.Id, tt.Quantity, tt.TimeUnit, tt.AssetTaskId)
 	if err != nil {
-		return tp.TimeTrigger{}, err
+		return tp.TimeTrigger{}, handleDbError(err)
 	}
 
 	return tt, nil
@@ -24,7 +24,7 @@ func (s *Store) DeleteTimeTrigger(ttId uuid.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id=$1`, timeTriggerTableName)
 	_, err := s.db.Exec(query, ttId)
 	if err != nil {
-		return err
+		return handleDbError(err)
 	}
 
 	return nil
@@ -34,7 +34,7 @@ func (s *Store) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, assettask_id FROM %s`, timeTriggerTableName)
 	rows, err := s.db.Query(query)
 	if err != nil {
-		return []tp.TimeTrigger{}, err
+		return []tp.TimeTrigger{}, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -43,7 +43,7 @@ func (s *Store) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 		var tt tp.TimeTrigger
 		err := rows.Scan(&tt.Id, &tt.Quantity, &tt.TimeUnit, &tt.AssetTaskId)
 		if err != nil {
-			return []tp.TimeTrigger{}, err
+			return []tp.TimeTrigger{}, handleDbError(err)
 		}
 		ttgs = append(ttgs, tt)
 	}
@@ -58,7 +58,7 @@ func (s *Store) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
 	var tt tp.TimeTrigger
 	err := row.Scan(&tt.Id, &tt.Quantity, &tt.TimeUnit, &tt.AssetTaskId)
 	if err != nil {
-		return tp.TimeTrigger{}, err
+		return tp.TimeTrigger{}, handleDbError(err)
 	}
 
 	return tt, nil
@@ -68,7 +68,7 @@ func (s *Store) UpdateTimeTrigger(ttId uuid.UUID, tt tp.TimeTrigger) (tp.TimeTri
 	query := fmt.Sprintf(`UPDATE %s SET quantity=$1, timeunit_title=$2, assettask_id=$3 WHERE id=$4`, timeTriggerTableName)
 	_, err := s.db.Exec(query, tt.Quantity, tt.TimeUnit, tt.AssetTaskId, ttId)
 	if err != nil {
-		return tp.TimeTrigger{}, err
+		return tp.TimeTrigger{}, handleDbError(err)
 	}
 
 	return tt, nil

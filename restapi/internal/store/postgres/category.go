@@ -15,7 +15,7 @@ func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
 	_, err := pg.db.Exec(query, category.Id, category.Title, category.Description)
 	if err != nil {
-		return tp.Category{}, err
+		return tp.Category{}, handleDbError(err)
 	}
 
 	return category, nil
@@ -25,14 +25,14 @@ func (pg *Store) DeleteCategory(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, categoryTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return err
+	return handleDbError(err)
 }
 
 func (pg *Store) ListCategories() ([]tp.Category, error) {
 	query := fmt.Sprintf(`SELECT id, title, description FROM %s`, categoryTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, handleDbError(err)
 	}
 	defer rows.Close()
 
@@ -41,7 +41,7 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 		var category tp.Category
 		err = rows.Scan(&category.Id, &category.Title, &category.Description)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 
 		categories = append(categories, category)
@@ -67,7 +67,7 @@ func (pg *Store) UpdateCategory(title string, category tp.Category) (tp.Category
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 returning id`, categoryTableName)
 	err := pg.db.QueryRow(query, category.Title, category.Description, title).Scan(&category.Id)
 	if err != nil {
-		return tp.Category{}, err
+		return tp.Category{}, handleDbError(err)
 	}
 
 	return category, nil

@@ -42,7 +42,7 @@ func (pg *Store) ListGroups() ([]tp.Group, error) {
 		var grp tp.Group
 		err = rows.Scan(&grp.Id, &grp.Title)
 		if err != nil {
-			return nil, err
+			return nil, handleDbError(err)
 		}
 		groups = append(groups, grp)
 	}
