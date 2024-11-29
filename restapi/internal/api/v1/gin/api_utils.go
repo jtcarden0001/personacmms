@@ -8,7 +8,6 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 )
 
-// TODO: figure this out, debugger is not breaking
 func getStatus(err error, successCode int) int {
 	if err == nil {
 		return successCode
