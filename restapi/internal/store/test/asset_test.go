@@ -113,6 +113,72 @@ func TestAssetList(t *testing.T) {
 	}
 }
 
+func TestAssetListByGroup(t *testing.T) {
+	dbName := "testassetlistbygroup"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	// setup
+	groupTitle1 := setupGroup(t, store, "1")
+	groupTitle2 := setupGroup(t, store, "2")
+
+	// create 2 assets in group 1 and 2 assets in group 2
+	categoryTitle := setupCategory(t, store, "1")
+	asset1 := getTestAsset(groupTitle1, categoryTitle, "1")
+	_, err := store.CreateAsset(asset1)
+	if err != nil {
+		t.Errorf("CreateAsset() failed: %v", err)
+	}
+
+	asset2 := getTestAsset(groupTitle1, categoryTitle, "2")
+	_, err = store.CreateAsset(asset2)
+	if err != nil {
+		t.Errorf("CreateAsset() failed: %v", err)
+	}
+
+	asset3 := getTestAsset(groupTitle2, categoryTitle, "1")
+	_, err = store.CreateAsset(asset3)
+	if err != nil {
+		t.Errorf("CreateAsset() failed: %v", err)
+	}
+
+	asset4 := getTestAsset(groupTitle2, categoryTitle, "2")
+	_, err = store.CreateAsset(asset4)
+	if err != nil {
+		t.Errorf("CreateAsset() failed: %v", err)
+	}
+
+	// List by group 1
+	assets, err := store.ListAssetsByGroup(groupTitle1)
+	if err != nil {
+		t.Errorf("ListAssetsByGroup() failed: %v", err)
+	}
+
+	if len(assets) != 2 {
+		t.Errorf("ListAssetsByGroup() failed: expected 2 assets, got %d", len(assets))
+	}
+
+	// List by group 2
+	assets, err = store.ListAssetsByGroup(groupTitle2)
+	if err != nil {
+		t.Errorf("ListAssetsByGroup() failed: %v", err)
+	}
+
+	if len(assets) != 2 {
+		t.Errorf("ListAssetsByGroup() failed: expected 2 assets, got %d", len(assets))
+	}
+
+	// List all
+	assets, err = store.ListAssets()
+	if err != nil {
+		t.Errorf("ListAssets() failed: %v", err)
+	}
+
+	if len(assets) != 4 {
+		t.Errorf("ListAssets() failed: expected 4 assets, got %d", len(assets))
+	}
+}
+
 func TestAssetUpdateGet(t *testing.T) {
 	dbName := "testassetupdateget"
 	store := initializeStore(dbName)
