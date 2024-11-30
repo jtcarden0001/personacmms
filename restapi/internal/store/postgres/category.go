@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	"github.com/pkg/errors"
 )
 
 var categoryTableName = "category"
@@ -15,7 +14,7 @@ func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
 	_, err := pg.db.Exec(query, category.Id, category.Title, category.Description)
 	if err != nil {
-		return tp.Category{}, handleDbError(err)
+		return tp.Category{}, handleDbError(err, "category")
 	}
 
 	return category, nil
@@ -25,14 +24,14 @@ func (pg *Store) DeleteCategory(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, categoryTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return handleDbError(err)
+	return handleDbError(err, "category")
 }
 
 func (pg *Store) ListCategories() ([]tp.Category, error) {
 	query := fmt.Sprintf(`SELECT id, title, description FROM %s`, categoryTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, handleDbError(err)
+		return nil, handleDbError(err, "category")
 	}
 	defer rows.Close()
 
@@ -41,7 +40,7 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 		var category tp.Category
 		err = rows.Scan(&category.Id, &category.Title, &category.Description)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "category")
 		}
 
 		categories = append(categories, category)
@@ -57,7 +56,7 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	var category tp.Category
 	err := row.Scan(&category.Id, &category.Title, &category.Description)
 	if err != nil {
-		return tp.Category{}, errors.Wrapf(handleDbError(err), "the category with title %s does not exist", title)
+		return tp.Category{}, handleDbError(err, "category")
 	}
 
 	return category, nil
@@ -67,7 +66,7 @@ func (pg *Store) UpdateCategory(title string, category tp.Category) (tp.Category
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 returning id`, categoryTableName)
 	err := pg.db.QueryRow(query, category.Title, category.Description, title).Scan(&category.Id)
 	if err != nil {
-		return tp.Category{}, handleDbError(err)
+		return tp.Category{}, handleDbError(err, "category")
 	}
 
 	return category, nil

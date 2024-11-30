@@ -14,7 +14,7 @@ func (pg *Store) CreateUsageTrigger(ut tp.UsageTrigger) (tp.UsageTrigger, error)
 	query := fmt.Sprintf("INSERT INTO %s (id, quantity, usageunit_title, assettask_id) VALUES ($1, $2, $3, $4)", usageTriggerTableName)
 	_, err := pg.db.Exec(query, ut.Id, ut.Quantity, ut.UsageUnit, ut.AssetTaskId)
 	if err != nil {
-		return tp.UsageTrigger{}, handleDbError(err)
+		return tp.UsageTrigger{}, handleDbError(err, "usage-trigger")
 	}
 
 	return ut, nil
@@ -24,7 +24,7 @@ func (pg *Store) DeleteUsageTrigger(utId uuid.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", usageTriggerTableName)
 	_, err := pg.db.Exec(query, utId)
 	if err != nil {
-		return handleDbError(err)
+		return handleDbError(err, "usage-trigger")
 	}
 
 	return nil
@@ -35,7 +35,7 @@ func (pg *Store) GetUsageTrigger(utId uuid.UUID) (tp.UsageTrigger, error) {
 	query := fmt.Sprintf("SELECT id, quantity, usageunit_title, assettask_id FROM %s WHERE id = $1", usageTriggerTableName)
 	err := pg.db.QueryRow(query, utId).Scan(&ut.Id, &ut.Quantity, &ut.UsageUnit, &ut.AssetTaskId)
 	if err != nil {
-		return tp.UsageTrigger{}, handleDbError(err)
+		return tp.UsageTrigger{}, handleDbError(err, "usage-trigger")
 	}
 
 	return ut, nil
@@ -46,14 +46,14 @@ func (pg *Store) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	query := fmt.Sprintf("SELECT id, quantity, usageunit_title, assettask_id FROM %s", usageTriggerTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, handleDbError(err)
+		return nil, handleDbError(err, "usage-trigger")
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var ut tp.UsageTrigger
 		if err := rows.Scan(&ut.Id, &ut.Quantity, &ut.UsageUnit, &ut.AssetTaskId); err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "usage-trigger")
 		}
 		uts = append(uts, ut)
 	}
@@ -65,7 +65,7 @@ func (pg *Store) UpdateUsageTrigger(utId uuid.UUID, ut tp.UsageTrigger) (tp.Usag
 	query := fmt.Sprintf("UPDATE %s SET quantity = $1, usageunit_title = $2, assettask_id = $3 WHERE id = $4", usageTriggerTableName)
 	_, err := pg.db.Exec(query, ut.Quantity, ut.UsageUnit, ut.AssetTaskId, utId)
 	if err != nil {
-		return tp.UsageTrigger{}, handleDbError(err)
+		return tp.UsageTrigger{}, handleDbError(err, "usage-trigger")
 	}
 
 	return ut, nil

@@ -11,6 +11,7 @@ type Store interface {
 	CreateAsset(tp.Asset) (tp.Asset, error)
 	DeleteAsset(string, string) error
 	ListAssets() ([]tp.Asset, error)
+	ListAssetsByGroup(string) ([]tp.Asset, error)
 	GetAsset(string, string) (tp.Asset, error)
 	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
 

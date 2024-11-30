@@ -15,7 +15,7 @@ func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, consumableTableName)
 	_, err := pg.db.Exec(query, id, c.Title)
 	if err != nil {
-		return tp.Consumable{}, handleDbError(err)
+		return tp.Consumable{}, handleDbError(err, "consumable")
 	}
 
 	c.Id = id
@@ -26,7 +26,7 @@ func (pg *Store) DeleteConsumable(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, consumableTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return handleDbError(err)
+	return handleDbError(err, "consumable")
 }
 
 func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
@@ -34,7 +34,7 @@ func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, consumableTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return consumables, handleDbError(err)
+		return consumables, handleDbError(err, "consumable")
 	}
 	defer rows.Close()
 
@@ -42,7 +42,7 @@ func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
 		var c tp.Consumable
 		err = rows.Scan(&c.Id, &c.Title)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "consumable")
 		}
 		consumables = append(consumables, c)
 	}
@@ -55,7 +55,7 @@ func (pg *Store) GetConsumable(title string) (tp.Consumable, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, consumableTableName)
 	err := pg.db.QueryRow(query, title).Scan(&c.Id, &c.Title)
 	if err != nil {
-		return tp.Consumable{}, handleDbError(err)
+		return tp.Consumable{}, handleDbError(err, "consumable")
 	}
 
 	return c, nil
@@ -65,7 +65,7 @@ func (pg *Store) UpdateConsumable(title string, c tp.Consumable) (tp.Consumable,
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, consumableTableName)
 	_, err := pg.db.Exec(query, c.Title, title)
 	if err != nil {
-		return tp.Consumable{}, handleDbError(err)
+		return tp.Consumable{}, handleDbError(err, "consumable")
 	}
 
 	return c, nil

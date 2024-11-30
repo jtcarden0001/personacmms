@@ -15,7 +15,7 @@ func (s *Store) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatu
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2)`, workOrderStatusTableName)
 	_, err := s.db.Exec(query, id, wos.Title)
 	if err != nil {
-		return tp.WorkOrderStatus{}, handleDbError(err)
+		return tp.WorkOrderStatus{}, handleDbError(err, "work-order-status")
 	}
 
 	wos.Id = id
@@ -26,7 +26,7 @@ func (s *Store) DeleteWorkOrderStatus(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, workOrderStatusTableName)
 	_, err := s.db.Exec(query, title)
 
-	return handleDbError(err)
+	return handleDbError(err, "work-order-status")
 }
 
 func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
@@ -34,7 +34,7 @@ func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, workOrderStatusTableName)
 	rows, err := s.db.Query(query)
 	if err != nil {
-		return workOrderStatuses, handleDbError(err)
+		return workOrderStatuses, handleDbError(err, "work-order-status")
 	}
 	defer rows.Close()
 
@@ -42,7 +42,7 @@ func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
 		var wos tp.WorkOrderStatus
 		err = rows.Scan(&wos.Id, &wos.Title)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "work-order-status")
 		}
 		workOrderStatuses = append(workOrderStatuses, wos)
 	}
@@ -55,7 +55,7 @@ func (s *Store) GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, workOrderStatusTableName)
 	err := s.db.QueryRow(query, title).Scan(&wos.Id, &wos.Title)
 	if err != nil {
-		return tp.WorkOrderStatus{}, handleDbError(err)
+		return tp.WorkOrderStatus{}, handleDbError(err, "work-order-status")
 	}
 
 	return wos, nil
@@ -65,7 +65,7 @@ func (s *Store) UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, workOrderStatusTableName)
 	_, err := s.db.Exec(query, wos.Title, title)
 	if err != nil {
-		return tp.WorkOrderStatus{}, handleDbError(err)
+		return tp.WorkOrderStatus{}, handleDbError(err, "work-order-status")
 	}
 
 	return wos, nil

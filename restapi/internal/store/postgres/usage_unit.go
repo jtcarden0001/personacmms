@@ -15,7 +15,7 @@ func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, usageUnitTableName)
 	_, err := pg.db.Exec(query, id, uu.Title)
 	if err != nil {
-		return tp.UsageUnit{}, handleDbError(err)
+		return tp.UsageUnit{}, handleDbError(err, "usage-unit")
 	}
 
 	uu.Id = id
@@ -26,7 +26,7 @@ func (pg *Store) DeleteUsageUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, usageUnitTableName)
 	_, err := pg.db.Exec(query, title)
 
-	return handleDbError(err)
+	return handleDbError(err, "usage-unit")
 }
 
 func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
@@ -34,7 +34,7 @@ func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, usageUnitTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return usageUnits, handleDbError(err)
+		return usageUnits, handleDbError(err, "usage-unit")
 	}
 	defer rows.Close()
 
@@ -42,7 +42,7 @@ func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
 		var uu tp.UsageUnit
 		err = rows.Scan(&uu.Id, &uu.Title)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "usage-unit")
 		}
 		usageUnits = append(usageUnits, uu)
 	}
@@ -55,7 +55,7 @@ func (pg *Store) GetUsageUnit(title string) (tp.UsageUnit, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, usageUnitTableName)
 	err := pg.db.QueryRow(query, title).Scan(&uu.Id, &uu.Title)
 	if err != nil {
-		return tp.UsageUnit{}, handleDbError(err)
+		return tp.UsageUnit{}, handleDbError(err, "usage-unit")
 	}
 
 	return uu, nil
@@ -65,7 +65,7 @@ func (pg *Store) UpdateUsageUnit(title string, uu tp.UsageUnit) (tp.UsageUnit, e
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, usageUnitTableName)
 	_, err := pg.db.Exec(query, uu.Title, title)
 	if err != nil {
-		return tp.UsageUnit{}, handleDbError(err)
+		return tp.UsageUnit{}, handleDbError(err, "usage-unit")
 	}
 
 	return uu, nil

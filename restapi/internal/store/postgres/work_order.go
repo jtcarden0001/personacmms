@@ -37,7 +37,7 @@ func (pg *Store) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 		wo.StatusTitle,
 	)
 	if err != nil {
-		return tp.WorkOrder{}, handleDbError(err)
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
 	}
 
 	return wo, nil
@@ -46,14 +46,14 @@ func (pg *Store) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 func (pg *Store) DeleteWorkOrder(woId tp.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, workOrderTable)
 	_, err := pg.db.Exec(query, woId)
-	return handleDbError(err)
+	return handleDbError(err, "work-order")
 }
 
 func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
 	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s`, workOrderTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, handleDbError(err)
+		return nil, handleDbError(err, "work-order")
 	}
 
 	workOrders := []tp.WorkOrder{}
@@ -61,7 +61,7 @@ func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
 		var wo tp.WorkOrder
 		err = rows.Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.AssetTaskId, &wo.StatusTitle)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "work-order")
 		}
 		workOrders = append(workOrders, wo)
 	}
@@ -74,7 +74,7 @@ func (pg *Store) GetWorkOrder(woId tp.UUID) (tp.WorkOrder, error) {
 	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, assettask_id, status_title FROM %s WHERE id = $1`, workOrderTable)
 	err := pg.db.QueryRow(query, woId).Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.AssetTaskId, &wo.StatusTitle)
 	if err != nil {
-		return tp.WorkOrder{}, handleDbError(err)
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
 	}
 
 	return wo, nil
@@ -103,7 +103,7 @@ func (pg *Store) UpdateWorkOrder(woId tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, e
 		wo.StatusTitle,
 	)
 	if err != nil {
-		return tp.WorkOrder{}, handleDbError(err)
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
 	}
 
 	return wo, nil

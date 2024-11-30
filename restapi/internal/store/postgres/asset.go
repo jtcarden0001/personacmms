@@ -21,7 +21,7 @@ func (pg *Store) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 
 	_, err := pg.db.Exec(query, asset.Id, asset.Title, asset.GroupTitle, asset.Year, asset.Make, asset.ModelNumber, asset.SerialNumber, asset.Description, asset.CategoryTitle)
 	if err != nil {
-		return tp.Asset{}, handleDbError(err)
+		return tp.Asset{}, handleDbError(err, "asset")
 	}
 
 	return asset, nil
@@ -30,7 +30,7 @@ func (pg *Store) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 func (pg *Store) DeleteAsset(groupTitle string, assetTitle string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
 	_, err := pg.db.Exec(query, assetTitle, groupTitle)
-	return handleDbError(err)
+	return handleDbError(err, "asset")
 }
 
 func (pg *Store) ListAssets() ([]tp.Asset, error) {
@@ -39,7 +39,7 @@ func (pg *Store) ListAssets() ([]tp.Asset, error) {
 		FROM %s`, assetTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
-		return nil, handleDbError(err)
+		return nil, handleDbError(err, "asset")
 	}
 
 	assets := []tp.Asset{}
@@ -47,7 +47,30 @@ func (pg *Store) ListAssets() ([]tp.Asset, error) {
 		var asset tp.Asset
 		err = rows.Scan(&asset.GroupTitle, &asset.Title, &asset.Id, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description, &asset.CategoryTitle)
 		if err != nil {
-			return nil, handleDbError(err)
+			return nil, handleDbError(err, "asset")
+		}
+		assets = append(assets, asset)
+	}
+
+	return assets, nil
+}
+
+func (pg *Store) ListAssetsByGroup(groupTitle string) ([]tp.Asset, error) {
+	query := fmt.Sprintf(`
+		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
+		FROM %s 
+		WHERE group_title = $1`, assetTableName)
+	rows, err := pg.db.Query(query, groupTitle)
+	if err != nil {
+		return nil, handleDbError(err, "asset")
+	}
+
+	assets := []tp.Asset{}
+	for rows.Next() {
+		var asset tp.Asset
+		err = rows.Scan(&asset.GroupTitle, &asset.Title, &asset.Id, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description, &asset.CategoryTitle)
+		if err != nil {
+			return nil, handleDbError(err, "asset")
 		}
 		assets = append(assets, asset)
 	}
@@ -74,7 +97,7 @@ func (pg *Store) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error
 		&asset.CategoryTitle,
 	)
 	if err != nil {
-		return tp.Asset{}, handleDbError(err)
+		return tp.Asset{}, handleDbError(err, "asset")
 	}
 
 	return asset, nil
@@ -99,7 +122,7 @@ func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asse
 		asset.GroupTitle,
 	).Scan(&asset.Id)
 	if err != nil {
-		return tp.Asset{}, handleDbError(err)
+		return tp.Asset{}, handleDbError(err, "asset")
 	}
 
 	return asset, nil
