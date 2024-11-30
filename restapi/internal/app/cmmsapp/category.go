@@ -9,6 +9,11 @@ func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
 }
 
 func (a *App) DeleteCategory(title string) error {
+	_, err := a.GetCategory(title)
+	if err != nil {
+		return err
+	}
+
 	return a.db.DeleteCategory(title)
 }
 
