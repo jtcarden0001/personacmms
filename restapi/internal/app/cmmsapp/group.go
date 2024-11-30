@@ -9,6 +9,10 @@ func (a *App) CreateGroup(grp tp.Group) (tp.Group, error) {
 }
 
 func (a *App) DeleteGroup(title string) error {
+	if _, err := a.GetGroup(title); err != nil {
+		return err
+	}
+
 	return a.db.DeleteGroup(title)
 }
 

@@ -6,13 +6,13 @@ import (
 )
 
 func (a *App) CreateTask(groupTitle string, assetTitle string, at tp.Task) (tp.Task, error) {
-	// TODO: validate and populate asset task
+	// TODO: validate and populate Tsk
 
 	return a.db.CreateTask(at)
 }
 
 func (a *App) DeleteTask(groupTitle string, assetTitle string, taskId string) error {
-	// TODO: validate asset task
+	// TODO: validate Tsk
 
 	// cast taskId to tp.UUID
 	atId, err := uuid.Parse(taskId)
@@ -29,7 +29,7 @@ func (a *App) ListTasks(groupTitle string, assetTitle string) ([]tp.Task, error)
 		return []tp.Task{}, err
 	}
 
-	// filter asset tasks by group and asset title
+	// filter Tsks by group and asset title
 	var tasks []tp.Task
 	for _, at := range ats {
 		// if at.GroupTitle == groupTitle && at.AssetTitle == assetTitle {
@@ -41,7 +41,7 @@ func (a *App) ListTasks(groupTitle string, assetTitle string) ([]tp.Task, error)
 }
 
 func (a *App) GetTask(groupTitle string, assetTitle string, taskId string) (tp.Task, error) {
-	// TODO: validate asset task
+	// TODO: validate Tsk
 
 	// cast taskId to tp.UUID
 	atId, err := uuid.Parse(taskId)
@@ -53,7 +53,7 @@ func (a *App) GetTask(groupTitle string, assetTitle string, taskId string) (tp.T
 }
 
 func (a *App) UpdateTask(groupTitle string, assetTitle string, taskId string, at tp.Task) (tp.Task, error) {
-	// TODO: validate asset task
+	// TODO: validate Tsk
 
 	// cast taskId to tp.UUID
 	atId, err := uuid.Parse(taskId)

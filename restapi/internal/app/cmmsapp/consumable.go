@@ -7,6 +7,10 @@ func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) 
 }
 
 func (a *App) DeleteConsumable(consumableTitle string) error {
+	if _, err := a.GetConsumable(consumableTitle); err != nil {
+		return err
+	}
+
 	return a.db.DeleteConsumable(consumableTitle)
 }
 

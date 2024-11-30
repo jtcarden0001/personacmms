@@ -9,8 +9,7 @@ func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
 }
 
 func (a *App) DeleteCategory(title string) error {
-	_, err := a.GetCategory(title)
-	if err != nil {
+	if _, err := a.GetCategory(title); err != nil {
 		return err
 	}
 

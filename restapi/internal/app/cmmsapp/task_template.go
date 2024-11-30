@@ -7,6 +7,10 @@ func (a *App) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate,
 }
 
 func (a *App) DeleteTaskTemplate(title string) error {
+	if _, err := a.GetTaskTemplate(title); err != nil {
+		return err
+	}
+
 	return a.db.DeleteTaskTemplate(title)
 }
 
