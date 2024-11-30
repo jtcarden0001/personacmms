@@ -1,14 +1,9 @@
 package types
 
-type TaskTemplate struct {
-	Title       string `json:"title" binding:"required"`
-	Id          UUID   `json:"id" swaggerignore:"true"`
-	Description string `json:"description"`
-	Type        string `json:"type"`
+type Task struct {
+	Id                 UUID   `json:"id" swaggerignore:"true"` // will be handled by service
+	Title              string `json:"title"`
+	UniqueInstructions string `json:"uniqueInstructions"`
+	AssetId            UUID   `json:"assetId" swaggerignore:"true"` // will get in route path
+	TaskTemplateId     UUID   `json:"taskTemplateId"`
 }
-
-// TaskType Enum
-const (
-	TaskTypePreventative = "preventative"
-	TaskTypeCorrective   = "corrective"
-)

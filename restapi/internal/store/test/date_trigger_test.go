@@ -13,10 +13,10 @@ func TestDateTriggerCreate(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	dt := tp.DateTrigger{
-		Date:        time.Now().AddDate(1, 0, 0),
-		AssetTaskId: assetTaskId,
+		Date:   time.Now().AddDate(1, 0, 0),
+		TaskId: assetTaskId,
 	}
 	createdDt, err := store.CreateDateTrigger(dt)
 	if err != nil {
@@ -33,10 +33,10 @@ func TestDateTriggerDelete(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	dt := tp.DateTrigger{
-		Date:        time.Now().AddDate(1, 0, 0),
-		AssetTaskId: assetTaskId,
+		Date:   time.Now().AddDate(1, 0, 0),
+		TaskId: assetTaskId,
 	}
 	createdDt, err := store.CreateDateTrigger(dt)
 	if err != nil {
@@ -60,7 +60,7 @@ func TestDateTriggerList(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 
 	// list
 	dts, err := store.ListDateTriggers()
@@ -74,8 +74,8 @@ func TestDateTriggerList(t *testing.T) {
 	}
 
 	dt := tp.DateTrigger{
-		Date:        time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
-		AssetTaskId: assetTaskId,
+		Date:   time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
+		TaskId: assetTaskId,
 	}
 
 	createdDt, err := store.CreateDateTrigger(dt)
@@ -111,10 +111,10 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	dt := tp.DateTrigger{
-		Date:        time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
-		AssetTaskId: assetTaskId,
+		Date:   time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
+		TaskId: assetTaskId,
 	}
 	createdDt, err := store.CreateDateTrigger(dt)
 	if err != nil {

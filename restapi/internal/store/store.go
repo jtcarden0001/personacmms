@@ -15,25 +15,18 @@ type Store interface {
 	GetAsset(string, string) (tp.Asset, error)
 	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
 
-	// asset task
-	CreateAssetTask(tp.AssetTask) (tp.AssetTask, error)
-	DeleteAssetTask(tp.UUID) error
-	ListAssetTasks() ([]tp.AssetTask, error)
-	GetAssetTask(tp.UUID) (tp.AssetTask, error)
-	UpdateAssetTask(tp.UUID, tp.AssetTask) (tp.AssetTask, error)
-
 	// asset task consumable
-	CreateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
-	DeleteAssetTaskConsumable(tp.UUID, tp.UUID) error
-	ListAssetTaskConsumables() ([]tp.AssetTaskConsumable, error)
-	GetAssetTaskConsumable(tp.UUID, tp.UUID) (tp.AssetTaskConsumable, error)
-	UpdateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
+	CreateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
+	DeleteTaskConsumable(tp.UUID, tp.UUID) error
+	ListTaskConsumables() ([]tp.TaskConsumable, error)
+	GetTaskConsumable(tp.UUID, tp.UUID) (tp.TaskConsumable, error)
+	UpdateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
 
 	// asset task tool
-	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
-	DeleteAssetTaskTool(tp.UUID, tp.UUID) error
-	ListAssetTaskTools() ([]tp.AssetTaskTool, error)
-	GetAssetTaskTool(tp.UUID, tp.UUID) (tp.AssetTaskTool, error)
+	CreateTaskTool(tp.TaskTool) (tp.TaskTool, error)
+	DeleteTaskTool(tp.UUID, tp.UUID) error
+	ListTaskTools() ([]tp.TaskTool, error)
+	GetTaskTool(tp.UUID, tp.UUID) (tp.TaskTool, error)
 
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)
@@ -62,6 +55,13 @@ type Store interface {
 	ListGroups() ([]tp.Group, error)
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, tp.Group) (tp.Group, error)
+
+	// task
+	CreateTask(tp.Task) (tp.Task, error)
+	DeleteTask(tp.UUID) error
+	ListTasks() ([]tp.Task, error)
+	GetTask(tp.UUID) (tp.Task, error)
+	UpdateTask(tp.UUID, tp.Task) (tp.Task, error)
 
 	// task template
 	CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)

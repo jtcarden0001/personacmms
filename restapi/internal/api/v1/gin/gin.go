@@ -58,7 +58,7 @@ var routePrefix = "/api/v1"
 
 func (h *Api) registerRoutes() {
 	h.registerAssetRoutes()
-	h.registerAssetTaskRoutes()
+	h.registerTaskRoutes()
 	h.registerCategoryRoutes()
 	h.registerConsumableRoutes()
 	h.registerDateTriggerRoutes()

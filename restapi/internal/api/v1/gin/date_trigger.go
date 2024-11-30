@@ -8,7 +8,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-var baseDateTriggerRoute = fmt.Sprintf("%s/date-triggers", indAssetTaskRoute)
+var baseDateTriggerRoute = fmt.Sprintf("%s/date-triggers", indTaskRoute)
 var dateTriggerId = "DateTriggerId"
 var indDateTriggerRoute = fmt.Sprintf("%s/:%s", baseDateTriggerRoute, dateTriggerId)
 
@@ -27,11 +27,11 @@ func (h *Api) registerDateTriggerRoutes() {
 //	@Accept			json
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Param			dateTrigger	body	tp.DateTrigger	true	"Date Trigger object"
 //	@Produce		json
 //	@Success		201	{object}	tp.DateTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers [post]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers [post]
 func (h *Api) createDateTrigger(c *gin.Context) {
 	var dateTrigger tp.DateTrigger
 	if err := c.BindJSON(&dateTrigger); err != nil {
@@ -39,7 +39,7 @@ func (h *Api) createDateTrigger(c *gin.Context) {
 		return
 	}
 
-	dateTrigger, err := h.app.CreateDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), dateTrigger)
+	dateTrigger, err := h.app.CreateDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), dateTrigger)
 	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, dateTrigger))
 }
 
@@ -49,13 +49,13 @@ func (h *Api) createDateTrigger(c *gin.Context) {
 //	@Description	Delete a date trigger
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
 //	@Success		204
 //	@Failure		404
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId} [delete]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [delete]
 func (h *Api) deleteDateTrigger(c *gin.Context) {
-	err := h.app.DeleteDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(dateTriggerId))
+	err := h.app.DeleteDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(dateTriggerId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -65,13 +65,13 @@ func (h *Api) deleteDateTrigger(c *gin.Context) {
 //	@Description	Get a date trigger
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.DateTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId} [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [get]
 func (h *Api) getDateTrigger(c *gin.Context) {
-	dateTrigger, err := h.app.GetDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(dateTriggerId))
+	dateTrigger, err := h.app.GetDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(dateTriggerId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTrigger))
 }
 
@@ -81,12 +81,12 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 //	@Description	List date triggers
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.DateTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers [get]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers [get]
 func (h *Api) listDateTriggers(c *gin.Context) {
-	dateTriggers, err := h.app.ListDateTriggers(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId))
+	dateTriggers, err := h.app.ListDateTriggers(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTriggers))
 }
 
@@ -97,12 +97,12 @@ func (h *Api) listDateTriggers(c *gin.Context) {
 //	@Accept			json
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			assetTaskId	path	string	true	"Asset Task Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
 //	@Param			dateTrigger	body	tp.DateTrigger	true	"Date Trigger object"
 //	@Produce		json
 //	@Success		200	{object}	tp.DateTrigger
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId} [put]
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [put]
 func (h *Api) updateDateTrigger(c *gin.Context) {
 	var dateTrigger tp.DateTrigger
 	if err := c.BindJSON(&dateTrigger); err != nil {
@@ -110,6 +110,6 @@ func (h *Api) updateDateTrigger(c *gin.Context) {
 		return
 	}
 
-	dateTrigger, err := h.app.UpdateDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(assetTaskId), c.Param(dateTriggerId), dateTrigger)
+	dateTrigger, err := h.app.UpdateDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(dateTriggerId), dateTrigger)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTrigger))
 }

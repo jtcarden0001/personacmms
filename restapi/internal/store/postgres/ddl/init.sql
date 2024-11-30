@@ -32,7 +32,7 @@ CREATE TABLE tasktemplate (
   PRIMARY KEY (title)
 );
 
-CREATE TABLE asset_task (
+CREATE TABLE task (
   id uuid,
   title varchar,
   unique_instructions varchar,
@@ -48,10 +48,10 @@ CREATE TABLE tool (
   PRIMARY KEY (title)
 );
 
-CREATE TABLE assettask_tool (
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+CREATE TABLE task_tool (
+  task_id uuid NOT NULL REFERENCES task(id),
   tool_id uuid NOT NULL REFERENCES tool(id),
-  PRIMARY KEY (assettask_id, tool_id)
+  PRIMARY KEY (task_id, tool_id)
 );
 
 CREATE TABLE consumable (
@@ -60,11 +60,11 @@ CREATE TABLE consumable (
   PRIMARY KEY (title)
 );
 
-CREATE TABLE assettask_consumable (
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+CREATE TABLE task_consumable (
+  task_id uuid NOT NULL REFERENCES task(id),
   consumable_id uuid NOT NULL REFERENCES consumable(id),
   quantity_note varchar NOT NULL,
-  PRIMARY KEY (assettask_id, consumable_id)
+  PRIMARY KEY (task_id, consumable_id)
 );
 
 CREATE TABLE timeunit (
@@ -77,7 +77,7 @@ CREATE TABLE timetrigger (
   id uuid,
   quantity int NOT NULL,
   timeunit_title varchar NOT NULL REFERENCES timeunit(title),
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
@@ -91,14 +91,14 @@ CREATE TABLE usagetrigger (
   id uuid,
   quantity int NOT NULL,
   usageunit_title varchar NOT NULL REFERENCES usageunit(title),
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
 CREATE TABLE datetrigger (
   id uuid,
   date timestamptz NOT NULL,
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
@@ -115,7 +115,7 @@ CREATE TABLE workorder (
   notes varchar,
   cumulative_miles int, 
   cumulative_hours int,
-  assettask_id uuid NOT NULL REFERENCES asset_task(id),
+  task_id uuid NOT NULL REFERENCES task(id),
   status_title varchar NOT NULL REFERENCES workorderstatus(title),
   PRIMARY KEY (id)
 );

@@ -15,29 +15,6 @@ type App interface {
 	GetAsset(string, string) (tp.Asset, error)
 	UpdateAsset(string, string, tp.Asset) (tp.Asset, error)
 
-	// asset task
-	CreateAssetTask(string, string, tp.AssetTask) (tp.AssetTask, error)
-	DeleteAssetTask(string, string, string) error
-	ListAssetTasks(string, string) ([]tp.AssetTask, error)
-	GetAssetTask(string, string, string) (tp.AssetTask, error)
-	UpdateAssetTask(string, string, string, tp.AssetTask) (tp.AssetTask, error)
-
-	// asset task consumable
-	CreateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
-	CreateAssetTaskConsumableWithValidation(string, string, string, string, string) (tp.AssetTaskConsumable, error)
-	DeleteAssetTaskConsumable(string, string, string, string) error
-	ListAssetTaskConsumables(string, string, string) ([]tp.AssetTaskConsumable, error)
-	GetAssetTaskConsumable(string, string, string, string) (tp.AssetTaskConsumable, error)
-	UpdateAssetTaskConsumable(tp.AssetTaskConsumable) (tp.AssetTaskConsumable, error)
-	UpdateAssetTaskConsumableWithValidation(string, string, string, string, string) (tp.AssetTaskConsumable, error)
-
-	// asset task tools
-	CreateAssetTaskTool(tp.AssetTaskTool) (tp.AssetTaskTool, error)
-	CreateAssetTaskToolWithValidation(string, string, string, string) (tp.AssetTaskTool, error)
-	DeleteAssetTaskTool(string, string, string, string) error
-	ListAssetTaskTools(string, string, string) ([]tp.AssetTaskTool, error)
-	GetAssetTaskTool(string, string, string, string) (tp.AssetTaskTool, error)
-
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)
 	DeleteCategory(string) error
@@ -66,12 +43,35 @@ type App interface {
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 
+	// task
+	CreateTask(string, string, tp.Task) (tp.Task, error)
+	DeleteTask(string, string, string) error
+	ListTasks(string, string) ([]tp.Task, error)
+	GetTask(string, string, string) (tp.Task, error)
+	UpdateTask(string, string, string, tp.Task) (tp.Task, error)
+
+	// task consumable
+	CreateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
+	CreateTaskConsumableWithValidation(string, string, string, string, string) (tp.TaskConsumable, error)
+	DeleteTaskConsumable(string, string, string, string) error
+	ListTaskConsumables(string, string, string) ([]tp.TaskConsumable, error)
+	GetTaskConsumable(string, string, string, string) (tp.TaskConsumable, error)
+	UpdateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
+	UpdateTaskConsumableWithValidation(string, string, string, string, string) (tp.TaskConsumable, error)
+
 	// task template
 	CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
 	DeleteTaskTemplate(string) error
 	ListTaskTemplates() ([]tp.TaskTemplate, error)
 	GetTaskTemplate(string) (tp.TaskTemplate, error)
 	UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
+
+	// task tools
+	CreateTaskTool(tp.TaskTool) (tp.TaskTool, error)
+	CreateTaskToolWithValidation(string, string, string, string) (tp.TaskTool, error)
+	DeleteTaskTool(string, string, string, string) error
+	ListTaskTools(string, string, string) ([]tp.TaskTool, error)
+	GetTaskTool(string, string, string, string) (tp.TaskTool, error)
 
 	// time trigger
 	CreateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
@@ -117,10 +117,10 @@ type App interface {
 
 	// work order
 	CreateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteAssetTaskWorkOrder(string, string, string, string) error
-	ListAssetTaskWorkOrders(string, string, string) ([]tp.WorkOrder, error)
-	GetAssetTaskWorkOrder(string, string, string, string) (tp.WorkOrder, error)
-	UpdateAssetTaskWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteTaskWorkOrder(string, string, string, string) error
+	ListTaskWorkOrders(string, string, string) ([]tp.WorkOrder, error)
+	GetTaskWorkOrder(string, string, string, string) (tp.WorkOrder, error)
+	UpdateTaskWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
 type AppTest interface {

@@ -24,68 +24,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/asset-task-consumables": {
-            "post": {
-                "description": "Create a relationship between an asset task and a consumable with json body",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a relationship between an asset task and a consumable with json body",
-                "parameters": [
-                    {
-                        "description": "Asset Task Consumable object",
-                        "name": "assetTaskConsumable",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
-                        }
-                    }
-                }
-            }
-        },
-        "/asset-task-tools": {
-            "post": {
-                "description": "Create a relationship between an asset task and a tool with json body",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a relationship between an asset task and a tool with json body",
-                "parameters": [
-                    {
-                        "description": "Asset Task Tool object",
-                        "name": "assetTaskTool",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskTool"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskTool"
-                        }
-                    }
-                }
-            }
-        },
         "/categories": {
             "get": {
                 "description": "List all categories",
@@ -265,37 +203,6 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
-                        }
-                    }
-                }
-            }
-        },
-        "/consumables/{consumableId}": {
-            "put": {
-                "description": "Update an asset task consumable with json body",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update an asset task consumable with json body",
-                "parameters": [
-                    {
-                        "description": "Asset Task Consumable object",
-                        "name": "assetTaskConsumable",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
                         }
                     }
                 }
@@ -516,7 +423,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks": {
             "get": {
                 "description": "List all asset tasks",
                 "produces": [
@@ -545,7 +452,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.AssetTask"
+                                "$ref": "#/definitions/types.Task"
                             }
                         }
                     }
@@ -577,11 +484,11 @@ const docTemplate = `{
                     },
                     {
                         "description": "Asset Task object",
-                        "name": "assetTask",
+                        "name": "task",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 ],
@@ -589,13 +496,13 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}": {
             "get": {
                 "description": "Get an asset task",
                 "produces": [
@@ -620,7 +527,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -629,7 +536,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 }
@@ -661,17 +568,17 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
                     {
                         "description": "Asset Task object",
-                        "name": "assetTask",
+                        "name": "task",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 ],
@@ -679,7 +586,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTask"
+                            "$ref": "#/definitions/types.Task"
                         }
                     }
                 }
@@ -705,7 +612,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -720,7 +627,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables": {
             "get": {
                 "description": "List all asset task consumables",
                 "produces": [
@@ -745,7 +652,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task ID",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -756,14 +663,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.AssetTaskConsumable"
+                                "$ref": "#/definitions/types.TaskConsumable"
                             }
                         }
                     }
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables/{consumableId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables/{consumableId}": {
             "get": {
                 "description": "Get an asset task consumable",
                 "produces": [
@@ -788,7 +695,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task ID",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -804,7 +711,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                            "$ref": "#/definitions/types.TaskConsumable"
                         }
                     }
                 }
@@ -833,7 +740,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task ID",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -846,11 +753,11 @@ const docTemplate = `{
                     },
                     {
                         "description": "Asset Task Consumable object",
-                        "name": "assetTaskConsumable",
+                        "name": "taskConsumable",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumableForPath"
+                            "$ref": "#/definitions/types.TaskConsumableForPath"
                         }
                     }
                 ],
@@ -858,7 +765,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                            "$ref": "#/definitions/types.TaskConsumable"
                         }
                     }
                 }
@@ -890,7 +797,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task ID",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -903,11 +810,11 @@ const docTemplate = `{
                     },
                     {
                         "description": "Asset Task Consumable object",
-                        "name": "assetTaskConsumable",
+                        "name": "taskConsumable",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumableForPath"
+                            "$ref": "#/definitions/types.TaskConsumableForPath"
                         }
                     }
                 ],
@@ -915,7 +822,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.AssetTaskConsumable"
+                            "$ref": "#/definitions/types.TaskConsumable"
                         }
                     }
                 }
@@ -941,7 +848,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task ID",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -963,184 +870,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools": {
-            "get": {
-                "description": "List all asset task tools",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List asset task tools",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Group Title",
-                        "name": "groupTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Title",
-                        "name": "assetTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Task Id",
-                        "name": "assetTaskId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/types.AssetTaskTool"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools/{toolId}": {
-            "get": {
-                "description": "Get an asset task tool",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get an asset task tool",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Group Title",
-                        "name": "groupTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Title",
-                        "name": "assetTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Task Id",
-                        "name": "assetTaskId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Tool Id",
-                        "name": "toolId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskTool"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a relationship between an asset task and a tool with path parameters",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create a relationship between an asset task and a tool with path parameters",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Group Title",
-                        "name": "groupTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Title",
-                        "name": "assetTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Task Id",
-                        "name": "assetTaskId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Tool Id",
-                        "name": "toolId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.AssetTaskTool"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a relationship between an asset task and a tool",
-                "summary": "Delete a relationship between an asset task and a tool",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Group Title",
-                        "name": "groupTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Title",
-                        "name": "assetTitle",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Asset Task Id",
-                        "name": "assetTaskId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Tool Id",
-                        "name": "toolId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers": {
             "get": {
                 "description": "List date triggers",
                 "produces": [
@@ -1165,7 +895,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -1209,7 +939,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1233,7 +963,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId}": {
             "get": {
                 "description": "Get a date trigger",
                 "produces": [
@@ -1258,7 +988,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1306,7 +1036,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1357,7 +1087,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1379,7 +1109,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers": {
             "get": {
                 "description": "List all time triggers",
                 "produces": [
@@ -1404,7 +1134,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -1448,7 +1178,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1472,7 +1202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers/{timeTriggerId}": {
             "get": {
                 "description": "Get a time trigger",
                 "produces": [
@@ -1497,7 +1227,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1545,7 +1275,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1596,7 +1326,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1618,7 +1348,184 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools": {
+            "get": {
+                "description": "List all asset task tools",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List asset task tools",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.TaskTool"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId}": {
+            "get": {
+                "description": "Get an asset task tool",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get an asset task tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskTool"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a relationship between an asset task and a tool with path parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a tool with path parameters",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskTool"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a relationship between an asset task and a tool",
+                "summary": "Delete a relationship between an asset task and a tool",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Title",
+                        "name": "groupTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Title",
+                        "name": "assetTitle",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tool Id",
+                        "name": "toolId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers": {
             "get": {
                 "description": "List usage triggers",
                 "produces": [
@@ -1643,7 +1550,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -1687,7 +1594,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1711,7 +1618,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers/{usageTriggerId}": {
             "get": {
                 "description": "Get a usage trigger",
                 "produces": [
@@ -1736,7 +1643,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1784,7 +1691,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1835,7 +1742,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1857,7 +1764,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders": {
             "get": {
                 "description": "List all asset task work orders",
                 "produces": [
@@ -1882,7 +1789,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     }
@@ -1926,7 +1833,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -1950,7 +1857,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId}": {
+        "/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId}": {
             "get": {
                 "description": "Get an asset task work order",
                 "produces": [
@@ -1975,7 +1882,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -2023,7 +1930,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -2074,7 +1981,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Asset Task Id",
-                        "name": "assetTaskId",
+                        "name": "taskId",
                         "in": "path",
                         "required": true
                     },
@@ -2092,6 +1999,68 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/task-consumables": {
+            "post": {
+                "description": "Create a relationship between an asset task and a consumable with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a consumable with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "taskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskConsumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskConsumable"
+                        }
+                    }
+                }
+            }
+        },
+        "/task-consumables/{consumableId}": {
+            "put": {
+                "description": "Update an asset task consumable with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update an asset task consumable with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Consumable object",
+                        "name": "taskConsumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskConsumable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskConsumable"
+                        }
                     }
                 }
             }
@@ -2221,6 +2190,37 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/task-tools": {
+            "post": {
+                "description": "Create a relationship between an asset task and a tool with json body",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a relationship between an asset task and a tool with json body",
+                "parameters": [
+                    {
+                        "description": "Asset Task Tool object",
+                        "name": "taskTool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskTool"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.TaskTool"
+                        }
                     }
                 }
             }
@@ -2410,65 +2410,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "types.AssetTask": {
-            "type": "object",
-            "properties": {
-                "taskTemplateId": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "uniqueInstructions": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.AssetTaskConsumable": {
-            "type": "object",
-            "required": [
-                "assetTaskId",
-                "consumableId",
-                "quantityNote"
-            ],
-            "properties": {
-                "assetTaskId": {
-                    "type": "string"
-                },
-                "consumableId": {
-                    "type": "string"
-                },
-                "quantityNote": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.AssetTaskConsumableForPath": {
-            "type": "object",
-            "required": [
-                "quantityNote"
-            ],
-            "properties": {
-                "quantityNote": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.AssetTaskTool": {
-            "type": "object",
-            "required": [
-                "assetTaskId",
-                "toolId"
-            ],
-            "properties": {
-                "assetTaskId": {
-                    "type": "string"
-                },
-                "toolId": {
-                    "type": "string"
-                }
-            }
-        },
         "types.Category": {
             "type": "object",
             "required": [
@@ -2513,6 +2454,50 @@ const docTemplate = `{
                 }
             }
         },
+        "types.Task": {
+            "type": "object",
+            "properties": {
+                "taskTemplateId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "uniqueInstructions": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TaskConsumable": {
+            "type": "object",
+            "required": [
+                "consumableId",
+                "quantityNote",
+                "taskId"
+            ],
+            "properties": {
+                "consumableId": {
+                    "type": "string"
+                },
+                "quantityNote": {
+                    "type": "string"
+                },
+                "taskId": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TaskConsumableForPath": {
+            "type": "object",
+            "required": [
+                "quantityNote"
+            ],
+            "properties": {
+                "quantityNote": {
+                    "type": "string"
+                }
+            }
+        },
         "types.TaskTemplate": {
             "type": "object",
             "required": [
@@ -2526,6 +2511,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TaskTool": {
+            "type": "object",
+            "required": [
+                "taskId",
+                "toolId"
+            ],
+            "properties": {
+                "taskId": {
+                    "type": "string"
+                },
+                "toolId": {
                     "type": "string"
                 }
             }

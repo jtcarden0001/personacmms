@@ -12,11 +12,11 @@ func TestUsageTriggerCreate(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	ut := tp.UsageTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		UsageUnit:   tp.UsageUnitDays,
+		TaskId:    assetTaskId,
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
 	}
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
@@ -33,11 +33,11 @@ func TestUsageTriggerDelete(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	ut := tp.UsageTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		UsageUnit:   tp.UsageUnitDays,
+		TaskId:    assetTaskId,
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
 	}
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
@@ -73,11 +73,11 @@ func TestUsageTriggerList(t *testing.T) {
 	}
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	ut := tp.UsageTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		UsageUnit:   tp.UsageUnitDays,
+		TaskId:    assetTaskId,
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
 	}
 	ut, err = store.CreateUsageTrigger(ut)
 	if err != nil {
@@ -86,9 +86,9 @@ func TestUsageTriggerList(t *testing.T) {
 	utMap[ut.Id] = ut
 
 	ut2 := tp.UsageTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    60,
-		UsageUnit:   tp.UsageUnitMiles,
+		TaskId:    assetTaskId,
+		Quantity:  60,
+		UsageUnit: tp.UsageUnitMiles,
 	}
 	ut2, err = store.CreateUsageTrigger(ut2)
 	if err != nil {
@@ -117,11 +117,11 @@ func TestUsageTriggerUpdateGet(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	ut := tp.UsageTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		UsageUnit:   tp.UsageUnitDays,
+		TaskId:    assetTaskId,
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
 	}
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {

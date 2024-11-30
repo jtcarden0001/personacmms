@@ -1,44 +1,5 @@
 basePath: /api/v1
 definitions:
-  types.AssetTask:
-    properties:
-      taskTemplateId:
-        type: string
-      title:
-        type: string
-      uniqueInstructions:
-        type: string
-    type: object
-  types.AssetTaskConsumable:
-    properties:
-      assetTaskId:
-        type: string
-      consumableId:
-        type: string
-      quantityNote:
-        type: string
-    required:
-    - assetTaskId
-    - consumableId
-    - quantityNote
-    type: object
-  types.AssetTaskConsumableForPath:
-    properties:
-      quantityNote:
-        type: string
-    required:
-    - quantityNote
-    type: object
-  types.AssetTaskTool:
-    properties:
-      assetTaskId:
-        type: string
-      toolId:
-        type: string
-    required:
-    - assetTaskId
-    - toolId
-    type: object
   types.Category:
     properties:
       description:
@@ -67,6 +28,35 @@ definitions:
     required:
     - title
     type: object
+  types.Task:
+    properties:
+      taskTemplateId:
+        type: string
+      title:
+        type: string
+      uniqueInstructions:
+        type: string
+    type: object
+  types.TaskConsumable:
+    properties:
+      consumableId:
+        type: string
+      quantityNote:
+        type: string
+      taskId:
+        type: string
+    required:
+    - consumableId
+    - quantityNote
+    - taskId
+    type: object
+  types.TaskConsumableForPath:
+    properties:
+      quantityNote:
+        type: string
+    required:
+    - quantityNote
+    type: object
   types.TaskTemplate:
     properties:
       description:
@@ -77,6 +67,16 @@ definitions:
         type: string
     required:
     - title
+    type: object
+  types.TaskTool:
+    properties:
+      taskId:
+        type: string
+      toolId:
+        type: string
+    required:
+    - taskId
+    - toolId
     type: object
   types.TimeTrigger:
     properties:
@@ -161,49 +161,6 @@ info:
   title: PersonaCMMS API
   version: "1.0"
 paths:
-  /asset-task-consumables:
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a consumable with
-        json body
-      parameters:
-      - description: Asset Task Consumable object
-        in: body
-        name: assetTaskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.AssetTaskConsumable'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.AssetTaskConsumable'
-      summary: Create a relationship between an asset task and a consumable with json
-        body
-  /asset-task-tools:
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a tool with json
-        body
-      parameters:
-      - description: Asset Task Tool object
-        in: body
-        name: assetTaskTool
-        required: true
-        schema:
-          $ref: '#/definitions/types.AssetTaskTool'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.AssetTaskTool'
-      summary: Create a relationship between an asset task and a tool with json body
   /categories:
     get:
       description: List all categories
@@ -325,26 +282,6 @@ paths:
           schema:
             $ref: '#/definitions/types.Consumable'
       summary: Create a consumable
-  /consumables/{consumableId}:
-    put:
-      consumes:
-      - application/json
-      description: Update an asset task consumable with json body
-      parameters:
-      - description: Asset Task Consumable object
-        in: body
-        name: assetTaskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.AssetTaskConsumable'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.AssetTaskConsumable'
-      summary: Update an asset task consumable with json body
   /consumables/{consumableTitle}:
     delete:
       description: Delete a consumable
@@ -487,7 +424,7 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Update an asset group
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks:
     get:
       description: List all asset tasks
       parameters:
@@ -508,7 +445,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.AssetTask'
+              $ref: '#/definitions/types.Task'
             type: array
       summary: List asset tasks
     post:
@@ -528,19 +465,19 @@ paths:
         type: string
       - description: Asset Task object
         in: body
-        name: assetTask
+        name: task
         required: true
         schema:
-          $ref: '#/definitions/types.AssetTask'
+          $ref: '#/definitions/types.Task'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.AssetTask'
+            $ref: '#/definitions/types.Task'
       summary: Create an asset task
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}:
     delete:
       description: Delete an asset task
       parameters:
@@ -556,7 +493,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       responses:
@@ -580,7 +517,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -589,7 +526,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.AssetTask'
+            $ref: '#/definitions/types.Task'
       summary: Get an asset task
     put:
       consumes:
@@ -608,24 +545,24 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Asset Task object
         in: body
-        name: assetTask
+        name: task
         required: true
         schema:
-          $ref: '#/definitions/types.AssetTask'
+          $ref: '#/definitions/types.Task'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.AssetTask'
+            $ref: '#/definitions/types.Task'
       summary: Update an asset task
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables:
     get:
       description: List all asset task consumables
       parameters:
@@ -641,7 +578,7 @@ paths:
         type: string
       - description: Asset Task ID
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -651,10 +588,10 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.AssetTaskConsumable'
+              $ref: '#/definitions/types.TaskConsumable'
             type: array
       summary: List asset task consumables
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/consumables/{consumableId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables/{consumableId}:
     delete:
       description: Delete an asset task consumable
       parameters:
@@ -670,7 +607,7 @@ paths:
         type: string
       - description: Asset Task ID
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Consumable ID
@@ -699,7 +636,7 @@ paths:
         type: string
       - description: Asset Task ID
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Consumable ID
@@ -713,7 +650,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.AssetTaskConsumable'
+            $ref: '#/definitions/types.TaskConsumable'
       summary: Get an asset task consumable
     post:
       consumes:
@@ -733,7 +670,7 @@ paths:
         type: string
       - description: Asset Task ID
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Consumable ID
@@ -743,17 +680,17 @@ paths:
         type: string
       - description: Asset Task Consumable object
         in: body
-        name: assetTaskConsumable
+        name: taskConsumable
         required: true
         schema:
-          $ref: '#/definitions/types.AssetTaskConsumableForPath'
+          $ref: '#/definitions/types.TaskConsumableForPath'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.AssetTaskConsumable'
+            $ref: '#/definitions/types.TaskConsumable'
       summary: Create a relationship between an asset task and a consumable with path
         parameters
     put:
@@ -771,7 +708,7 @@ paths:
         type: string
       - description: Asset Task ID
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Consumable ID
@@ -781,141 +718,19 @@ paths:
         type: string
       - description: Asset Task Consumable object
         in: body
-        name: assetTaskConsumable
+        name: taskConsumable
         required: true
         schema:
-          $ref: '#/definitions/types.AssetTaskConsumableForPath'
+          $ref: '#/definitions/types.TaskConsumableForPath'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.AssetTaskConsumable'
+            $ref: '#/definitions/types.TaskConsumable'
       summary: Update an asset task consumable with path parameters
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools:
-    get:
-      description: List all asset task tools
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: assetTaskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.AssetTaskTool'
-            type: array
-      summary: List asset task tools
-  /groups/{groupTitle}/assets/{assetTitle}/asset-tasks/{assetTaskId}/tools/{toolId}:
-    delete:
-      description: Delete a relationship between an asset task and a tool
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: assetTaskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      summary: Delete a relationship between an asset task and a tool
-    get:
-      description: Get an asset task tool
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: assetTaskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.AssetTaskTool'
-      summary: Get an asset task tool
-    post:
-      description: Create a relationship between an asset task and a tool with path
-        parameters
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: assetTaskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.AssetTaskTool'
-      summary: Create a relationship between an asset task and a tool with path parameters
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers:
     get:
       description: List date triggers
       parameters:
@@ -931,7 +746,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -961,7 +776,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Date Trigger object
@@ -978,7 +793,7 @@ paths:
           schema:
             $ref: '#/definitions/types.DateTrigger'
       summary: Create a date trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/date-triggers/{dateTriggerId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId}:
     delete:
       description: Delete a date trigger
       parameters:
@@ -994,7 +809,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Date Trigger Id
@@ -1023,7 +838,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Date Trigger Id
@@ -1056,7 +871,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Date Trigger Id
@@ -1078,7 +893,7 @@ paths:
           schema:
             $ref: '#/definitions/types.DateTrigger'
       summary: Update a date trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers:
     get:
       description: List all time triggers
       parameters:
@@ -1094,7 +909,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -1124,7 +939,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Time Trigger object
@@ -1141,7 +956,7 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeTrigger'
       summary: Create a time trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/time-triggers/{timeTriggerId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers/{timeTriggerId}:
     delete:
       description: Delete a time trigger
       parameters:
@@ -1157,7 +972,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Time Trigger Id
@@ -1186,7 +1001,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Time Trigger Id
@@ -1219,7 +1034,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Time Trigger Id
@@ -1241,7 +1056,129 @@ paths:
           schema:
             $ref: '#/definitions/types.TimeTrigger'
       summary: Update a time trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools:
+    get:
+      description: List all asset task tools
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.TaskTool'
+            type: array
+      summary: List asset task tools
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId}:
+    delete:
+      description: Delete a relationship between an asset task and a tool
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a relationship between an asset task and a tool
+    get:
+      description: Get an asset task tool
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TaskTool'
+      summary: Get an asset task tool
+    post:
+      description: Create a relationship between an asset task and a tool with path
+        parameters
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Tool Id
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TaskTool'
+      summary: Create a relationship between an asset task and a tool with path parameters
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers:
     get:
       description: List usage triggers
       parameters:
@@ -1257,7 +1194,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -1287,7 +1224,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Usage Trigger object
@@ -1304,7 +1241,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UsageTrigger'
       summary: Create a usage trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/usage-triggers/{usageTriggerId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers/{usageTriggerId}:
     delete:
       description: Delete a usage trigger
       parameters:
@@ -1320,7 +1257,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Usage Trigger Id
@@ -1349,7 +1286,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Usage Trigger Id
@@ -1382,7 +1319,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Usage Trigger Id
@@ -1404,7 +1341,7 @@ paths:
           schema:
             $ref: '#/definitions/types.UsageTrigger'
       summary: Update a usage trigger
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders:
     get:
       description: List all asset task work orders
       parameters:
@@ -1420,7 +1357,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       produces:
@@ -1450,7 +1387,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Work Order object
@@ -1467,7 +1404,7 @@ paths:
           schema:
             $ref: '#/definitions/types.WorkOrder'
       summary: Create a work order
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{assetTaskId}/work-orders/{workOrderId}:
+  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId}:
     delete:
       description: Delete an asset task work order
       parameters:
@@ -1483,7 +1420,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Work Order Id
@@ -1512,7 +1449,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Work Order Id
@@ -1545,7 +1482,7 @@ paths:
         type: string
       - description: Asset Task Id
         in: path
-        name: assetTaskId
+        name: taskId
         required: true
         type: string
       - description: Work Order Id
@@ -1567,6 +1504,48 @@ paths:
           schema:
             $ref: '#/definitions/types.WorkOrder'
       summary: Update an asset task work order
+  /task-consumables:
+    post:
+      consumes:
+      - application/json
+      description: Create a relationship between an asset task and a consumable with
+        json body
+      parameters:
+      - description: Asset Task Consumable object
+        in: body
+        name: taskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.TaskConsumable'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TaskConsumable'
+      summary: Create a relationship between an asset task and a consumable with json
+        body
+  /task-consumables/{consumableId}:
+    put:
+      consumes:
+      - application/json
+      description: Update an asset task consumable with json body
+      parameters:
+      - description: Asset Task Consumable object
+        in: body
+        name: taskConsumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.TaskConsumable'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TaskConsumable'
+      summary: Update an asset task consumable with json body
   /task-templates:
     get:
       description: List all task templates
@@ -1652,6 +1631,27 @@ paths:
         "204":
           description: No Content
       summary: Update a task template
+  /task-tools:
+    post:
+      consumes:
+      - application/json
+      description: Create a relationship between an asset task and a tool with json
+        body
+      parameters:
+      - description: Asset Task Tool object
+        in: body
+        name: taskTool
+        required: true
+        schema:
+          $ref: '#/definitions/types.TaskTool'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TaskTool'
+      summary: Create a relationship between an asset task and a tool with json body
   /time-units:
     get:
       description: List all time units

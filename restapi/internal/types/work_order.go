@@ -9,6 +9,6 @@ type WorkOrder struct {
 	Notes           *string  `json:"notes"`
 	CumulativeMiles *int     `json:"cumulativeMiles"`
 	CumulativeHours *int     `json:"cumulativeHours"`
-	AssetTaskId     UUID     `json:"AssetTaskId" swaggerignore:"true"`
+	TaskId          UUID     `json:"TaskId" swaggerignore:"true"`
 	StatusTitle     string   `json:"statusId" binding:"required"`
 }

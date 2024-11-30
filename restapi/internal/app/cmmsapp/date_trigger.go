@@ -5,12 +5,12 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, assetTaskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
+func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
 	// TODO: implement this method
 	return a.db.CreateDateTrigger(dateTrigger)
 }
 
-func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, assetTaskId string, dateTriggerId string) error {
+func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) error {
 	// TODO: implement this method
 	parsedDtId, err := uuid.Parse(dateTriggerId)
 	if err != nil {
@@ -20,7 +20,7 @@ func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, assetTaskI
 	return a.db.DeleteDateTrigger(parsedDtId)
 }
 
-func (a *App) ListDateTriggers(groupTitle string, assetTitle string, assetTaskId string) ([]tp.DateTrigger, error) {
+func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.DateTrigger, error) {
 	// TODO: implement this method
 	dts, err := a.db.ListDateTriggers()
 	if err != nil {
@@ -31,7 +31,7 @@ func (a *App) ListDateTriggers(groupTitle string, assetTitle string, assetTaskId
 	return dts, nil
 }
 
-func (a *App) GetDateTrigger(groupTitle string, assetTitle string, assetTaskId string, dateTriggerId string) (tp.DateTrigger, error) {
+func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
 	// TODO: implement this method
 	parsedDtId, err := uuid.Parse(dateTriggerId)
 	if err != nil {
@@ -41,7 +41,7 @@ func (a *App) GetDateTrigger(groupTitle string, assetTitle string, assetTaskId s
 	return a.db.GetDateTrigger(parsedDtId)
 }
 
-func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, assetTaskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
+func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
 	// TODO: implement this method
 	parsedDtId, err := uuid.Parse(dateTriggerId)
 	if err != nil {

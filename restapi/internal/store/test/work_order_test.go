@@ -14,7 +14,7 @@ func TestWorkOrderCreate(t *testing.T) {
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
 
-	atId := setupAssetTask(t, store, "1")
+	atId := setupTask(t, store, "1")
 	wo := getTestWorkOrder(atId, "1")
 
 	// Create a new work order
@@ -32,7 +32,7 @@ func TestWorkOrderDelete(t *testing.T) {
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
 
-	atId := setupAssetTask(t, store, "1")
+	atId := setupTask(t, store, "1")
 	wo := getTestWorkOrder(atId, "1")
 
 	// Create a new work order
@@ -70,7 +70,7 @@ func TestWorkOrderList(t *testing.T) {
 		wosMap[wo.Id] = wo
 	}
 
-	atId := setupAssetTask(t, store, "1")
+	atId := setupTask(t, store, "1")
 
 	// Create a new work order
 	wo1 := getTestWorkOrder(atId, "1")
@@ -107,7 +107,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
 
-	atId := setupAssetTask(t, store, "1")
+	atId := setupTask(t, store, "1")
 	wo := getTestWorkOrder(atId, "1")
 
 	// Create a new work order
@@ -145,7 +145,7 @@ func getTestWorkOrder(assetTaskId tp.UUID, id string) tp.WorkOrder {
 		Notes:           func(s string) *string { return &s }(fmt.Sprintf("Test work order %s", id)),
 		CumulativeMiles: func() *int { miles, _ := strconv.Atoi(fmt.Sprintf("20%s", id)); return &miles }(),
 		CumulativeHours: func() *int { hours, _ := strconv.Atoi(fmt.Sprintf("20%s", id)); return &hours }(),
-		AssetTaskId:     assetTaskId,
+		TaskId:          assetTaskId,
 		StatusTitle:     tp.WorkOrderStatusComplete,
 	}
 }

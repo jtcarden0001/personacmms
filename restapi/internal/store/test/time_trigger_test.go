@@ -12,11 +12,11 @@ func TestTimeTriggerCreate(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	tt := tp.TimeTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		TimeUnit:    tp.TimeUnitDays,
+		TaskId:   assetTaskId,
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
 	}
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
@@ -33,11 +33,11 @@ func TestTimeTriggerDelete(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	tt := tp.TimeTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		TimeUnit:    tp.TimeUnitDays,
+		TaskId:   assetTaskId,
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
 	}
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
@@ -73,11 +73,11 @@ func TestTimeTriggerList(t *testing.T) {
 	}
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	tt := tp.TimeTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		TimeUnit:    tp.TimeUnitDays,
+		TaskId:   assetTaskId,
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
 	}
 	tt, err = store.CreateTimeTrigger(tt)
 	if err != nil {
@@ -86,9 +86,9 @@ func TestTimeTriggerList(t *testing.T) {
 	ttMap[tt.Id] = tt
 
 	tt2 := tp.TimeTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    60,
-		TimeUnit:    tp.TimeUnitWeeks,
+		TaskId:   assetTaskId,
+		Quantity: 60,
+		TimeUnit: tp.TimeUnitWeeks,
 	}
 	tt2, err = store.CreateTimeTrigger(tt2)
 	if err != nil {
@@ -117,11 +117,11 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	// setup
-	assetTaskId := setupAssetTask(t, store, "1")
+	assetTaskId := setupTask(t, store, "1")
 	tt := tp.TimeTrigger{
-		AssetTaskId: assetTaskId,
-		Quantity:    30,
-		TimeUnit:    tp.TimeUnitDays,
+		TaskId:   assetTaskId,
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
 	}
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {

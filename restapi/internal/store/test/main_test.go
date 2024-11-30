@@ -284,23 +284,23 @@ func setupTaskTemplate(t *testing.T, store st.Store, identifier string) tp.UUID 
 	}
 	task, err := store.CreateTaskTemplate(task)
 	if err != nil {
-		t.Errorf("CreateTask() failed: %v", err)
+		t.Errorf("CreateTaskTemplate() failed: %v", err)
 	}
 	return task.Id
 }
 
-func setupAssetTask(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupTask(t *testing.T, store st.Store, identifier string) tp.UUID {
 	assetId := setupAsset(t, store, identifier)
 	taskId := setupTaskTemplate(t, store, identifier)
-	assetTask := tp.AssetTask{
-		Title:              fmt.Sprintf("AssetTask %s", identifier),
-		UniqueInstructions: fmt.Sprintf("AssetTask %s instructions", identifier),
+	assetTask := tp.Task{
+		Title:              fmt.Sprintf("Task %s", identifier),
+		UniqueInstructions: fmt.Sprintf("Task %s instructions", identifier),
 		AssetId:            assetId,
 		TaskTemplateId:     taskId,
 	}
-	assetTask, err := store.CreateAssetTask(assetTask)
+	assetTask, err := store.CreateTask(assetTask)
 	if err != nil {
-		t.Errorf("CreateAssetTask() failed: %v", err)
+		t.Errorf("CreateTask() failed: %v", err)
 	}
 	return assetTask.Id
 }
