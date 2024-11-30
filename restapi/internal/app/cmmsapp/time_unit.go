@@ -7,6 +7,10 @@ func (a *App) CreateTimeUnit(timeUnit tp.TimeUnit) (tp.TimeUnit, error) {
 }
 
 func (a *App) DeleteTimeUnit(timeUnitTitle string) error {
+	if _, err := a.GetTimeUnit(timeUnitTitle); err != nil {
+		return err
+	}
+
 	return a.db.DeleteTimeUnit(timeUnitTitle)
 }
 

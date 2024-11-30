@@ -5,5 +5,5 @@ type AssetTask struct {
 	Title              string `json:"title"`
 	UniqueInstructions string `json:"uniqueInstructions"`
 	AssetId            UUID   `json:"assetId" swaggerignore:"true"` // will get in route path
-	TaskId             UUID   `json:"taskId"`
+	TaskTemplateId     UUID   `json:"taskTemplateId"`
 }

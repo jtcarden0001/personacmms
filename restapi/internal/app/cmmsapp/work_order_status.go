@@ -7,6 +7,10 @@ func (a *App) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus,
 }
 
 func (a *App) DeleteWorkOrderStatus(title string) error {
+	if _, err := a.GetWorkOrderStatus(title); err != nil {
+		return err
+	}
+
 	return a.db.DeleteWorkOrderStatus(title)
 }
 

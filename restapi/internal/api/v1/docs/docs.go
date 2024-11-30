@@ -2096,42 +2096,42 @@ const docTemplate = `{
                 }
             }
         },
-        "/tasks": {
+        "/task-templates": {
             "get": {
-                "description": "List all tasks",
+                "description": "List all task templates",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List tasks",
+                "summary": "List task templates",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Task"
+                                "$ref": "#/definitions/types.TaskTemplate"
                             }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Create a task",
+                "description": "Create a task template",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create a task",
+                "summary": "Create a task template",
                 "parameters": [
                     {
-                        "description": "Task object",
-                        "name": "task",
+                        "description": "TaskTemplate object",
+                        "name": "taskTemplate",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/types.TaskTemplate"
                         }
                     }
                 ],
@@ -2139,24 +2139,24 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/types.TaskTemplate"
                         }
                     }
                 }
             }
         },
-        "/tasks/{taskTitle}": {
+        "/task-templates/{taskTemplateTitle}": {
             "get": {
-                "description": "Get a task",
+                "description": "Get a task template",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a task",
+                "summary": "Get a task template",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Task Title",
-                        "name": "taskTitle",
+                        "description": "TaskTemplate Title",
+                        "name": "taskTemplateTitle",
                         "in": "path",
                         "required": true
                     }
@@ -2165,35 +2165,35 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/types.TaskTemplate"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update a task",
+                "description": "Update a task template",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a task",
+                "summary": "Update a task template",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Task Title",
-                        "name": "taskTitle",
+                        "description": "TaskTemplate Title",
+                        "name": "taskTemplateTitle",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Task object",
-                        "name": "task",
+                        "description": "TaskTemplate object",
+                        "name": "taskTemplate",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/types.TaskTemplate"
                         }
                     }
                 ],
@@ -2204,13 +2204,13 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete a task",
-                "summary": "Delete a task",
+                "description": "Delete a task template",
+                "summary": "Delete a task template",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Task Title",
-                        "name": "taskTitle",
+                        "description": "TaskTemplate Title",
+                        "name": "taskTemplateTitle",
                         "in": "path",
                         "required": true
                     }
@@ -2413,7 +2413,7 @@ const docTemplate = `{
         "types.AssetTask": {
             "type": "object",
             "properties": {
-                "taskId": {
+                "taskTemplateId": {
                     "type": "string"
                 },
                 "title": {
@@ -2513,7 +2513,7 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Task": {
+        "types.TaskTemplate": {
             "type": "object",
             "required": [
                 "title"

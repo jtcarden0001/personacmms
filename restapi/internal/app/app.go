@@ -66,12 +66,12 @@ type App interface {
 	GetGroup(string) (tp.Group, error)
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 
-	// task
-	CreateTask(tp.Task) (tp.Task, error)
-	DeleteTask(string) error
-	ListTasks() ([]tp.Task, error)
-	GetTask(string) (tp.Task, error)
-	UpdateTask(string, tp.Task) (tp.Task, error)
+	// task template
+	CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
+	DeleteTaskTemplate(string) error
+	ListTaskTemplates() ([]tp.TaskTemplate, error)
+	GetTaskTemplate(string) (tp.TaskTemplate, error)
+	UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
 
 	// time trigger
 	CreateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)

@@ -7,6 +7,10 @@ func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
 }
 
 func (a *App) DeleteTool(title string) error {
+	if _, err := a.GetTool(title); err != nil {
+		return err
+	}
+
 	return a.db.DeleteTool(title)
 }
 

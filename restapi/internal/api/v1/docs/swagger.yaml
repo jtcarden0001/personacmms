@@ -2,7 +2,7 @@ basePath: /api/v1
 definitions:
   types.AssetTask:
     properties:
-      taskId:
+      taskTemplateId:
         type: string
       title:
         type: string
@@ -67,7 +67,7 @@ definitions:
     required:
     - title
     type: object
-  types.Task:
+  types.TaskTemplate:
     properties:
       description:
         type: string
@@ -1567,9 +1567,9 @@ paths:
           schema:
             $ref: '#/definitions/types.WorkOrder'
       summary: Update an asset task work order
-  /tasks:
+  /task-templates:
     get:
-      description: List all tasks
+      description: List all task templates
       produces:
       - application/json
       responses:
@@ -1577,35 +1577,35 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Task'
+              $ref: '#/definitions/types.TaskTemplate'
             type: array
-      summary: List tasks
+      summary: List task templates
     post:
       consumes:
       - application/json
-      description: Create a task
+      description: Create a task template
       parameters:
-      - description: Task object
+      - description: TaskTemplate object
         in: body
-        name: task
+        name: taskTemplate
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/types.TaskTemplate'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Task'
-      summary: Create a task
-  /tasks/{taskTitle}:
+            $ref: '#/definitions/types.TaskTemplate'
+      summary: Create a task template
+  /task-templates/{taskTemplateTitle}:
     delete:
-      description: Delete a task
+      description: Delete a task template
       parameters:
-      - description: Task Title
+      - description: TaskTemplate Title
         in: path
-        name: taskTitle
+        name: taskTemplateTitle
         required: true
         type: string
       responses:
@@ -1613,13 +1613,13 @@ paths:
           description: No Content
         "404":
           description: Not Found
-      summary: Delete a task
+      summary: Delete a task template
     get:
-      description: Get a task
+      description: Get a task template
       parameters:
-      - description: Task Title
+      - description: TaskTemplate Title
         in: path
-        name: taskTitle
+        name: taskTemplateTitle
         required: true
         type: string
       produces:
@@ -1628,30 +1628,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Task'
-      summary: Get a task
+            $ref: '#/definitions/types.TaskTemplate'
+      summary: Get a task template
     put:
       consumes:
       - application/json
-      description: Update a task
+      description: Update a task template
       parameters:
-      - description: Task Title
+      - description: TaskTemplate Title
         in: path
-        name: taskTitle
+        name: taskTemplateTitle
         required: true
         type: string
-      - description: Task object
+      - description: TaskTemplate object
         in: body
-        name: task
+        name: taskTemplate
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/types.TaskTemplate'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
-      summary: Update a task
+      summary: Update a task template
   /time-units:
     get:
       description: List all time units

@@ -7,6 +7,10 @@ func (a *App) CreateUsageUnit(usageUnit tp.UsageUnit) (tp.UsageUnit, error) {
 }
 
 func (a *App) DeleteUsageUnit(usageUnitTitle string) error {
+	if _, err := a.GetUsageUnit(usageUnitTitle); err != nil {
+		return err
+	}
+
 	return a.db.DeleteUsageUnit(usageUnitTitle)
 }
 

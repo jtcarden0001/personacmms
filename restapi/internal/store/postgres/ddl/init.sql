@@ -24,7 +24,7 @@ CREATE TABLE asset (
   PRIMARY KEY (group_title, title)
 );
 
-CREATE TABLE task (
+CREATE TABLE tasktemplate (
   title varchar,
   id uuid NOT NULL UNIQUE,
   description varchar,
@@ -37,7 +37,7 @@ CREATE TABLE asset_task (
   title varchar,
   unique_instructions varchar,
   asset_id uuid NOT NULL REFERENCES asset(id),
-  task_id uuid, 
+  tasktemplate_id uuid REFERENCES tasktemplate(id), 
   PRIMARY KEY (id)
 );
 

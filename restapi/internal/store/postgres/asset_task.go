@@ -11,8 +11,8 @@ var assetTaskTable = "asset_task"
 
 func (pg *Store) CreateAssetTask(at tp.AssetTask) (tp.AssetTask, error) {
 	at.Id = uuid.New()
-	query := fmt.Sprintf(`INSERT INTO %s (id, title, unique_instructions, asset_id, task_id) VALUES ($1, $2, $3, $4, $5)`, assetTaskTable)
-	_, err := pg.db.Exec(query, at.Id, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId)
+	query := fmt.Sprintf(`INSERT INTO %s (id, title, unique_instructions, asset_id, tasktemplate_id) VALUES ($1, $2, $3, $4, $5)`, assetTaskTable)
+	_, err := pg.db.Exec(query, at.Id, at.Title, at.UniqueInstructions, at.AssetId, at.TaskTemplateId)
 	if err != nil {
 		return tp.AssetTask{}, handleDbError(err, "asset-task")
 	}
@@ -31,7 +31,7 @@ func (pg *Store) DeleteAssetTask(atId tp.UUID) error {
 }
 
 func (pg *Store) ListAssetTasks() ([]tp.AssetTask, error) {
-	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, task_id FROM %s`, assetTaskTable)
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s`, assetTaskTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, handleDbError(err, "asset-task")
@@ -41,7 +41,7 @@ func (pg *Store) ListAssetTasks() ([]tp.AssetTask, error) {
 	var at []tp.AssetTask
 	for rows.Next() {
 		var e tp.AssetTask
-		err = rows.Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
+		err = rows.Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskTemplateId)
 		if err != nil {
 			return nil, handleDbError(err, "asset-task")
 		}
@@ -52,9 +52,9 @@ func (pg *Store) ListAssetTasks() ([]tp.AssetTask, error) {
 }
 
 func (pg *Store) GetAssetTask(atId tp.UUID) (tp.AssetTask, error) {
-	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, task_id FROM %s WHERE id = $1`, assetTaskTable)
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE id = $1`, assetTaskTable)
 	var e tp.AssetTask
-	err := pg.db.QueryRow(query, atId).Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskId)
+	err := pg.db.QueryRow(query, atId).Scan(&e.Id, &e.Title, &e.UniqueInstructions, &e.AssetId, &e.TaskTemplateId)
 	if err != nil {
 		return tp.AssetTask{}, handleDbError(err, "asset-task")
 	}
@@ -63,8 +63,8 @@ func (pg *Store) GetAssetTask(atId tp.UUID) (tp.AssetTask, error) {
 }
 
 func (pg *Store) UpdateAssetTask(atId tp.UUID, at tp.AssetTask) (tp.AssetTask, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, task_id = $4 WHERE id = $5 returning id`, assetTaskTable)
-	err := pg.db.QueryRow(query, at.Title, at.UniqueInstructions, at.AssetId, at.TaskId, atId).Scan(&at.Id)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, tasktemplate_id = $4 WHERE id = $5 returning id`, assetTaskTable)
+	err := pg.db.QueryRow(query, at.Title, at.UniqueInstructions, at.AssetId, at.TaskTemplateId, atId).Scan(&at.Id)
 	if err != nil {
 		return tp.AssetTask{}, handleDbError(err, "asset-task")
 	}
