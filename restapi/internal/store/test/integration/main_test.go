@@ -130,6 +130,10 @@ func closeStore(store st.Store, dbName string) {
 	}
 }
 
+func strToPtr(s string) *string {
+	return &s
+}
+
 func convertToSet(arr []string) map[string]struct{} {
 	set := make(map[string]struct{})
 	for _, v := range arr {
@@ -265,9 +269,9 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 	categoryTitle := setupCategory(t, store, identifier)
 	asset := tp.Asset{
 		Title:         fmt.Sprintf("Asset %s", identifier),
-		Description:   fmt.Sprintf("Asset %s description", identifier),
+		Description:   strToPtr(fmt.Sprintf("Asset %s description", identifier)),
 		GroupTitle:    groupTitle,
-		CategoryTitle: categoryTitle,
+		CategoryTitle: &categoryTitle,
 	}
 	asset, err := store.CreateAsset(asset)
 	if err != nil {
