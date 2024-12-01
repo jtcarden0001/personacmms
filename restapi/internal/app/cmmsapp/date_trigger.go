@@ -6,6 +6,9 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// A DateTrigger is an event that is triggered on a specific date that results in a work order being created based on a task.
+
+// Create a DateTrigger
 func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
 	if err := a.validateAndInterpolateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
 		return tp.DateTrigger{}, err
@@ -14,6 +17,7 @@ func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId str
 	return a.db.CreateDateTrigger(dateTrigger)
 }
 
+// Delete a DateTrigger
 func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) error {
 	if _, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId); err != nil {
 		return err
@@ -68,6 +72,7 @@ func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, taskId str
 	return a.db.UpdateDateTrigger(parsedDtId, dateTrigger)
 }
 
+// general trigger functions valid for all trigger types
 func (a *App) validateAndInterpolateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger *tp.DateTrigger) error {
 	tid, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId)
 	if err != nil {
@@ -79,10 +84,7 @@ func (a *App) validateAndInterpolateTrigger(groupTitle string, assetTitle string
 }
 
 func (a *App) validateTriggerAndGetTaskId(groupTitle string, assetTitle string, taskId string) (tp.UUID, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return uuid.Nil, err
-	}
-
+	// Get Asset will validate group and asset
 	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
 		return uuid.Nil, err
 	}

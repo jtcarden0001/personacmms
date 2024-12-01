@@ -20,3 +20,4 @@ var ErrNotFound = AppError{Code: CodeNotFound, Message: "not found"}
 var ErrAlreadyExists = AppError{Code: CodeAlreadyExists, Message: "already exists"}
 var ErrInvalid = AppError{Code: CodeInvalid, Message: "invalid"}
 var ErrIdMismatch = AppError{Code: CodeInvalid, Message: "id mismatch"}
+var ErrGroupTitleMismatch = AppError{Code: CodeInvalid, Message: "group title mismatch"}

@@ -1,24 +1,28 @@
 package cmmsapp
 
-import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+import (
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+)
 
+// An Asset is representative of an entity that requires maintenance
+
+// Create an Asset
 func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
-	// interpolate args into target of creation
-	gp, err := a.GetGroup(groupTitle)
-	if err != nil {
+	if _, err := a.GetGroup(groupTitle); err != nil {
 		return tp.Asset{}, err
 	}
 
-	asset.GroupTitle = gp.Title
+	if asset.GroupTitle != groupTitle {
+		return tp.Asset{}, ae.ErrGroupTitleMismatch
+	}
+
 	return a.db.CreateAsset(asset)
 }
 
+// Delete an Asset
 func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
-	// validate
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return err
-	}
-
+	// Get Asset will validate the group as well, Get before delete so we can return a not found error.
 	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
 		return err
 	}
@@ -26,6 +30,7 @@ func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
 	return a.db.DeleteAsset(groupTitle, assetTitle)
 }
 
+// List all Assets in a Group
 func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
 	if _, err := a.GetGroup(groupTitle); err != nil {
 		return []tp.Asset{}, err
@@ -39,6 +44,7 @@ func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
 	return assets, nil
 }
 
+// Get an Asset
 func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
 	if _, err := a.GetGroup(groupTitle); err != nil {
 		return tp.Asset{}, err
@@ -47,6 +53,7 @@ func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
 	return a.db.GetAsset(groupTitle, assetTitle)
 }
 
+// Update an Asset
 func (a *App) UpdateAsset(oldGroupTitle string, oldAssetTitle string, asset tp.Asset) (tp.Asset, error) {
 	if _, err := a.GetGroup(oldGroupTitle); err != nil {
 		return tp.Asset{}, err
