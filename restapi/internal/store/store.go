@@ -2,6 +2,7 @@ package store
 
 import (
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
+	"github.com/jtcarden0001/personacmms/restapi/internal/store/test/mock"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -131,4 +132,8 @@ func New() Store {
 // used for testing
 func NewWithDb(dbName string) Store {
 	return imp.NewWithDb(dbName)
+}
+
+func NewMock() Store {
+	return mock.New()
 }

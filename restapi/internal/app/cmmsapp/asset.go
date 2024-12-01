@@ -3,6 +3,7 @@ package cmmsapp
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
 func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
+	// interpolate args into target of creation
 	gp, err := a.GetGroup(groupTitle)
 	if err != nil {
 		return tp.Asset{}, err
@@ -13,13 +14,12 @@ func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
 }
 
 func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
-	_, err := a.GetGroup(groupTitle)
-	if err != nil {
+	// validate
+	if _, err := a.GetGroup(groupTitle); err != nil {
 		return err
 	}
 
-	_, err = a.GetAsset(groupTitle, assetTitle)
-	if err != nil {
+	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
 		return err
 	}
 
@@ -27,8 +27,7 @@ func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
 }
 
 func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
-	_, err := a.GetGroup(groupTitle)
-	if err != nil {
+	if _, err := a.GetGroup(groupTitle); err != nil {
 		return []tp.Asset{}, err
 	}
 
@@ -41,19 +40,25 @@ func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
 }
 
 func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
-	_, err := a.GetGroup(groupTitle)
-	if err != nil {
+	if _, err := a.GetGroup(groupTitle); err != nil {
 		return tp.Asset{}, err
 	}
 
 	return a.db.GetAsset(groupTitle, assetTitle)
 }
 
-func (a *App) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
-	_, err := a.GetGroup(groupTitle)
-	if err != nil {
+func (a *App) UpdateAsset(oldGroupTitle string, oldAssetTitle string, asset tp.Asset) (tp.Asset, error) {
+	if _, err := a.GetGroup(oldGroupTitle); err != nil {
 		return tp.Asset{}, err
 	}
 
-	return a.db.UpdateAsset(groupTitle, assetTitle, asset)
+	if asset.GroupTitle == "" {
+		asset.GroupTitle = oldGroupTitle
+	}
+
+	if asset.Title == "" {
+		asset.Title = oldAssetTitle
+	}
+
+	return a.db.UpdateAsset(oldGroupTitle, oldAssetTitle, asset)
 }
