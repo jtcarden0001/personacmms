@@ -22,6 +22,9 @@ func (a *App) GetConsumable(consumableTitle string) (tp.Consumable, error) {
 	return a.db.GetConsumable(consumableTitle)
 }
 
-func (a *App) UpdateConsumable(consumableTitle string, consumable tp.Consumable) (tp.Consumable, error) {
-	return a.db.UpdateConsumable(consumableTitle, consumable)
+func (a *App) UpdateConsumable(oldTitle string, consumable tp.Consumable) (tp.Consumable, error) {
+	if consumable.Title == "" {
+		consumable.Title = oldTitle
+	}
+	return a.db.UpdateConsumable(oldTitle, consumable)
 }

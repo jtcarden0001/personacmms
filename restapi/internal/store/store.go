@@ -47,6 +47,7 @@ type Store interface {
 	CreateDateTrigger(tp.DateTrigger) (tp.DateTrigger, error)
 	DeleteDateTrigger(tp.UUID) error
 	ListDateTriggers() ([]tp.DateTrigger, error)
+	ListDateTriggersByTaskId(tp.UUID) ([]tp.DateTrigger, error)
 	GetDateTrigger(tp.UUID) (tp.DateTrigger, error)
 	UpdateDateTrigger(tp.UUID, tp.DateTrigger) (tp.DateTrigger, error)
 

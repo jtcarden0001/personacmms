@@ -158,6 +158,11 @@ func (m *MockStore) ListDateTriggers() ([]tp.DateTrigger, error) {
 	return []tp.DateTrigger{}, nil
 }
 
+func (m *MockStore) ListDateTriggersByTaskId(id tp.UUID) ([]tp.DateTrigger, error) {
+	// Mock implementation
+	return []tp.DateTrigger{}, nil
+}
+
 func (m *MockStore) GetDateTrigger(id tp.UUID) (tp.DateTrigger, error) {
 	// Mock implementation
 	return tp.DateTrigger{}, nil

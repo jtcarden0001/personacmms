@@ -25,5 +25,9 @@ func (a *App) GetCategory(title string) (tp.Category, error) {
 }
 
 func (a *App) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
+	if cat.Title == "" {
+		cat.Title = oldTitle
+	}
+
 	return a.db.UpdateCategory(oldTitle, cat)
 }

@@ -46,6 +46,25 @@ func (pg *Store) ListDateTriggers() ([]tp.DateTrigger, error) {
 	return dts, nil
 }
 
+func (pg *Store) ListDateTriggersByTaskId(taskId uuid.UUID) ([]tp.DateTrigger, error) {
+	query := fmt.Sprintf("SELECT id, date, task_id FROM %s WHERE task_id = $1", dateTriggerTableName)
+	rows, err := pg.db.Query(query, taskId)
+	if err != nil {
+		return nil, handleDbError(err, "date-trigger")
+	}
+
+	dts := []tp.DateTrigger{}
+	for rows.Next() {
+		var dt tp.DateTrigger
+		if err := rows.Scan(&dt.Id, &dt.Date, &dt.TaskId); err != nil {
+			return nil, handleDbError(err, "date-trigger")
+		}
+		dts = append(dts, dt)
+	}
+
+	return dts, nil
+}
+
 func (pg *Store) GetDateTrigger(dtId uuid.UUID) (tp.DateTrigger, error) {
 	query := fmt.Sprintf("SELECT id, date, task_id FROM %s WHERE id = $1", dateTriggerTableName)
 	var dt tp.DateTrigger
