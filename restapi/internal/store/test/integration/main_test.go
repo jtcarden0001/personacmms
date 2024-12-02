@@ -238,7 +238,7 @@ func setupGroup(t *testing.T, store st.Store, identifier string) string {
 func setupCategory(t *testing.T, store st.Store, identifier string) string {
 	category := tp.Category{
 		Title:       fmt.Sprintf("Category %s", identifier),
-		Description: fmt.Sprintf("Category %s description", identifier),
+		Description: toPtr(fmt.Sprintf("Category %s description", identifier)),
 	}
 	category, err := store.CreateCategory(category)
 	if err != nil {

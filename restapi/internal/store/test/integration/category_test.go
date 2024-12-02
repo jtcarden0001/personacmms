@@ -16,7 +16,7 @@ func TestCategoryCreate(t *testing.T) {
 	// Create
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 
 	returnCat, err := store.CreateCategory(cat)
@@ -36,7 +36,7 @@ func TestCategoryDelete(t *testing.T) {
 	// Delete
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 	_, err := store.CreateCategory(cat)
 	if err != nil {
@@ -74,12 +74,12 @@ func TestCategoryList(t *testing.T) {
 
 	catMap["testcategory1"] = tp.Category{
 		Title:       "testcategory1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 
 	catMap["testcategory2"] = tp.Category{
 		Title:       "testcategory2",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 
 	// create the 2 new categories
@@ -123,14 +123,14 @@ func TestCategoryUpdateGet(t *testing.T) {
 	// Update
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 	createCat, err := store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	cat.Description = "new description"
+	cat.Description = toPtr("new description")
 	updateCat, err := store.UpdateCategory(cat.Title, cat)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
