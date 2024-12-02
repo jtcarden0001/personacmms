@@ -13,10 +13,10 @@ func TestTaskCreate(t *testing.T) {
 
 	// Create
 	at := tp.Task{
-		Title:              "testtask1",
-		UniqueInstructions: "test instructions",
-		AssetId:            setupAsset(t, store, "1"),
-		TaskTemplateId:     setupTaskTemplate(t, store, "1"),
+		Title:          "testtask1",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        setupAsset(t, store, "1"),
+		TaskTemplateId: toPtr(setupTaskTemplate(t, store, "1")),
 	}
 	returnedTask, err := store.CreateTask(at)
 	if err != nil {
@@ -34,10 +34,10 @@ func TestTaskDelete(t *testing.T) {
 
 	// Create
 	at := tp.Task{
-		Title:              "testtask1",
-		UniqueInstructions: "test instructions",
-		AssetId:            setupAsset(t, store, "1"),
-		TaskTemplateId:     setupTaskTemplate(t, store, "1"),
+		Title:          "testtask1",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        setupAsset(t, store, "1"),
+		TaskTemplateId: toPtr(setupTaskTemplate(t, store, "1")),
 	}
 
 	at, err := store.CreateTask(at)
@@ -75,17 +75,17 @@ func TestTaskList(t *testing.T) {
 	}
 
 	taskMap["testtask1"] = tp.Task{
-		Title:              "testtask1",
-		UniqueInstructions: "test instructions",
-		AssetId:            setupAsset(t, store, "1"),
-		TaskTemplateId:     setupTaskTemplate(t, store, "1"),
+		Title:          "testtask1",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        setupAsset(t, store, "1"),
+		TaskTemplateId: toPtr(setupTaskTemplate(t, store, "1")),
 	}
 
 	taskMap["testtask2"] = tp.Task{
-		Title:              "testtask2",
-		UniqueInstructions: "test instructions",
-		AssetId:            setupAsset(t, store, "2"),
-		TaskTemplateId:     setupTaskTemplate(t, store, "2"),
+		Title:          "testtask2",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        setupAsset(t, store, "2"),
+		TaskTemplateId: toPtr(setupTaskTemplate(t, store, "2")),
 	}
 
 	// Create the tasks
@@ -128,10 +128,10 @@ func TestTaskUpdateGet(t *testing.T) {
 
 	// Create
 	at := tp.Task{
-		Title:              "testtask1",
-		UniqueInstructions: "test instructions",
-		AssetId:            setupAsset(t, store, "1"),
-		TaskTemplateId:     setupTaskTemplate(t, store, "1"),
+		Title:          "testtask1",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        setupAsset(t, store, "1"),
+		TaskTemplateId: toPtr(setupTaskTemplate(t, store, "1")),
 	}
 
 	createAt, err := store.CreateTask(at)
@@ -141,15 +141,15 @@ func TestTaskUpdateGet(t *testing.T) {
 
 	// Update
 	at.Title = "testtask1updated"
-	at.UniqueInstructions = "test instructions updated"
+	at.Instructions = toPtr("test instructions updated")
 	at.AssetId = setupAsset(t, store, "2")
-	at.TaskTemplateId = setupTaskTemplate(t, store, "2")
+	at.TaskTemplateId = toPtr(setupTaskTemplate(t, store, "2"))
 	updateAt, err := store.UpdateTask(createAt.Id, at)
 	if err != nil {
 		t.Errorf("UpdateTask() failed: %v", err)
 	}
 
-	fields := convertToSet([]string{"Title", "UniqueInstructions", "AssetId", "TaskTemplateId"})
+	fields := convertToSet([]string{"Title", "Instructions", "AssetId", "TaskTemplateId"})
 	compEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
 
 	// Get

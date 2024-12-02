@@ -2457,13 +2457,16 @@ const docTemplate = `{
         "types.Task": {
             "type": "object",
             "properties": {
+                "instructions": {
+                    "type": "string"
+                },
                 "taskTemplateId": {
                     "type": "string"
                 },
                 "title": {
                     "type": "string"
                 },
-                "uniqueInstructions": {
+                "type": {
                     "type": "string"
                 }
             }

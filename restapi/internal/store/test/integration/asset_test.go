@@ -220,10 +220,10 @@ func getTestAsset(groupTitle string, categoryTitle string, suffix string) tp.Ass
 		GroupTitle:    groupTitle,
 		Title:         fmt.Sprintf("testasset%s", suffix),
 		Year:          func() *int { year, _ := strconv.Atoi(fmt.Sprintf("202%s", suffix)); return &year }(),
-		Description:   strToPtr(fmt.Sprintf("test description %s", suffix)),
-		Make:          strToPtr(fmt.Sprintf("test make %s", suffix)),
-		ModelNumber:   strToPtr(fmt.Sprintf("test model number %s", suffix)),
-		SerialNumber:  strToPtr(fmt.Sprintf("test serial number %s", suffix)),
+		Description:   toPtr(fmt.Sprintf("test description %s", suffix)),
+		Make:          toPtr(fmt.Sprintf("test make %s", suffix)),
+		ModelNumber:   toPtr(fmt.Sprintf("test model number %s", suffix)),
+		SerialNumber:  toPtr(fmt.Sprintf("test serial number %s", suffix)),
 		CategoryTitle: &categoryTitle,
 	}
 }

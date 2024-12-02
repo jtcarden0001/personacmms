@@ -6,7 +6,6 @@ import (
 	"net"
 	"os"
 	"reflect"
-	"strings"
 	"testing"
 	"time"
 
@@ -130,8 +129,8 @@ func closeStore(store st.Store, dbName string) {
 	}
 }
 
-func strToPtr(s string) *string {
-	return &s
+func toPtr[T any](v T) *T {
+	return &v
 }
 
 func convertToSet(arr []string) map[string]struct{} {
@@ -142,6 +141,7 @@ func convertToSet(arr []string) map[string]struct{} {
 	return set
 }
 
+// TODO: some optimization and code reduction to be had here in these comparison functions
 func compEntities(t *testing.T, expected interface{}, actual interface{}) {
 	// exclude no fields
 	compEntitiesExcludeFields(t, expected, actual, make(map[string]struct{}))
@@ -161,30 +161,36 @@ func compEntitiesExcludeFields(t *testing.T, expected interface{}, actual interf
 		expectedField := expectedValue.Field(i).Interface()
 		actualField := actualValue.Field(i).Interface()
 
-		if strings.Contains(field.Name, "Date") {
-			expectedTime, ok1 := expectedField.(time.Time)
-			actualTime, ok2 := actualField.(time.Time)
-			if !ok1 || !ok2 {
-				expectedTimePtr, ok1 := expectedField.(*time.Time)
-				actualTimePtr, ok2 := actualField.(*time.Time)
-				if ok1 && ok2 && expectedTimePtr != nil && actualTimePtr != nil {
-					expectedTime = *expectedTimePtr
-					actualTime = *actualTimePtr
-				} else {
-					t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
-					continue
-				}
-			}
-			if !expectedTime.Truncate(time.Second).Equal(actualTime.Truncate(time.Second)) {
-				t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
-			}
+		isPtr := reflect.TypeOf(expectedField).Kind() == reflect.Ptr
+		if isPtr {
+			comparePointers(t, expectedField, actualField, field)
 		} else {
-			expectedValue := reflect.Indirect(reflect.ValueOf(expectedField)).Interface()
-			actualValue := reflect.Indirect(reflect.ValueOf(actualField)).Interface()
-			if !reflect.DeepEqual(expectedValue, actualValue) {
-				t.Errorf("Create() failed: expected %v for field %s, got %v", expectedValue, field.Name, actualValue)
-			}
+			compareValues(t, expectedField, actualField, field)
 		}
+	}
+}
+
+func comparePointers(t *testing.T, expectedField interface{}, actualField interface{}, field reflect.StructField) {
+	if expectedField == nil && actualField != nil {
+		t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+	} else if expectedField != nil && actualField == nil {
+		t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+	} else if expectedField != nil && actualField != nil {
+		if !reflect.DeepEqual(expectedField, actualField) {
+			t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		}
+	}
+}
+
+func compareValues(t *testing.T, expectedField interface{}, actualField interface{}, field reflect.StructField) {
+	if field.Type == reflect.TypeOf(time.Time{}) {
+		expectedTime := expectedField.(time.Time)
+		actualTime := actualField.(time.Time)
+		if !expectedTime.Truncate(time.Second).Equal(actualTime.Truncate(time.Second)) {
+			t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
+		}
+	} else if !reflect.DeepEqual(expectedField, actualField) {
+		t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
 	}
 }
 
@@ -269,7 +275,7 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 	categoryTitle := setupCategory(t, store, identifier)
 	asset := tp.Asset{
 		Title:         fmt.Sprintf("Asset %s", identifier),
-		Description:   strToPtr(fmt.Sprintf("Asset %s description", identifier)),
+		Description:   toPtr(fmt.Sprintf("Asset %s description", identifier)),
 		GroupTitle:    groupTitle,
 		CategoryTitle: &categoryTitle,
 	}
@@ -297,10 +303,10 @@ func setupTask(t *testing.T, store st.Store, identifier string) tp.UUID {
 	assetId := setupAsset(t, store, identifier)
 	taskId := setupTaskTemplate(t, store, identifier)
 	assetTask := tp.Task{
-		Title:              fmt.Sprintf("Task %s", identifier),
-		UniqueInstructions: fmt.Sprintf("Task %s instructions", identifier),
-		AssetId:            assetId,
-		TaskTemplateId:     taskId,
+		Title:          fmt.Sprintf("Task %s", identifier),
+		Instructions:   toPtr(fmt.Sprintf("Task %s instructions", identifier)),
+		AssetId:        assetId,
+		TaskTemplateId: &taskId,
 	}
 	assetTask, err := store.CreateTask(assetTask)
 	if err != nil {

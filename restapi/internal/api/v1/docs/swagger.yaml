@@ -30,11 +30,13 @@ definitions:
     type: object
   types.Task:
     properties:
+      instructions:
+        type: string
       taskTemplateId:
         type: string
       title:
         type: string
-      uniqueInstructions:
+      type:
         type: string
     type: object
   types.TaskConsumable:
