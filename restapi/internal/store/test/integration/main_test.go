@@ -289,8 +289,8 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 func setupTaskTemplate(t *testing.T, store st.Store, identifier string) tp.UUID {
 	task := tp.TaskTemplate{
 		Title:       fmt.Sprintf("Task %s", identifier),
-		Description: fmt.Sprintf("Task %s description", identifier),
-		Type:        tp.TaskTypePreventative,
+		Description: toPtr(fmt.Sprintf("Task %s description", identifier)),
+		Type:        toPtr(tp.TaskTypePreventative),
 	}
 	task, err := store.CreateTaskTemplate(task)
 	if err != nil {

@@ -14,8 +14,8 @@ func TestTaskTemplateCreate(t *testing.T) {
 	// Create
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: "test description",
-		Type:        tp.TaskTypePreventative,
+		Description: toPtr("test description"),
+		Type:        toPtr(tp.TaskTypePreventative),
 	}
 
 	returnTaskTemplate, err := store.CreateTaskTemplate(taskTemplate)
@@ -35,7 +35,7 @@ func TestTaskTemplateDelete(t *testing.T) {
 	// Delete
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 	_, err := store.CreateTaskTemplate(taskTemplate)
 	if err != nil {
@@ -75,14 +75,14 @@ func TestTaskTemplateList(t *testing.T) {
 
 	taskTemplateMap["testtasktemplate1"] = tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: "test description",
-		Type:        tp.TaskTypePreventative,
+		Description: toPtr("test description"),
+		Type:        toPtr(tp.TaskTypePreventative),
 	}
 
 	taskTemplateMap["testtasktemplate2"] = tp.TaskTemplate{
 		Title:       "testtasktemplate2",
-		Description: "test description",
-		Type:        tp.TaskTypeCorrective,
+		Description: toPtr("test description"),
+		Type:        toPtr(tp.TaskTypeCorrective),
 	}
 
 	// Create the taskTemplates
@@ -125,14 +125,14 @@ func TestTaskTemplateUpdateGet(t *testing.T) {
 	// Update
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: "test description",
+		Description: toPtr("test description"),
 	}
 	createTaskTemplate, err := store.CreateTaskTemplate(taskTemplate)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	taskTemplate.Description = "new description"
+	taskTemplate.Description = toPtr("new description")
 	returnTaskTemplate, err := store.UpdateTaskTemplate(taskTemplate.Title, taskTemplate)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
@@ -146,11 +146,5 @@ func TestTaskTemplateUpdateGet(t *testing.T) {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	if returnTaskTemplate.Title != taskTemplate.Title || getTaskTemplate.Title != taskTemplate.Title {
-		t.Errorf("Update() failed: expected %s, got %s", taskTemplate.Title, returnTaskTemplate.Title)
-	}
-
-	if returnTaskTemplate.Description != taskTemplate.Description || getTaskTemplate.Description != taskTemplate.Description {
-		t.Errorf("Update() failed: expected %s, got %s", taskTemplate.Description, returnTaskTemplate.Description)
-	}
+	compEntities(t, returnTaskTemplate, getTaskTemplate)
 }
