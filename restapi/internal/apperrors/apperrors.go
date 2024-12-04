@@ -21,3 +21,5 @@ var ErrAlreadyExists = AppError{Code: CodeAlreadyExists, Message: "already exist
 var ErrInvalid = AppError{Code: CodeInvalid, Message: "invalid"}
 var ErrIdMismatch = AppError{Code: CodeInvalid, Message: "id mismatch"}
 var ErrGroupTitleMismatch = AppError{Code: CodeInvalid, Message: "group title mismatch"}
+var ErrGroupTitleRequired = AppError{Code: CodeInvalid, Message: "group title required"}
+var ErrCategoryTitleRequired = AppError{Code: CodeInvalid, Message: "category title mismatch"}

@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -34,7 +35,7 @@ func (a *App) GetCategory(title string) (tp.Category, error) {
 // Update a Category
 func (a *App) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
 	if cat.Title == "" {
-		cat.Title = oldTitle
+		return tp.Category{}, ae.ErrCategoryTitleRequired
 	}
 
 	return a.db.UpdateCategory(oldTitle, cat)
