@@ -3,7 +3,6 @@ package integration
 import (
 	"testing"
 
-	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -15,7 +14,7 @@ func TestCreateTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  "13mm",
+		Size:  toPtr("13mm"),
 	}
 
 	returnedTool, err := store.CreateTool(tool)
@@ -23,17 +22,8 @@ func TestCreateTool(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	if returnedTool.Title != tool.Title {
-		t.Errorf("Create() failed: expected %s, got %s", tool.Title, returnedTool.Title)
-	}
-
-	if returnedTool.Id == uuid.Nil {
-		t.Errorf("Create() failed: expected non-empty ID, got empty")
-	}
-
-	if returnedTool.Size != tool.Size {
-		t.Errorf("Create() failed: expected %s, got %s", tool.Size, returnedTool.Size)
-	}
+	fieldsToExclude := convertToSet([]string{"Id"})
+	compEntitiesExcludeFields(t, tool, returnedTool, fieldsToExclude)
 }
 
 func TestDeleteTool(t *testing.T) {
@@ -44,7 +34,7 @@ func TestDeleteTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  "13mm",
+		Size:  toPtr("13mm"),
 	}
 
 	_, err := store.CreateTool(tool)
@@ -80,7 +70,7 @@ func TestListTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  "13mm",
+		Size:  toPtr("13mm"),
 	}
 	_, err = store.CreateTool(tool)
 	if err != nil {
@@ -114,28 +104,30 @@ func TestUpdateGetTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  "13mm",
+		Size:  toPtr("13mm"),
 	}
 
-	_, err := store.CreateTool(tool)
+	cTool, err := store.CreateTool(tool)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
 	// Update
-	tool.Size = "14mm"
-	_, err = store.UpdateTool(tool.Title, tool)
+	tool.Size = toPtr("14mm")
+	uTool, err := store.UpdateTool(tool.Title, tool)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
+	fieldsShouldBeDifferent := convertToSet([]string{"Size"})
+	compEntitiesFieldsShouldBeDifferent(t, cTool, uTool, fieldsShouldBeDifferent)
+
 	// Get
-	returnedTool, err := store.GetTool(tool.Title)
+	gTool, err := store.GetTool(tool.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	if returnedTool.Size != tool.Size {
-		t.Errorf("Get() failed: expected %s, got %s", tool.Size, returnedTool.Size)
-	}
+	compEntities(t, uTool, gTool)
+
 }

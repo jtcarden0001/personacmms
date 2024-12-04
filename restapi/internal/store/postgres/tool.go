@@ -62,8 +62,10 @@ func (pg *Store) GetTool(title string) (tp.Tool, error) {
 }
 
 func (pg *Store) UpdateTool(title string, tool tp.Tool) (tp.Tool, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, size = $2 WHERE title = $3`, toolTableName)
-	_, err := pg.db.Exec(query, tool.Title, tool.Size, title)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, size = $2 WHERE title = $3 returning id`, toolTableName)
+	row := pg.db.QueryRow(query, tool.Title, tool.Size, title)
+
+	err := row.Scan(&tool.Id)
 	if err != nil {
 		return tp.Tool{}, handleDbError(err, "tool")
 	}

@@ -261,7 +261,7 @@ func setupConsumable(t *testing.T, store st.Store, identifier string) tp.UUID {
 func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
 	tool := tp.Tool{
 		Title: fmt.Sprintf("Tool %s", identifier),
-		Size:  fmt.Sprintf("Tool %s Size", identifier),
+		Size:  toPtr(fmt.Sprintf("Tool %s Size", identifier)),
 	}
 	tool, err := store.CreateTool(tool)
 	if err != nil {
