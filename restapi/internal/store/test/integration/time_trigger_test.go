@@ -111,6 +111,62 @@ func TestTimeTriggerList(t *testing.T) {
 	}
 }
 
+func TestTimeTriggerListByTaskId(t *testing.T) {
+	dbName := "testtimetriggerlistbytaskid"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	// List
+	tts, err := store.ListTimeTriggersByTaskId(tp.UUID{})
+	if err != nil {
+		t.Errorf("ListTimeTriggersByTaskId() failed: %v", err)
+	}
+
+	// make a map ttId -> tt
+	ttMap := make(map[tp.UUID]tp.TimeTrigger)
+	for _, tt := range tts {
+		ttMap[tt.Id] = tt
+	}
+
+	// setup
+	assetTaskId := setupTask(t, store, "1")
+	tt := tp.TimeTrigger{
+		TaskId:   assetTaskId,
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
+	}
+	tt, err = store.CreateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("CreateTimeTrigger() failed: %v", err)
+	}
+	ttMap[tt.Id] = tt
+
+	tt2 := tp.TimeTrigger{
+		TaskId:   assetTaskId,
+		Quantity: 60,
+		TimeUnit: tp.TimeUnitWeeks,
+	}
+	tt2, err = store.CreateTimeTrigger(tt2)
+	if err != nil {
+		t.Errorf("CreateTimeTrigger() failed: %v", err)
+	}
+	ttMap[tt2.Id] = tt2
+
+	tts, err = store.ListTimeTriggersByTaskId(assetTaskId)
+	if err != nil {
+		t.Errorf("ListTimeTriggersByTaskId() failed: %v", err)
+	}
+
+	if len(tts) != len(ttMap) {
+		t.Errorf("ListTimeTriggersByTaskId() failed: expected %d, got %d", len(ttMap), len(tts))
+	}
+
+	// compare
+	for _, tt := range tts {
+		compEntities(t, tt, ttMap[tt.Id])
+	}
+}
+
 func TestTimeTriggerUpdateGet(t *testing.T) {
 	dbName := "testtimetriggerupdateget"
 	store := initializeStore(dbName)

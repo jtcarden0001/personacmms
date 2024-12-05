@@ -51,6 +51,26 @@ func (s *Store) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	return ttgs, nil
 }
 
+func (s *Store) ListTimeTriggersByTaskId(taskId uuid.UUID) ([]tp.TimeTrigger, error) {
+	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, task_id FROM %s WHERE task_id=$1`, timeTriggerTableName)
+	rows, err := s.db.Query(query, taskId)
+	if err != nil {
+		return []tp.TimeTrigger{}, handleDbError(err, "time-trigger")
+	}
+
+	var ttgs []tp.TimeTrigger
+	for rows.Next() {
+		var tt tp.TimeTrigger
+		err := rows.Scan(&tt.Id, &tt.Quantity, &tt.TimeUnit, &tt.TaskId)
+		if err != nil {
+			return []tp.TimeTrigger{}, handleDbError(err, "time-trigger")
+		}
+		ttgs = append(ttgs, tt)
+	}
+
+	return ttgs, nil
+}
+
 func (s *Store) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, task_id FROM %s WHERE id=$1`, timeTriggerTableName)
 	row := s.db.QueryRow(query, ttId)

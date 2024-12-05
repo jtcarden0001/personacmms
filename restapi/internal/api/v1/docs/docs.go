@@ -2592,10 +2592,14 @@ const docTemplate = `{
         "types.UsageUnit": {
             "type": "object",
             "required": [
-                "title"
+                "title",
+                "type"
             ],
             "properties": {
                 "title": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

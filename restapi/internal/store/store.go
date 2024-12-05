@@ -83,6 +83,7 @@ type Store interface {
 	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
 	DeleteTimeUnit(string) error
 	ListTimeUnits() ([]tp.TimeUnit, error)
+	ListTimeTriggersByTaskId(tp.UUID) ([]tp.TimeTrigger, error)
 	GetTimeUnit(string) (tp.TimeUnit, error)
 	UpdateTimeUnit(string, tp.TimeUnit) (tp.TimeUnit, error)
 

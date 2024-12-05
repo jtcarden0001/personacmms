@@ -121,8 +121,11 @@ definitions:
     properties:
       title:
         type: string
+      type:
+        type: string
     required:
     - title
+    - type
     type: object
   types.WorkOrder:
     properties:

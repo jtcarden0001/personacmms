@@ -10,7 +10,7 @@ import (
 
 // Create a DateTrigger
 func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
-	if err := a.validateAndInterpolateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
+	if err := a.validateAndInterpolateDateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
 		return tp.DateTrigger{}, err
 	}
 
@@ -30,7 +30,7 @@ func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, taskId str
 
 // List all date triggers for a particular task
 func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.DateTrigger, error) {
-	tid, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId)
+	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
 	if err != nil {
 		return []tp.DateTrigger{}, err
 	}
@@ -40,7 +40,7 @@ func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId stri
 
 // Get a date trigger that is essentially namespaced under the task specificed
 func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
-	if _, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId); err != nil {
+	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
 		return tp.DateTrigger{}, err
 	}
 
@@ -54,7 +54,7 @@ func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string
 
 // Update a date trigger
 func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
-	if err := a.validateAndInterpolateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
+	if err := a.validateAndInterpolateDateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
 		return tp.DateTrigger{}, err
 	}
 
@@ -72,9 +72,8 @@ func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, taskId str
 	return a.db.UpdateDateTrigger(parsedDtId, dateTrigger)
 }
 
-// general trigger functions valid for all trigger types
-func (a *App) validateAndInterpolateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger *tp.DateTrigger) error {
-	tid, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId)
+func (a *App) validateAndInterpolateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger *tp.DateTrigger) error {
+	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
 	if err != nil {
 		return err
 	}
@@ -83,7 +82,8 @@ func (a *App) validateAndInterpolateTrigger(groupTitle string, assetTitle string
 	return nil
 }
 
-func (a *App) validateTriggerAndGetTaskId(groupTitle string, assetTitle string, taskId string) (tp.UUID, error) {
+// common function to validate the dependencies (namespaces) of a trigger and return the final namespace (taskId)
+func (a *App) validateTriggerDependencies(groupTitle string, assetTitle string, taskId string) (tp.UUID, error) {
 	// Get Asset will validate group and asset
 	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
 		return uuid.Nil, err

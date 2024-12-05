@@ -23,3 +23,4 @@ var ErrIdMismatch = AppError{Code: CodeInvalid, Message: "id mismatch"}
 var ErrGroupTitleMismatch = AppError{Code: CodeInvalid, Message: "group title mismatch"}
 var ErrGroupTitleRequired = AppError{Code: CodeInvalid, Message: "group title required"}
 var ErrCategoryTitleRequired = AppError{Code: CodeInvalid, Message: "category title mismatch"}
+var ErrQuantityMustBePositive = AppError{Code: CodeInvalid, Message: "quantity must be positive"}

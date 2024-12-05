@@ -267,6 +267,11 @@ func (m *MockStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	return []tp.TimeTrigger{}, nil
 }
 
+func (m *MockStore) ListTimeTriggersByTaskId(id tp.UUID) ([]tp.TimeTrigger, error) {
+	// Mock implementation
+	return []tp.TimeTrigger{}, nil
+}
+
 func (m *MockStore) GetTimeTrigger(id tp.UUID) (tp.TimeTrigger, error) {
 	// Mock implementation
 	return tp.TimeTrigger{}, nil
