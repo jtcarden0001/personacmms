@@ -19,27 +19,26 @@ func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId str
 
 // Delete a DateTrigger
 func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) error {
-	if _, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId); err != nil {
-		return err
-	}
-
-	parsedDtId, err := uuid.Parse(dateTriggerId)
+	// Get before delete to provide opportunity to return not found error
+	dt, err := a.GetDateTrigger(groupTitle, assetTitle, taskId, dateTriggerId)
 	if err != nil {
 		return err
 	}
 
-	return a.db.DeleteDateTrigger(parsedDtId)
+	return a.db.DeleteDateTrigger(dt.Id)
 }
 
+// List all date triggers for a particular task
 func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.DateTrigger, error) {
 	tid, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId)
 	if err != nil {
-		return nil, err
+		return []tp.DateTrigger{}, err
 	}
 
 	return a.db.ListDateTriggersByTaskId(tid)
 }
 
+// Get a date trigger that is essentially namespaced under the task specificed
 func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
 	if _, err := a.validateTriggerAndGetTaskId(groupTitle, assetTitle, taskId); err != nil {
 		return tp.DateTrigger{}, err
@@ -53,6 +52,7 @@ func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string
 	return a.db.GetDateTrigger(parsedDtId)
 }
 
+// Update a date trigger
 func (a *App) UpdateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
 	if err := a.validateAndInterpolateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
 		return tp.DateTrigger{}, err
