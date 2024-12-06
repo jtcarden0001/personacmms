@@ -8,6 +8,7 @@ import (
 )
 
 func TestGroupCreate(t *testing.T) {
+	t.Parallel()
 	dbname := "testgroupcreate"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
@@ -32,6 +33,7 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
+	t.Parallel()
 	dbname := "testgroupdelete"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
@@ -58,6 +60,7 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroupList(t *testing.T) {
+	t.Parallel()
 	dbname := "testgrouplist"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
@@ -99,6 +102,7 @@ func TestGroupList(t *testing.T) {
 }
 
 func TestGroupUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbname := "testgroupupdateget"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)

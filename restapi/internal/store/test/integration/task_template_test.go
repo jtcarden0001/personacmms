@@ -7,6 +7,7 @@ import (
 )
 
 func TestTaskTemplateCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testtasktemplatecreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -28,6 +29,7 @@ func TestTaskTemplateCreate(t *testing.T) {
 }
 
 func TestTaskTemplateDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testtasktemplatedelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -55,6 +57,7 @@ func TestTaskTemplateDelete(t *testing.T) {
 }
 
 func TestTaskTemplateList(t *testing.T) {
+	t.Parallel()
 	dbName := "testtasktemplatelist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -118,6 +121,7 @@ func TestTaskTemplateList(t *testing.T) {
 }
 
 func TestTaskTemplateUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testtasktemplateupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

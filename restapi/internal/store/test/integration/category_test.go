@@ -9,6 +9,7 @@ import (
 )
 
 func TestCategoryCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testcategorycreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -29,6 +30,7 @@ func TestCategoryCreate(t *testing.T) {
 }
 
 func TestCategoryDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testcategorydelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -56,6 +58,7 @@ func TestCategoryDelete(t *testing.T) {
 }
 
 func TestCategoryList(t *testing.T) {
+	t.Parallel()
 	dbName := "testcategorylist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -116,6 +119,7 @@ func TestCategoryList(t *testing.T) {
 }
 
 func TestCategoryUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testcategoryupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -149,6 +153,7 @@ func TestCategoryUpdateGet(t *testing.T) {
 }
 
 func TestCategoryNotFound(t *testing.T) {
+	t.Parallel()
 	dbName := "testcategorynotfound"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

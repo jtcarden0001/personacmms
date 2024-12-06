@@ -8,6 +8,7 @@ import (
 )
 
 func TestCreateWorkOrderStatus(t *testing.T) {
+	t.Parallel()
 	dbName := "testcreateworkorderstatus"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -32,6 +33,7 @@ func TestCreateWorkOrderStatus(t *testing.T) {
 }
 
 func TestDeleteWorkOrderStatus(t *testing.T) {
+	t.Parallel()
 	dbName := "testdeleteworkorderstatus"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -60,6 +62,7 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 }
 
 func TestListWorkOrderStatus(t *testing.T) {
+	t.Parallel()
 	dbName := "testlistworkorderstatus"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -99,6 +102,7 @@ func TestListWorkOrderStatus(t *testing.T) {
 }
 
 func TestGetWorkOrderStatus(t *testing.T) {
+	t.Parallel()
 	dbName := "testgetworkorderstatus"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -129,6 +133,7 @@ func TestGetWorkOrderStatus(t *testing.T) {
 }
 
 func TestUpdateWorkOrderStatus(t *testing.T) {
+	t.Parallel()
 	dbName := "testupdateworkorderstatus"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

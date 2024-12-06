@@ -10,6 +10,7 @@ import (
 var preseedTimeUnitCount = 4
 
 func TestTimeUnitCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimeunitcreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -34,6 +35,7 @@ func TestTimeUnitCreate(t *testing.T) {
 }
 
 func TestTimeUnitDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimeunitdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -62,6 +64,7 @@ func TestTimeUnitDelete(t *testing.T) {
 }
 
 func TestTimeUnitList(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimeunitlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -98,6 +101,7 @@ func TestTimeUnitList(t *testing.T) {
 }
 
 func TestTimeUnitUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimeunitupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

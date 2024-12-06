@@ -7,6 +7,7 @@ import (
 )
 
 func TestCreateTool(t *testing.T) {
+	t.Parallel()
 	dbName := "testcreatetool"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -27,6 +28,7 @@ func TestCreateTool(t *testing.T) {
 }
 
 func TestDeleteTool(t *testing.T) {
+	t.Parallel()
 	dbName := "testdeletetool"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -56,6 +58,7 @@ func TestDeleteTool(t *testing.T) {
 }
 
 func TestListTool(t *testing.T) {
+	t.Parallel()
 	dbName := "testlisttool"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -97,6 +100,7 @@ func TestListTool(t *testing.T) {
 }
 
 func TestUpdateGetTool(t *testing.T) {
+	t.Parallel()
 	dbName := "testupdategettool"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

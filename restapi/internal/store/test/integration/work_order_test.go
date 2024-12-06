@@ -10,6 +10,7 @@ import (
 )
 
 func TestWorkOrderCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testworkordercreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -28,6 +29,7 @@ func TestWorkOrderCreate(t *testing.T) {
 }
 
 func TestWorkOrderDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testworkorderdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -55,6 +57,7 @@ func TestWorkOrderDelete(t *testing.T) {
 }
 
 func TestWorkOrderList(t *testing.T) {
+	t.Parallel()
 	dbName := "testworkorderlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -103,6 +106,7 @@ func TestWorkOrderList(t *testing.T) {
 }
 
 func TestWorkOrderUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testworkorderupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

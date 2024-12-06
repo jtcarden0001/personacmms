@@ -8,6 +8,7 @@ import (
 )
 
 func TestConsumableCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testconsumablecreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -32,6 +33,7 @@ func TestConsumableCreate(t *testing.T) {
 }
 
 func TestConsumableDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testconsumabledelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -60,6 +62,7 @@ func TestConsumableDelete(t *testing.T) {
 }
 
 func TestConsumableList(t *testing.T) {
+	t.Parallel()
 	dbName := "testconsumablelist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -104,6 +107,7 @@ func TestConsumableList(t *testing.T) {
 }
 
 func TestConsumableUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testconsumableupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

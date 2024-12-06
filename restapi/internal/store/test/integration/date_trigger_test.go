@@ -8,6 +8,7 @@ import (
 )
 
 func TestDateTriggerCreate(t *testing.T) {
+	t.Parallel()
 	var dbName = "testdatetriggercreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -28,6 +29,7 @@ func TestDateTriggerCreate(t *testing.T) {
 }
 
 func TestDateTriggerDelete(t *testing.T) {
+	t.Parallel()
 	var dbName = "testdatetriggerdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -55,6 +57,7 @@ func TestDateTriggerDelete(t *testing.T) {
 }
 
 func TestDateTriggerList(t *testing.T) {
+	t.Parallel()
 	var dbName = "testdatetriggerlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -106,6 +109,7 @@ func TestDateTriggerList(t *testing.T) {
 }
 
 func TestDateTriggerUpdateGet(t *testing.T) {
+	t.Parallel()
 	var dbName = "testdatetriggerupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

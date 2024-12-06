@@ -7,6 +7,7 @@ import (
 )
 
 func TestUsageUnitCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testusageunitcreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -26,6 +27,7 @@ func TestUsageUnitCreate(t *testing.T) {
 }
 
 func TestUsageUnitDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testusageunitdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -54,6 +56,7 @@ func TestUsageUnitDelete(t *testing.T) {
 }
 
 func TestUsageUnitList(t *testing.T) {
+	t.Parallel()
 	dbName := "testusageunitlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -105,6 +108,7 @@ func TestUsageUnitList(t *testing.T) {
 }
 
 func TestUsageUnitUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testusageunitupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

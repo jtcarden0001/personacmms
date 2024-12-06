@@ -9,6 +9,7 @@ import (
 )
 
 func TestAssetCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testassetcreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -29,6 +30,7 @@ func TestAssetCreate(t *testing.T) {
 }
 
 func TestAssetDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testassetdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -57,6 +59,7 @@ func TestAssetDelete(t *testing.T) {
 }
 
 func TestAssetList(t *testing.T) {
+	t.Parallel()
 	dbName := "testassetlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -114,6 +117,7 @@ func TestAssetList(t *testing.T) {
 }
 
 func TestAssetListByGroup(t *testing.T) {
+	t.Parallel()
 	dbName := "testassetlistbygroup"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -180,6 +184,7 @@ func TestAssetListByGroup(t *testing.T) {
 }
 
 func TestAssetUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testassetupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

@@ -7,6 +7,7 @@ import (
 )
 
 func TestTimeTriggerCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimetriggercreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -28,6 +29,7 @@ func TestTimeTriggerCreate(t *testing.T) {
 }
 
 func TestTimeTriggerDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimetriggerdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -56,6 +58,7 @@ func TestTimeTriggerDelete(t *testing.T) {
 }
 
 func TestTimeTriggerList(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimetriggerlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -112,6 +115,7 @@ func TestTimeTriggerList(t *testing.T) {
 }
 
 func TestTimeTriggerListByTaskId(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimetriggerlistbytaskid"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -168,6 +172,7 @@ func TestTimeTriggerListByTaskId(t *testing.T) {
 }
 
 func TestTimeTriggerUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testtimetriggerupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)

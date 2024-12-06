@@ -350,6 +350,11 @@ func (m *MockStore) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	return []tp.UsageTrigger{}, nil
 }
 
+func (m *MockStore) ListUsageTriggersByTaskId(id tp.UUID) ([]tp.UsageTrigger, error) {
+	// Mock implementation
+	return []tp.UsageTrigger{}, nil
+}
+
 func (m *MockStore) GetUsageTrigger(id tp.UUID) (tp.UsageTrigger, error) {
 	// Mock implementation
 	return tp.UsageTrigger{}, nil

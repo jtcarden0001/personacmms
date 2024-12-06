@@ -7,6 +7,7 @@ import (
 )
 
 func TestTaskToolCreateGet(t *testing.T) {
+	t.Parallel()
 	dbname := "testtasktoolcreate"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
@@ -33,6 +34,7 @@ func TestTaskToolCreateGet(t *testing.T) {
 }
 
 func TestTaskToolDelete(t *testing.T) {
+	t.Parallel()
 	dbname := "testtasktooldelete"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)
@@ -62,6 +64,7 @@ func TestTaskToolDelete(t *testing.T) {
 }
 
 func TestTaskToolList(t *testing.T) {
+	t.Parallel()
 	dbname := "testtasktoollist"
 	store := initializeStore(dbname)
 	defer closeStore(store, dbname)

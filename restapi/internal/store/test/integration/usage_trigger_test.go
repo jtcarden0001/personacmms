@@ -7,6 +7,7 @@ import (
 )
 
 func TestUsageTriggerCreate(t *testing.T) {
+	t.Parallel()
 	dbName := "testusagetriggercreate"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -28,6 +29,7 @@ func TestUsageTriggerCreate(t *testing.T) {
 }
 
 func TestUsageTriggerDelete(t *testing.T) {
+	t.Parallel()
 	dbName := "testusagetriggerdelete"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -56,6 +58,7 @@ func TestUsageTriggerDelete(t *testing.T) {
 }
 
 func TestUsageTriggerList(t *testing.T) {
+	t.Parallel()
 	dbName := "testusagetriggerlist"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
@@ -111,7 +114,79 @@ func TestUsageTriggerList(t *testing.T) {
 	}
 }
 
+// TODO: add content checks
+func TestUsageTriggerListByTaskId(t *testing.T) {
+	t.Parallel()
+	dbName := "testusagetriggerlistbytaskid"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	// create 2 usage triggers for task 1
+	assetTaskId := setupTask(t, store, "1")
+	ut := tp.UsageTrigger{
+		TaskId:    assetTaskId,
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
+	}
+	_, err := store.CreateUsageTrigger(ut)
+	if err != nil {
+		t.Errorf("CreateUsageTrigger() failed: %v", err)
+	}
+
+	ut2 := tp.UsageTrigger{
+		TaskId:    assetTaskId,
+		Quantity:  60,
+		UsageUnit: tp.UsageUnitMiles,
+	}
+	_, err = store.CreateUsageTrigger(ut2)
+	if err != nil {
+		t.Errorf("CreateUsageTrigger() failed: %v", err)
+	}
+
+	// create 1 usage trigger for task 2
+	assetTaskId2 := setupTask(t, store, "2")
+	ut3 := tp.UsageTrigger{
+		TaskId:    assetTaskId2,
+		Quantity:  90,
+		UsageUnit: tp.UsageUnitHours,
+	}
+	_, err = store.CreateUsageTrigger(ut3)
+	if err != nil {
+		t.Errorf("CreateUsageTrigger() failed: %v", err)
+	}
+
+	uts, err := store.ListUsageTriggersByTaskId(assetTaskId)
+	if err != nil {
+		t.Errorf("ListUsageTriggersByTaskId() failed: %v", err)
+	}
+
+	if len(uts) != 2 {
+		t.Errorf("ListUsageTriggersByTaskId() failed: expected 2, got %d", len(uts))
+	}
+
+	// list all usage triggers for task 2
+	uts, err = store.ListUsageTriggersByTaskId(assetTaskId2)
+	if err != nil {
+		t.Errorf("ListUsageTriggersByTaskId() failed: %v", err)
+	}
+
+	if len(uts) != 1 {
+		t.Errorf("ListUsageTriggersByTaskId() failed: expected 1, got %d", len(uts))
+	}
+
+	// list all usage triggers
+	uts, err = store.ListUsageTriggers()
+	if err != nil {
+		t.Errorf("ListUsageTriggers() failed: %v", err)
+	}
+
+	if len(uts) != 3 {
+		t.Errorf("ListUsageTriggers() failed: expected 3, got %d", len(uts))
+	}
+}
+
 func TestUsageTriggerUpdateGet(t *testing.T) {
+	t.Parallel()
 	dbName := "testusagetriggerupdateget"
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
