@@ -98,6 +98,7 @@ type Store interface {
 	CreateUsageTrigger(tp.UsageTrigger) (tp.UsageTrigger, error)
 	DeleteUsageTrigger(tp.UUID) error
 	ListUsageTriggers() ([]tp.UsageTrigger, error)
+	ListUsageTriggersByTaskId(tp.UUID) ([]tp.UsageTrigger, error)
 	GetUsageTrigger(tp.UUID) (tp.UsageTrigger, error)
 	UpdateUsageTrigger(tp.UUID, tp.UsageTrigger) (tp.UsageTrigger, error)
 

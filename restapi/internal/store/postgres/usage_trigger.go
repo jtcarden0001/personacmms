@@ -61,6 +61,26 @@ func (pg *Store) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	return uts, nil
 }
 
+func (pg *Store) ListUsageTriggersByTaskId(taskId uuid.UUID) ([]tp.UsageTrigger, error) {
+	var uts []tp.UsageTrigger
+	query := fmt.Sprintf("SELECT id, quantity, usageunit_title, task_id FROM %s WHERE task_id = $1", usageTriggerTableName)
+	rows, err := pg.db.Query(query, taskId)
+	if err != nil {
+		return nil, handleDbError(err, "usage-trigger")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var ut tp.UsageTrigger
+		if err := rows.Scan(&ut.Id, &ut.Quantity, &ut.UsageUnit, &ut.TaskId); err != nil {
+			return nil, handleDbError(err, "usage-trigger")
+		}
+		uts = append(uts, ut)
+	}
+
+	return uts, nil
+}
+
 func (pg *Store) UpdateUsageTrigger(utId uuid.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
 	query := fmt.Sprintf("UPDATE %s SET quantity = $1, usageunit_title = $2, task_id = $3 WHERE id = $4", usageTriggerTableName)
 	_, err := pg.db.Exec(query, ut.Quantity, ut.UsageUnit, ut.TaskId, utId)

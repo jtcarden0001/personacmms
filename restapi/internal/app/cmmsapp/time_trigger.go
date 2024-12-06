@@ -35,7 +35,6 @@ func (a *App) ListTimeTriggers(groupTitle string, assetTitle string, taskId stri
 		return []tp.TimeTrigger{}, err
 	}
 
-	// TODO: implement this on the DB level
 	return a.db.ListTimeTriggersByTaskId(tid)
 }
 
