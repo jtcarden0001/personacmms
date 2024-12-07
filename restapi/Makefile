@@ -60,8 +60,8 @@ unittest:
 
 # run
 dev-up: clean
-	docker-compose -f ./tools/docker/dev.compose.yaml up --build -d
+	docker-compose -f ./tools/docker/dev.compose.yaml --env-file ./tools/docker/dev.env up --build -d
 
 dev-down:
-	docker-compose -f ./tools/docker/dev.compose.yaml down -v
+	docker-compose -f ./tools/docker/dev.compose.yaml --env-file ./tools/docker/dev.env up down -v
 

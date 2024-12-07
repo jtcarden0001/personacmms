@@ -23,8 +23,8 @@ cli/bin
 go.work
 
 # environment
-*.env
-*.vscode
+# *.env
+# *.vscode
 
 # air temp directory
 tmp
