@@ -2,8 +2,11 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
 	"name": "Ubuntu",
+
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"moby": true,
@@ -30,12 +33,11 @@
 			"preserve_apt_list": true,
 			"packages": "htop",
 			"ppas": "ppa:deadsnakes/ppa"
-		},
+		}
 		// "ghcr.io/davzucky/devcontainers-features-wolfi/bash:1": {}
 	},
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"shutdownAction": "none",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -44,7 +46,15 @@
 	"postCreateCommand": "go install github.com/swaggo/swag/cmd/swag@latest",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"GitHub.copilot",
+				"ms-vscode.makefile-tools",
+				"eamodio.gitlens"
+			]
+		}
+	},
 
 	//TODO: get configuration into the dev container
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
