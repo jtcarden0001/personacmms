@@ -2,8 +2,6 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
-// A Consumable is a consumable item that is required to complete a maintenance task for an asset.
-
 // Create a Consumable
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
 	return a.db.CreateConsumable(consumable)

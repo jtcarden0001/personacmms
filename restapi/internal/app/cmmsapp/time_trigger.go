@@ -6,9 +6,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// a time trigger is an event that is triggered after a specific time has elapsed since the last time a
-// work order was completed for a task.
-
 // create a time trigger
 func (a *App) CreateTimeTrigger(groupTitle string, assetTitle string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
 	if err := a.validateAndInterpolateTimeTrigger(groupTitle, assetTitle, taskId, &timeTrigger); err != nil {

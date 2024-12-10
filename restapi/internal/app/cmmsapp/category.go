@@ -5,8 +5,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// A Category is a logical grouping of asset types
-
 // Create a Category
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
 	return a.db.CreateCategory(cat)

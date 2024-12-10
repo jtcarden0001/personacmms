@@ -5,8 +5,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// group is a logial grouping (in other words, a container) of related assets
-
 // Create a group
 func (a *App) CreateGroup(grp tp.Group) (tp.Group, error) {
 	return a.db.CreateGroup(grp)

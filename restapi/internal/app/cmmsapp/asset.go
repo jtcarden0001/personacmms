@@ -5,8 +5,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// An Asset is representative of an entity that requires maintenance
-
 // Create an Asset
 func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
 	if _, err := a.GetGroup(groupTitle); err != nil {
