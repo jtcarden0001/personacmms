@@ -6,8 +6,6 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// A DateTrigger is an event that is triggered on a specific date that results in a work order being created based on a task.
-
 // Create a DateTrigger
 func (a *App) CreateDateTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
 	if err := a.validateAndInterpolateDateTrigger(groupTitle, assetTitle, taskId, &dateTrigger); err != nil {
