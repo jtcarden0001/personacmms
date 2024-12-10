@@ -28,16 +28,6 @@ func (a *App) DeleteDateTrigger(groupTitle string, assetTitle string, taskId str
 	return a.db.DeleteDateTrigger(dt.Id)
 }
 
-// List all date triggers for a particular task
-func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.DateTrigger, error) {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
-	if err != nil {
-		return []tp.DateTrigger{}, err
-	}
-
-	return a.db.ListDateTriggersByTaskId(tid)
-}
-
 // Get a date trigger that is essentially namespaced under the task specificed
 func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
 	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
@@ -50,6 +40,16 @@ func (a *App) GetDateTrigger(groupTitle string, assetTitle string, taskId string
 	}
 
 	return a.db.GetDateTrigger(parsedDtId)
+}
+
+// List all date triggers for a particular task
+func (a *App) ListDateTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.DateTrigger, error) {
+	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
+	if err != nil {
+		return []tp.DateTrigger{}, err
+	}
+
+	return a.db.ListDateTriggersByTaskId(tid)
 }
 
 // Update a date trigger

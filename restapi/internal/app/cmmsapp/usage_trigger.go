@@ -6,9 +6,7 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// A usage trigger is an even that is triggered after a specific usage threshold has been reached
-// since the last time a task was completed.  Like a generator being used for 30 hours, etc.
-
+// Create a UsageTrigger
 func (a *App) CreateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
 	if err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger); err != nil {
 		return tp.UsageTrigger{}, err
@@ -17,7 +15,9 @@ func (a *App) CreateUsageTrigger(groupTitle, assetTitle, taskId string, usageTri
 	return a.db.CreateUsageTrigger(usageTrigger)
 }
 
+// Delete a UsageTrigger
 func (a *App) DeleteUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) error {
+	// Get before delete to provide opportunity to return not found error
 	ut, err := a.GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId)
 	if err != nil {
 		return err
@@ -26,8 +26,12 @@ func (a *App) DeleteUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId 
 	return a.db.DeleteUsageTrigger(ut.Id)
 }
 
+// Get a usage trigger that is essentially namespaced under the task specificed
 func (a *App) GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) (tp.UsageTrigger, error) {
-	// TODO: implement this method
+	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
+		return tp.UsageTrigger{}, err
+	}
+
 	parsedutId, err := uuid.Parse(usageTriggerId)
 	if err != nil {
 		return tp.UsageTrigger{}, err
@@ -36,6 +40,7 @@ func (a *App) GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId str
 	return a.db.GetUsageTrigger(parsedutId)
 }
 
+// List all usage triggers for a particular task
 func (a *App) ListUsageTriggers(groupTitle, assetTitle, taskId string) ([]tp.UsageTrigger, error) {
 	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
 	if err != nil {
@@ -45,21 +50,25 @@ func (a *App) ListUsageTriggers(groupTitle, assetTitle, taskId string) ([]tp.Usa
 	return a.db.ListUsageTriggersByTaskId(tid)
 }
 
+// Update a usage trigger
 func (a *App) UpdateUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
-	ut, err := a.GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId)
+	err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger)
 	if err != nil {
 		return tp.UsageTrigger{}, err
 	}
 
-	if usageTrigger.Id != uuid.Nil && usageTrigger.Id != ut.Id {
+	utId, err := uuid.Parse(usageTriggerId)
+	if err != nil {
+		return tp.UsageTrigger{}, err
+	}
+
+	if usageTrigger.Id == uuid.Nil {
+		usageTrigger.Id = utId
+	} else if usageTrigger.Id != utId {
 		return tp.UsageTrigger{}, ae.ErrIdMismatch
 	}
 
-	if usageTrigger.TaskId == uuid.Nil {
-		usageTrigger.TaskId = ut.TaskId
-	}
-
-	return a.db.UpdateUsageTrigger(ut.Id, usageTrigger)
+	return a.db.UpdateUsageTrigger(utId, usageTrigger)
 }
 
 func (a *App) validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger *tp.UsageTrigger) error {
