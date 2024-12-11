@@ -25,6 +25,7 @@ var ErrIdMismatch = AppError{Code: CodeInvalid, Message: "id mismatch"}
 var ErrInvalid = AppError{Code: CodeInvalid, Message: "invalid"}
 var ErrQuantityMustBePositive = AppError{Code: CodeInvalid, Message: "quantity must be positive"}
 var ErrTimeUnitTitleRequired = AppError{Code: CodeInvalid, Message: "time unit title required"}
+var ErrToolTitleRequired = AppError{Code: CodeInvalid, Message: "tool title required"}
 var ErrWorkOrderStatusTitleRequired = AppError{Code: CodeInvalid, Message: "work order status title required"}
 
 // Not Found Errors
