@@ -1,6 +1,6 @@
 package apperrors
 
-// It is idiomative to use pointers in custom errors and have Error() return a pointer type
+// It is idiomatic to use pointers in custom errors and have Error() return a pointer type
 // unless a good reason arises, avoiding the pointers is a concious choice for reduced complexity.
 
 type AppError struct {
