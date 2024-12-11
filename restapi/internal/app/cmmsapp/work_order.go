@@ -6,7 +6,9 @@ import (
 )
 
 func (a *App) CreateWorkOrder(groupTitle string, assetTitle string, taskId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
-	//TODO: validate and populate workorder
+	if err := a.validateWorkOrder(wo); err != nil {
+		return tp.WorkOrder{}, err
+	}
 
 	return a.db.CreateWorkOrder(wo)
 }
@@ -65,4 +67,8 @@ func (a *App) UpdateTaskWorkOrder(groupTitle string, assetTitle string, atId str
 	}
 
 	return a.db.UpdateWorkOrder(woIdParsed, wo)
+}
+
+func (a *App) validateWorkOrder(wo tp.WorkOrder) error {
+	return nil
 }
