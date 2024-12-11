@@ -6,6 +6,7 @@ type UsageUnit struct {
 	Type  string `json:"type" binding:"required"`
 }
 
+// If you add something here then add it below in the validUsageUnitTypes map
 const (
 	// types
 	UsageUnitTypeTime     = "time"
@@ -19,3 +20,11 @@ const (
 	// distance based
 	UsageUnitMiles = "mile"
 )
+
+var ValidUsageUnitTypes = map[string]bool{
+	UsageUnitTypeTime:     true,
+	UsageUnitTypeDistance: true,
+	UsageUnitHours:        true,
+	UsageUnitDays:         true,
+	UsageUnitMiles:        true,
+}
