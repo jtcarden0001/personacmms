@@ -51,7 +51,9 @@
 			"extensions": [
 				"GitHub.copilot",
 				"ms-vscode.makefile-tools",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"gruntfuggly.todo-tree",
+				"wayou.vscode-todo-highlight"
 			]
 		}
 	},
