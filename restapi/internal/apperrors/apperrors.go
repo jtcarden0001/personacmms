@@ -19,18 +19,25 @@ func (e AppError) Error() string {
 	return e.Message
 }
 
+func New(code string, message string) AppError {
+	return AppError{Code: code, Message: message}
+}
+
 // Already Exists Errors
 var CodeAlreadyExists = "ALREADY_EXISTS"
 var ErrAlreadyExists = AppError{Code: CodeAlreadyExists, Message: "already exists"}
 
 // Invalid Errors
 var CodeInvalid = "INVALID"
+
 var ErrCategoryTitleRequired = AppError{Code: CodeInvalid, Message: "category title mismatch"}
+
 var ErrGroupTitleMismatch = AppError{Code: CodeInvalid, Message: "group title mismatch"}
 var ErrGroupTitleRequired = AppError{Code: CodeInvalid, Message: "group title required"}
 var ErrIdMismatch = AppError{Code: CodeInvalid, Message: "id mismatch"}
 var ErrInvalid = AppError{Code: CodeInvalid, Message: "invalid"}
 var ErrQuantityMustBePositive = AppError{Code: CodeInvalid, Message: "quantity must be positive"}
+var ErrTaskConsumableQuantityNoteEmpty = AppError{Code: CodeInvalid, Message: "task consumable quantity note empty"}
 var ErrTimeUnitTitleRequired = AppError{Code: CodeInvalid, Message: "time unit title required"}
 var ErrToolTitleRequired = AppError{Code: CodeInvalid, Message: "tool title required"}
 var ErrUsageUnitTitleRequired = AppError{Code: CodeInvalid, Message: "usage unit title required"}

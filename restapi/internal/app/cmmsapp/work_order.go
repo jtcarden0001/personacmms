@@ -5,6 +5,8 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// TODO: implement this vertical
+
 func (a *App) CreateWorkOrder(groupTitle string, assetTitle string, taskId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	if err := a.validateWorkOrder(wo); err != nil {
 		return tp.WorkOrder{}, err

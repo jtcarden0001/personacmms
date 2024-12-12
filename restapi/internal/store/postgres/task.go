@@ -62,6 +62,17 @@ func (pg *Store) GetTask(atId tp.UUID) (tp.Task, error) {
 	return e, nil
 }
 
+func (pg *Store) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, error) {
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE asset_id = $1 AND id = $2`, assetTaskTable)
+	var e tp.Task
+	err := pg.db.QueryRow(query, assetId, taskId).Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
+	if err != nil {
+		return tp.Task{}, handleDbError(err, "tasks")
+	}
+
+	return e, nil
+}
+
 func (pg *Store) UpdateTask(atId tp.UUID, at tp.Task) (tp.Task, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, tasktemplate_id = $4 WHERE id = $5 returning id`, assetTaskTable)
 	err := pg.db.QueryRow(query, at.Title, at.Instructions, at.AssetId, at.TaskTemplateId, atId).Scan(&at.Id)

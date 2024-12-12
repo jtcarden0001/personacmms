@@ -220,6 +220,11 @@ func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
 	return tp.Task{}, nil
 }
 
+func (m *MockStore) GetTaskByAssetId(assetId tp.UUID, id tp.UUID) (tp.Task, error) {
+	// Mock implementation
+	return tp.Task{}, nil
+}
+
 func (m *MockStore) UpdateTask(id tp.UUID, task tp.Task) (tp.Task, error) {
 	// Mock implementation
 	return task, nil

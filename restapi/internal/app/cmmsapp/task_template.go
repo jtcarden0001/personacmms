@@ -2,6 +2,8 @@ package cmmsapp
 
 import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 
+// TODO: implement this vertical
+
 func (a *App) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
 	return a.db.CreateTaskTemplate(taskTemplate)
 }

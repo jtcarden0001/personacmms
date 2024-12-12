@@ -63,6 +63,7 @@ type Store interface {
 	DeleteTask(tp.UUID) error
 	ListTasks() ([]tp.Task, error)
 	GetTask(tp.UUID) (tp.Task, error)
+	GetTaskByAssetId(tp.UUID, tp.UUID) (tp.Task, error)
 	UpdateTask(tp.UUID, tp.Task) (tp.Task, error)
 
 	// task template

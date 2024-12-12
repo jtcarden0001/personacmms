@@ -5,6 +5,8 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// TODO: implement this vertical
+
 func (a *App) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
 	return a.db.CreateTaskTool(tool)
 }
