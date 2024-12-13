@@ -1,5 +1,7 @@
 package types
 
+// A UsageUnit is a unit of measurement that is used to measure the usage of a particular asset
+// for the purpose of task scheduling
 type UsageUnit struct {
 	Title string `json:"title" binding:"required"`
 	Id    UUID   `json:"id" swaggerignore:"true"`

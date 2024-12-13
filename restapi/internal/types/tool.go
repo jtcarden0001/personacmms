@@ -1,5 +1,6 @@
 package types
 
+// a tool is a physical (non-disposable) item that is required to complete a task
 type Tool struct {
 	Title string  `json:"title" binding:"required"`
 	Id    UUID    `json:"id" swaggerignore:"true"`

@@ -1,5 +1,6 @@
 package types
 
+// a task is a task that is assigned to an asset that work orders can be spawned from
 type Task struct {
 	Id             UUID    `json:"id" swaggerignore:"true"` // will be handled by service
 	Title          string  `json:"title"`
