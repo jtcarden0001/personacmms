@@ -42,34 +42,34 @@ func (a *App) GetTask(groupTitle string, assetTitle string, taskId string) (tp.T
 	return a.db.GetTaskByAssetId(asset.Id, tId)
 }
 
-// TODO: complete this vertical
+// list tasks for an asset
 func (a *App) ListTasks(groupTitle string, assetTitle string) ([]tp.Task, error) {
-	ats, err := a.db.ListTasks()
+	asset, err := a.GetAsset(groupTitle, assetTitle)
 	if err != nil {
 		return []tp.Task{}, err
 	}
 
-	// filter Tsks by group and asset title
-	var tasks []tp.Task
-	for _, at := range ats {
-		// if at.GroupTitle == groupTitle && at.AssetTitle == assetTitle {
-		tasks = append(tasks, at)
-		// }
+	tasks, err := a.db.ListTasksByAssetId(asset.Id)
+	if err != nil {
+		return []tp.Task{}, err
 	}
 
 	return tasks, nil
 }
 
+// UpdateTask updates a task for an asset
 func (a *App) UpdateTask(groupTitle string, assetTitle string, taskId string, at tp.Task) (tp.Task, error) {
-	// TODO: validate Tsk
-
-	// cast taskId to tp.UUID
-	atId, err := uuid.Parse(taskId)
+	err := a.validateAndInterpolateTask(groupTitle, assetTitle, &at)
 	if err != nil {
 		return tp.Task{}, err
 	}
 
-	return a.db.UpdateTask(atId, at)
+	tId, err := uuid.Parse(taskId)
+	if err != nil {
+		return tp.Task{}, ae.New(ae.CodeInvalid, "task id invalid")
+	}
+
+	return a.db.UpdateTask(tId, at)
 }
 
 func (a *App) validateAndInterpolateTask(groupTitle, assetTitle string, task *tp.Task) error {

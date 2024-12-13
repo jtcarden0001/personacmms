@@ -215,6 +215,11 @@ func (m *MockStore) ListTasks() ([]tp.Task, error) {
 	return []tp.Task{}, nil
 }
 
+func (m *MockStore) ListTasksByAssetId(id tp.UUID) ([]tp.Task, error) {
+	// Mock implementation
+	return []tp.Task{}, nil
+}
+
 func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
 	// Mock implementation
 	return tp.Task{}, nil

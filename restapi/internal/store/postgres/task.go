@@ -30,27 +30,6 @@ func (pg *Store) DeleteTask(atId tp.UUID) error {
 	return nil
 }
 
-func (pg *Store) ListTasks() ([]tp.Task, error) {
-	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s`, assetTaskTable)
-	rows, err := pg.db.Query(query)
-	if err != nil {
-		return nil, handleDbError(err, "tasks")
-	}
-	defer rows.Close()
-
-	var at []tp.Task
-	for rows.Next() {
-		var e tp.Task
-		err = rows.Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
-		if err != nil {
-			return nil, handleDbError(err, "tasks")
-		}
-		at = append(at, e)
-	}
-
-	return at, nil
-}
-
 func (pg *Store) GetTask(atId tp.UUID) (tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE id = $1`, assetTaskTable)
 	var e tp.Task
@@ -71,6 +50,49 @@ func (pg *Store) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, err
 	}
 
 	return e, nil
+}
+
+func (pg *Store) ListTasks() ([]tp.Task, error) {
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s`, assetTaskTable)
+	rows, err := pg.db.Query(query)
+	if err != nil {
+		return nil, handleDbError(err, "tasks")
+	}
+	defer rows.Close()
+
+	var ts []tp.Task
+	for rows.Next() {
+		var e tp.Task
+		err = rows.Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
+		if err != nil {
+			return nil, handleDbError(err, "tasks")
+		}
+		ts = append(ts, e)
+	}
+
+	return ts, nil
+}
+
+// TODO: add a test for this
+func (pg *Store) ListTasksByAssetId(assetId tp.UUID) ([]tp.Task, error) {
+	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE asset_id = $1`, assetTaskTable)
+	rows, err := pg.db.Query(query, assetId)
+	if err != nil {
+		return nil, handleDbError(err, "tasks")
+	}
+	defer rows.Close()
+
+	var ts []tp.Task
+	for rows.Next() {
+		var e tp.Task
+		err = rows.Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
+		if err != nil {
+			return nil, handleDbError(err, "tasks")
+		}
+		ts = append(ts, e)
+	}
+
+	return ts, nil
 }
 
 func (pg *Store) UpdateTask(atId tp.UUID, at tp.Task) (tp.Task, error) {
