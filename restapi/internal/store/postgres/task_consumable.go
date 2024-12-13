@@ -28,6 +28,17 @@ func (pg *Store) DeleteTaskConsumable(atId, cId tp.UUID) error {
 	return nil
 }
 
+func (pg *Store) GetTaskConsumable(atId, cId tp.UUID) (tp.TaskConsumable, error) {
+	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s WHERE task_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
+	var e tp.TaskConsumable
+	err := pg.db.QueryRow(query, atId, cId).Scan(&e.TaskId, &e.ConsumableId, &e.QuantityNote)
+	if err != nil {
+		return tp.TaskConsumable{}, handleDbError(err, "task-consumable")
+	}
+
+	return e, nil
+}
+
 func (pg *Store) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s", assetTaskConsumableTable)
 	rows, err := pg.db.Query(query)
@@ -49,15 +60,26 @@ func (pg *Store) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 	return at, nil
 }
 
-func (pg *Store) GetTaskConsumable(atId, cId tp.UUID) (tp.TaskConsumable, error) {
-	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s WHERE task_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
-	var e tp.TaskConsumable
-	err := pg.db.QueryRow(query, atId, cId).Scan(&e.TaskId, &e.ConsumableId, &e.QuantityNote)
+// TODO: add testing for this
+func (pg *Store) ListTaskConsumablesByTaskId(atId tp.UUID) ([]tp.TaskConsumable, error) {
+	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s WHERE task_id = $1", assetTaskConsumableTable)
+	rows, err := pg.db.Query(query, atId)
 	if err != nil {
-		return tp.TaskConsumable{}, handleDbError(err, "task-consumable")
+		return nil, handleDbError(err, "task-consumable")
+	}
+	defer rows.Close()
+
+	var tcs []tp.TaskConsumable
+	for rows.Next() {
+		var e tp.TaskConsumable
+		err = rows.Scan(&e.TaskId, &e.ConsumableId, &e.QuantityNote)
+		if err != nil {
+			return nil, handleDbError(err, "task-consumable")
+		}
+		tcs = append(tcs, e)
 	}
 
-	return e, nil
+	return tcs, nil
 }
 
 func (pg *Store) UpdateTaskConsumable(atc tp.TaskConsumable) (tp.TaskConsumable, error) {

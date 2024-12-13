@@ -59,6 +59,11 @@ func (m *MockStore) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 	return []tp.TaskConsumable{}, nil
 }
 
+func (m *MockStore) ListTaskConsumablesByTaskId(taskId tp.UUID) ([]tp.TaskConsumable, error) {
+	// Mock implementation
+	return []tp.TaskConsumable{}, nil
+}
+
 func (m *MockStore) GetTaskConsumable(id, taskId tp.UUID) (tp.TaskConsumable, error) {
 	// Mock implementation
 	return tp.TaskConsumable{}, nil
