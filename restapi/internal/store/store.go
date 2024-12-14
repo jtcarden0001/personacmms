@@ -1,6 +1,7 @@
 package store
 
 import (
+	"github.com/google/uuid"
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 	"github.com/jtcarden0001/personacmms/restapi/internal/store/test/mock"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
@@ -26,7 +27,8 @@ type Store interface {
 	// consumable
 	CreateConsumable(tp.Consumable) (tp.Consumable, error)
 	DeleteConsumable(string) error
-	GetConsumable(string) (tp.Consumable, error)
+	GetConsumableById(uuid.UUID) (tp.Consumable, error)
+	GetConsumableByTitle(string) (tp.Consumable, error)
 	ListConsumables() ([]tp.Consumable, error)
 	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
 
@@ -74,6 +76,7 @@ type Store interface {
 	DeleteTaskTool(tp.UUID, tp.UUID) error
 	GetTaskTool(tp.UUID, tp.UUID) (tp.TaskTool, error)
 	ListTaskTools() ([]tp.TaskTool, error)
+	ListTaskToolsByTaskId(tp.UUID) ([]tp.TaskTool, error)
 
 	// time trigger
 	CreateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
@@ -94,6 +97,7 @@ type Store interface {
 	CreateTool(tp.Tool) (tp.Tool, error)
 	DeleteTool(string) error
 	GetTool(string) (tp.Tool, error)
+	GetToolById(uuid.UUID) (tp.Tool, error)
 	ListTools() ([]tp.Tool, error)
 	UpdateTool(string, tp.Tool) (tp.Tool, error)
 

@@ -61,6 +61,20 @@ func (pg *Store) GetTool(title string) (tp.Tool, error) {
 	return tool, nil
 }
 
+// TODO: add testing for this.
+func (pg *Store) GetToolById(id uuid.UUID) (tp.Tool, error) {
+	query := fmt.Sprintf(`SELECT id, title, size FROM %s WHERE id = $1`, toolTableName)
+	row := pg.db.QueryRow(query, id)
+
+	var tool tp.Tool
+	err := row.Scan(&tool.Id, &tool.Title, &tool.Size)
+	if err != nil {
+		return tp.Tool{}, handleDbError(err, "tool")
+	}
+
+	return tool, nil
+}
+
 func (pg *Store) UpdateTool(title string, tool tp.Tool) (tp.Tool, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, size = $2 WHERE title = $3 returning id`, toolTableName)
 	row := pg.db.QueryRow(query, tool.Title, tool.Size, title)

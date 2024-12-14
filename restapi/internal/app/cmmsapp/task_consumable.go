@@ -130,12 +130,21 @@ func (a *App) UpdateTaskConsumableWithValidation(groupTitle, assetTitle, taskId,
 }
 
 func (a *App) validateTaskConsumable(atc tp.TaskConsumable) error {
+	// validate task exists
+	_, err := a.db.GetTask(atc.TaskId)
+	if err != nil {
+		return err
+	}
+
+	// validate consumable exists
+	_, err = a.db.GetConsumableById(atc.ConsumableId)
+	if err != nil {
+		return err
+	}
+
 	if atc.QuantityNote == "" {
 		return ae.ErrTaskConsumableQuantityNoteEmpty
 	}
 
-	// we could validate that the task and consumable exist here
-	// but we get that for free with the db layer so will exclude here
-	// a little leaky but avoids unnecessary db calls
 	return nil
 }

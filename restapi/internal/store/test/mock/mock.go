@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -90,6 +91,11 @@ func (m *MockStore) ListTaskTools() ([]tp.TaskTool, error) {
 	return []tp.TaskTool{}, nil
 }
 
+func (m *MockStore) ListTaskToolsByTaskId(taskId tp.UUID) ([]tp.TaskTool, error) {
+	// Mock implementation
+	return []tp.TaskTool{}, nil
+}
+
 func (m *MockStore) GetTaskTool(id, taskId tp.UUID) (tp.TaskTool, error) {
 	// Mock implementation
 	return tp.TaskTool{}, nil
@@ -137,7 +143,12 @@ func (m *MockStore) ListConsumables() ([]tp.Consumable, error) {
 	return []tp.Consumable{}, nil
 }
 
-func (m *MockStore) GetConsumable(id string) (tp.Consumable, error) {
+func (m *MockStore) GetConsumableByTitle(title string) (tp.Consumable, error) {
+	// Mock implementation
+	return tp.Consumable{}, nil
+}
+
+func (m *MockStore) GetConsumableById(id uuid.UUID) (tp.Consumable, error) {
 	// Mock implementation
 	return tp.Consumable{}, nil
 }
@@ -340,6 +351,11 @@ func (m *MockStore) ListTools() ([]tp.Tool, error) {
 }
 
 func (m *MockStore) GetTool(id string) (tp.Tool, error) {
+	// Mock implementation
+	return tp.Tool{}, nil
+}
+
+func (m *MockStore) GetToolById(id uuid.UUID) (tp.Tool, error) {
 	// Mock implementation
 	return tp.Tool{}, nil
 }

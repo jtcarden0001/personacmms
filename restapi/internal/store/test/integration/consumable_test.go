@@ -55,7 +55,7 @@ func TestConsumableDelete(t *testing.T) {
 	}
 
 	// Confirm deletion
-	_, err = store.GetConsumable(returnedConsumable.Title)
+	_, err = store.GetConsumableByTitle(returnedConsumable.Title)
 	if err == nil {
 		t.Errorf("Get() failed: expected error, got nil")
 	}
@@ -130,7 +130,7 @@ func TestConsumableUpdateGet(t *testing.T) {
 	}
 
 	// Get
-	consumable, err = store.GetConsumable(consumable.Title)
+	consumable, err = store.GetConsumableByTitle(consumable.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}

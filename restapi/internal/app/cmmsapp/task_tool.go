@@ -5,15 +5,20 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// TODO: implement this vertical
-
+// create tan association between a task and a tool
 func (a *App) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
+	err := a.validateTaskTool(tool)
+	if err != nil {
+		return tp.TaskTool{}, err
+	}
+
 	return a.db.CreateTaskTool(tool)
 }
 
+// create an association between a task and a tool with task namespace validation
 func (a *App) CreateTaskToolWithValidation(groupTitle, assetTitle, taskId, toolId string) (tp.TaskTool, error) {
-	// TODO: implement validation
-	atId, err := uuid.Parse(taskId)
+	// validate the namespace coherency of the task
+	t, err := a.GetTask(groupTitle, assetTitle, taskId)
 	if err != nil {
 		return tp.TaskTool{}, err
 	}
@@ -23,40 +28,52 @@ func (a *App) CreateTaskToolWithValidation(groupTitle, assetTitle, taskId, toolI
 		return tp.TaskTool{}, err
 	}
 
-	return a.db.CreateTaskTool(tp.TaskTool{TaskId: atId, ToolId: tId})
+	// construct the target task tool
+	tt := tp.TaskTool{
+		TaskId: t.Id,
+		ToolId: tId,
+	}
+
+	// TODO: some inefficiency here as task is being queried from the db twice, room for improvement
+	err = a.validateTaskTool(tt)
+	if err != nil {
+		return tp.TaskTool{}, err
+	}
+
+	return a.db.CreateTaskTool(tt)
 }
 
+// delete the relationship between a task and a tool
 func (a *App) DeleteTaskTool(groupTitle, assetTitle, taskId, toolId string) error {
-	// TODO: implement validation
-	atId, err := uuid.Parse(taskId)
+	// validate the tasktool exists
+	tt, err := a.GetTaskTool(groupTitle, assetTitle, taskId, toolId)
 	if err != nil {
 		return err
 	}
 
-	tId, err := uuid.Parse(toolId)
-	if err != nil {
-		return err
-	}
-
-	return a.db.DeleteTaskTool(atId, tId)
+	return a.db.DeleteTaskTool(tt.TaskId, tt.ToolId)
 }
 
+// list all tools associates with a task
 func (a *App) ListTaskTools(groupTitle, assetTitle, taskId string) ([]tp.TaskTool, error) {
-	// TODO: implement validation
-
-	atTools, err := a.db.ListTaskTools()
+	// namespace validation
+	t, err := a.GetTask(groupTitle, assetTitle, taskId)
 	if err != nil {
-		return nil, err
+		return []tp.TaskTool{}, err
 	}
 
-	// TODO: filter asset task tools by asset task id
+	atTools, err := a.db.ListTaskToolsByTaskId(t.Id)
+	if err != nil {
+		return []tp.TaskTool{}, err
+	}
 
 	return atTools, nil
 }
 
+// get a tool associated with a task
 func (a *App) GetTaskTool(groupTitle, assetTitle, taskId, toolId string) (tp.TaskTool, error) {
-	// TODO: implement validation
-	atId, err := uuid.Parse(taskId)
+	// namespace validation
+	task, err := a.GetTask(groupTitle, assetTitle, taskId)
 	if err != nil {
 		return tp.TaskTool{}, err
 	}
@@ -66,5 +83,21 @@ func (a *App) GetTaskTool(groupTitle, assetTitle, taskId, toolId string) (tp.Tas
 		return tp.TaskTool{}, err
 	}
 
-	return a.db.GetTaskTool(atId, tId)
+	return a.db.GetTaskTool(task.Id, tId)
+}
+
+func (a *App) validateTaskTool(tool tp.TaskTool) error {
+	// validate task exists
+	_, err := a.db.GetTask(tool.TaskId)
+	if err != nil {
+		return err
+	}
+
+	// validate tool exists
+	_, err = a.db.GetToolById(tool.ToolId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

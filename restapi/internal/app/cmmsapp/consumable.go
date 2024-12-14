@@ -24,7 +24,7 @@ func (a *App) ListConsumables() ([]tp.Consumable, error) {
 
 // Get a Consumable
 func (a *App) GetConsumable(consumableTitle string) (tp.Consumable, error) {
-	return a.db.GetConsumable(consumableTitle)
+	return a.db.GetConsumableByTitle(consumableTitle)
 }
 
 // Update a Consumable
