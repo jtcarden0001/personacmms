@@ -1,6 +1,6 @@
 GOCMD=GO111MODULE=on GOARCH=amd64 go
 GOBUILD=$(GOCMD) build -v 
-GOTEST=$(GOCMD) test -v -parallel 2
+GOTEST=$(GOCMD) test -v -parallel 1
 GOHOSTOS=$(strip $(shell $(GOCMD) env get GOHOSTOS))
 
 

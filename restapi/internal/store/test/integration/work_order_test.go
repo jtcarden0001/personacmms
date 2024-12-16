@@ -17,7 +17,7 @@ func TestWorkOrderCreate(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
-	wo := getTestWorkOrder(atId, "1")
+	wo := getTestWorkOrder(atId, 1)
 
 	// Create a new work order
 	returnedWo, err := store.CreateWorkOrder(wo)
@@ -36,7 +36,7 @@ func TestWorkOrderDelete(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
-	wo := getTestWorkOrder(atId, "1")
+	wo := getTestWorkOrder(atId, 1)
 
 	// Create a new work order
 	returnedWo, err := store.CreateWorkOrder(wo)
@@ -89,14 +89,14 @@ func TestWorkOrderList(t *testing.T) {
 	atId := setupTask(t, store, "1")
 
 	// Create a new work order
-	wo1 := getTestWorkOrder(atId, "1")
+	wo1 := getTestWorkOrder(atId, 1)
 	cwo1, err := store.CreateWorkOrder(wo1)
 	if err != nil {
 		t.Errorf("CreateWorkOrder() failed: %v", err)
 	}
 	wosMap[cwo1.Id] = cwo1
 
-	wo2 := getTestWorkOrder(atId, "2")
+	wo2 := getTestWorkOrder(atId, 2)
 	cwo2, err := store.CreateWorkOrder(wo2)
 	if err != nil {
 		t.Errorf("CreateWorkOrder() failed: %v", err)
@@ -125,7 +125,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
-	wo1 := getTestWorkOrder(atId, "1")
+	wo1 := getTestWorkOrder(atId, 1)
 
 	// Create a new work order
 	cwo, err := store.CreateWorkOrder(wo1)
@@ -134,7 +134,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	}
 
 	// Update the work order
-	wo2 := getTestWorkOrder(atId, "2")
+	wo2 := getTestWorkOrder(atId, 2)
 	wo2.Id = cwo.Id
 
 	updatedWo, err := store.UpdateWorkOrder(cwo.Id, wo2)
@@ -142,7 +142,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 		t.Errorf("UpdateWorkOrder() failed: %v", err)
 	}
 
-	fieldsShouldBeDifferent := convertToSet([]string{"CreatedDate", "CompletedDate", "Notes", "CumulativeMiles", "CumulativeHours"})
+	fieldsShouldBeDifferent := convertToSet([]string{"CreatedDate", "CompletedDate", "CumulativeMiles", "CumulativeHours"})
 	compEntitiesFieldsShouldBeDifferent(t, cwo, updatedWo, fieldsShouldBeDifferent)
 
 	// Get the work order
@@ -160,7 +160,7 @@ func TestWorkOrderUpdateNotFound(t *testing.T) {
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
 
-	wo := getTestWorkOrder(uuid.New(), "1")
+	wo := getTestWorkOrder(uuid.New(), 1)
 	_, err := store.UpdateWorkOrder(uuid.New(), wo)
 	if err == nil {
 		t.Errorf("UpdateWorkOrder() failed: expected error, got nil")
@@ -168,13 +168,13 @@ func TestWorkOrderUpdateNotFound(t *testing.T) {
 }
 
 // different values except assetTaskId and statusTitle
-func getTestWorkOrder(assetTaskId tp.UUID, id string) tp.WorkOrder {
+func getTestWorkOrder(assetTaskId tp.UUID, id int) tp.WorkOrder {
 	return tp.WorkOrder{
-		CreatedDate:     time.Now(),
-		CompletedDate:   func(t time.Time) *time.Time { return &t }(time.Now().UTC().Truncate(time.Millisecond)),
-		Notes:           func(s string) *string { return &s }(fmt.Sprintf("Test work order %s", id)),
-		CumulativeMiles: func() *int { miles, _ := strconv.Atoi(fmt.Sprintf("20%s", id)); return &miles }(),
-		CumulativeHours: func() *int { hours, _ := strconv.Atoi(fmt.Sprintf("20%s", id)); return &hours }(),
+		CreatedDate:     time.Now().Add(time.Duration(id) * time.Hour),
+		CompletedDate:   func(t time.Time) *time.Time { return &t }(time.Now().Add(time.Duration(id) * time.Hour).UTC().Truncate(time.Millisecond)),
+		Notes:           nil, // func(s string) *string { return &s }(fmt.Sprintf("Test work order %s", id)),
+		CumulativeMiles: func() *int { miles, _ := strconv.Atoi(fmt.Sprintf("20%d", id)); return &miles }(),
+		CumulativeHours: func() *int { hours, _ := strconv.Atoi(fmt.Sprintf("20%d", id)); return &hours }(),
 		TaskId:          assetTaskId,
 		StatusTitle:     tp.WorkOrderStatusComplete,
 	}
