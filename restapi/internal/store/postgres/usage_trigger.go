@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var usageTriggerTableName = "usagetrigger"
@@ -22,11 +24,17 @@ func (pg *Store) CreateUsageTrigger(ut tp.UsageTrigger) (tp.UsageTrigger, error)
 
 func (pg *Store) DeleteUsageTrigger(utId uuid.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", usageTriggerTableName)
-	_, err := pg.db.Exec(query, utId)
+	result, err := pg.db.Exec(query, utId)
 	if err != nil {
 		return handleDbError(err, "usage-trigger")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "usage-trigger")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "usage trigger with id '%s' not found", utId)
+	}
 	return nil
 }
 
@@ -83,10 +91,16 @@ func (pg *Store) ListUsageTriggersByTaskId(taskId uuid.UUID) ([]tp.UsageTrigger,
 
 func (pg *Store) UpdateUsageTrigger(utId uuid.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
 	query := fmt.Sprintf("UPDATE %s SET quantity = $1, usageunit_title = $2, task_id = $3 WHERE id = $4", usageTriggerTableName)
-	_, err := pg.db.Exec(query, ut.Quantity, ut.UsageUnit, ut.TaskId, utId)
+	result, err := pg.db.Exec(query, ut.Quantity, ut.UsageUnit, ut.TaskId, utId)
 	if err != nil {
 		return tp.UsageTrigger{}, handleDbError(err, "usage-trigger")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.UsageTrigger{}, handleDbError(err, "usage-trigger")
+	}
+	if rowsAffected == 0 {
+		return tp.UsageTrigger{}, errors.Wrapf(ae.ErrNotFound, "usage trigger with id '%s' not found", utId)
+	}
 	return ut, nil
 }

@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 type WorkOrder interface {
@@ -45,8 +47,21 @@ func (pg *Store) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 
 func (pg *Store) DeleteWorkOrder(woId tp.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, workOrderTable)
-	_, err := pg.db.Exec(query, woId)
-	return handleDbError(err, "work-order")
+	result, err := pg.db.Exec(query, woId)
+	if err != nil {
+		return handleDbError(err, "work-order")
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "work-order")
+	}
+
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "work-order with id %s not found", woId)
+	}
+
+	return nil
 }
 
 func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
@@ -91,7 +106,7 @@ func (pg *Store) UpdateWorkOrder(woId tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, e
 		status_title = $8 
 		WHERE id = $1`, workOrderTable)
 
-	_, err := pg.db.Exec(
+	result, err := pg.db.Exec(
 		query,
 		woId,
 		wo.CreatedDate,
@@ -104,6 +119,15 @@ func (pg *Store) UpdateWorkOrder(woId tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, e
 	)
 	if err != nil {
 		return tp.WorkOrder{}, handleDbError(err, "work-order")
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
+	}
+
+	if rowsAffected == 0 {
+		return tp.WorkOrder{}, errors.Wrapf(ae.ErrNotFound, "work-order with id %s not found", woId)
 	}
 
 	return wo, nil

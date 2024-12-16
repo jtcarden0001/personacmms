@@ -59,6 +59,18 @@ func TestGroupDelete(t *testing.T) {
 	}
 }
 
+func TestGroupDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testgroupdeletenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	err := store.DeleteGroup("notfound")
+	if err == nil {
+		t.Errorf("DeleteGroup() should have failed")
+	}
+}
+
 func TestGroupList(t *testing.T) {
 	t.Parallel()
 	dbname := "testgrouplist"
@@ -130,5 +142,20 @@ func TestGroupUpdateGet(t *testing.T) {
 
 	if returnGroup.Title != group.Title || getGroup.Title != group.Title {
 		t.Errorf("Get() failed: expected %s, got %s", group.Title, returnGroup.Title)
+	}
+}
+
+func TestGroupUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testgroupupdatenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	group := types.Group{
+		Title: "notfound",
+	}
+	_, err := store.UpdateGroup("notfound", group)
+	if err == nil {
+		t.Errorf("UpdateGroup() should have failed")
 	}
 }

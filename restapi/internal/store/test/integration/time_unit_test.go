@@ -63,6 +63,18 @@ func TestTimeUnitDelete(t *testing.T) {
 	}
 }
 
+func TestTimeUnitDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimeunitdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteTimeUnit("nonexistent-title")
+	if err == nil {
+		t.Errorf("DeleteTimeUnit() failed: expected error, got nil")
+	}
+}
+
 func TestTimeUnitList(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitlist"
@@ -131,5 +143,20 @@ func TestTimeUnitUpdateGet(t *testing.T) {
 
 	if updatedUnit.Title != returnedUnit.Title {
 		t.Errorf("Get() failed: expected %s, got %s", returnedUnit.Title, updatedUnit.Title)
+	}
+}
+
+func TestTimeUnitUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimeunitupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	timeUnit := types.TimeUnit{
+		Title: "nonexistent-title",
+	}
+	_, err := store.UpdateTimeUnit("nonexistent-title", timeUnit)
+	if err == nil {
+		t.Errorf("UpdateTimeUnit() failed: expected error, got nil")
 	}
 }

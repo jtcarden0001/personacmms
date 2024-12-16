@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	uid "github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var timeUnitTableName = "timeunit"
@@ -24,9 +26,18 @@ func (pg *Store) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
 
 func (pg *Store) DeleteTimeUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, timeUnitTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "time-unit")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "time-unit")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "time-unit")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "time unit with title '%s' not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
@@ -62,11 +73,10 @@ func (pg *Store) GetTimeUnit(title string) (tp.TimeUnit, error) {
 }
 
 func (pg *Store) UpdateTimeUnit(title string, tu tp.TimeUnit) (tp.TimeUnit, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, timeUnitTableName)
-	_, err := pg.db.Exec(query, tu.Title, title)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, timeUnitTableName)
+	err := pg.db.QueryRow(query, tu.Title, title).Scan(&tu.Id)
 	if err != nil {
 		return tp.TimeUnit{}, handleDbError(err, "time-unit")
 	}
-
 	return tu, nil
 }

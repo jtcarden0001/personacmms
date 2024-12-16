@@ -56,6 +56,18 @@ func TestDateTriggerDelete(t *testing.T) {
 	}
 }
 
+func TestDateTriggerDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	var dbName = "testdatetriggerdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteDateTrigger(tp.UUID{})
+	if err == nil {
+		t.Errorf("DeleteDateTrigger() should have failed")
+	}
+}
+
 func TestDateTriggerList(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerlist"
@@ -142,4 +154,21 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updatedDt, retrievedDt)
+}
+
+func TestDateTriggerUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	var dbName = "testdatetriggerupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	dt := tp.DateTrigger{
+		Id:     tp.UUID{},
+		Date:   time.Now().AddDate(1, 0, 0),
+		TaskId: tp.UUID{},
+	}
+	_, err := store.UpdateDateTrigger(dt.Id, dt)
+	if err == nil {
+		t.Errorf("UpdateDateTrigger() should have failed")
+	}
 }

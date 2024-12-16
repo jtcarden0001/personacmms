@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var toolTableName = "tool"
@@ -22,9 +24,18 @@ func (pg *Store) CreateTool(tool tp.Tool) (tp.Tool, error) {
 
 func (pg *Store) DeleteTool(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, toolTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "tool")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "tool with title '%s' not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListTools() ([]tp.Tool, error) {
@@ -77,9 +88,7 @@ func (pg *Store) GetToolById(id uuid.UUID) (tp.Tool, error) {
 
 func (pg *Store) UpdateTool(title string, tool tp.Tool) (tp.Tool, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, size = $2 WHERE title = $3 returning id`, toolTableName)
-	row := pg.db.QueryRow(query, tool.Title, tool.Size, title)
-
-	err := row.Scan(&tool.Id)
+	err := pg.db.QueryRow(query, tool.Title, tool.Size, title).Scan(&tool.Id)
 	if err != nil {
 		return tp.Tool{}, handleDbError(err, "tool")
 	}

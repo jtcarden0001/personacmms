@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var assetTaskTable = "task"
@@ -22,11 +24,17 @@ func (pg *Store) CreateTask(at tp.Task) (tp.Task, error) {
 
 func (pg *Store) DeleteTask(atId tp.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, assetTaskTable)
-	_, err := pg.db.Exec(query, atId)
+	result, err := pg.db.Exec(query, atId)
 	if err != nil {
 		return handleDbError(err, "tasks")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "tasks")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "task with id '%s' not found", atId)
+	}
 	return nil
 }
 
@@ -96,11 +104,18 @@ func (pg *Store) ListTasksByAssetId(assetId tp.UUID) ([]tp.Task, error) {
 }
 
 func (pg *Store) UpdateTask(atId tp.UUID, at tp.Task) (tp.Task, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, tasktemplate_id = $4 WHERE id = $5 returning id`, assetTaskTable)
-	err := pg.db.QueryRow(query, at.Title, at.Instructions, at.AssetId, at.TaskTemplateId, atId).Scan(&at.Id)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, tasktemplate_id = $4 WHERE id = $5`, assetTaskTable)
+	result, err := pg.db.Exec(query, at.Title, at.Instructions, at.AssetId, at.TaskTemplateId, atId)
 	if err != nil {
 		return tp.Task{}, handleDbError(err, "tasks")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.Task{}, handleDbError(err, "tasks")
+	}
+	if rowsAffected == 0 {
+		return tp.Task{}, errors.Wrapf(ae.ErrNotFound, "task with id '%s' not found", atId)
+	}
+	at.Id = atId
 	return at, nil
 }

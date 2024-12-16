@@ -220,6 +220,40 @@ func TestAssetUpdateGet(t *testing.T) {
 	compEntities(t, updatedAsset, returnedAsset)
 }
 
+func TestAssetDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testassetdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteAsset("notfound", "notfound")
+	if err == nil {
+		t.Errorf("DeleteAsset() should have failed")
+	}
+}
+
+func TestAssetUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testassetupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	asset := tp.Asset{
+		GroupTitle:    "notfound",
+		Title:         "notfound",
+		Year:          toPtr(2023),
+		Description:   toPtr("test description"),
+		Make:          toPtr("test make"),
+		ModelNumber:   toPtr("test model number"),
+		SerialNumber:  toPtr("test serial number"),
+		CategoryTitle: toPtr("notfound"),
+	}
+	_, err := store.UpdateAsset("notfound", "notfound", asset)
+	if err == nil {
+		t.Errorf("UpdateAsset() should have failed")
+	}
+}
+
 func getTestAsset(groupTitle string, categoryTitle string, suffix string) tp.Asset {
 	return tp.Asset{
 		GroupTitle:    groupTitle,

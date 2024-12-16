@@ -55,6 +55,18 @@ func TestUsageUnitDelete(t *testing.T) {
 	}
 }
 
+func TestUsageUnitDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testusageunitdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteUsageUnit("nonexistent-title")
+	if err == nil {
+		t.Errorf("DeleteUsageUnit() failed: expected error, got nil")
+	}
+}
+
 func TestUsageUnitList(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitlist"
@@ -142,5 +154,20 @@ func TestUsageUnitUpdateGet(t *testing.T) {
 
 	if unit.Title != updatedUnit.Title {
 		t.Errorf("Get() failed: expected %s, got %s", updatedUnit.Title, unit.Title)
+	}
+}
+
+func TestUsageUnitUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testusageunitupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	usageUnit := tp.UsageUnit{
+		Title: "nonexistent-title",
+	}
+	_, err := store.UpdateUsageUnit("nonexistent-title", usageUnit)
+	if err == nil {
+		t.Errorf("UpdateUsageUnit() failed: expected error, got nil")
 	}
 }

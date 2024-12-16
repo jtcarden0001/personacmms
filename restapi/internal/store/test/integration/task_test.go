@@ -59,6 +59,18 @@ func TestTaskDelete(t *testing.T) {
 	}
 }
 
+func TestTaskDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testtaskdeletenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	err := store.DeleteTask(tp.UUID{})
+	if err == nil {
+		t.Errorf("DeleteTask() should have failed")
+	}
+}
+
 func TestTaskList(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasklist"
@@ -163,4 +175,23 @@ func TestTaskUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updateAt, getAt)
+}
+
+func TestTaskUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testtaskupdatenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	at := tp.Task{
+		Id:             tp.UUID{},
+		Title:          "testtask1",
+		Instructions:   toPtr("test instructions"),
+		AssetId:        tp.UUID{},
+		TaskTemplateId: toPtr(tp.UUID{}),
+	}
+	_, err := store.UpdateTask(at.Id, at)
+	if err == nil {
+		t.Errorf("UpdateTask() should have failed")
+	}
 }

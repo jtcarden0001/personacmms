@@ -113,3 +113,15 @@ func TestTaskToolList(t *testing.T) {
 		t.Errorf("ListTaskTools() failed: expected %d, got %d", expCount, len(ats))
 	}
 }
+
+func TestTaskToolDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testtasktooldeletenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	err := store.DeleteTaskTool(tp.UUID{}, tp.UUID{})
+	if err == nil {
+		t.Errorf("DeleteTaskTool() should have failed")
+	}
+}

@@ -57,6 +57,18 @@ func TestDeleteTool(t *testing.T) {
 	}
 }
 
+func TestDeleteToolNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testdeletetoolnotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteTool("nonexistent-title")
+	if err == nil {
+		t.Errorf("DeleteTool() failed: expected error, got nil")
+	}
+}
+
 func TestListTool(t *testing.T) {
 	t.Parallel()
 	dbName := "testlisttool"
@@ -134,4 +146,20 @@ func TestUpdateGetTool(t *testing.T) {
 
 	compEntities(t, uTool, gTool)
 
+}
+
+func TestUpdateToolNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testupdatetoolnotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	tool := tp.Tool{
+		Title: "nonexistent-title",
+		Size:  toPtr("13mm"),
+	}
+	_, err := store.UpdateTool("nonexistent-title", tool)
+	if err == nil {
+		t.Errorf("UpdateTool() failed: expected error, got nil")
+	}
 }

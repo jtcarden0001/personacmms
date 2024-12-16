@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var dateTriggerTableName = "datetrigger"
@@ -22,8 +24,18 @@ func (pg *Store) CreateDateTrigger(dt tp.DateTrigger) (tp.DateTrigger, error) {
 
 func (pg *Store) DeleteDateTrigger(dtId uuid.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", dateTriggerTableName)
-	_, err := pg.db.Exec(query, dtId)
-	return handleDbError(err, "date-trigger")
+	result, err := pg.db.Exec(query, dtId)
+	if err != nil {
+		return handleDbError(err, "date-trigger")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "date-trigger")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "date-trigger with id %s not found", dtId)
+	}
+	return nil
 }
 
 func (pg *Store) ListDateTriggers() ([]tp.DateTrigger, error) {
@@ -73,12 +85,11 @@ func (pg *Store) GetDateTrigger(dtId uuid.UUID) (tp.DateTrigger, error) {
 }
 
 func (pg *Store) UpdateDateTrigger(dtId uuid.UUID, dt tp.DateTrigger) (tp.DateTrigger, error) {
-	query := fmt.Sprintf("UPDATE %s SET date = $1, task_id = $2 WHERE id = $3", dateTriggerTableName)
-	_, err := pg.db.Exec(query, dt.Date, dt.TaskId, dtId)
+	query := fmt.Sprintf("UPDATE %s SET date = $1, task_id = $2 WHERE id = $3 returning id", dateTriggerTableName)
+	err := pg.db.QueryRow(query, dt.Date, dt.TaskId, dtId).Scan(&dt.Id)
 	if err != nil {
 		return tp.DateTrigger{}, handleDbError(err, "date-trigger")
 	}
 
-	dt.Id = dtId
 	return dt, nil
 }

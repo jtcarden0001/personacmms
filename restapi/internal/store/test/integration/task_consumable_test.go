@@ -115,3 +115,32 @@ func TestTaskConsumableUpdateGet(t *testing.T) {
 
 	compEntities(t, at, rat)
 }
+
+func TestTaskConsumableDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testtaskconsumabledeletenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	err := store.DeleteTaskConsumable(tp.UUID{}, tp.UUID{})
+	if err == nil {
+		t.Errorf("DeleteTaskConsumable() should have failed")
+	}
+}
+
+func TestTaskConsumableUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbname := "testtaskconsumableupdatenotfound"
+	store := initializeStore(dbname)
+	defer closeStore(store, dbname)
+
+	at := tp.TaskConsumable{
+		TaskId:       tp.UUID{},
+		ConsumableId: tp.UUID{},
+		QuantityNote: "1",
+	}
+	_, err := store.UpdateTaskConsumable(at)
+	if err == nil {
+		t.Errorf("UpdateTaskConsumable() should have failed")
+	}
+}

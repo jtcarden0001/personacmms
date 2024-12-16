@@ -61,6 +61,18 @@ func TestConsumableDelete(t *testing.T) {
 	}
 }
 
+func TestConsumableDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testconsumabledeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteConsumable("notfound")
+	if err == nil {
+		t.Errorf("DeleteConsumable() should have failed")
+	}
+}
+
 func TestConsumableList(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumablelist"
@@ -137,5 +149,20 @@ func TestConsumableUpdateGet(t *testing.T) {
 
 	if consumable.Title != "testconsumable2" {
 		t.Errorf("Get() failed: expected testconsumable2, got %s", consumable.Title)
+	}
+}
+
+func TestConsumableUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testconsumableupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	consumable := types.Consumable{
+		Title: "notfound",
+	}
+	_, err := store.UpdateConsumable("notfound", consumable)
+	if err == nil {
+		t.Errorf("UpdateConsumable() should have failed")
 	}
 }

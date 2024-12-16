@@ -35,12 +35,17 @@ func TestCategoryDelete(t *testing.T) {
 	store := initializeStore(dbName)
 	defer closeStore(store, dbName)
 
-	// Delete
+	// Delete something that doesn't exist
+	err := store.DeleteCategory("notfound")
+	if err == nil {
+		t.Errorf("Delete() failed: expected error, got nil")
+	}
+
 	cat := tp.Category{
 		Title:       "testcategory1",
 		Description: toPtr("test description"),
 	}
-	_, err := store.CreateCategory(cat)
+	_, err = store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
@@ -166,5 +171,33 @@ func TestCategoryNotFound(t *testing.T) {
 
 	if appErr.Code != ae.CodeNotFound {
 		t.Errorf("Get() failed: expected CodeNotFound, got %v", appErr.Code)
+	}
+}
+
+func TestCategoryDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testcategorydeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteCategory("notfound")
+	if err == nil {
+		t.Errorf("DeleteCategory() should have failed")
+	}
+}
+
+func TestCategoryUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testcategoryupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	cat := tp.Category{
+		Title:       "notfound",
+		Description: toPtr("test description"),
+	}
+	_, err := store.UpdateCategory(cat.Title, cat)
+	if err == nil {
+		t.Errorf("UpdateCategory() should have failed")
 	}
 }

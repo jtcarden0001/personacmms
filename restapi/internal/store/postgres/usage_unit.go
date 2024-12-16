@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	uid "github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var usageUnitTableName = "usageunit"
@@ -24,9 +26,18 @@ func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
 
 func (pg *Store) DeleteUsageUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, usageUnitTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "usage-unit")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "usage-unit")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "usage-unit")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "usage unit with title '%s' not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
@@ -62,11 +73,10 @@ func (pg *Store) GetUsageUnit(title string) (tp.UsageUnit, error) {
 }
 
 func (pg *Store) UpdateUsageUnit(title string, uu tp.UsageUnit) (tp.UsageUnit, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, usageUnitTableName)
-	_, err := pg.db.Exec(query, uu.Title, title)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, usageUnitTableName)
+	err := pg.db.QueryRow(query, uu.Title, title).Scan(&uu.Id)
 	if err != nil {
 		return tp.UsageUnit{}, handleDbError(err, "usage-unit")
 	}
-
 	return uu, nil
 }

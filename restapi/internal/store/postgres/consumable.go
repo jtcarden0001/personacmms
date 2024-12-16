@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	uid "github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var consumableTableName = "consumable"
@@ -24,9 +26,18 @@ func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
 
 func (pg *Store) DeleteConsumable(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, consumableTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "consumable")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "consumable")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "consumable")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "consumable with title %s not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
@@ -74,8 +85,8 @@ func (pg *Store) GetConsumableByTitle(title string) (tp.Consumable, error) {
 }
 
 func (pg *Store) UpdateConsumable(title string, c tp.Consumable) (tp.Consumable, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, consumableTableName)
-	_, err := pg.db.Exec(query, c.Title, title)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, consumableTableName)
+	err := pg.db.QueryRow(query, c.Title, title).Scan(&c.Id)
 	if err != nil {
 		return tp.Consumable{}, handleDbError(err, "consumable")
 	}

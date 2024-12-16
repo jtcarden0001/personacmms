@@ -57,6 +57,18 @@ func TestTimeTriggerDelete(t *testing.T) {
 	}
 }
 
+func TestTimeTriggerDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteTimeTrigger(tp.UUID{})
+	if err == nil {
+		t.Errorf("DeleteTimeTrigger() should have failed")
+	}
+}
+
 func TestTimeTriggerList(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerlist"
@@ -206,4 +218,22 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updatedTt, tt)
+}
+
+func TestTimeTriggerUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	tt := tp.TimeTrigger{
+		Id:       tp.UUID{},
+		TaskId:   tp.UUID{},
+		Quantity: 30,
+		TimeUnit: tp.TimeUnitDays,
+	}
+	_, err := store.UpdateTimeTrigger(tt.Id, tt)
+	if err == nil {
+		t.Errorf("UpdateTimeTrigger() should have failed")
+	}
 }

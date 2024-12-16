@@ -9,6 +9,7 @@ type UsageUnit struct {
 }
 
 // If you add something here then add it below in the validUsageUnitTypes map
+// TODO: make sure the swagger documentation reflects the possible values
 const (
 	// types
 	UsageUnitTypeTime     = "time"

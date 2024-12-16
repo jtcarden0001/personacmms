@@ -3,6 +3,7 @@ package integration
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -54,6 +55,18 @@ func TestUsageTriggerDelete(t *testing.T) {
 	_, err = store.GetUsageTrigger(createdUt.Id)
 	if err == nil {
 		t.Errorf("GetUsageTrigger() should have failed")
+	}
+}
+
+func TestUsageTriggerDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testusagetriggerdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteUsageTrigger(uuid.New())
+	if err == nil {
+		t.Errorf("DeleteUsageTrigger() failed: expected error, got nil")
 	}
 }
 
@@ -220,4 +233,21 @@ func TestUsageTriggerUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updatedUt, ut)
+}
+
+func TestUsageTriggerUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testusagetriggerupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	ut := tp.UsageTrigger{
+		TaskId:    uuid.New(),
+		Quantity:  30,
+		UsageUnit: tp.UsageUnitDays,
+	}
+	_, err := store.UpdateUsageTrigger(uuid.New(), ut)
+	if err == nil {
+		t.Errorf("UpdateUsageTrigger() failed: expected error, got nil")
+	}
 }

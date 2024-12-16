@@ -3,14 +3,16 @@ package postgres
 import (
 	"fmt"
 
-	uid "github.com/google/uuid"
+	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var taskTemplateTableName = "tasktemplate"
 
 func (pg *Store) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
-	taskTemplate.Id = uid.New()
+	taskTemplate.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description, type) VALUES ($1, $2, $3, $4)`, taskTemplateTableName)
 	_, err := pg.db.Exec(query, taskTemplate.Id, taskTemplate.Title, taskTemplate.Description, taskTemplate.Type)
 	if err != nil {
@@ -22,9 +24,18 @@ func (pg *Store) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTempla
 
 func (pg *Store) DeleteTaskTemplate(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, taskTemplateTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "task-template")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "task-template")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "task-template")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "task template with title '%s' not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListTaskTemplates() ([]tp.TaskTemplate, error) {
@@ -63,7 +74,7 @@ func (pg *Store) GetTaskTemplate(title string) (tp.TaskTemplate, error) {
 
 func (pg *Store) UpdateTaskTemplate(title string, taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2, type = $3 WHERE title = $4 returning id`, taskTemplateTableName)
-	err := pg.db.QueryRow(query, taskTemplate.Title, taskTemplate.Description, taskTemplate.Type, taskTemplate.Title).Scan(&taskTemplate.Id)
+	err := pg.db.QueryRow(query, taskTemplate.Title, taskTemplate.Description, taskTemplate.Type, title).Scan(&taskTemplate.Id)
 	if err != nil {
 		return tp.TaskTemplate{}, handleDbError(err, "task-template")
 	}

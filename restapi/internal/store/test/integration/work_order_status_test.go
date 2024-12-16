@@ -61,6 +61,18 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 	}
 }
 
+func TestDeleteWorkOrderStatusNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testdeleteworkorderstatusnotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteWorkOrderStatus("nonexistent-title")
+	if err == nil {
+		t.Errorf("DeleteWorkOrderStatus() failed: expected error, got nil")
+	}
+}
+
 func TestListWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testlistworkorderstatus"
@@ -157,5 +169,20 @@ func TestUpdateWorkOrderStatus(t *testing.T) {
 
 	if returnedStat.Title != workOrderStatus.Title {
 		t.Errorf("Update() failed: expected %s, got %s", workOrderStatus.Title, returnedStat.Title)
+	}
+}
+
+func TestUpdateWorkOrderStatusNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testupdateworkorderstatusnotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	workOrderStatus := tp.WorkOrderStatus{
+		Title: "nonexistent-title",
+	}
+	_, err := store.UpdateWorkOrderStatus("nonexistent-title", workOrderStatus)
+	if err == nil {
+		t.Errorf("UpdateWorkOrderStatus() failed: expected error, got nil")
 	}
 }

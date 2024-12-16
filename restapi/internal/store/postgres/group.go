@@ -3,15 +3,17 @@ package postgres
 import (
 	"fmt"
 
-	uid "github.com/google/uuid"
+	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var groupTableName = "assetgroup"
 
 func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	//TODO: allow for group creation with a specified id ?
-	id := uid.New()
+	id := uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, groupTableName)
 	_, err := pg.db.Exec(query, id, grp.Title)
 	if err != nil {
@@ -24,9 +26,18 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 
 func (pg *Store) DeleteGroup(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, groupTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "group")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "group")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "group")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "group with title '%s' not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListGroups() ([]tp.Group, error) {
@@ -63,11 +74,10 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 
 func (pg *Store) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 returning id, title`, groupTableName)
-	var grp tp.Group
-	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&grp.Id, &grp.Title)
+	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&newGroup.Id, &newGroup.Title)
 	if err != nil {
 		return tp.Group{}, handleDbError(err, "group")
 	}
 
-	return grp, nil
+	return newGroup, nil
 }

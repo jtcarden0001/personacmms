@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var timeTriggerTableName = "timetrigger"
@@ -22,11 +24,17 @@ func (s *Store) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 
 func (s *Store) DeleteTimeTrigger(ttId uuid.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id=$1`, timeTriggerTableName)
-	_, err := s.db.Exec(query, ttId)
+	result, err := s.db.Exec(query, ttId)
 	if err != nil {
 		return handleDbError(err, "time-trigger")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "time-trigger")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "time trigger with id '%s' not found", ttId)
+	}
 	return nil
 }
 
@@ -86,10 +94,17 @@ func (s *Store) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
 
 func (s *Store) UpdateTimeTrigger(ttId uuid.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`UPDATE %s SET quantity=$1, timeunit_title=$2, task_id=$3 WHERE id=$4`, timeTriggerTableName)
-	_, err := s.db.Exec(query, tt.Quantity, tt.TimeUnit, tt.TaskId, ttId)
+	result, err := s.db.Exec(query, tt.Quantity, tt.TimeUnit, tt.TaskId, ttId)
 	if err != nil {
 		return tp.TimeTrigger{}, handleDbError(err, "time-trigger")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.TimeTrigger{}, handleDbError(err, "time-trigger")
+	}
+	if rowsAffected == 0 {
+		return tp.TimeTrigger{}, errors.Wrapf(ae.ErrNotFound, "time trigger with id '%s' not found", ttId)
+	}
+	tt.Id = ttId
 	return tt, nil
 }

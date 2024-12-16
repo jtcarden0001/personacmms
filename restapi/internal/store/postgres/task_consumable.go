@@ -3,7 +3,9 @@ package postgres
 import (
 	"fmt"
 
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var assetTaskConsumableTable = "task_consumable"
@@ -20,11 +22,17 @@ func (pg *Store) CreateTaskConsumable(consumable tp.TaskConsumable) (tp.TaskCons
 
 func (pg *Store) DeleteTaskConsumable(atId, cId tp.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE task_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
-	_, err := pg.db.Exec(query, atId, cId)
+	result, err := pg.db.Exec(query, atId, cId)
 	if err != nil {
 		return handleDbError(err, "task-consumable")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "task-consumable")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "task consumable with task_id '%s' and consumable_id '%s' not found", atId, cId)
+	}
 	return nil
 }
 
@@ -84,10 +92,16 @@ func (pg *Store) ListTaskConsumablesByTaskId(atId tp.UUID) ([]tp.TaskConsumable,
 
 func (pg *Store) UpdateTaskConsumable(atc tp.TaskConsumable) (tp.TaskConsumable, error) {
 	query := fmt.Sprintf("UPDATE %s SET quantity_note = $1 WHERE task_id = $2 AND consumable_id = $3", assetTaskConsumableTable)
-	_, err := pg.db.Exec(query, atc.QuantityNote, atc.TaskId, atc.ConsumableId)
+	result, err := pg.db.Exec(query, atc.QuantityNote, atc.TaskId, atc.ConsumableId)
 	if err != nil {
 		return tp.TaskConsumable{}, handleDbError(err, "task-consumable")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.TaskConsumable{}, handleDbError(err, "task-consumable")
+	}
+	if rowsAffected == 0 {
+		return tp.TaskConsumable{}, errors.Wrapf(ae.ErrNotFound, "task consumable with task_id '%s' and consumable_id '%s' not found", atc.TaskId, atc.ConsumableId)
+	}
 	return atc, nil
 }

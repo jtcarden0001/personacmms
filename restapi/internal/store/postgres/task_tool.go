@@ -3,7 +3,9 @@ package postgres
 import (
 	"fmt"
 
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var assetTaskToolTable = "task_tool"
@@ -20,11 +22,17 @@ func (pg *Store) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
 
 func (pg *Store) DeleteTaskTool(atId, tId tp.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE task_id = $1 AND tool_id = $2", assetTaskToolTable)
-	_, err := pg.db.Exec(query, atId, tId)
+	result, err := pg.db.Exec(query, atId, tId)
 	if err != nil {
 		return handleDbError(err, "task-tool")
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "task-tool")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "task tool with task_id '%s' and tool_id '%s' not found", atId, tId)
+	}
 	return nil
 }
 
@@ -80,4 +88,22 @@ func (pg *Store) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
 	}
 
 	return e, nil
+}
+
+func (pg *Store) UpdateTaskTool(atId, tId tp.UUID, tool tp.TaskTool) (tp.TaskTool, error) {
+	query := fmt.Sprintf("UPDATE %s SET tool_id = $1 WHERE task_id = $2 AND tool_id = $3", assetTaskToolTable)
+	result, err := pg.db.Exec(query, tool.ToolId, atId, tId)
+	if err != nil {
+		return tp.TaskTool{}, handleDbError(err, "task-tool")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.TaskTool{}, handleDbError(err, "task-tool")
+	}
+	if rowsAffected == 0 {
+		return tp.TaskTool{}, errors.Wrapf(ae.ErrNotFound, "task tool with task_id '%s' and tool_id '%s' not found", atId, tId)
+	}
+
+	tool.TaskId = atId
+	return tool, nil
 }

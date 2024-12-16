@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
@@ -53,6 +54,18 @@ func TestWorkOrderDelete(t *testing.T) {
 	_, err = store.GetWorkOrder(returnedWo.Id)
 	if err == nil {
 		t.Errorf("GetWorkOrder() failed: expected error, got nil")
+	}
+}
+
+func TestWorkOrderDeleteNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testworkorderdeletenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	err := store.DeleteWorkOrder(uuid.New())
+	if err == nil {
+		t.Errorf("DeleteWorkOrder() failed: expected error, got nil")
 	}
 }
 
@@ -112,19 +125,19 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	defer closeStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
-	wo := getTestWorkOrder(atId, "1")
+	wo1 := getTestWorkOrder(atId, "1")
 
 	// Create a new work order
-	cwo, err := store.CreateWorkOrder(wo)
+	cwo, err := store.CreateWorkOrder(wo1)
 	if err != nil {
 		t.Errorf("CreateWorkOrder() failed: %v", err)
 	}
 
 	// Update the work order
-	wo = getTestWorkOrder(atId, "2")
-	wo.Id = cwo.Id
+	wo2 := getTestWorkOrder(atId, "2")
+	wo2.Id = cwo.Id
 
-	updatedWo, err := store.UpdateWorkOrder(cwo.Id, wo)
+	updatedWo, err := store.UpdateWorkOrder(cwo.Id, wo2)
 	if err != nil {
 		t.Errorf("UpdateWorkOrder() failed: %v", err)
 	}
@@ -139,6 +152,19 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	}
 
 	compEntities(t, updatedWo, returnedWo)
+}
+
+func TestWorkOrderUpdateNotFound(t *testing.T) {
+	t.Parallel()
+	dbName := "testworkorderupdatenotfound"
+	store := initializeStore(dbName)
+	defer closeStore(store, dbName)
+
+	wo := getTestWorkOrder(uuid.New(), "1")
+	_, err := store.UpdateWorkOrder(uuid.New(), wo)
+	if err == nil {
+		t.Errorf("UpdateWorkOrder() failed: expected error, got nil")
+	}
 }
 
 // different values except assetTaskId and statusTitle

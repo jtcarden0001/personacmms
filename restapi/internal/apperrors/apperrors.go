@@ -58,3 +58,13 @@ func createInvalidUsageUnitTypeMessage() string {
 	commaDelimitedString := strings.Join(keys, ", ")
 	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
 }
+
+func CreateInvalidTaskTypeMessage() string {
+	prefix := "invalid task type, must be one of:"
+	keys := make([]string, 0, len(tp.ValidTaskTypes))
+	for key := range tp.ValidTaskTypes {
+		keys = append(keys, key)
+	}
+	commaDelimitedString := strings.Join(keys, ", ")
+	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
+}

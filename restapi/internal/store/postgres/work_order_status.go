@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	uid "github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var workOrderStatusTableName = "workorderstatus"
@@ -24,9 +26,18 @@ func (s *Store) CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatu
 
 func (s *Store) DeleteWorkOrderStatus(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, workOrderStatusTableName)
-	_, err := s.db.Exec(query, title)
-
-	return handleDbError(err, "work-order-status")
+	result, err := s.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "work-order-status")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "work-order-status")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "work-order-status with title %s not found", title)
+	}
+	return nil
 }
 
 func (s *Store) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
@@ -62,8 +73,8 @@ func (s *Store) GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error) {
 }
 
 func (s *Store) UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2`, workOrderStatusTableName)
-	_, err := s.db.Exec(query, wos.Title, title)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, workOrderStatusTableName)
+	err := s.db.QueryRow(query, wos.Title, title).Scan(&wos.Id)
 	if err != nil {
 		return tp.WorkOrderStatus{}, handleDbError(err, "work-order-status")
 	}

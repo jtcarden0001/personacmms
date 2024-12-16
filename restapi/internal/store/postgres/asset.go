@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var assetTableName = "asset"
@@ -29,8 +31,18 @@ func (pg *Store) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 
 func (pg *Store) DeleteAsset(groupTitle string, assetTitle string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
-	_, err := pg.db.Exec(query, assetTitle, groupTitle)
-	return handleDbError(err, "asset")
+	result, err := pg.db.Exec(query, assetTitle, groupTitle)
+	if err != nil {
+		return handleDbError(err, "asset")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "asset")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with title %s and group title %s not found", assetTitle, groupTitle)
+	}
+	return nil
 }
 
 func (pg *Store) ListAssets() ([]tp.Asset, error) {
@@ -119,7 +131,7 @@ func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asse
 		asset.CategoryTitle,
 		asset.Title,
 		assetTitle,
-		asset.GroupTitle,
+		groupTitle,
 	).Scan(&asset.Id)
 	if err != nil {
 		return tp.Asset{}, handleDbError(err, "asset")

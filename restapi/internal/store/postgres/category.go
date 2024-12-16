@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	"github.com/pkg/errors"
 )
 
 var categoryTableName = "category"
@@ -22,9 +24,18 @@ func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
 
 func (pg *Store) DeleteCategory(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, categoryTableName)
-	_, err := pg.db.Exec(query, title)
-
-	return handleDbError(err, "category")
+	result, err := pg.db.Exec(query, title)
+	if err != nil {
+		return handleDbError(err, "category")
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "category")
+	}
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "category with title %s not found", title)
+	}
+	return nil
 }
 
 func (pg *Store) ListCategories() ([]tp.Category, error) {
@@ -63,7 +74,7 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 }
 
 func (pg *Store) UpdateCategory(title string, category tp.Category) (tp.Category, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 returning id`, categoryTableName)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 RETURNING id`, categoryTableName)
 	err := pg.db.QueryRow(query, category.Title, category.Description, title).Scan(&category.Id)
 	if err != nil {
 		return tp.Category{}, handleDbError(err, "category")
