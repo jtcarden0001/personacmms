@@ -24,6 +24,11 @@ func (m *MockStore) DeleteAsset(id, group string) error {
 	return nil
 }
 
+func (m *MockStore) GetAsset(id, group string) (tp.Asset, error) {
+	// Mock implementation
+	return tp.Asset{}, nil
+}
+
 func (m *MockStore) ListAssets() ([]tp.Asset, error) {
 	// Mock implementation
 	return []tp.Asset{}, nil
@@ -32,11 +37,6 @@ func (m *MockStore) ListAssets() ([]tp.Asset, error) {
 func (m *MockStore) ListAssetsByGroup(group string) ([]tp.Asset, error) {
 	// Mock implementation
 	return []tp.Asset{}, nil
-}
-
-func (m *MockStore) GetAsset(id, group string) (tp.Asset, error) {
-	// Mock implementation
-	return tp.Asset{}, nil
 }
 
 func (m *MockStore) UpdateAsset(id, group string, asset tp.Asset) (tp.Asset, error) {
@@ -55,6 +55,11 @@ func (m *MockStore) DeleteTaskConsumable(id, taskId tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetTaskConsumable(id, taskId tp.UUID) (tp.TaskConsumable, error) {
+	// Mock implementation
+	return tp.TaskConsumable{}, nil
+}
+
 func (m *MockStore) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 	// Mock implementation
 	return []tp.TaskConsumable{}, nil
@@ -63,11 +68,6 @@ func (m *MockStore) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 func (m *MockStore) ListTaskConsumablesByTaskId(taskId tp.UUID) ([]tp.TaskConsumable, error) {
 	// Mock implementation
 	return []tp.TaskConsumable{}, nil
-}
-
-func (m *MockStore) GetTaskConsumable(id, taskId tp.UUID) (tp.TaskConsumable, error) {
-	// Mock implementation
-	return tp.TaskConsumable{}, nil
 }
 
 func (m *MockStore) UpdateTaskConsumable(tc tp.TaskConsumable) (tp.TaskConsumable, error) {
@@ -86,6 +86,11 @@ func (m *MockStore) DeleteTaskTool(id, taskId tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetTaskTool(id, taskId tp.UUID) (tp.TaskTool, error) {
+	// Mock implementation
+	return tp.TaskTool{}, nil
+}
+
 func (m *MockStore) ListTaskTools() ([]tp.TaskTool, error) {
 	// Mock implementation
 	return []tp.TaskTool{}, nil
@@ -94,11 +99,6 @@ func (m *MockStore) ListTaskTools() ([]tp.TaskTool, error) {
 func (m *MockStore) ListTaskToolsByTaskId(taskId tp.UUID) ([]tp.TaskTool, error) {
 	// Mock implementation
 	return []tp.TaskTool{}, nil
-}
-
-func (m *MockStore) GetTaskTool(id, taskId tp.UUID) (tp.TaskTool, error) {
-	// Mock implementation
-	return tp.TaskTool{}, nil
 }
 
 // category
@@ -112,14 +112,14 @@ func (m *MockStore) DeleteCategory(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListCategories() ([]tp.Category, error) {
-	// Mock implementation
-	return []tp.Category{}, nil
-}
-
 func (m *MockStore) GetCategory(id string) (tp.Category, error) {
 	// Mock implementation
 	return tp.Category{}, nil
+}
+
+func (m *MockStore) ListCategories() ([]tp.Category, error) {
+	// Mock implementation
+	return []tp.Category{}, nil
 }
 
 func (m *MockStore) UpdateCategory(id string, category tp.Category) (tp.Category, error) {
@@ -138,11 +138,6 @@ func (m *MockStore) DeleteConsumable(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListConsumables() ([]tp.Consumable, error) {
-	// Mock implementation
-	return []tp.Consumable{}, nil
-}
-
 func (m *MockStore) GetConsumableByTitle(title string) (tp.Consumable, error) {
 	// Mock implementation
 	return tp.Consumable{}, nil
@@ -151,6 +146,11 @@ func (m *MockStore) GetConsumableByTitle(title string) (tp.Consumable, error) {
 func (m *MockStore) GetConsumableById(id uuid.UUID) (tp.Consumable, error) {
 	// Mock implementation
 	return tp.Consumable{}, nil
+}
+
+func (m *MockStore) ListConsumables() ([]tp.Consumable, error) {
+	// Mock implementation
+	return []tp.Consumable{}, nil
 }
 
 func (m *MockStore) UpdateConsumable(id string, consumable tp.Consumable) (tp.Consumable, error) {
@@ -169,6 +169,11 @@ func (m *MockStore) DeleteDateTrigger(id tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetDateTrigger(id tp.UUID) (tp.DateTrigger, error) {
+	// Mock implementation
+	return tp.DateTrigger{}, nil
+}
+
 func (m *MockStore) ListDateTriggers() ([]tp.DateTrigger, error) {
 	// Mock implementation
 	return []tp.DateTrigger{}, nil
@@ -177,11 +182,6 @@ func (m *MockStore) ListDateTriggers() ([]tp.DateTrigger, error) {
 func (m *MockStore) ListDateTriggersByTaskId(id tp.UUID) ([]tp.DateTrigger, error) {
 	// Mock implementation
 	return []tp.DateTrigger{}, nil
-}
-
-func (m *MockStore) GetDateTrigger(id tp.UUID) (tp.DateTrigger, error) {
-	// Mock implementation
-	return tp.DateTrigger{}, nil
 }
 
 func (m *MockStore) UpdateDateTrigger(id tp.UUID, dt tp.DateTrigger) (tp.DateTrigger, error) {
@@ -200,14 +200,14 @@ func (m *MockStore) DeleteGroup(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListGroups() ([]tp.Group, error) {
-	// Mock implementation
-	return []tp.Group{}, nil
-}
-
 func (m *MockStore) GetGroup(id string) (tp.Group, error) {
 	// Mock implementation
 	return tp.Group{}, nil
+}
+
+func (m *MockStore) ListGroups() ([]tp.Group, error) {
+	// Mock implementation
+	return []tp.Group{}, nil
 }
 
 func (m *MockStore) UpdateGroup(id string, group tp.Group) (tp.Group, error) {
@@ -226,16 +226,6 @@ func (m *MockStore) DeleteTask(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) ListTasks() ([]tp.Task, error) {
-	// Mock implementation
-	return []tp.Task{}, nil
-}
-
-func (m *MockStore) ListTasksByAssetId(id tp.UUID) ([]tp.Task, error) {
-	// Mock implementation
-	return []tp.Task{}, nil
-}
-
 func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
 	// Mock implementation
 	return tp.Task{}, nil
@@ -244,6 +234,16 @@ func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
 func (m *MockStore) GetTaskByAssetId(assetId tp.UUID, id tp.UUID) (tp.Task, error) {
 	// Mock implementation
 	return tp.Task{}, nil
+}
+
+func (m *MockStore) ListTasks() ([]tp.Task, error) {
+	// Mock implementation
+	return []tp.Task{}, nil
+}
+
+func (m *MockStore) ListTasksByAssetId(id tp.UUID) ([]tp.Task, error) {
+	// Mock implementation
+	return []tp.Task{}, nil
 }
 
 func (m *MockStore) UpdateTask(id tp.UUID, task tp.Task) (tp.Task, error) {
@@ -262,14 +262,14 @@ func (m *MockStore) DeleteTaskTemplate(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListTaskTemplates() ([]tp.TaskTemplate, error) {
-	// Mock implementation
-	return []tp.TaskTemplate{}, nil
-}
-
 func (m *MockStore) GetTaskTemplate(id string) (tp.TaskTemplate, error) {
 	// Mock implementation
 	return tp.TaskTemplate{}, nil
+}
+
+func (m *MockStore) ListTaskTemplates() ([]tp.TaskTemplate, error) {
+	// Mock implementation
+	return []tp.TaskTemplate{}, nil
 }
 
 func (m *MockStore) UpdateTaskTemplate(id string, tt tp.TaskTemplate) (tp.TaskTemplate, error) {
@@ -288,6 +288,11 @@ func (m *MockStore) DeleteTimeTrigger(id tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetTimeTrigger(id tp.UUID) (tp.TimeTrigger, error) {
+	// Mock implementation
+	return tp.TimeTrigger{}, nil
+}
+
 func (m *MockStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	// Mock implementation
 	return []tp.TimeTrigger{}, nil
@@ -296,11 +301,6 @@ func (m *MockStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 func (m *MockStore) ListTimeTriggersByTaskId(id tp.UUID) ([]tp.TimeTrigger, error) {
 	// Mock implementation
 	return []tp.TimeTrigger{}, nil
-}
-
-func (m *MockStore) GetTimeTrigger(id tp.UUID) (tp.TimeTrigger, error) {
-	// Mock implementation
-	return tp.TimeTrigger{}, nil
 }
 
 func (m *MockStore) UpdateTimeTrigger(id tp.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
@@ -319,14 +319,14 @@ func (m *MockStore) DeleteTimeUnit(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListTimeUnits() ([]tp.TimeUnit, error) {
-	// Mock implementation
-	return []tp.TimeUnit{}, nil
-}
-
 func (m *MockStore) GetTimeUnit(id string) (tp.TimeUnit, error) {
 	// Mock implementation
 	return tp.TimeUnit{}, nil
+}
+
+func (m *MockStore) ListTimeUnits() ([]tp.TimeUnit, error) {
+	// Mock implementation
+	return []tp.TimeUnit{}, nil
 }
 
 func (m *MockStore) UpdateTimeUnit(id string, tu tp.TimeUnit) (tp.TimeUnit, error) {
@@ -345,11 +345,6 @@ func (m *MockStore) DeleteTool(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListTools() ([]tp.Tool, error) {
-	// Mock implementation
-	return []tp.Tool{}, nil
-}
-
 func (m *MockStore) GetTool(id string) (tp.Tool, error) {
 	// Mock implementation
 	return tp.Tool{}, nil
@@ -358,6 +353,11 @@ func (m *MockStore) GetTool(id string) (tp.Tool, error) {
 func (m *MockStore) GetToolById(id uuid.UUID) (tp.Tool, error) {
 	// Mock implementation
 	return tp.Tool{}, nil
+}
+
+func (m *MockStore) ListTools() ([]tp.Tool, error) {
+	// Mock implementation
+	return []tp.Tool{}, nil
 }
 
 func (m *MockStore) UpdateTool(id string, tool tp.Tool) (tp.Tool, error) {
@@ -376,6 +376,11 @@ func (m *MockStore) DeleteUsageTrigger(id tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetUsageTrigger(id tp.UUID) (tp.UsageTrigger, error) {
+	// Mock implementation
+	return tp.UsageTrigger{}, nil
+}
+
 func (m *MockStore) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	// Mock implementation
 	return []tp.UsageTrigger{}, nil
@@ -384,11 +389,6 @@ func (m *MockStore) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 func (m *MockStore) ListUsageTriggersByTaskId(id tp.UUID) ([]tp.UsageTrigger, error) {
 	// Mock implementation
 	return []tp.UsageTrigger{}, nil
-}
-
-func (m *MockStore) GetUsageTrigger(id tp.UUID) (tp.UsageTrigger, error) {
-	// Mock implementation
-	return tp.UsageTrigger{}, nil
 }
 
 func (m *MockStore) UpdateUsageTrigger(id tp.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
@@ -407,14 +407,14 @@ func (m *MockStore) DeleteUsageUnit(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListUsageUnits() ([]tp.UsageUnit, error) {
-	// Mock implementation
-	return []tp.UsageUnit{}, nil
-}
-
 func (m *MockStore) GetUsageUnit(id string) (tp.UsageUnit, error) {
 	// Mock implementation
 	return tp.UsageUnit{}, nil
+}
+
+func (m *MockStore) ListUsageUnits() ([]tp.UsageUnit, error) {
+	// Mock implementation
+	return []tp.UsageUnit{}, nil
 }
 
 func (m *MockStore) UpdateUsageUnit(id string, uu tp.UsageUnit) (tp.UsageUnit, error) {
@@ -433,14 +433,24 @@ func (m *MockStore) DeleteWorkOrder(id tp.UUID) error {
 	return nil
 }
 
+func (m *MockStore) GetWorkOrder(id tp.UUID) (tp.WorkOrder, error) {
+	// Mock implementation
+	return tp.WorkOrder{}, nil
+}
+
+func (m *MockStore) GetWorkOrderForTask(taskId tp.UUID, id tp.UUID) (tp.WorkOrder, error) {
+	// Mock implementation
+	return tp.WorkOrder{}, nil
+}
+
 func (m *MockStore) ListWorkOrders() ([]tp.WorkOrder, error) {
 	// Mock implementation
 	return []tp.WorkOrder{}, nil
 }
 
-func (m *MockStore) GetWorkOrder(id tp.UUID) (tp.WorkOrder, error) {
+func (m *MockStore) ListWorkOrdersByTaskId(taskId tp.UUID) ([]tp.WorkOrder, error) {
 	// Mock implementation
-	return tp.WorkOrder{}, nil
+	return []tp.WorkOrder{}, nil
 }
 
 func (m *MockStore) UpdateWorkOrder(id tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {
@@ -459,14 +469,14 @@ func (m *MockStore) DeleteWorkOrderStatus(id string) error {
 	return nil
 }
 
-func (m *MockStore) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
-	// Mock implementation
-	return []tp.WorkOrderStatus{}, nil
-}
-
 func (m *MockStore) GetWorkOrderStatus(id string) (tp.WorkOrderStatus, error) {
 	// Mock implementation
 	return tp.WorkOrderStatus{}, nil
+}
+
+func (m *MockStore) ListWorkOrderStatuses() ([]tp.WorkOrderStatus, error) {
+	// Mock implementation
+	return []tp.WorkOrderStatus{}, nil
 }
 
 func (m *MockStore) UpdateWorkOrderStatus(id string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error) {

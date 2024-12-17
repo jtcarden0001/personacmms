@@ -118,8 +118,16 @@ func (pg *Store) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error
 func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
 	query := fmt.Sprintf(`
 		UPDATE %s 
-		SET year = $1, make = $2, model_number = $3, serial_number = $4, description = $5, category_title = $6, title = $7 
-		WHERE title = $8 AND group_title = $9 returning id`, assetTableName)
+		SET year = $1, 
+		make = $2, 
+		model_number = $3, 
+		serial_number = $4, 
+		description = $5, 
+		category_title = $6, 
+		title = $7 
+		WHERE title = $8 AND group_title = $9 
+		returning id`,
+		assetTableName)
 
 	err := pg.db.QueryRow(
 		query,

@@ -64,6 +64,44 @@ func (pg *Store) DeleteWorkOrder(woId tp.UUID) error {
 	return nil
 }
 
+func (pg *Store) GetWorkOrder(woId tp.UUID) (tp.WorkOrder, error) {
+	var wo tp.WorkOrder
+	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, task_id, status_title FROM %s WHERE id = $1`, workOrderTable)
+	err := pg.db.QueryRow(query, woId).Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.TaskId, &wo.StatusTitle)
+	if err != nil {
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
+	}
+
+	return wo, nil
+}
+
+// TODO: add testing for this
+func (pg *Store) GetWorkOrderForTask(tId tp.UUID, woId tp.UUID) (tp.WorkOrder, error) {
+	var wo tp.WorkOrder
+	query := fmt.Sprintf(`
+		SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, task_id, status_title
+		FROM %s
+		WHERE id = $1 AND task_id = $2
+	`, workOrderTable)
+
+	row := pg.db.QueryRow(query, woId, tId)
+	err := row.Scan(
+		&wo.Id,
+		&wo.CreatedDate,
+		&wo.CompletedDate,
+		&wo.Notes,
+		&wo.CumulativeMiles,
+		&wo.CumulativeHours,
+		&wo.TaskId,
+		&wo.StatusTitle,
+	)
+	if err != nil {
+		return tp.WorkOrder{}, handleDbError(err, "work-order")
+	}
+
+	return wo, nil
+}
+
 func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
 	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, task_id, status_title FROM %s`, workOrderTable)
 	rows, err := pg.db.Query(query)
@@ -84,15 +122,32 @@ func (pg *Store) ListWorkOrders() ([]tp.WorkOrder, error) {
 	return workOrders, nil
 }
 
-func (pg *Store) GetWorkOrder(woId tp.UUID) (tp.WorkOrder, error) {
-	var wo tp.WorkOrder
-	query := fmt.Sprintf(`SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, task_id, status_title FROM %s WHERE id = $1`, workOrderTable)
-	err := pg.db.QueryRow(query, woId).Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate, &wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.TaskId, &wo.StatusTitle)
+// TODO: add testing for this
+func (pg *Store) ListWorkOrdersByTaskId(tId tp.UUID) ([]tp.WorkOrder, error) {
+	query := fmt.Sprintf(`
+		SELECT id, created_date, completed_date, notes, cumulative_miles, cumulative_hours, task_id, status_title
+		FROM %s
+		WHERE task_id = $1
+	`, workOrderTable)
+
+	rows, err := pg.db.Query(query, tId)
 	if err != nil {
-		return tp.WorkOrder{}, handleDbError(err, "work-order")
+		return nil, handleDbError(err, "work-order")
 	}
 
-	return wo, nil
+	workOrders := []tp.WorkOrder{}
+	for rows.Next() {
+		var wo tp.WorkOrder
+		err = rows.Scan(&wo.Id, &wo.CreatedDate, &wo.CompletedDate,
+			&wo.Notes, &wo.CumulativeMiles, &wo.CumulativeHours, &wo.TaskId, &wo.StatusTitle)
+		if err != nil {
+			return nil, handleDbError(err, "work-order")
+		}
+
+		workOrders = append(workOrders, wo)
+	}
+
+	return workOrders, nil
 }
 
 func (pg *Store) UpdateWorkOrder(woId tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {

@@ -9,6 +9,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// TODO: switch to *sql.Db calls using contexts
+
 type Store struct {
 	name string
 	db   *sql.DB

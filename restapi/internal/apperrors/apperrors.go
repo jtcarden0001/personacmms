@@ -68,3 +68,13 @@ func CreateInvalidTaskTypeMessage() string {
 	commaDelimitedString := strings.Join(keys, ", ")
 	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
 }
+
+func CreateInvalidWorkOrderStatusMessage() string {
+	prefix := "invalid work order status, must be one of:"
+	keys := make([]string, 0, len(tp.ValidWorkOrderStatuses))
+	for key := range tp.ValidWorkOrderStatuses {
+		keys = append(keys, key)
+	}
+	commaDelimitedString := strings.Join(keys, ", ")
+	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
+}

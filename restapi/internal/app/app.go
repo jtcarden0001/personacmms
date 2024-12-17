@@ -117,10 +117,10 @@ type App interface {
 
 	// work order
 	CreateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteTaskWorkOrder(string, string, string, string) error
-	ListTaskWorkOrders(string, string, string) ([]tp.WorkOrder, error)
-	GetTaskWorkOrder(string, string, string, string) (tp.WorkOrder, error)
-	UpdateTaskWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(string, string, string, string) error
+	ListWorkOrders(string, string, string) ([]tp.WorkOrder, error)
+	GetWorkOrder(string, string, string, string) (tp.WorkOrder, error)
+	UpdateWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
 type AppTest interface {

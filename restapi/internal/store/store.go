@@ -120,7 +120,9 @@ type Store interface {
 	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
 	DeleteWorkOrder(tp.UUID) error
 	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
+	GetWorkOrderForTask(tp.UUID, tp.UUID) (tp.WorkOrder, error)
 	ListWorkOrders() ([]tp.WorkOrder, error)
+	ListWorkOrdersByTaskId(tp.UUID) ([]tp.WorkOrder, error)
 	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 
 	// work order status

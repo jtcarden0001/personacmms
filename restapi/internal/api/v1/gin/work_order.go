@@ -56,7 +56,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Failure		404
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [delete]
 func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
-	err := h.app.DeleteTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
+	err := h.app.DeleteWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -71,7 +71,7 @@ func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 //	@Success		200	{object}	[]tp.WorkOrder
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
 func (h *Api) listTaskWorkOrders(c *gin.Context) {
-	workOrders, err := h.app.ListTaskWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
+	workOrders, err := h.app.ListWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
 }
 
@@ -87,7 +87,7 @@ func (h *Api) listTaskWorkOrders(c *gin.Context) {
 //	@Success		200	{object}	tp.WorkOrder
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [get]
 func (h *Api) getTaskWorkOrder(c *gin.Context) {
-	workOrder, err := h.app.GetTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
+	workOrder, err := h.app.GetWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }
 
@@ -111,6 +111,6 @@ func (h *Api) updateTaskWorkOrder(c *gin.Context) {
 		return
 	}
 
-	workOrder, err := h.app.UpdateTaskWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId), workOrder)
+	workOrder, err := h.app.UpdateWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId), workOrder)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }
