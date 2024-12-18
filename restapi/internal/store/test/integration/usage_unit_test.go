@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestUsageUnitCreate(t *testing.T) {
@@ -22,7 +23,7 @@ func TestUsageUnitCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, usageUnit, returnedUnit, fieldsToExclude)
 }
 

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestTimeTriggerCreate(t *testing.T) {
@@ -24,7 +25,7 @@ func TestTimeTriggerCreate(t *testing.T) {
 		t.Errorf("CreateTimeTrigger() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, tt, createdTt, fieldsToExclude)
 }
 

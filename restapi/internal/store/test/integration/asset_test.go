@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestAssetCreate(t *testing.T) {
@@ -25,7 +26,7 @@ func TestAssetCreate(t *testing.T) {
 		t.Errorf("CreateAsset() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, asset, returnedAsset, fieldsToExclude)
 }
 
@@ -111,7 +112,7 @@ func TestAssetList(t *testing.T) {
 	}
 
 	for title, asset := range assetMap {
-		fieldsToExclude := convertToSet([]string{"Id"})
+		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 		compEntitiesExcludeFields(t, asset, newAssetMap[title], fieldsToExclude)
 	}
 }
@@ -208,7 +209,7 @@ func TestAssetUpdateGet(t *testing.T) {
 		t.Errorf("UpdateAsset() failed: %v", err)
 	}
 
-	differentFields := convertToSet([]string{"Title", "Year", "Make", "ModelNumber", "SerialNumber", "Description"})
+	differentFields := utest.ConvertToSet([]string{"Title", "Year", "Make", "ModelNumber", "SerialNumber", "Description"})
 	compEntitiesFieldsShouldBeDifferent(t, createAsset, updatedAsset, differentFields)
 
 	// Get
@@ -241,12 +242,12 @@ func TestAssetUpdateNotFound(t *testing.T) {
 	asset := tp.Asset{
 		GroupTitle:    "notfound",
 		Title:         "notfound",
-		Year:          toPtr(2023),
-		Description:   toPtr("test description"),
-		Make:          toPtr("test make"),
-		ModelNumber:   toPtr("test model number"),
-		SerialNumber:  toPtr("test serial number"),
-		CategoryTitle: toPtr("notfound"),
+		Year:          utest.ToPtr(2023),
+		Description:   utest.ToPtr("test description"),
+		Make:          utest.ToPtr("test make"),
+		ModelNumber:   utest.ToPtr("test model number"),
+		SerialNumber:  utest.ToPtr("test serial number"),
+		CategoryTitle: utest.ToPtr("notfound"),
 	}
 	_, err := store.UpdateAsset("notfound", "notfound", asset)
 	if err == nil {
@@ -259,10 +260,10 @@ func getTestAsset(groupTitle string, categoryTitle string, suffix string) tp.Ass
 		GroupTitle:    groupTitle,
 		Title:         fmt.Sprintf("testasset%s", suffix),
 		Year:          func() *int { year, _ := strconv.Atoi(fmt.Sprintf("202%s", suffix)); return &year }(),
-		Description:   toPtr(fmt.Sprintf("test description %s", suffix)),
-		Make:          toPtr(fmt.Sprintf("test make %s", suffix)),
-		ModelNumber:   toPtr(fmt.Sprintf("test model number %s", suffix)),
-		SerialNumber:  toPtr(fmt.Sprintf("test serial number %s", suffix)),
+		Description:   utest.ToPtr(fmt.Sprintf("test description %s", suffix)),
+		Make:          utest.ToPtr(fmt.Sprintf("test make %s", suffix)),
+		ModelNumber:   utest.ToPtr(fmt.Sprintf("test model number %s", suffix)),
+		SerialNumber:  utest.ToPtr(fmt.Sprintf("test serial number %s", suffix)),
 		CategoryTitle: &categoryTitle,
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestTaskTemplateCreate(t *testing.T) {
@@ -15,8 +16,8 @@ func TestTaskTemplateCreate(t *testing.T) {
 	// Create
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: toPtr("test description"),
-		Type:        toPtr(tp.TaskTypePreventative),
+		Description: utest.ToPtr("test description"),
+		Type:        utest.ToPtr(tp.TaskTypePreventative),
 	}
 
 	returnTaskTemplate, err := store.CreateTaskTemplate(taskTemplate)
@@ -24,7 +25,7 @@ func TestTaskTemplateCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, taskTemplate, returnTaskTemplate, fieldsToExclude)
 }
 
@@ -37,7 +38,7 @@ func TestTaskTemplateDelete(t *testing.T) {
 	// Delete
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	_, err := store.CreateTaskTemplate(taskTemplate)
 	if err != nil {
@@ -90,14 +91,14 @@ func TestTaskTemplateList(t *testing.T) {
 
 	taskTemplateMap["testtasktemplate1"] = tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: toPtr("test description"),
-		Type:        toPtr(tp.TaskTypePreventative),
+		Description: utest.ToPtr("test description"),
+		Type:        utest.ToPtr(tp.TaskTypePreventative),
 	}
 
 	taskTemplateMap["testtasktemplate2"] = tp.TaskTemplate{
 		Title:       "testtasktemplate2",
-		Description: toPtr("test description"),
-		Type:        toPtr(tp.TaskTypeCorrective),
+		Description: utest.ToPtr("test description"),
+		Type:        utest.ToPtr(tp.TaskTypeCorrective),
 	}
 
 	// Create the taskTemplates
@@ -127,7 +128,7 @@ func TestTaskTemplateList(t *testing.T) {
 	}
 
 	for title, taskTemplate := range taskTemplateMap {
-		fieldsToExclude := convertToSet([]string{"Id"})
+		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 		compEntitiesExcludeFields(t, taskTemplate, newTaskTemplateMap[title], fieldsToExclude)
 	}
 }
@@ -141,20 +142,20 @@ func TestTaskTemplateUpdateGet(t *testing.T) {
 	// Update
 	taskTemplate := tp.TaskTemplate{
 		Title:       "testtasktemplate1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	createTaskTemplate, err := store.CreateTaskTemplate(taskTemplate)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	taskTemplate.Description = toPtr("new description")
+	taskTemplate.Description = utest.ToPtr("new description")
 	returnTaskTemplate, err := store.UpdateTaskTemplate(taskTemplate.Title, taskTemplate)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	diffFields := convertToSet([]string{"Description"})
+	diffFields := utest.ConvertToSet([]string{"Description"})
 	compEntitiesExcludeFields(t, createTaskTemplate, returnTaskTemplate, diffFields)
 
 	getTaskTemplate, err := store.GetTaskTemplate(taskTemplate.Title)
@@ -173,7 +174,7 @@ func TestTaskTemplateUpdateNotFound(t *testing.T) {
 
 	taskTemplate := tp.TaskTemplate{
 		Title:       "notfound",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	_, err := store.UpdateTaskTemplate(taskTemplate.Title, taskTemplate)
 	if err == nil {

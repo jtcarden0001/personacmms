@@ -6,6 +6,7 @@ import (
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestCategoryCreate(t *testing.T) {
@@ -17,7 +18,7 @@ func TestCategoryCreate(t *testing.T) {
 	// Create
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 
 	returnCat, err := store.CreateCategory(cat)
@@ -25,7 +26,7 @@ func TestCategoryCreate(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, cat, returnCat, fieldsToExclude)
 }
 
@@ -43,7 +44,7 @@ func TestCategoryDelete(t *testing.T) {
 
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	_, err = store.CreateCategory(cat)
 	if err != nil {
@@ -82,12 +83,12 @@ func TestCategoryList(t *testing.T) {
 
 	catMap["testcategory1"] = tp.Category{
 		Title:       "testcategory1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 
 	catMap["testcategory2"] = tp.Category{
 		Title:       "testcategory2",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 
 	// create the 2 new categories
@@ -118,7 +119,7 @@ func TestCategoryList(t *testing.T) {
 
 	// compare the two maps
 	for key, cat := range catMap {
-		fieldsToExclude := convertToSet([]string{"Id"})
+		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 		compEntitiesExcludeFields(t, cat, newCatMap[key], fieldsToExclude)
 	}
 }
@@ -132,20 +133,20 @@ func TestCategoryUpdateGet(t *testing.T) {
 	// Update
 	cat := tp.Category{
 		Title:       "testcategory1",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	createCat, err := store.CreateCategory(cat)
 	if err != nil {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	cat.Description = toPtr("new description")
+	cat.Description = utest.ToPtr("new description")
 	updateCat, err := store.UpdateCategory(cat.Title, cat)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	differentFields := convertToSet([]string{"Description"})
+	differentFields := utest.ConvertToSet([]string{"Description"})
 	compEntitiesFieldsShouldBeDifferent(t, createCat, updateCat, differentFields)
 
 	getCat, err := store.GetCategory(cat.Title)
@@ -194,7 +195,7 @@ func TestCategoryUpdateNotFound(t *testing.T) {
 
 	cat := tp.Category{
 		Title:       "notfound",
-		Description: toPtr("test description"),
+		Description: utest.ToPtr("test description"),
 	}
 	_, err := store.UpdateCategory(cat.Title, cat)
 	if err == nil {

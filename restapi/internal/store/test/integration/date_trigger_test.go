@@ -5,6 +5,7 @@ import (
 	"time"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestDateTriggerCreate(t *testing.T) {
@@ -24,7 +25,7 @@ func TestDateTriggerCreate(t *testing.T) {
 		t.Errorf("CreateDateTrigger() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, dt, createdDt, fieldsToExclude)
 }
 
@@ -144,7 +145,7 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 		t.Errorf("UpdateDateTrigger() failed: %v", err)
 	}
 
-	fieldsShouldBeDifferent := convertToSet([]string{"Date"})
+	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Date"})
 	compEntitiesFieldsShouldBeDifferent(t, createdDt, updatedDt, fieldsShouldBeDifferent)
 
 	// get

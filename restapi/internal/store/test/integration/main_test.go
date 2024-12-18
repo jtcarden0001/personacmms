@@ -74,18 +74,6 @@ func closeStore(store st.Store, dbName string) {
 	}
 }
 
-func toPtr[T any](v T) *T {
-	return &v
-}
-
-func convertToSet(arr []string) map[string]struct{} {
-	set := make(map[string]struct{})
-	for _, v := range arr {
-		set[v] = struct{}{}
-	}
-	return set
-}
-
 // TODO: some optimization and code reduction to be had here in these comparison functions
 func compEntities(t *testing.T, expected interface{}, actual interface{}) {
 	// exclude no fields
@@ -183,7 +171,7 @@ func setupGroup(t *testing.T, store st.Store, identifier string) string {
 func setupCategory(t *testing.T, store st.Store, identifier string) string {
 	category := tp.Category{
 		Title:       fmt.Sprintf("Category %s", identifier),
-		Description: toPtr(fmt.Sprintf("Category %s description", identifier)),
+		Description: utest.ToPtr(fmt.Sprintf("Category %s description", identifier)),
 	}
 	category, err := store.CreateCategory(category)
 	if err != nil {
@@ -206,7 +194,7 @@ func setupConsumable(t *testing.T, store st.Store, identifier string) tp.UUID {
 func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
 	tool := tp.Tool{
 		Title: fmt.Sprintf("Tool %s", identifier),
-		Size:  toPtr(fmt.Sprintf("Tool %s Size", identifier)),
+		Size:  utest.ToPtr(fmt.Sprintf("Tool %s Size", identifier)),
 	}
 	tool, err := store.CreateTool(tool)
 	if err != nil {
@@ -220,7 +208,7 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 	categoryTitle := setupCategory(t, store, identifier)
 	asset := tp.Asset{
 		Title:         fmt.Sprintf("Asset %s", identifier),
-		Description:   toPtr(fmt.Sprintf("Asset %s description", identifier)),
+		Description:   utest.ToPtr(fmt.Sprintf("Asset %s description", identifier)),
 		GroupTitle:    groupTitle,
 		CategoryTitle: &categoryTitle,
 	}
@@ -234,8 +222,8 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 func setupTaskTemplate(t *testing.T, store st.Store, identifier string) tp.UUID {
 	task := tp.TaskTemplate{
 		Title:       fmt.Sprintf("Task %s", identifier),
-		Description: toPtr(fmt.Sprintf("Task %s description", identifier)),
-		Type:        toPtr(tp.TaskTypePreventative),
+		Description: utest.ToPtr(fmt.Sprintf("Task %s description", identifier)),
+		Type:        utest.ToPtr(tp.TaskTypePreventative),
 	}
 	task, err := store.CreateTaskTemplate(task)
 	if err != nil {
@@ -249,7 +237,7 @@ func setupTask(t *testing.T, store st.Store, identifier string) tp.UUID {
 	taskId := setupTaskTemplate(t, store, identifier)
 	assetTask := tp.Task{
 		Title:          fmt.Sprintf("Task %s", identifier),
-		Instructions:   toPtr(fmt.Sprintf("Task %s instructions", identifier)),
+		Instructions:   utest.ToPtr(fmt.Sprintf("Task %s instructions", identifier)),
 		AssetId:        assetId,
 		TaskTemplateId: &taskId,
 	}

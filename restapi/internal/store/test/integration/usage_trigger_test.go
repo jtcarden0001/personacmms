@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestUsageTriggerCreate(t *testing.T) {
@@ -25,7 +26,7 @@ func TestUsageTriggerCreate(t *testing.T) {
 		t.Errorf("CreateUsageTrigger() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, ut, createdUt, fieldsToExclude)
 }
 

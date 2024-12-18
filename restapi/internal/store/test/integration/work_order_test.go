@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestWorkOrderCreate(t *testing.T) {
@@ -25,7 +26,7 @@ func TestWorkOrderCreate(t *testing.T) {
 		t.Errorf("CreateWorkOrder() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, wo, returnedWo, fieldsToExclude)
 }
 
@@ -142,7 +143,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 		t.Errorf("UpdateWorkOrder() failed: %v", err)
 	}
 
-	fieldsShouldBeDifferent := convertToSet([]string{"CreatedDate", "CompletedDate", "CumulativeMiles", "CumulativeHours"})
+	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"CreatedDate", "CompletedDate", "CumulativeMiles", "CumulativeHours"})
 	compEntitiesFieldsShouldBeDifferent(t, cwo, updatedWo, fieldsShouldBeDifferent)
 
 	// Get the work order

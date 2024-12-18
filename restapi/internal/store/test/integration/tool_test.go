@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestCreateTool(t *testing.T) {
@@ -15,7 +16,7 @@ func TestCreateTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  toPtr("13mm"),
+		Size:  utest.ToPtr("13mm"),
 	}
 
 	returnedTool, err := store.CreateTool(tool)
@@ -23,7 +24,7 @@ func TestCreateTool(t *testing.T) {
 		t.Errorf("Create() failed: %v", err)
 	}
 
-	fieldsToExclude := convertToSet([]string{"Id"})
+	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
 	compEntitiesExcludeFields(t, tool, returnedTool, fieldsToExclude)
 }
 
@@ -36,7 +37,7 @@ func TestDeleteTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  toPtr("13mm"),
+		Size:  utest.ToPtr("13mm"),
 	}
 
 	_, err := store.CreateTool(tool)
@@ -85,7 +86,7 @@ func TestListTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  toPtr("13mm"),
+		Size:  utest.ToPtr("13mm"),
 	}
 	_, err = store.CreateTool(tool)
 	if err != nil {
@@ -120,7 +121,7 @@ func TestUpdateGetTool(t *testing.T) {
 	// Create
 	tool := tp.Tool{
 		Title: "testtool1",
-		Size:  toPtr("13mm"),
+		Size:  utest.ToPtr("13mm"),
 	}
 
 	cTool, err := store.CreateTool(tool)
@@ -129,13 +130,13 @@ func TestUpdateGetTool(t *testing.T) {
 	}
 
 	// Update
-	tool.Size = toPtr("14mm")
+	tool.Size = utest.ToPtr("14mm")
 	uTool, err := store.UpdateTool(tool.Title, tool)
 	if err != nil {
 		t.Errorf("Update() failed: %v", err)
 	}
 
-	fieldsShouldBeDifferent := convertToSet([]string{"Size"})
+	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Size"})
 	compEntitiesFieldsShouldBeDifferent(t, cTool, uTool, fieldsShouldBeDifferent)
 
 	// Get
@@ -156,7 +157,7 @@ func TestUpdateToolNotFound(t *testing.T) {
 
 	tool := tp.Tool{
 		Title: "nonexistent-title",
-		Size:  toPtr("13mm"),
+		Size:  utest.ToPtr("13mm"),
 	}
 	_, err := store.UpdateTool("nonexistent-title", tool)
 	if err == nil {
