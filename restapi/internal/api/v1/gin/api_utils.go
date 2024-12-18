@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
 func getStatus(err error, successCode int) int {

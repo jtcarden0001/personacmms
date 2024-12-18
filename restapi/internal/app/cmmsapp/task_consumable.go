@@ -2,8 +2,8 @@ package cmmsapp
 
 import (
 	"github.com/google/uuid"
-	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
 // create task consumable aka map a consumable to a task and quantify how much

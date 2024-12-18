@@ -1,8 +1,8 @@
 package cmmsapp
 
 import (
-	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
 // Create a group

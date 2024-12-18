@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 
-	ae "github.com/jtcarden0001/personacmms/restapi/internal/apperrors"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 )
