@@ -25,7 +25,7 @@ func TestCreateTool(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, tool, returnedTool, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, tool, returnedTool, fieldsToExclude)
 }
 
 func TestDeleteTool(t *testing.T) {
@@ -137,7 +137,7 @@ func TestUpdateGetTool(t *testing.T) {
 	}
 
 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Size"})
-	compEntitiesFieldsShouldBeDifferent(t, cTool, uTool, fieldsShouldBeDifferent)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, cTool, uTool, fieldsShouldBeDifferent)
 
 	// Get
 	gTool, err := store.GetTool(tool.Title)
@@ -145,7 +145,7 @@ func TestUpdateGetTool(t *testing.T) {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	compEntities(t, uTool, gTool)
+	utest.CompEntities(t, uTool, gTool)
 
 }
 

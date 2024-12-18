@@ -27,7 +27,7 @@ func TestWorkOrderCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, wo, returnedWo, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, wo, returnedWo, fieldsToExclude)
 }
 
 func TestWorkOrderDelete(t *testing.T) {
@@ -115,7 +115,7 @@ func TestWorkOrderList(t *testing.T) {
 	}
 
 	for _, wo := range workOrders {
-		compEntities(t, wo, wosMap[wo.Id])
+		utest.CompEntities(t, wo, wosMap[wo.Id])
 	}
 }
 
@@ -144,7 +144,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 	}
 
 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"CreatedDate", "CompletedDate", "CumulativeMiles", "CumulativeHours"})
-	compEntitiesFieldsShouldBeDifferent(t, cwo, updatedWo, fieldsShouldBeDifferent)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, cwo, updatedWo, fieldsShouldBeDifferent)
 
 	// Get the work order
 	returnedWo, err := store.GetWorkOrder(updatedWo.Id)
@@ -152,7 +152,7 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 		t.Errorf("GetWorkOrder() failed: %v", err)
 	}
 
-	compEntities(t, updatedWo, returnedWo)
+	utest.CompEntities(t, updatedWo, returnedWo)
 }
 
 func TestWorkOrderUpdateNotFound(t *testing.T) {

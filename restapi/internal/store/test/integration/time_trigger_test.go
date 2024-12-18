@@ -26,7 +26,7 @@ func TestTimeTriggerCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, tt, createdTt, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, tt, createdTt, fieldsToExclude)
 }
 
 func TestTimeTriggerDelete(t *testing.T) {
@@ -123,7 +123,7 @@ func TestTimeTriggerList(t *testing.T) {
 
 	// compare
 	for _, tt := range tts {
-		compEntities(t, tt, ttMap[tt.Id])
+		utest.CompEntities(t, tt, ttMap[tt.Id])
 	}
 }
 
@@ -180,7 +180,7 @@ func TestTimeTriggerListByTaskId(t *testing.T) {
 
 	// compare
 	for _, tt := range tts {
-		compEntities(t, tt, ttMap[tt.Id])
+		utest.CompEntities(t, tt, ttMap[tt.Id])
 	}
 }
 
@@ -210,7 +210,7 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 		t.Errorf("UpdateTimeTrigger() failed: %v", err)
 	}
 
-	compEntities(t, createdTt, updatedTt)
+	utest.CompEntities(t, createdTt, updatedTt)
 
 	// get
 	tt, err = store.GetTimeTrigger(updatedTt.Id)
@@ -218,7 +218,7 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 		t.Errorf("GetTimeTrigger() failed: %v", err)
 	}
 
-	compEntities(t, updatedTt, tt)
+	utest.CompEntities(t, updatedTt, tt)
 }
 
 func TestTimeTriggerUpdateNotFound(t *testing.T) {

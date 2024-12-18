@@ -24,7 +24,7 @@ func TestTaskConsumableCreateDelete(t *testing.T) {
 		t.Errorf("CreateTaskConsumable() failed %v", err)
 	}
 
-	compEntities(t, at, returnedTaskConsumable)
+	utest.CompEntities(t, at, returnedTaskConsumable)
 
 	// Delete
 	err = store.DeleteTaskConsumable(at.TaskId, at.ConsumableId)
@@ -114,7 +114,7 @@ func TestTaskConsumableUpdateGet(t *testing.T) {
 		t.Errorf("GetTaskConsumable() failed %v", err)
 	}
 
-	compEntities(t, at, rat)
+	utest.CompEntities(t, at, rat)
 }
 
 func TestTaskConsumableDeleteNotFound(t *testing.T) {

@@ -23,7 +23,7 @@ func TestTaskToolCreateGet(t *testing.T) {
 		t.Errorf("CreateTaskTool() failed %v", err)
 	}
 
-	compEntities(t, at, returnedTaskTool)
+	utest.CompEntities(t, at, returnedTaskTool)
 
 	// Get
 	at2, err := store.GetTaskTool(at.TaskId, at.ToolId)
@@ -31,7 +31,7 @@ func TestTaskToolCreateGet(t *testing.T) {
 		t.Errorf("GetTaskTool() failed %v", err)
 	}
 
-	compEntities(t, at, at2)
+	utest.CompEntities(t, at, at2)
 }
 
 func TestTaskToolDelete(t *testing.T) {
@@ -50,7 +50,7 @@ func TestTaskToolDelete(t *testing.T) {
 		t.Errorf("CreateTaskTool() failed %v", err)
 	}
 
-	compEntities(t, at, returnedTaskTool)
+	utest.CompEntities(t, at, returnedTaskTool)
 
 	// Delete
 	err = store.DeleteTaskTool(at.TaskId, at.ToolId)

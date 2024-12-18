@@ -24,7 +24,7 @@ func TestUsageUnitCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, usageUnit, returnedUnit, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, usageUnit, returnedUnit, fieldsToExclude)
 }
 
 func TestUsageUnitDelete(t *testing.T) {
@@ -116,7 +116,7 @@ func TestUsageUnitList(t *testing.T) {
 
 	// compare
 	for _, unit := range units {
-		compEntities(t, unit, unitMap[unit.Title])
+		utest.CompEntities(t, unit, unitMap[unit.Title])
 	}
 }
 

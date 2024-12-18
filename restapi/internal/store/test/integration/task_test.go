@@ -26,7 +26,7 @@ func TestTaskCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, at, returnedTask, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, at, returnedTask, fieldsToExclude)
 }
 
 func TestTaskDelete(t *testing.T) {
@@ -133,7 +133,7 @@ func TestTaskList(t *testing.T) {
 
 	// compare the 2 maps
 	for title, task := range taskMap {
-		compEntities(t, task, newTaskMap[title])
+		utest.CompEntities(t, task, newTaskMap[title])
 	}
 }
 
@@ -167,7 +167,7 @@ func TestTaskUpdateGet(t *testing.T) {
 	}
 
 	fields := utest.ConvertToSet([]string{"Title", "Instructions", "AssetId", "TaskTemplateId"})
-	compEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
 
 	// Get
 	getAt, err := store.GetTask(updateAt.Id)
@@ -175,7 +175,7 @@ func TestTaskUpdateGet(t *testing.T) {
 		t.Errorf("GetTask() failed: %v", err)
 	}
 
-	compEntities(t, updateAt, getAt)
+	utest.CompEntities(t, updateAt, getAt)
 }
 
 func TestTaskUpdateNotFound(t *testing.T) {

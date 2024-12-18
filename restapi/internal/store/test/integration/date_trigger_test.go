@@ -26,7 +26,7 @@ func TestDateTriggerCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, dt, createdDt, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, dt, createdDt, fieldsToExclude)
 }
 
 func TestDateTriggerDelete(t *testing.T) {
@@ -117,7 +117,7 @@ func TestDateTriggerList(t *testing.T) {
 	}
 
 	for _, trigger := range dts {
-		compEntities(t, trigger, triggerMap[trigger.Id])
+		utest.CompEntities(t, trigger, triggerMap[trigger.Id])
 	}
 }
 
@@ -146,7 +146,7 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 	}
 
 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Date"})
-	compEntitiesFieldsShouldBeDifferent(t, createdDt, updatedDt, fieldsShouldBeDifferent)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdDt, updatedDt, fieldsShouldBeDifferent)
 
 	// get
 	retrievedDt, err := store.GetDateTrigger(createdDt.Id)
@@ -154,7 +154,7 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 		t.Errorf("GetDateTrigger() failed: %v", err)
 	}
 
-	compEntities(t, updatedDt, retrievedDt)
+	utest.CompEntities(t, updatedDt, retrievedDt)
 }
 
 func TestDateTriggerUpdateNotFound(t *testing.T) {

@@ -27,7 +27,7 @@ func TestUsageTriggerCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, ut, createdUt, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, ut, createdUt, fieldsToExclude)
 }
 
 func TestUsageTriggerDelete(t *testing.T) {
@@ -124,7 +124,7 @@ func TestUsageTriggerList(t *testing.T) {
 
 	// compare
 	for _, ut := range uts {
-		compEntities(t, ut, utMap[ut.Id])
+		utest.CompEntities(t, ut, utMap[ut.Id])
 	}
 }
 
@@ -225,7 +225,7 @@ func TestUsageTriggerUpdateGet(t *testing.T) {
 		t.Errorf("UpdateUsageTrigger() failed: %v", err)
 	}
 
-	compEntities(t, createdUt, updatedUt)
+	utest.CompEntities(t, createdUt, updatedUt)
 
 	// get
 	ut, err = store.GetUsageTrigger(updatedUt.Id)
@@ -233,7 +233,7 @@ func TestUsageTriggerUpdateGet(t *testing.T) {
 		t.Errorf("GetUsageTrigger() failed: %v", err)
 	}
 
-	compEntities(t, updatedUt, ut)
+	utest.CompEntities(t, updatedUt, ut)
 }
 
 func TestUsageTriggerUpdateNotFound(t *testing.T) {

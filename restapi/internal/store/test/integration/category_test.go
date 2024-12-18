@@ -27,7 +27,7 @@ func TestCategoryCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, cat, returnCat, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, cat, returnCat, fieldsToExclude)
 }
 
 func TestCategoryDelete(t *testing.T) {
@@ -120,7 +120,7 @@ func TestCategoryList(t *testing.T) {
 	// compare the two maps
 	for key, cat := range catMap {
 		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-		compEntitiesExcludeFields(t, cat, newCatMap[key], fieldsToExclude)
+		utest.CompEntitiesExcludeFields(t, cat, newCatMap[key], fieldsToExclude)
 	}
 }
 
@@ -147,7 +147,7 @@ func TestCategoryUpdateGet(t *testing.T) {
 	}
 
 	differentFields := utest.ConvertToSet([]string{"Description"})
-	compEntitiesFieldsShouldBeDifferent(t, createCat, updateCat, differentFields)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createCat, updateCat, differentFields)
 
 	getCat, err := store.GetCategory(cat.Title)
 	if err != nil {
@@ -155,7 +155,7 @@ func TestCategoryUpdateGet(t *testing.T) {
 	}
 
 	// exclude no fields
-	compEntities(t, updateCat, getCat)
+	utest.CompEntities(t, updateCat, getCat)
 }
 
 func TestCategoryNotFound(t *testing.T) {

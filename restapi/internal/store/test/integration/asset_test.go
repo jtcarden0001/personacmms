@@ -27,7 +27,7 @@ func TestAssetCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, asset, returnedAsset, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, asset, returnedAsset, fieldsToExclude)
 }
 
 func TestAssetDelete(t *testing.T) {
@@ -113,7 +113,7 @@ func TestAssetList(t *testing.T) {
 
 	for title, asset := range assetMap {
 		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-		compEntitiesExcludeFields(t, asset, newAssetMap[title], fieldsToExclude)
+		utest.CompEntitiesExcludeFields(t, asset, newAssetMap[title], fieldsToExclude)
 	}
 }
 
@@ -210,7 +210,7 @@ func TestAssetUpdateGet(t *testing.T) {
 	}
 
 	differentFields := utest.ConvertToSet([]string{"Title", "Year", "Make", "ModelNumber", "SerialNumber", "Description"})
-	compEntitiesFieldsShouldBeDifferent(t, createAsset, updatedAsset, differentFields)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createAsset, updatedAsset, differentFields)
 
 	// Get
 	returnedAsset, err := store.GetAsset(groupTitle, updatedAsset.Title)
@@ -218,7 +218,7 @@ func TestAssetUpdateGet(t *testing.T) {
 		t.Errorf("GetAsset() failed: %v", err)
 	}
 
-	compEntities(t, updatedAsset, returnedAsset)
+	utest.CompEntities(t, updatedAsset, returnedAsset)
 }
 
 func TestAssetDeleteNotFound(t *testing.T) {

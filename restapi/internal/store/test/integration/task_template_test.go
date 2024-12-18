@@ -26,7 +26,7 @@ func TestTaskTemplateCreate(t *testing.T) {
 	}
 
 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-	compEntitiesExcludeFields(t, taskTemplate, returnTaskTemplate, fieldsToExclude)
+	utest.CompEntitiesExcludeFields(t, taskTemplate, returnTaskTemplate, fieldsToExclude)
 }
 
 func TestTaskTemplateDelete(t *testing.T) {
@@ -129,7 +129,7 @@ func TestTaskTemplateList(t *testing.T) {
 
 	for title, taskTemplate := range taskTemplateMap {
 		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-		compEntitiesExcludeFields(t, taskTemplate, newTaskTemplateMap[title], fieldsToExclude)
+		utest.CompEntitiesExcludeFields(t, taskTemplate, newTaskTemplateMap[title], fieldsToExclude)
 	}
 }
 
@@ -156,14 +156,14 @@ func TestTaskTemplateUpdateGet(t *testing.T) {
 	}
 
 	diffFields := utest.ConvertToSet([]string{"Description"})
-	compEntitiesExcludeFields(t, createTaskTemplate, returnTaskTemplate, diffFields)
+	utest.CompEntitiesExcludeFields(t, createTaskTemplate, returnTaskTemplate, diffFields)
 
 	getTaskTemplate, err := store.GetTaskTemplate(taskTemplate.Title)
 	if err != nil {
 		t.Errorf("Get() failed: %v", err)
 	}
 
-	compEntities(t, returnTaskTemplate, getTaskTemplate)
+	utest.CompEntities(t, returnTaskTemplate, getTaskTemplate)
 }
 
 func TestTaskTemplateUpdateNotFound(t *testing.T) {
