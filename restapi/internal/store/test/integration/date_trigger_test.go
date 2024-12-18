@@ -11,8 +11,8 @@ import (
 func TestDateTriggerCreate(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggercreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -32,8 +32,8 @@ func TestDateTriggerCreate(t *testing.T) {
 func TestDateTriggerDelete(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -60,8 +60,8 @@ func TestDateTriggerDelete(t *testing.T) {
 func TestDateTriggerDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteDateTrigger(tp.UUID{})
 	if err == nil {
@@ -72,8 +72,8 @@ func TestDateTriggerDeleteNotFound(t *testing.T) {
 func TestDateTriggerList(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -124,8 +124,8 @@ func TestDateTriggerList(t *testing.T) {
 func TestDateTriggerUpdateGet(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -160,8 +160,8 @@ func TestDateTriggerUpdateGet(t *testing.T) {
 func TestDateTriggerUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	var dbName = "testdatetriggerupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	dt := tp.DateTrigger{
 		Id:     tp.UUID{},

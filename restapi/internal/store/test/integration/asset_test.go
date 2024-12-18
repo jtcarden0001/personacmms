@@ -12,8 +12,8 @@ import (
 func TestAssetCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetcreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	groupTitle := setupGroup(t, store, "1")
@@ -33,8 +33,8 @@ func TestAssetCreate(t *testing.T) {
 func TestAssetDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	groupTitle := setupGroup(t, store, "1")
@@ -62,8 +62,8 @@ func TestAssetDelete(t *testing.T) {
 func TestAssetList(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	groupTitle := setupGroup(t, store, "1")
@@ -120,8 +120,8 @@ func TestAssetList(t *testing.T) {
 func TestAssetListByGroup(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetlistbygroup"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	groupTitle1 := setupGroup(t, store, "1")
@@ -187,8 +187,8 @@ func TestAssetListByGroup(t *testing.T) {
 func TestAssetUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	groupTitle := setupGroup(t, store, "1")
@@ -224,8 +224,8 @@ func TestAssetUpdateGet(t *testing.T) {
 func TestAssetDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteAsset("notfound", "notfound")
 	if err == nil {
@@ -236,8 +236,8 @@ func TestAssetDeleteNotFound(t *testing.T) {
 func TestAssetUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testassetupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	asset := tp.Asset{
 		GroupTitle:    "notfound",

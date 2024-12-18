@@ -10,8 +10,8 @@ import (
 func TestCreateTool(t *testing.T) {
 	t.Parallel()
 	dbName := "testcreatetool"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	tool := tp.Tool{
@@ -31,8 +31,8 @@ func TestCreateTool(t *testing.T) {
 func TestDeleteTool(t *testing.T) {
 	t.Parallel()
 	dbName := "testdeletetool"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	tool := tp.Tool{
@@ -61,8 +61,8 @@ func TestDeleteTool(t *testing.T) {
 func TestDeleteToolNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testdeletetoolnotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteTool("nonexistent-title")
 	if err == nil {
@@ -73,8 +73,8 @@ func TestDeleteToolNotFound(t *testing.T) {
 func TestListTool(t *testing.T) {
 	t.Parallel()
 	dbName := "testlisttool"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	tools, err := store.ListTools()
@@ -115,8 +115,8 @@ func TestListTool(t *testing.T) {
 func TestUpdateGetTool(t *testing.T) {
 	t.Parallel()
 	dbName := "testupdategettool"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	tool := tp.Tool{
@@ -152,8 +152,8 @@ func TestUpdateGetTool(t *testing.T) {
 func TestUpdateToolNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testupdatetoolnotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	tool := tp.Tool{
 		Title: "nonexistent-title",

@@ -10,8 +10,8 @@ import (
 func TestTaskTemplateCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplatecreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	taskTemplate := tp.TaskTemplate{
@@ -32,8 +32,8 @@ func TestTaskTemplateCreate(t *testing.T) {
 func TestTaskTemplateDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplatedelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Delete
 	taskTemplate := tp.TaskTemplate{
@@ -60,8 +60,8 @@ func TestTaskTemplateDelete(t *testing.T) {
 func TestTaskTemplateDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplatedeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteTaskTemplate("notfound")
 	if err == nil {
@@ -72,8 +72,8 @@ func TestTaskTemplateDeleteNotFound(t *testing.T) {
 func TestTaskTemplateList(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplatelist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	taskTemplates, err := store.ListTaskTemplates()
@@ -136,8 +136,8 @@ func TestTaskTemplateList(t *testing.T) {
 func TestTaskTemplateUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplateupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Update
 	taskTemplate := tp.TaskTemplate{
@@ -169,8 +169,8 @@ func TestTaskTemplateUpdateGet(t *testing.T) {
 func TestTaskTemplateUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtasktemplateupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	taskTemplate := tp.TaskTemplate{
 		Title:       "notfound",

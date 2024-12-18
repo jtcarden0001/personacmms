@@ -5,13 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestConsumableCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumablecreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{
@@ -35,8 +36,8 @@ func TestConsumableCreate(t *testing.T) {
 func TestConsumableDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumabledelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{
@@ -64,8 +65,8 @@ func TestConsumableDelete(t *testing.T) {
 func TestConsumableDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumabledeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteConsumable("notfound")
 	if err == nil {
@@ -76,8 +77,8 @@ func TestConsumableDeleteNotFound(t *testing.T) {
 func TestConsumableList(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumablelist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	consumables, err := store.ListConsumables()
@@ -121,8 +122,8 @@ func TestConsumableList(t *testing.T) {
 func TestConsumableUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumableupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	consumable := types.Consumable{
@@ -155,8 +156,8 @@ func TestConsumableUpdateGet(t *testing.T) {
 func TestConsumableUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testconsumableupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	consumable := types.Consumable{
 		Title: "notfound",

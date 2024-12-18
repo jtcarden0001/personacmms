@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
+	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 	"github.com/pkg/errors"
@@ -89,4 +91,44 @@ func CreateDockerTestPostgres() (*dockertest.Pool, *dockertest.Resource, error) 
 	}
 
 	return pool, resource, nil
+}
+
+func InitializeStore(dbName string) st.Store {
+	conninfo := fmt.Sprintf("user=%s password=%s host=%s port=%s sslmode=disable",
+		os.Getenv("DATABASE_USER"),
+		os.Getenv("DATABASE_PASSWORD"),
+		os.Getenv("DATABASE_HOST"),
+		os.Getenv("DATABASE_PORT"))
+	db, err := sql.Open("postgres", conninfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s", dbName))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	store := st.NewWithDb(dbName)
+	schema, err := os.ReadFile("../../postgres/ddl/init.sql")
+	if err != nil {
+		log.Fatalf("Could not read schema file: %s", err)
+	}
+
+	err = store.Exec(string(schema))
+	if err != nil {
+		log.Fatalf("Could not execute schema: %s", err)
+	}
+
+	return store
+}
+
+func CloseStore(store st.Store, dbName string) {
+	// cannnot drop the database because the connection is still open
+	// store.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
+	_ = dbName
+	err := store.Close()
+	if err != nil {
+		log.Fatalf("Could not close store: %s", err)
+	}
 }

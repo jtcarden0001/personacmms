@@ -4,13 +4,14 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestTaskToolCreateGet(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasktoolcreate"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.TaskTool{
@@ -36,8 +37,8 @@ func TestTaskToolCreateGet(t *testing.T) {
 func TestTaskToolDelete(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasktooldelete"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.TaskTool{
@@ -66,8 +67,8 @@ func TestTaskToolDelete(t *testing.T) {
 func TestTaskToolList(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasktoollist"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// List
 	ats, err := store.ListTaskTools()
@@ -117,8 +118,8 @@ func TestTaskToolList(t *testing.T) {
 func TestTaskToolDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasktooldeletenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	err := store.DeleteTaskTool(tp.UUID{}, tp.UUID{})
 	if err == nil {

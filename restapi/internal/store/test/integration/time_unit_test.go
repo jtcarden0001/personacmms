@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 var preseedTimeUnitCount = 4
@@ -12,8 +13,8 @@ var preseedTimeUnitCount = 4
 func TestTimeUnitCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitcreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -37,8 +38,8 @@ func TestTimeUnitCreate(t *testing.T) {
 func TestTimeUnitDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -66,8 +67,8 @@ func TestTimeUnitDelete(t *testing.T) {
 func TestTimeUnitDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteTimeUnit("nonexistent-title")
 	if err == nil {
@@ -78,8 +79,8 @@ func TestTimeUnitDeleteNotFound(t *testing.T) {
 func TestTimeUnitList(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	timeUnits, err := store.ListTimeUnits()
@@ -115,8 +116,8 @@ func TestTimeUnitList(t *testing.T) {
 func TestTimeUnitUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	timeUnit := types.TimeUnit{
@@ -149,8 +150,8 @@ func TestTimeUnitUpdateGet(t *testing.T) {
 func TestTimeUnitUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimeunitupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	timeUnit := types.TimeUnit{
 		Title: "nonexistent-title",

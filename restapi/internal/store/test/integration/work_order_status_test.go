@@ -5,13 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestCreateWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testcreateworkorderstatus"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	workOrderStatus := tp.WorkOrderStatus{
@@ -35,8 +36,8 @@ func TestCreateWorkOrderStatus(t *testing.T) {
 func TestDeleteWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testdeleteworkorderstatus"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	workOrderStatus := tp.WorkOrderStatus{
@@ -64,8 +65,8 @@ func TestDeleteWorkOrderStatus(t *testing.T) {
 func TestDeleteWorkOrderStatusNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testdeleteworkorderstatusnotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteWorkOrderStatus("nonexistent-title")
 	if err == nil {
@@ -76,8 +77,8 @@ func TestDeleteWorkOrderStatusNotFound(t *testing.T) {
 func TestListWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testlistworkorderstatus"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	initWOS, err := store.ListWorkOrderStatuses()
 	if err != nil {
@@ -116,8 +117,8 @@ func TestListWorkOrderStatus(t *testing.T) {
 func TestGetWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testgetworkorderstatus"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	workOrderStatus := tp.WorkOrderStatus{
@@ -147,8 +148,8 @@ func TestGetWorkOrderStatus(t *testing.T) {
 func TestUpdateWorkOrderStatus(t *testing.T) {
 	t.Parallel()
 	dbName := "testupdateworkorderstatus"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	workOrderStatus := tp.WorkOrderStatus{
@@ -175,8 +176,8 @@ func TestUpdateWorkOrderStatus(t *testing.T) {
 func TestUpdateWorkOrderStatusNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testupdateworkorderstatusnotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	workOrderStatus := tp.WorkOrderStatus{
 		Title: "nonexistent-title",

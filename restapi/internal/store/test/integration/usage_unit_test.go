@@ -10,8 +10,8 @@ import (
 func TestUsageUnitCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitcreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{
@@ -30,8 +30,8 @@ func TestUsageUnitCreate(t *testing.T) {
 func TestUsageUnitDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{
@@ -59,8 +59,8 @@ func TestUsageUnitDelete(t *testing.T) {
 func TestUsageUnitDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteUsageUnit("nonexistent-title")
 	if err == nil {
@@ -71,8 +71,8 @@ func TestUsageUnitDeleteNotFound(t *testing.T) {
 func TestUsageUnitList(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	units, err := store.ListUsageUnits()
@@ -123,8 +123,8 @@ func TestUsageUnitList(t *testing.T) {
 func TestUsageUnitUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	usageUnit := tp.UsageUnit{
@@ -161,8 +161,8 @@ func TestUsageUnitUpdateGet(t *testing.T) {
 func TestUsageUnitUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testusageunitupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	usageUnit := tp.UsageUnit{
 		Title: "nonexistent-title",

@@ -4,13 +4,14 @@ import (
 	"testing"
 
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestTaskConsumableCreateDelete(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskconsumabledelete"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.TaskConsumable{
@@ -40,8 +41,8 @@ func TestTaskConsumableCreateDelete(t *testing.T) {
 func TestTaskConsumableList(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskconsumablelist"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// List
 	atcs, err := store.ListTaskConsumables()
@@ -86,8 +87,8 @@ func TestTaskConsumableList(t *testing.T) {
 func TestTaskConsumableUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskconsumableupdateget"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.TaskConsumable{
@@ -119,8 +120,8 @@ func TestTaskConsumableUpdateGet(t *testing.T) {
 func TestTaskConsumableDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskconsumabledeletenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	err := store.DeleteTaskConsumable(tp.UUID{}, tp.UUID{})
 	if err == nil {
@@ -131,8 +132,8 @@ func TestTaskConsumableDeleteNotFound(t *testing.T) {
 func TestTaskConsumableUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskconsumableupdatenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	at := tp.TaskConsumable{
 		TaskId:       tp.UUID{},

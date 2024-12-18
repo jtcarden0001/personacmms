@@ -10,8 +10,8 @@ import (
 func TestTimeTriggerCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggercreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -32,8 +32,8 @@ func TestTimeTriggerCreate(t *testing.T) {
 func TestTimeTriggerDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -61,8 +61,8 @@ func TestTimeTriggerDelete(t *testing.T) {
 func TestTimeTriggerDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteTimeTrigger(tp.UUID{})
 	if err == nil {
@@ -73,8 +73,8 @@ func TestTimeTriggerDeleteNotFound(t *testing.T) {
 func TestTimeTriggerList(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	tts, err := store.ListTimeTriggers()
@@ -130,8 +130,8 @@ func TestTimeTriggerList(t *testing.T) {
 func TestTimeTriggerListByTaskId(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerlistbytaskid"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	tts, err := store.ListTimeTriggersByTaskId(tp.UUID{})
@@ -187,8 +187,8 @@ func TestTimeTriggerListByTaskId(t *testing.T) {
 func TestTimeTriggerUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -224,8 +224,8 @@ func TestTimeTriggerUpdateGet(t *testing.T) {
 func TestTimeTriggerUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	tt := tp.TimeTrigger{
 		Id:       tp.UUID{},

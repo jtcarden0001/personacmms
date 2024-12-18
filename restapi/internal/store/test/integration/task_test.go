@@ -10,8 +10,8 @@ import (
 func TestTaskCreate(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskcreate"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.Task{
@@ -32,8 +32,8 @@ func TestTaskCreate(t *testing.T) {
 func TestTaskDelete(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskdelete"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.Task{
@@ -63,8 +63,8 @@ func TestTaskDelete(t *testing.T) {
 func TestTaskDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskdeletenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	err := store.DeleteTask(tp.UUID{})
 	if err == nil {
@@ -75,8 +75,8 @@ func TestTaskDeleteNotFound(t *testing.T) {
 func TestTaskList(t *testing.T) {
 	t.Parallel()
 	dbname := "testtasklist"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// List
 	tasks, err := store.ListTasks()
@@ -140,8 +140,8 @@ func TestTaskList(t *testing.T) {
 func TestTaskUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskupdateget"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	at := tp.Task{
@@ -181,8 +181,8 @@ func TestTaskUpdateGet(t *testing.T) {
 func TestTaskUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testtaskupdatenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	at := tp.Task{
 		Id:             tp.UUID{},

@@ -5,13 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestGroupCreate(t *testing.T) {
 	t.Parallel()
 	dbname := "testgroupcreate"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Create
 	group := types.Group{
@@ -35,8 +36,8 @@ func TestGroupCreate(t *testing.T) {
 func TestGroupDelete(t *testing.T) {
 	t.Parallel()
 	dbname := "testgroupdelete"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Delete
 	group := types.Group{
@@ -62,8 +63,8 @@ func TestGroupDelete(t *testing.T) {
 func TestGroupDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testgroupdeletenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	err := store.DeleteGroup("notfound")
 	if err == nil {
@@ -74,8 +75,8 @@ func TestGroupDeleteNotFound(t *testing.T) {
 func TestGroupList(t *testing.T) {
 	t.Parallel()
 	dbname := "testgrouplist"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// List
 	groups, err := store.ListGroups()
@@ -116,8 +117,8 @@ func TestGroupList(t *testing.T) {
 func TestGroupUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbname := "testgroupupdateget"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	// Update
 	group := types.Group{
@@ -148,8 +149,8 @@ func TestGroupUpdateGet(t *testing.T) {
 func TestGroupUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbname := "testgroupupdatenotfound"
-	store := initializeStore(dbname)
-	defer closeStore(store, dbname)
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
 	group := types.Group{
 		Title: "notfound",

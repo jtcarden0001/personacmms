@@ -14,8 +14,8 @@ import (
 func TestWorkOrderCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkordercreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
 	wo := getTestWorkOrder(atId, 1)
@@ -33,8 +33,8 @@ func TestWorkOrderCreate(t *testing.T) {
 func TestWorkOrderDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkorderdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
 	wo := getTestWorkOrder(atId, 1)
@@ -61,8 +61,8 @@ func TestWorkOrderDelete(t *testing.T) {
 func TestWorkOrderDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkorderdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteWorkOrder(uuid.New())
 	if err == nil {
@@ -73,8 +73,8 @@ func TestWorkOrderDeleteNotFound(t *testing.T) {
 func TestWorkOrderList(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkorderlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	wos, err := store.ListWorkOrders()
@@ -122,8 +122,8 @@ func TestWorkOrderList(t *testing.T) {
 func TestWorkOrderUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkorderupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	atId := setupTask(t, store, "1")
 	wo1 := getTestWorkOrder(atId, 1)
@@ -158,8 +158,8 @@ func TestWorkOrderUpdateGet(t *testing.T) {
 func TestWorkOrderUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testworkorderupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	wo := getTestWorkOrder(uuid.New(), 1)
 	_, err := store.UpdateWorkOrder(uuid.New(), wo)

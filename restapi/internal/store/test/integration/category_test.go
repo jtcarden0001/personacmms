@@ -12,8 +12,8 @@ import (
 func TestCategoryCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategorycreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Create
 	cat := tp.Category{
@@ -33,8 +33,8 @@ func TestCategoryCreate(t *testing.T) {
 func TestCategoryDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategorydelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Delete something that doesn't exist
 	err := store.DeleteCategory("notfound")
@@ -66,8 +66,8 @@ func TestCategoryDelete(t *testing.T) {
 func TestCategoryList(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategorylist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	cats, err := store.ListCategories()
@@ -127,8 +127,8 @@ func TestCategoryList(t *testing.T) {
 func TestCategoryUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategoryupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// Update
 	cat := tp.Category{
@@ -161,8 +161,8 @@ func TestCategoryUpdateGet(t *testing.T) {
 func TestCategoryNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategorynotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	_, err := store.GetCategory("notfound")
 	var appErr ae.AppError
@@ -178,8 +178,8 @@ func TestCategoryNotFound(t *testing.T) {
 func TestCategoryDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategorydeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteCategory("notfound")
 	if err == nil {
@@ -190,8 +190,8 @@ func TestCategoryDeleteNotFound(t *testing.T) {
 func TestCategoryUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testcategoryupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	cat := tp.Category{
 		Title:       "notfound",

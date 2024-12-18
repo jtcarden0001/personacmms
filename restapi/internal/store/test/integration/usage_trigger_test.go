@@ -11,8 +11,8 @@ import (
 func TestUsageTriggerCreate(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggercreate"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -33,8 +33,8 @@ func TestUsageTriggerCreate(t *testing.T) {
 func TestUsageTriggerDelete(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerdelete"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -62,8 +62,8 @@ func TestUsageTriggerDelete(t *testing.T) {
 func TestUsageTriggerDeleteNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerdeletenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	err := store.DeleteUsageTrigger(uuid.New())
 	if err == nil {
@@ -74,8 +74,8 @@ func TestUsageTriggerDeleteNotFound(t *testing.T) {
 func TestUsageTriggerList(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerlist"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// List
 	uts, err := store.ListUsageTriggers()
@@ -132,8 +132,8 @@ func TestUsageTriggerList(t *testing.T) {
 func TestUsageTriggerListByTaskId(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerlistbytaskid"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// create 2 usage triggers for task 1
 	assetTaskId := setupTask(t, store, "1")
@@ -202,8 +202,8 @@ func TestUsageTriggerListByTaskId(t *testing.T) {
 func TestUsageTriggerUpdateGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerupdateget"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	// setup
 	assetTaskId := setupTask(t, store, "1")
@@ -239,8 +239,8 @@ func TestUsageTriggerUpdateGet(t *testing.T) {
 func TestUsageTriggerUpdateNotFound(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerupdatenotfound"
-	store := initializeStore(dbName)
-	defer closeStore(store, dbName)
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
 	ut := tp.UsageTrigger{
 		TaskId:    uuid.New(),
