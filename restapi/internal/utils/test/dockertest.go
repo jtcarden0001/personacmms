@@ -110,7 +110,7 @@ func InitializeStore(dbName string) st.Store {
 	}
 
 	store := st.NewWithDb(dbName)
-	schema, err := os.ReadFile("../../postgres/ddl/init.sql")
+	schema, err := os.ReadFile("../../../store/postgres/ddl/init.sql")
 	if err != nil {
 		log.Fatalf("Could not read schema file: %s", err)
 	}
