@@ -8,8 +8,6 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
-var cmmsapp app.App
-
 func TestMain(m *testing.M) {
 	pool, resource, err := utest.CreateDockerTestPostgres()
 	if err != nil {
@@ -22,9 +20,11 @@ func TestMain(m *testing.M) {
 		resource.Close()
 	}()
 
-	store := utest.InitializeStore("cmmsapptest")
-	cmmsapp = app.New(store)
-
 	// run tests
 	m.Run()
+}
+
+func NewApp(name string) app.App {
+	store := utest.InitializeStore(name)
+	return app.New(store)
 }
