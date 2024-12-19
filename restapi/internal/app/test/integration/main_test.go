@@ -24,7 +24,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func NewApp(name string) app.App {
+func newApp(name string) app.App {
 	store := utest.InitializeStore(name)
 	return app.New(store)
 }
