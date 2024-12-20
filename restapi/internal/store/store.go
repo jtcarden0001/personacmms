@@ -2,8 +2,8 @@ package store
 
 import (
 	"github.com/google/uuid"
+	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/test/mock"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
