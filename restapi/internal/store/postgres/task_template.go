@@ -11,7 +11,7 @@ import (
 
 var taskTemplateTableName = "tasktemplate"
 
-func (pg *Store) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
+func (pg *PostgresStore) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
 	taskTemplate.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description, type) VALUES ($1, $2, $3, $4)`, taskTemplateTableName)
 	_, err := pg.db.Exec(query, taskTemplate.Id, taskTemplate.Title, taskTemplate.Description, taskTemplate.Type)
@@ -22,7 +22,7 @@ func (pg *Store) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTempla
 	return taskTemplate, nil
 }
 
-func (pg *Store) DeleteTaskTemplate(title string) error {
+func (pg *PostgresStore) DeleteTaskTemplate(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, taskTemplateTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -38,7 +38,7 @@ func (pg *Store) DeleteTaskTemplate(title string) error {
 	return nil
 }
 
-func (pg *Store) ListTaskTemplates() ([]tp.TaskTemplate, error) {
+func (pg *PostgresStore) ListTaskTemplates() ([]tp.TaskTemplate, error) {
 	query := fmt.Sprintf(`SELECT id, title, description, type FROM %s`, taskTemplateTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -59,7 +59,7 @@ func (pg *Store) ListTaskTemplates() ([]tp.TaskTemplate, error) {
 	return taskTemplates, nil
 }
 
-func (pg *Store) GetTaskTemplate(title string) (tp.TaskTemplate, error) {
+func (pg *PostgresStore) GetTaskTemplate(title string) (tp.TaskTemplate, error) {
 	query := fmt.Sprintf(`SELECT id, title, description, type FROM %s WHERE title = $1`, taskTemplateTableName)
 	row := pg.db.QueryRow(query, title)
 
@@ -72,7 +72,7 @@ func (pg *Store) GetTaskTemplate(title string) (tp.TaskTemplate, error) {
 	return taskTemplate, nil
 }
 
-func (pg *Store) UpdateTaskTemplate(title string, taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
+func (pg *PostgresStore) UpdateTaskTemplate(title string, taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2, type = $3 WHERE title = $4 returning id`, taskTemplateTableName)
 	err := pg.db.QueryRow(query, taskTemplate.Title, taskTemplate.Description, taskTemplate.Type, title).Scan(&taskTemplate.Id)
 	if err != nil {

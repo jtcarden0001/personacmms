@@ -11,7 +11,7 @@ import (
 
 var usageUnitTableName = "usageunit"
 
-func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
+func (pg *PostgresStore) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, usageUnitTableName)
@@ -24,7 +24,7 @@ func (pg *Store) CreateUsageUnit(uu tp.UsageUnit) (tp.UsageUnit, error) {
 	return uu, nil
 }
 
-func (pg *Store) DeleteUsageUnit(title string) error {
+func (pg *PostgresStore) DeleteUsageUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, usageUnitTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -40,7 +40,7 @@ func (pg *Store) DeleteUsageUnit(title string) error {
 	return nil
 }
 
-func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
+func (pg *PostgresStore) ListUsageUnits() ([]tp.UsageUnit, error) {
 	var usageUnits = []tp.UsageUnit{}
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, usageUnitTableName)
 	rows, err := pg.db.Query(query)
@@ -61,7 +61,7 @@ func (pg *Store) ListUsageUnits() ([]tp.UsageUnit, error) {
 	return usageUnits, nil
 }
 
-func (pg *Store) GetUsageUnit(title string) (tp.UsageUnit, error) {
+func (pg *PostgresStore) GetUsageUnit(title string) (tp.UsageUnit, error) {
 	var uu tp.UsageUnit
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, usageUnitTableName)
 	err := pg.db.QueryRow(query, title).Scan(&uu.Id, &uu.Title)
@@ -72,7 +72,7 @@ func (pg *Store) GetUsageUnit(title string) (tp.UsageUnit, error) {
 	return uu, nil
 }
 
-func (pg *Store) UpdateUsageUnit(title string, uu tp.UsageUnit) (tp.UsageUnit, error) {
+func (pg *PostgresStore) UpdateUsageUnit(title string, uu tp.UsageUnit) (tp.UsageUnit, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, usageUnitTableName)
 	err := pg.db.QueryRow(query, uu.Title, title).Scan(&uu.Id)
 	if err != nil {

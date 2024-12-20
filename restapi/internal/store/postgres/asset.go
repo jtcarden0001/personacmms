@@ -11,7 +11,7 @@ import (
 
 var assetTableName = "asset"
 
-func (pg *Store) CreateAsset(asset tp.Asset) (tp.Asset, error) {
+func (pg *PostgresStore) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 	asset.Id = uuid.New()
 	// TODO: make this line length more tenable
 	query := fmt.Sprintf(`
@@ -29,7 +29,7 @@ func (pg *Store) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 	return asset, nil
 }
 
-func (pg *Store) DeleteAsset(groupTitle string, assetTitle string) error {
+func (pg *PostgresStore) DeleteAsset(groupTitle string, assetTitle string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
 	result, err := pg.db.Exec(query, assetTitle, groupTitle)
 	if err != nil {
@@ -45,7 +45,7 @@ func (pg *Store) DeleteAsset(groupTitle string, assetTitle string) error {
 	return nil
 }
 
-func (pg *Store) ListAssets() ([]tp.Asset, error) {
+func (pg *PostgresStore) ListAssets() ([]tp.Asset, error) {
 	query := fmt.Sprintf(`
 		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
 		FROM %s`, assetTableName)
@@ -67,7 +67,7 @@ func (pg *Store) ListAssets() ([]tp.Asset, error) {
 	return assets, nil
 }
 
-func (pg *Store) ListAssetsByGroup(groupTitle string) ([]tp.Asset, error) {
+func (pg *PostgresStore) ListAssetsByGroup(groupTitle string) ([]tp.Asset, error) {
 	query := fmt.Sprintf(`
 		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
 		FROM %s 
@@ -90,7 +90,7 @@ func (pg *Store) ListAssetsByGroup(groupTitle string) ([]tp.Asset, error) {
 	return assets, nil
 }
 
-func (pg *Store) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
+func (pg *PostgresStore) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
 	var asset tp.Asset
 	query := fmt.Sprintf(`
 		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
@@ -115,7 +115,7 @@ func (pg *Store) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error
 	return asset, nil
 }
 
-func (pg *Store) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
+func (pg *PostgresStore) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
 	query := fmt.Sprintf(`
 		UPDATE %s 
 		SET year = $1, 

@@ -11,7 +11,7 @@ import (
 
 var categoryTableName = "category"
 
-func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
+func (pg *PostgresStore) CreateCategory(category tp.Category) (tp.Category, error) {
 	category.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
 	_, err := pg.db.Exec(query, category.Id, category.Title, category.Description)
@@ -22,7 +22,7 @@ func (pg *Store) CreateCategory(category tp.Category) (tp.Category, error) {
 	return category, nil
 }
 
-func (pg *Store) DeleteCategory(title string) error {
+func (pg *PostgresStore) DeleteCategory(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, categoryTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -38,7 +38,7 @@ func (pg *Store) DeleteCategory(title string) error {
 	return nil
 }
 
-func (pg *Store) ListCategories() ([]tp.Category, error) {
+func (pg *PostgresStore) ListCategories() ([]tp.Category, error) {
 	query := fmt.Sprintf(`SELECT id, title, description FROM %s`, categoryTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -60,7 +60,7 @@ func (pg *Store) ListCategories() ([]tp.Category, error) {
 	return categories, nil
 }
 
-func (pg *Store) GetCategory(title string) (tp.Category, error) {
+func (pg *PostgresStore) GetCategory(title string) (tp.Category, error) {
 	query := fmt.Sprintf(`SELECT id, title, description FROM %s WHERE title = $1`, categoryTableName)
 	row := pg.db.QueryRow(query, title)
 
@@ -73,7 +73,7 @@ func (pg *Store) GetCategory(title string) (tp.Category, error) {
 	return category, nil
 }
 
-func (pg *Store) UpdateCategory(title string, category tp.Category) (tp.Category, error) {
+func (pg *PostgresStore) UpdateCategory(title string, category tp.Category) (tp.Category, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE title = $3 RETURNING id`, categoryTableName)
 	err := pg.db.QueryRow(query, category.Title, category.Description, title).Scan(&category.Id)
 	if err != nil {

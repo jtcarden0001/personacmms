@@ -11,7 +11,7 @@ import (
 
 var consumableTableName = "consumable"
 
-func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
+func (pg *PostgresStore) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, consumableTableName)
@@ -24,7 +24,7 @@ func (pg *Store) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
 	return c, nil
 }
 
-func (pg *Store) DeleteConsumable(title string) error {
+func (pg *PostgresStore) DeleteConsumable(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, consumableTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -40,7 +40,7 @@ func (pg *Store) DeleteConsumable(title string) error {
 	return nil
 }
 
-func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
+func (pg *PostgresStore) ListConsumables() ([]tp.Consumable, error) {
 	var consumables = []tp.Consumable{}
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, consumableTableName)
 	rows, err := pg.db.Query(query)
@@ -62,7 +62,7 @@ func (pg *Store) ListConsumables() ([]tp.Consumable, error) {
 }
 
 // TODO: implement testing for this
-func (pg *Store) GetConsumableById(id uid.UUID) (tp.Consumable, error) {
+func (pg *PostgresStore) GetConsumableById(id uid.UUID) (tp.Consumable, error) {
 	var c tp.Consumable
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE id = $1`, consumableTableName)
 	err := pg.db.QueryRow(query, id).Scan(&c.Id, &c.Title)
@@ -73,7 +73,7 @@ func (pg *Store) GetConsumableById(id uid.UUID) (tp.Consumable, error) {
 	return c, nil
 }
 
-func (pg *Store) GetConsumableByTitle(title string) (tp.Consumable, error) {
+func (pg *PostgresStore) GetConsumableByTitle(title string) (tp.Consumable, error) {
 	var c tp.Consumable
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, consumableTableName)
 	err := pg.db.QueryRow(query, title).Scan(&c.Id, &c.Title)
@@ -84,7 +84,7 @@ func (pg *Store) GetConsumableByTitle(title string) (tp.Consumable, error) {
 	return c, nil
 }
 
-func (pg *Store) UpdateConsumable(title string, c tp.Consumable) (tp.Consumable, error) {
+func (pg *PostgresStore) UpdateConsumable(title string, c tp.Consumable) (tp.Consumable, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, consumableTableName)
 	err := pg.db.QueryRow(query, c.Title, title).Scan(&c.Id)
 	if err != nil {

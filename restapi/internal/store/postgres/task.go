@@ -11,7 +11,7 @@ import (
 
 var assetTaskTable = "task"
 
-func (pg *Store) CreateTask(at tp.Task) (tp.Task, error) {
+func (pg *PostgresStore) CreateTask(at tp.Task) (tp.Task, error) {
 	at.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title, unique_instructions, asset_id, tasktemplate_id) VALUES ($1, $2, $3, $4, $5)`, assetTaskTable)
 	_, err := pg.db.Exec(query, at.Id, at.Title, at.Instructions, at.AssetId, at.TaskTemplateId)
@@ -22,7 +22,7 @@ func (pg *Store) CreateTask(at tp.Task) (tp.Task, error) {
 	return at, nil
 }
 
-func (pg *Store) DeleteTask(atId tp.UUID) error {
+func (pg *PostgresStore) DeleteTask(atId tp.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, assetTaskTable)
 	result, err := pg.db.Exec(query, atId)
 	if err != nil {
@@ -38,7 +38,7 @@ func (pg *Store) DeleteTask(atId tp.UUID) error {
 	return nil
 }
 
-func (pg *Store) GetTask(atId tp.UUID) (tp.Task, error) {
+func (pg *PostgresStore) GetTask(atId tp.UUID) (tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE id = $1`, assetTaskTable)
 	var e tp.Task
 	err := pg.db.QueryRow(query, atId).Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
@@ -49,7 +49,7 @@ func (pg *Store) GetTask(atId tp.UUID) (tp.Task, error) {
 	return e, nil
 }
 
-func (pg *Store) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, error) {
+func (pg *PostgresStore) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE asset_id = $1 AND id = $2`, assetTaskTable)
 	var e tp.Task
 	err := pg.db.QueryRow(query, assetId, taskId).Scan(&e.Id, &e.Title, &e.Instructions, &e.AssetId, &e.TaskTemplateId)
@@ -60,7 +60,7 @@ func (pg *Store) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, err
 	return e, nil
 }
 
-func (pg *Store) ListTasks() ([]tp.Task, error) {
+func (pg *PostgresStore) ListTasks() ([]tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s`, assetTaskTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -82,7 +82,7 @@ func (pg *Store) ListTasks() ([]tp.Task, error) {
 }
 
 // TODO: add a test for this
-func (pg *Store) ListTasksByAssetId(assetId tp.UUID) ([]tp.Task, error) {
+func (pg *PostgresStore) ListTasksByAssetId(assetId tp.UUID) ([]tp.Task, error) {
 	query := fmt.Sprintf(`SELECT id, title, unique_instructions, asset_id, tasktemplate_id FROM %s WHERE asset_id = $1`, assetTaskTable)
 	rows, err := pg.db.Query(query, assetId)
 	if err != nil {
@@ -103,7 +103,7 @@ func (pg *Store) ListTasksByAssetId(assetId tp.UUID) ([]tp.Task, error) {
 	return ts, nil
 }
 
-func (pg *Store) UpdateTask(atId tp.UUID, at tp.Task) (tp.Task, error) {
+func (pg *PostgresStore) UpdateTask(atId tp.UUID, at tp.Task) (tp.Task, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1, unique_instructions = $2, asset_id = $3, tasktemplate_id = $4 WHERE id = $5`, assetTaskTable)
 	result, err := pg.db.Exec(query, at.Title, at.Instructions, at.AssetId, at.TaskTemplateId, atId)
 	if err != nil {

@@ -11,22 +11,22 @@ import (
 
 // TODO: switch to *sql.Db calls using contexts
 
-type Store struct {
+type PostgresStore struct {
 	name string
 	db   *sql.DB
 }
 
 // TODO: All of the entity store code is structured almost exactly the same.  Probably a way to reduce code using generics or something.
-func New() *Store {
+func New() *PostgresStore {
 	return getStore("")
 }
 
 // used for testing
-func NewWithDb(dbName string) *Store {
+func NewWithDb(dbName string) *PostgresStore {
 	return getStore(dbName)
 }
 
-func getStore(dbName string) *Store {
+func getStore(dbName string) *PostgresStore {
 	// TODO: move this config out of the implementation code
 	pgUser := os.Getenv("DATABASE_USER")
 	pgPass := os.Getenv("DATABASE_PASSWORD")
@@ -43,17 +43,17 @@ func getStore(dbName string) *Store {
 		log.Fatal(err)
 	}
 
-	return &Store{
+	return &PostgresStore{
 		name: dbName,
 		db:   Db,
 	}
 }
 
-func (pg *Store) Exec(query string) error {
+func (pg *PostgresStore) Exec(query string) error {
 	_, err := pg.db.Exec(query)
 	return err
 }
 
-func (pg *Store) Close() error {
+func (pg *PostgresStore) Close() error {
 	return pg.db.Close()
 }

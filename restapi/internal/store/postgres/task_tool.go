@@ -10,7 +10,7 @@ import (
 
 var assetTaskToolTable = "task_tool"
 
-func (pg *Store) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
+func (pg *PostgresStore) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
 	query := fmt.Sprintf("INSERT INTO %s (task_id, tool_id) VALUES ($1, $2)", assetTaskToolTable)
 	_, err := pg.db.Exec(query, tool.TaskId, tool.ToolId)
 	if err != nil {
@@ -20,7 +20,7 @@ func (pg *Store) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
 	return tool, nil
 }
 
-func (pg *Store) DeleteTaskTool(atId, tId tp.UUID) error {
+func (pg *PostgresStore) DeleteTaskTool(atId, tId tp.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE task_id = $1 AND tool_id = $2", assetTaskToolTable)
 	result, err := pg.db.Exec(query, atId, tId)
 	if err != nil {
@@ -36,7 +36,7 @@ func (pg *Store) DeleteTaskTool(atId, tId tp.UUID) error {
 	return nil
 }
 
-func (pg *Store) ListTaskTools() ([]tp.TaskTool, error) {
+func (pg *PostgresStore) ListTaskTools() ([]tp.TaskTool, error) {
 	query := fmt.Sprintf("SELECT task_id, tool_id FROM %s", assetTaskToolTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -58,7 +58,7 @@ func (pg *Store) ListTaskTools() ([]tp.TaskTool, error) {
 }
 
 // TODO: add testing for this function
-func (pg *Store) ListTaskToolsByTaskId(atId tp.UUID) ([]tp.TaskTool, error) {
+func (pg *PostgresStore) ListTaskToolsByTaskId(atId tp.UUID) ([]tp.TaskTool, error) {
 	query := fmt.Sprintf("SELECT task_id, tool_id FROM %s WHERE task_id = $1", assetTaskToolTable)
 	rows, err := pg.db.Query(query, atId)
 	if err != nil {
@@ -79,7 +79,7 @@ func (pg *Store) ListTaskToolsByTaskId(atId tp.UUID) ([]tp.TaskTool, error) {
 	return at, nil
 }
 
-func (pg *Store) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
+func (pg *PostgresStore) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
 	query := fmt.Sprintf("SELECT task_id, tool_id FROM %s WHERE task_id = $1 AND tool_id = $2", assetTaskToolTable)
 	var e tp.TaskTool
 	err := pg.db.QueryRow(query, atId, tId).Scan(&e.TaskId, &e.ToolId)
@@ -90,7 +90,7 @@ func (pg *Store) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
 	return e, nil
 }
 
-func (pg *Store) UpdateTaskTool(atId, tId tp.UUID, tool tp.TaskTool) (tp.TaskTool, error) {
+func (pg *PostgresStore) UpdateTaskTool(atId, tId tp.UUID, tool tp.TaskTool) (tp.TaskTool, error) {
 	query := fmt.Sprintf("UPDATE %s SET tool_id = $1 WHERE task_id = $2 AND tool_id = $3", assetTaskToolTable)
 	result, err := pg.db.Exec(query, tool.ToolId, atId, tId)
 	if err != nil {

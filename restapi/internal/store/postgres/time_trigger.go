@@ -11,10 +11,10 @@ import (
 
 var timeTriggerTableName = "timetrigger"
 
-func (s *Store) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error) {
+func (pg *PostgresStore) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	tt.Id = uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, quantity, timeunit_title, task_id) VALUES ($1, $2, $3, $4)`, timeTriggerTableName)
-	_, err := s.db.Exec(query, tt.Id, tt.Quantity, tt.TimeUnit, tt.TaskId)
+	_, err := pg.db.Exec(query, tt.Id, tt.Quantity, tt.TimeUnit, tt.TaskId)
 	if err != nil {
 		return tp.TimeTrigger{}, handleDbError(err, "time-trigger")
 	}
@@ -22,9 +22,9 @@ func (s *Store) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	return tt, nil
 }
 
-func (s *Store) DeleteTimeTrigger(ttId uuid.UUID) error {
+func (pg *PostgresStore) DeleteTimeTrigger(ttId uuid.UUID) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id=$1`, timeTriggerTableName)
-	result, err := s.db.Exec(query, ttId)
+	result, err := pg.db.Exec(query, ttId)
 	if err != nil {
 		return handleDbError(err, "time-trigger")
 	}
@@ -38,9 +38,9 @@ func (s *Store) DeleteTimeTrigger(ttId uuid.UUID) error {
 	return nil
 }
 
-func (s *Store) ListTimeTriggers() ([]tp.TimeTrigger, error) {
+func (pg *PostgresStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, task_id FROM %s`, timeTriggerTableName)
-	rows, err := s.db.Query(query)
+	rows, err := pg.db.Query(query)
 	if err != nil {
 		return []tp.TimeTrigger{}, handleDbError(err, "time-trigger")
 	}
@@ -59,9 +59,9 @@ func (s *Store) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	return ttgs, nil
 }
 
-func (s *Store) ListTimeTriggersByTaskId(taskId uuid.UUID) ([]tp.TimeTrigger, error) {
+func (pg *PostgresStore) ListTimeTriggersByTaskId(taskId uuid.UUID) ([]tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, task_id FROM %s WHERE task_id=$1`, timeTriggerTableName)
-	rows, err := s.db.Query(query, taskId)
+	rows, err := pg.db.Query(query, taskId)
 	if err != nil {
 		return []tp.TimeTrigger{}, handleDbError(err, "time-trigger")
 	}
@@ -79,9 +79,9 @@ func (s *Store) ListTimeTriggersByTaskId(taskId uuid.UUID) ([]tp.TimeTrigger, er
 	return ttgs, nil
 }
 
-func (s *Store) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
+func (pg *PostgresStore) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`SELECT id, quantity, timeunit_title, task_id FROM %s WHERE id=$1`, timeTriggerTableName)
-	row := s.db.QueryRow(query, ttId)
+	row := pg.db.QueryRow(query, ttId)
 
 	var tt tp.TimeTrigger
 	err := row.Scan(&tt.Id, &tt.Quantity, &tt.TimeUnit, &tt.TaskId)
@@ -92,9 +92,9 @@ func (s *Store) GetTimeTrigger(ttId uuid.UUID) (tp.TimeTrigger, error) {
 	return tt, nil
 }
 
-func (s *Store) UpdateTimeTrigger(ttId uuid.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
+func (pg *PostgresStore) UpdateTimeTrigger(ttId uuid.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	query := fmt.Sprintf(`UPDATE %s SET quantity=$1, timeunit_title=$2, task_id=$3 WHERE id=$4`, timeTriggerTableName)
-	result, err := s.db.Exec(query, tt.Quantity, tt.TimeUnit, tt.TaskId, ttId)
+	result, err := pg.db.Exec(query, tt.Quantity, tt.TimeUnit, tt.TaskId, ttId)
 	if err != nil {
 		return tp.TimeTrigger{}, handleDbError(err, "time-trigger")
 	}

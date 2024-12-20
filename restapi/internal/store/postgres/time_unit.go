@@ -11,7 +11,7 @@ import (
 
 var timeUnitTableName = "timeunit"
 
-func (pg *Store) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
+func (pg *PostgresStore) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, timeUnitTableName)
@@ -24,7 +24,7 @@ func (pg *Store) CreateTimeUnit(tu tp.TimeUnit) (tp.TimeUnit, error) {
 	return tu, nil
 }
 
-func (pg *Store) DeleteTimeUnit(title string) error {
+func (pg *PostgresStore) DeleteTimeUnit(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, timeUnitTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -40,7 +40,7 @@ func (pg *Store) DeleteTimeUnit(title string) error {
 	return nil
 }
 
-func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
+func (pg *PostgresStore) ListTimeUnits() ([]tp.TimeUnit, error) {
 	var timeUnits = []tp.TimeUnit{}
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, timeUnitTableName)
 	rows, err := pg.db.Query(query)
@@ -61,7 +61,7 @@ func (pg *Store) ListTimeUnits() ([]tp.TimeUnit, error) {
 	return timeUnits, nil
 }
 
-func (pg *Store) GetTimeUnit(title string) (tp.TimeUnit, error) {
+func (pg *PostgresStore) GetTimeUnit(title string) (tp.TimeUnit, error) {
 	var tu tp.TimeUnit
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, timeUnitTableName)
 	err := pg.db.QueryRow(query, title).Scan(&tu.Id, &tu.Title)
@@ -72,7 +72,7 @@ func (pg *Store) GetTimeUnit(title string) (tp.TimeUnit, error) {
 	return tu, nil
 }
 
-func (pg *Store) UpdateTimeUnit(title string, tu tp.TimeUnit) (tp.TimeUnit, error) {
+func (pg *PostgresStore) UpdateTimeUnit(title string, tu tp.TimeUnit) (tp.TimeUnit, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 RETURNING id`, timeUnitTableName)
 	err := pg.db.QueryRow(query, tu.Title, title).Scan(&tu.Id)
 	if err != nil {

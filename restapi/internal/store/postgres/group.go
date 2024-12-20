@@ -11,7 +11,7 @@ import (
 
 var groupTableName = "assetgroup"
 
-func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
+func (pg *PostgresStore) CreateGroup(grp tp.Group) (tp.Group, error) {
 	//TODO: allow for group creation with a specified id ?
 	id := uuid.New()
 	query := fmt.Sprintf(`INSERT INTO %s (id, title) VALUES ($1, $2) returning id`, groupTableName)
@@ -24,7 +24,7 @@ func (pg *Store) CreateGroup(grp tp.Group) (tp.Group, error) {
 	return grp, nil
 }
 
-func (pg *Store) DeleteGroup(title string) error {
+func (pg *PostgresStore) DeleteGroup(title string) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, groupTableName)
 	result, err := pg.db.Exec(query, title)
 	if err != nil {
@@ -40,7 +40,7 @@ func (pg *Store) DeleteGroup(title string) error {
 	return nil
 }
 
-func (pg *Store) ListGroups() ([]tp.Group, error) {
+func (pg *PostgresStore) ListGroups() ([]tp.Group, error) {
 	var groups = []tp.Group{}
 	query := fmt.Sprintf(`SELECT id, title FROM %s`, groupTableName)
 	rows, err := pg.db.Query(query)
@@ -61,7 +61,7 @@ func (pg *Store) ListGroups() ([]tp.Group, error) {
 	return groups, nil
 }
 
-func (pg *Store) GetGroup(title string) (tp.Group, error) {
+func (pg *PostgresStore) GetGroup(title string) (tp.Group, error) {
 	query := fmt.Sprintf(`SELECT id, title FROM %s WHERE title = $1`, groupTableName)
 	var grp tp.Group
 	err := pg.db.QueryRow(query, title).Scan(&grp.Id, &grp.Title)
@@ -72,7 +72,7 @@ func (pg *Store) GetGroup(title string) (tp.Group, error) {
 	return grp, nil
 }
 
-func (pg *Store) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, error) {
+func (pg *PostgresStore) UpdateGroup(oldtitle string, newGroup tp.Group) (tp.Group, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE title = $2 returning id, title`, groupTableName)
 	err := pg.db.QueryRow(query, newGroup.Title, oldtitle).Scan(&newGroup.Id, &newGroup.Title)
 	if err != nil {
