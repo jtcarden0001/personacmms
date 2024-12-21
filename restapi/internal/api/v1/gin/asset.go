@@ -8,6 +8,21 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /assets (JSON)
+// - GET  /assets/{assetId}
+// - GET  /assets
+// - POST /assets/{assetId} (JSON)
+// - DEL  /assets/{assetId}
+//
+// - GET  /categories/{categoryId}/assets
+// - GET  /categories/{categoryId}/groups/{groupId}/assets
+// - PUT  /categories/{categoryId}/assets/{assetId} (JSON)
+// - DEL  /categories/{categoryId}/assets/{assetId}
+//
+// - GET  /groups/{groupId}/assets
+// - PUT  /groups/{groupId}/assets/{assetId} (JSON)
+// - DEL  /groups/{groupId}/assets/{assetId} -> No, seems like it would delete the asset
+
 var baseAssetRoute = fmt.Sprintf("%s/assets", indGroupRoute)
 var assetTitle = "assetTitle"
 var indAssetRoute = fmt.Sprintf("%s/:%s", baseAssetRoute, assetTitle)

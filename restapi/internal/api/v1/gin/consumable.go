@@ -8,6 +8,17 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /consumables (JSON)
+// - GET  /consumables/{consumableId}
+// - GET  /consumables
+// - PUT  /consumables/{consumableId} (JSON)
+// - DEL  /consumables/{consumableId}
+//
+// - PUT  /assets/{assetId}/tasks/{taskId}/consumables/{consumableId}
+// - DEL  /assets/{assetId}/tasks/{taskId}/consumables/{consumableId}
+// - PUT  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
+// - DEL  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
+
 func (h *Api) registerConsumableRoutes() {
 	baseRoute := fmt.Sprintf("%s/consumables", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:consumableTitle", baseRoute)

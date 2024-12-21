@@ -8,6 +8,14 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /categories (JSON)
+// - GET  /categories/{categoryId}
+// - GET  /categories
+// - PUT  /categories/{categoryId} (JSON)
+// - DEL  /categories/{categoryId}
+//
+// - GET /assets/{assetId}/categories
+
 func (h *Api) registerCategoryRoutes() {
 	baseRoute := fmt.Sprintf("%s/categories", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:categoryTitle", baseRoute)

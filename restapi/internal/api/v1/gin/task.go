@@ -8,6 +8,14 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /assets/{assetId}/tasks (JSON)
+// - GET  /assets/{assetId}/tasks/{taskId}
+// - GET  /assets/{assetId}/tasks
+// - PUT  /assets/{assetId}/tasks/{taskId} (JSON)
+// - DEL  /assets/{assetId}/tasks/{taskId}
+//
+// - DEL  /assets/{assetId}/work-orders/{workOrderId}/tasks
+
 var baseTaskRoute = fmt.Sprintf("%s/tasks", indAssetRoute)
 var taskId = "TaskId"
 var indTaskRoute = fmt.Sprintf("%s/:%s", baseTaskRoute, taskId)

@@ -8,6 +8,17 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /tools (JSON)
+// - GET  /tools/{toolId}
+// - GET  /tools
+// - PUT  /tools/{toolId} (JSON)
+// - DEL  /tools/{toolId}
+//
+// - PUT  /assets/{assetId}/tasks/{taskId}/tools/{toolId}
+// - DEL  /assets/{assetId}/tasks/{taskId}/tools/{toolId}
+// - PUT  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
+// - DEL  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
+
 var baseToolRoute = fmt.Sprintf("%s/tools", routePrefix)
 var toolTitle = "ToolTitle"
 var individualToolRoute = fmt.Sprintf("%s/:%s", baseToolRoute, toolTitle)

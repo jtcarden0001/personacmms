@@ -8,6 +8,13 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /groups (JSON)
+// - GET  /groups/{groupId}
+// - GET  /groups
+// - PUT  /groups/{groupdId}
+// - DEL  /groups/{groupId}
+// - GET  /assets/{assetId}/groups
+
 var baseGroupRoute = fmt.Sprintf("%s/groups", routePrefix)
 var groupTitle = "groupTitle"
 var indGroupRoute = fmt.Sprintf("%s/:%s", baseGroupRoute, groupTitle)

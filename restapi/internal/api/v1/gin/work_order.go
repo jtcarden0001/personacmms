@@ -8,6 +8,13 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /assets/{assetId}/work-orders (JSON)
+// - GET  /assets/{assetId}/work-orders/{workOrderId}
+// - GET  /assets/{assetId}/work-orders
+// - PUT  /assets/{assetId}/work-orders/{workOrderId} (JSON)
+// - DEL  /assets/{assetId}/work-orders/{workOrderId}
+// - PUT  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}
+
 // start with long routes then evaluate short routes later
 var baseLongWorkOrderRoute = fmt.Sprintf("%s/work-orders", indTaskRoute)
 var workOrderId = "workOrderId"

@@ -8,6 +8,12 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+// - POST /task-templates (JSON)
+// - GET  /task-templates/{taskTemplateId}
+// - GET  /task-templates
+// - PUT  /task-templates/{taskTemplateId} (JSON)
+// - DEL  /task-templates/{taskTemplateId}
+
 func (h *Api) registerTaskTemplateRoutes() {
 	baseRoute := fmt.Sprintf("%s/task-templates", routePrefix)
 	individualRoute := fmt.Sprintf("%s/:taskTemplateTitle", baseRoute)
