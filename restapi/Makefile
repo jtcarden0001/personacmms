@@ -53,17 +53,12 @@ build-linux-debug:
 	GOOS=linux $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTLINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
 # test
-test: app-test store-test
+test: integration-test unit-test
 
-integration-test:
-	$(GOTEST) ./internal/store/test/integration/...
-	$(GOTEST) ./internal/app/test/integration/...
-
-app-integration-test:
-	$(GOTEST) ./internal/app/...
+integration-test: store-integration-test
 
 store-integration-test:
-	$(GOTEST) ./internal/store/...
+	$(GOTEST) ./internal/store/test/integration/...
 
 unit-test: app-unit-test
 
