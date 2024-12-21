@@ -26,7 +26,7 @@ func (h *Api) registerTaskToolRoutes() {
 //	@Summary		Create a relationship between an asset task and a tool with json body
 //	@Description	Create a relationship between an asset task and a tool with json body
 //	@Accept			json
-//	@Param 			taskTool 	body 	tp.TaskTool 	true 	"Asset Task Tool object"
+//	@Param			taskTool	body	tp.TaskTool	true	"Asset Task Tool object"
 //	@Produce		json
 //	@Success		201	{object}	tp.TaskTool
 //	@Router			/task-tools [post]
@@ -41,17 +41,17 @@ func (h *Api) createTaskToolBody(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, taskTool))
 }
 
-//	 CreateTaskToolPath godoc
+//	CreateTaskToolPath godoc
 //
-//		@Summary		Create a relationship between an asset task and a tool with path parameters
-//		@Description	Create a relationship between an asset task and a tool with path parameters
-//		@Param			groupTitle	path	string	true	"Group Title"
-//		@Param			assetTitle	path	string	true	"Asset Title"
-//		@Param			taskId	path	string	true	"Asset Task Id"
-//		@Param			toolId	path	string	true	"Tool Id"
-//		@Produce		json
-//		@Success		201	{object}	tp.TaskTool
-//	 @Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId} [post]
+// @Summary		Create a relationship between an asset task and a tool with path parameters
+// @Description	Create a relationship between an asset task and a tool with path parameters
+// @Param			groupTitle	path	string	true	"Group Title"
+// @Param			assetTitle	path	string	true	"Asset Title"
+// @Param			taskId		path	string	true	"Asset Task Id"
+// @Param			toolId		path	string	true	"Tool Id"
+// @Produce		json
+// @Success		201	{object}	tp.TaskTool
+// @Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId} [post]
 func (h *Api) createTaskToolPath(c *gin.Context) {
 	taskTool, err := h.app.CreateTaskToolWithValidation(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(toolId))
 	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, taskTool))
@@ -63,7 +63,7 @@ func (h *Api) createTaskToolPath(c *gin.Context) {
 //	@Description	Delete a relationship between an asset task and a tool
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			toolId		path	string	true	"Tool Id"
 //	@Success		204
 //	@Failure		404
@@ -79,7 +79,7 @@ func (h *Api) deleteTaskTool(c *gin.Context) {
 //	@Description	List all asset task tools
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.TaskTool
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools [get]
@@ -94,7 +94,7 @@ func (h *Api) listTaskTools(c *gin.Context) {
 //	@Description	Get an asset task tool
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			toolId		path	string	true	"Tool Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.TaskTool

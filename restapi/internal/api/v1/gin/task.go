@@ -28,7 +28,7 @@ func (h *Api) registerTaskRoutes() {
 //	@Accept			json
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			task	body	tp.Task	true	"Asset Task object"
+//	@Param			task		body	tp.Task	true	"Asset Task object"
 //	@Produce		json
 //	@Success		201	{object}	tp.Task
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [post]
@@ -49,7 +49,7 @@ func (h *Api) createTask(c *gin.Context) {
 //	@Description	Delete an asset task
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Success		204
 //	@Failure		404
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [delete]
@@ -78,7 +78,7 @@ func (h *Api) listTasks(c *gin.Context) {
 //	@Description	Get an asset task
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.Task
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [get]
@@ -94,8 +94,8 @@ func (h *Api) getTask(c *gin.Context) {
 //	@Accept			json
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
-//	@Param			task	body	tp.Task	true	"Asset Task object"
+//	@Param			taskId		path	string	true	"Asset Task Id"
+//	@Param			task		body	tp.Task	true	"Asset Task object"
 //	@Produce		json
 //	@Success		200	{object}	tp.Task
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [put]

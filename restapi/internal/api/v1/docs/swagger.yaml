@@ -187,7 +187,7 @@ info:
 paths:
   /categories:
     get:
-      description: List all categories
+      description: List asset categories
       produces:
       - application/json
       responses:
@@ -197,11 +197,18 @@ paths:
             items:
               $ref: '#/definitions/types.Category'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List asset categories
+      tags:
+      - categories
     post:
       consumes:
       - application/json
-      description: Create a category
+      description: Create an asset category
       parameters:
       - description: Category object
         in: body
@@ -216,24 +223,60 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.Category'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create an asset category
+      tags:
+      - categories
   /categories/{categoryTitle}:
     delete:
-      description: Delete a category
+      consumes:
+      - application/json
+      description: Delete an asset category
       parameters:
       - description: Category Title
         in: path
         name: categoryTitle
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete an asset category
+      tags:
+      - categories
     get:
-      description: Get an asset category
+      description: Get a category
       parameters:
       - description: Category Title
         in: path
@@ -247,11 +290,28 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Category'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get an asset category
+      tags:
+      - categories
     put:
       consumes:
       - application/json
-      description: Update a category
+      description: Update an asset category
       parameters:
       - description: Category Title
         in: path
@@ -271,9 +331,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Category'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
         "500":
           description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update an asset category
+      tags:
+      - categories
   /consumables:
     get:
       description: List all consumables

@@ -25,9 +25,9 @@ func (h *Api) registerUsageTriggerRoutes() {
 //	@Summary		Create a usage trigger
 //	@Description	Create a usage trigger
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			groupTitle		path	string			true	"Group Title"
+//	@Param			assetTitle		path	string			true	"Asset Id"
+//	@Param			taskId			path	string			true	"Asset Task Id"
 //	@Param			usageTrigger	body	tp.UsageTrigger	true	"Usage Trigger object"
 //	@Produce		json
 //	@Success		201	{object}	tp.UsageTrigger
@@ -47,9 +47,9 @@ func (h *Api) createUsageTrigger(c *gin.Context) {
 //
 //	@Summary		Delete a usage trigger
 //	@Description	Delete a usage trigger
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			groupTitle		path	string	true	"Group Title"
+//	@Param			assetTitle		path	string	true	"Asset Title"
+//	@Param			taskId			path	string	true	"Asset Task Id"
 //	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
 //	@Success		204
 //	@Failure		404
@@ -63,9 +63,9 @@ func (h *Api) deleteUsageTrigger(c *gin.Context) {
 //
 //	@Summary		Get a usage trigger
 //	@Description	Get a usage trigger
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			groupTitle		path	string	true	"Group Title"
+//	@Param			assetTitle		path	string	true	"Asset Title"
+//	@Param			taskId			path	string	true	"Asset Task Id"
 //	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.UsageTrigger
@@ -81,7 +81,7 @@ func (h *Api) getUsageTrigger(c *gin.Context) {
 //	@Description	List usage triggers
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.UsageTrigger
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers [get]
@@ -95,10 +95,10 @@ func (h *Api) listUsageTriggers(c *gin.Context) {
 //	@Summary		Update a usage trigger
 //	@Description	Update a usage trigger
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task Id"
-//	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
+//	@Param			groupTitle		path	string			true	"Group Title"
+//	@Param			assetTitle		path	string			true	"Asset Title"
+//	@Param			taskId			path	string			true	"Asset Task Id"
+//	@Param			usageTriggerId	path	string			true	"Usage Trigger Id"
 //	@Param			usageTrigger	body	tp.UsageTrigger	true	"Usage Trigger object"
 //	@Produce		json
 //	@Success		200	{object}	tp.UsageTrigger

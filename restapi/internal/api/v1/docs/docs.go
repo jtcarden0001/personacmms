@@ -26,9 +26,12 @@ const docTemplate = `{
     "paths": {
         "/categories": {
             "get": {
-                "description": "List all categories",
+                "description": "List asset categories",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "categories"
                 ],
                 "summary": "List asset categories",
                 "responses": {
@@ -40,16 +43,26 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.Category"
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "post": {
-                "description": "Create a category",
+                "description": "Create an asset category",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "categories"
                 ],
                 "summary": "Create an asset category",
                 "parameters": [
@@ -69,15 +82,39 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Category"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
         },
         "/categories/{categoryTitle}": {
             "get": {
-                "description": "Get an asset category",
+                "description": "Get a category",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "categories"
                 ],
                 "summary": "Get an asset category",
                 "parameters": [
@@ -95,16 +132,40 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Category"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "put": {
-                "description": "Update a category",
+                "description": "Update an asset category",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "categories"
                 ],
                 "summary": "Update an asset category",
                 "parameters": [
@@ -132,13 +193,40 @@ const docTemplate = `{
                             "$ref": "#/definitions/types.Category"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
-                "description": "Delete a category",
+                "description": "Delete an asset category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "categories"
+                ],
                 "summary": "Delete an asset category",
                 "parameters": [
                     {
@@ -153,8 +241,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }

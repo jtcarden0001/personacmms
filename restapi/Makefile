@@ -36,6 +36,7 @@ format:
 
 swag:
 	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types,internal/api/v1/gin
+	swag fmt
 
 # build
 build: build-windows build-linux

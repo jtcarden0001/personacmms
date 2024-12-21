@@ -26,9 +26,9 @@ func (h *Api) registerWorkOrderRoutes() {
 //	@Summary		Create a work order
 //	@Description	Create a work order
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			groupTitle	path	string			true	"Group Title"
+//	@Param			assetTitle	path	string			true	"Asset Id"
+//	@Param			taskId		path	string			true	"Asset Task Id"
 //	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
 //	@Success		201	{object}	tp.WorkOrder
@@ -50,7 +50,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Description	Delete an asset task work order
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
 //	@Failure		404
@@ -66,7 +66,7 @@ func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 //	@Description	List all asset task work orders
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.WorkOrder
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
@@ -81,7 +81,7 @@ func (h *Api) listTaskWorkOrders(c *gin.Context) {
 //	@Description	Get an asset task work order
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Produce		json
 //	@Success		200	{object}	tp.WorkOrder
@@ -96,10 +96,10 @@ func (h *Api) getTaskWorkOrder(c *gin.Context) {
 //	@Summary		Update an asset task work order
 //	@Description	Update an asset task work order
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Asset Task Id"
-//	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Param			groupTitle	path	string			true	"Group Title"
+//	@Param			assetTitle	path	string			true	"Asset Id"
+//	@Param			taskId		path	string			true	"Asset Task Id"
+//	@Param			workOrderId	path	string			true	"Work Order Id"
 //	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
 //	@Success		200	{object}	tp.WorkOrder

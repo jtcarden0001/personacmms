@@ -28,7 +28,7 @@ func (h *Api) registerTaskConsumableRoutes() {
 //	@Summary		Create a relationship between an asset task and a consumable with json body
 //	@Description	Create a relationship between an asset task and a consumable with json body
 //	@Accept			json
-//	@Param 			taskConsumable 	body 	tp.TaskConsumable 	true 	"Asset Task Consumable object"
+//	@Param			taskConsumable	body	tp.TaskConsumable	true	"Asset Task Consumable object"
 //	@Produce		json
 //	@Success		201	{object}	tp.TaskConsumable
 //	@Router			/task-consumables [post]
@@ -43,18 +43,18 @@ func (h *Api) createTaskConsumableBody(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, taskConsumable))
 }
 
-//	CreateTaskConsumablePath godoc
+// CreateTaskConsumablePath godoc
 //
-// @Summary			Create a relationship between an asset task and a consumable with path parameters
-// @Description		Create a relationship between an asset task and a consumable with path parameters
+// @Summary		Create a relationship between an asset task and a consumable with path parameters
+// @Description	Create a relationship between an asset task and a consumable with path parameters
 // @Accept			json
-// @Param			groupTitle	path	string	true	"Group Title"
-// @Param			assetTitle	path	string	true	"Asset Title"
-// @Param			taskId	path	string	true	"Asset Task ID"
-// @Param			consumableId	path	string	true	"Consumable ID"
-// @Param 			taskConsumable 	body 	tp.TaskConsumableForPath 	true 	"Asset Task Consumable object"
-// @Produce			json
-// @Success			201	{object}	tp.TaskConsumable
+// @Param			groupTitle		path	string						true	"Group Title"
+// @Param			assetTitle		path	string						true	"Asset Title"
+// @Param			taskId			path	string						true	"Asset Task ID"
+// @Param			consumableId	path	string						true	"Consumable ID"
+// @Param			taskConsumable	body	tp.TaskConsumableForPath	true	"Asset Task Consumable object"
+// @Produce		json
+// @Success		201	{object}	tp.TaskConsumable
 // @Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables/{consumableId} [post]
 func (h *Api) createTaskConsumablePath(c *gin.Context) {
 	var taskConsumable tp.TaskConsumable
@@ -77,9 +77,9 @@ func (h *Api) createTaskConsumablePath(c *gin.Context) {
 //
 //	@Summary		Delete an asset task consumable
 //	@Description	Delete an asset task consumable
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task ID"
+//	@Param			groupTitle		path	string	true	"Group Title"
+//	@Param			assetTitle		path	string	true	"Asset Title"
+//	@Param			taskId			path	string	true	"Asset Task ID"
 //	@Param			consumableId	path	string	true	"Consumable ID"
 //	@Success		204
 //	@Failure		404
@@ -95,7 +95,7 @@ func (h *Api) deleteTaskConsumable(c *gin.Context) {
 //	@Description	List all asset task consumables
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task ID"
+//	@Param			taskId		path	string	true	"Asset Task ID"
 //	@Produce		json
 //	@Success		200	{object}	[]tp.TaskConsumable
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables [get]
@@ -108,9 +108,9 @@ func (h *Api) listTaskConsumables(c *gin.Context) {
 //
 //	@Summary		Get an asset task consumable
 //	@Description	Get an asset task consumable
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId	path	string	true	"Asset Task ID"
+//	@Param			groupTitle		path	string	true	"Group Title"
+//	@Param			assetTitle		path	string	true	"Asset Title"
+//	@Param			taskId			path	string	true	"Asset Task ID"
 //	@Param			consumableId	path	string	true	"Consumable ID"
 //	@Produce		json
 //	@Success		200	{object}	tp.TaskConsumable
@@ -125,7 +125,7 @@ func (h *Api) getTaskConsumable(c *gin.Context) {
 //	@Summary		Update an asset task consumable with json body
 //	@Description	Update an asset task consumable with json body
 //	@Accept			json
-//	@Param 			taskConsumable 	body 	tp.TaskConsumable 	true 	"Asset Task Consumable object"
+//	@Param			taskConsumable	body	tp.TaskConsumable	true	"Asset Task Consumable object"
 //	@Produce		json
 //	@Success		201	{object}	tp.TaskConsumable
 //	@Router			/task-consumables/{consumableId} [put]
@@ -144,11 +144,11 @@ func (h *Api) updateTaskConsumableBody(c *gin.Context) {
 //
 //	@Summary		Update an asset task consumable with path parameters
 //	@Description	Update an asset task consumable with path parameters
-//	@Param 			groupTitle	path	string	true	"Group Title"
-//	@Param 			assetTitle	path	string	true	"Asset Title"
-//	@Param 			taskId	path	string	true	"Asset Task ID"
-//	@Param 			consumableId	path	string	true	"Consumable ID"
-//	@Param 			taskConsumable 	body 	tp.TaskConsumableForPath 	true 	"Asset Task Consumable object"
+//	@Param			groupTitle		path	string						true	"Group Title"
+//	@Param			assetTitle		path	string						true	"Asset Title"
+//	@Param			taskId			path	string						true	"Asset Task ID"
+//	@Param			consumableId	path	string						true	"Consumable ID"
+//	@Param			taskConsumable	body	tp.TaskConsumableForPath	true	"Asset Task Consumable object"
 //	@Produce		json
 //	@Success		201	{object}	tp.TaskConsumable
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables/{consumableId} [put]

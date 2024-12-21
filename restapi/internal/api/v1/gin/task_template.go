@@ -82,7 +82,7 @@ func (h *Api) getTaskTemplate(c *gin.Context) {
 //	@Summary		Update a task template
 //	@Description	Update a task template
 //	@Accept			json
-//	@Param			taskTemplateTitle	path	string	true	"TaskTemplate Title"
+//	@Param			taskTemplateTitle	path	string			true	"TaskTemplate Title"
 //	@Param			taskTemplate		body	tp.TaskTemplate	true	"TaskTemplate object"
 //	@Produce		json
 //	@Success		204

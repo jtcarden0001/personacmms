@@ -82,8 +82,8 @@ func (h *Api) getConsumable(c *gin.Context) {
 //	@Summary		Update a consumable
 //	@Description	Update a consumable
 //	@Accept			json
-//	@Param			consumableTitle	path	string		true	"Consumable ID"
-//	@Param			consumable	body	tp.Consumable	true	"Consumable object"
+//	@Param			consumableTitle	path	string			true	"Consumable ID"
+//	@Param			consumable		body	tp.Consumable	true	"Consumable object"
 //	@Produce		json
 //	@Success		200	{object}	tp.Consumable
 //	@Router			/consumables/{consumableTitle} [put]
