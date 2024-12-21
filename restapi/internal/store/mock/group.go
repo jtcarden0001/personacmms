@@ -34,7 +34,8 @@ func (m *MockStore) GetGroup(title string) (tp.Group, error) {
 	if group, ok := m.data["groups"][title]; ok {
 		return group.(tp.Group), nil
 	}
-	return tp.Group{}, nil
+
+	return tp.Group{}, ae.ErrNotFound
 }
 
 func (m *MockStore) ListGroups() ([]tp.Group, error) {

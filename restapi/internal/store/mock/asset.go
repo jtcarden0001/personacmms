@@ -14,27 +14,27 @@ func (m *MockStore) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 		m.data["assets"] = make(map[string]interface{})
 	}
 	asset.Id = uuid.New()
-	m.data["assets"][asset.Id.String()] = asset
+	m.data["assets"][asset.Title] = asset
 	return asset, nil
 }
 
-func (m *MockStore) DeleteAsset(id, group string) error {
+func (m *MockStore) DeleteAsset(group, title string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["assets"][id]; !ok {
+	if _, ok := m.data["assets"][title]; !ok {
 		return ae.New(ae.CodeNotFound, "asset not found")
 	}
-	delete(m.data["assets"], id)
+	delete(m.data["assets"], title)
 	return nil
 }
 
-func (m *MockStore) GetAsset(id, group string) (tp.Asset, error) {
+func (m *MockStore) GetAsset(group, title string) (tp.Asset, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if asset, ok := m.data["assets"][id]; ok {
+	if asset, ok := m.data["assets"][title]; ok {
 		return asset.(tp.Asset), nil
 	}
-	return tp.Asset{}, nil
+	return tp.Asset{}, ae.ErrNotFound
 }
 
 func (m *MockStore) ListAssets() ([]tp.Asset, error) {
@@ -59,12 +59,14 @@ func (m *MockStore) ListAssetsByGroup(group string) ([]tp.Asset, error) {
 	return assets, nil
 }
 
-func (m *MockStore) UpdateAsset(id, group string, asset tp.Asset) (tp.Asset, error) {
+func (m *MockStore) UpdateAsset(group, title string, asset tp.Asset) (tp.Asset, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["assets"][id]; !ok {
+	if _, ok := m.data["assets"][title]; !ok {
 		return tp.Asset{}, ae.New(ae.CodeNotFound, "asset not found")
 	}
-	m.data["assets"][id] = asset
+	// delete the old asset
+	delete(m.data["assets"], title)
+	m.data["assets"][asset.Title] = asset
 	return asset, nil
 }

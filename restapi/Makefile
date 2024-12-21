@@ -59,11 +59,16 @@ integration-test:
 	$(GOTEST) ./internal/store/test/integration/...
 	$(GOTEST) ./internal/app/test/integration/...
 
-app-test:
+app-integration-test:
 	$(GOTEST) ./internal/app/...
 
-store-test:
+store-integration-test:
 	$(GOTEST) ./internal/store/...
+
+unit-test: app-unit-test
+
+app-unit-test:
+	$(GOTEST) ./internal/app/cmmsapp/...
 
 # run
 dev-up: clean

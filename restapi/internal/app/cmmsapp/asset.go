@@ -15,6 +15,10 @@ func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
 		return tp.Asset{}, ae.ErrGroupTitleMismatch
 	}
 
+	if asset.Title == "" {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset title is required")
+	}
+
 	return a.db.CreateAsset(asset)
 }
 
