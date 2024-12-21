@@ -65,24 +65,6 @@ func (h *Api) deleteTask(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTasks godoc
-//
-//	@Summary		List asset tasks
-//	@Description	List all asset tasks
-//	@Tags			tasks
-//	@Produce		json
-//	@Param			groupTitle	path		string	true	"Group Title"
-//	@Param			assetTitle	path		string	true	"Asset Id"
-//	@Success		200			{object}	[]tp.Task
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [get]
-func (h *Api) listTasks(c *gin.Context) {
-	tasks, err := h.app.ListTasks(c.Param(groupTitle), c.Param(assetTitle))
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tasks))
-}
-
 // GetTask godoc
 //
 //	@Summary		Get an asset task
@@ -100,6 +82,24 @@ func (h *Api) listTasks(c *gin.Context) {
 func (h *Api) getTask(c *gin.Context) {
 	task, err := h.app.GetTask(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, task))
+}
+
+// ListTasks godoc
+//
+//	@Summary		List asset tasks
+//	@Description	List all asset tasks
+//	@Tags			tasks
+//	@Produce		json
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Success		200			{object}	[]tp.Task
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [get]
+func (h *Api) listTasks(c *gin.Context) {
+	tasks, err := h.app.ListTasks(c.Param(groupTitle), c.Param(assetTitle))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tasks))
 }
 
 // UpdateTask godoc

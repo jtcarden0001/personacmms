@@ -64,23 +64,6 @@ func (h *Api) deleteAsset(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// listAssets godoc
-//
-//	@Summary		List assets
-//	@Description	List all assets belonging to a group
-//	@Tags			assets
-//	@Produce		json
-//	@Param			groupTitle	path		string	true	"Group Title"
-//	@Success		200			{object}	[]tp.Asset
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
-//	@Router			/groups/{groupTitle}/assets [get]
-func (h *Api) listAssets(c *gin.Context) {
-	asset, err := h.app.ListAssets(c.Param(groupTitle))
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, asset))
-}
-
 // getAsset godoc
 //
 //	@Summary		Get an asset
@@ -96,6 +79,23 @@ func (h *Api) listAssets(c *gin.Context) {
 //	@Router			/groups/{groupTitle}/assets/{assetTitle} [get]
 func (h *Api) getAsset(c *gin.Context) {
 	asset, err := h.app.GetAsset(c.Param(groupTitle), c.Param(assetTitle))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, asset))
+}
+
+// listAssets godoc
+//
+//	@Summary		List assets
+//	@Description	List all assets belonging to a group
+//	@Tags			assets
+//	@Produce		json
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Success		200			{object}	[]tp.Asset
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/groups/{groupTitle}/assets [get]
+func (h *Api) listAssets(c *gin.Context) {
+	asset, err := h.app.ListAssets(c.Param(groupTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, asset))
 }
 

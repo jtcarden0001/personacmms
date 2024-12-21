@@ -89,21 +89,6 @@ func (h *Api) deleteTaskConsumable(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTaskConsumables godoc
-//
-//	@Summary		List asset task consumables
-//	@Description	List all asset task consumables
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId		path	string	true	"Asset Task ID"
-//	@Produce		json
-//	@Success		200	{object}	[]tp.TaskConsumable
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables [get]
-func (h *Api) listTaskConsumables(c *gin.Context) {
-	taskConsumables, err := h.app.ListTaskConsumables(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskConsumables))
-}
-
 // GetTaskConsumable godoc
 //
 //	@Summary		Get an asset task consumable
@@ -118,6 +103,21 @@ func (h *Api) listTaskConsumables(c *gin.Context) {
 func (h *Api) getTaskConsumable(c *gin.Context) {
 	taskConsumable, err := h.app.GetTaskConsumable(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(consumableId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskConsumable))
+}
+
+// ListTaskConsumables godoc
+//
+//	@Summary		List asset task consumables
+//	@Description	List all asset task consumables
+//	@Param			groupTitle	path	string	true	"Group Title"
+//	@Param			assetTitle	path	string	true	"Asset Title"
+//	@Param			taskId		path	string	true	"Asset Task ID"
+//	@Produce		json
+//	@Success		200	{object}	[]tp.TaskConsumable
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables [get]
+func (h *Api) listTaskConsumables(c *gin.Context) {
+	taskConsumables, err := h.app.ListTaskConsumables(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskConsumables))
 }
 
 // UpdateTaskConsumableBody godoc

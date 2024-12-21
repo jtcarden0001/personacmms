@@ -54,18 +54,6 @@ func (h *Api) deleteGroup(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListGroups godoc
-//
-//	@Summary		List asset groups
-//	@Description	List all groups
-//	@Produce		json
-//	@Success		200	{object}	[]tp.Group
-//	@Router			/groups [get]
-func (h *Api) listGroups(c *gin.Context) {
-	groups, err := h.app.ListGroups()
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, groups))
-}
-
 // GetGroup godoc
 //
 //	@Summary		Get an asset group
@@ -77,6 +65,18 @@ func (h *Api) listGroups(c *gin.Context) {
 func (h *Api) getGroup(c *gin.Context) {
 	group, err := h.app.GetGroup(c.Param(groupTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, group))
+}
+
+// ListGroups godoc
+//
+//	@Summary		List asset groups
+//	@Description	List all groups
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Group
+//	@Router			/groups [get]
+func (h *Api) listGroups(c *gin.Context) {
+	groups, err := h.app.ListGroups()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, groups))
 }
 
 // UpdateGroup godoc

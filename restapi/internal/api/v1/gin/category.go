@@ -61,20 +61,6 @@ func (h *Api) deleteCategory(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// listCategories godoc
-//
-//	@Summary		List asset categories
-//	@Description	List asset categories
-//	@Tags			categories
-//	@Produce		json
-//	@Success		200	{object}	[]tp.Category
-//	@Failure		500	{object}	map[string]any
-//	@Router			/categories [get]
-func (h *Api) listCategories(c *gin.Context) {
-	cats, err := h.app.ListCategories()
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cats))
-}
-
 // getCategory godoc
 //
 //	@Summary		Get an asset category
@@ -90,6 +76,20 @@ func (h *Api) listCategories(c *gin.Context) {
 func (h *Api) getCategory(c *gin.Context) {
 	cat, err := h.app.GetCategory(c.Param("categoryTitle"))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cat))
+}
+
+// listCategories godoc
+//
+//	@Summary		List asset categories
+//	@Description	List asset categories
+//	@Tags			categories
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Category
+//	@Failure		500	{object}	map[string]any
+//	@Router			/categories [get]
+func (h *Api) listCategories(c *gin.Context) {
+	cats, err := h.app.ListCategories()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cats))
 }
 
 // updateCategory godoc

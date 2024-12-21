@@ -59,22 +59,6 @@ func (h *Api) deleteConsumable(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListConsumables godoc
-//
-//	@Summary		List consumables
-//	@Description	List all consumables
-//	@Tags			consumables
-//	@Produce		json
-//	@Success		200	{object}	[]tp.Consumable
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
-//	@Router			/consumables [get]
-func (h *Api) listConsumables(c *gin.Context) {
-	consumables, err := h.app.ListConsumables()
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumables))
-}
-
 // GetConsumable godoc
 //
 //	@Summary		Get a consumable
@@ -90,6 +74,22 @@ func (h *Api) listConsumables(c *gin.Context) {
 func (h *Api) getConsumable(c *gin.Context) {
 	consumable, err := h.app.GetConsumable(c.Param("consumableTitle"))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
+}
+
+// ListConsumables godoc
+//
+//	@Summary		List consumables
+//	@Description	List all consumables
+//	@Tags			consumables
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Consumable
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
+//	@Router			/consumables [get]
+func (h *Api) listConsumables(c *gin.Context) {
+	consumables, err := h.app.ListConsumables()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumables))
 }
 
 // UpdateConsumable godoc

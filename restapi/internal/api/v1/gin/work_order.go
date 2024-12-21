@@ -67,25 +67,6 @@ func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTaskWorkOrders godoc
-//
-//	@Summary		List asset task work orders
-//	@Description	List all asset task work orders
-//	@Tags			work-orders
-//	@Produce		json
-//	@Param			groupTitle	path		string	true	"Group Title"
-//	@Param			assetTitle	path		string	true	"Asset Id"
-//	@Param			taskId		path		string	true	"Asset Task Id"
-//	@Success		200			{object}	[]tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
-func (h *Api) listTaskWorkOrders(c *gin.Context) {
-	workOrders, err := h.app.ListWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
-}
-
 // GetTaskWorkOrder godoc
 //
 //	@Summary		Get an asset task work order
@@ -104,6 +85,25 @@ func (h *Api) listTaskWorkOrders(c *gin.Context) {
 func (h *Api) getTaskWorkOrder(c *gin.Context) {
 	workOrder, err := h.app.GetWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
+}
+
+// ListTaskWorkOrders godoc
+//
+//	@Summary		List asset task work orders
+//	@Description	List all asset task work orders
+//	@Tags			work-orders
+//	@Produce		json
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Success		200			{object}	[]tp.WorkOrder
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
+func (h *Api) listTaskWorkOrders(c *gin.Context) {
+	workOrders, err := h.app.ListWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
 }
 
 // UpdateTaskWorkOrder godoc

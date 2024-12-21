@@ -52,18 +52,6 @@ func (h *Api) deleteTaskTemplate(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTaskTemplates godoc
-//
-//	@Summary		List task templates
-//	@Description	List all task templates
-//	@Produce		json
-//	@Success		200	{object}	[]tp.TaskTemplate
-//	@Router			/task-templates [get]
-func (h *Api) listTaskTemplates(c *gin.Context) {
-	taskTemplates, err := h.app.ListTaskTemplates()
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTemplates))
-}
-
 // GetTaskTemplate godoc
 //
 //	@Summary		Get a task template
@@ -75,6 +63,18 @@ func (h *Api) listTaskTemplates(c *gin.Context) {
 func (h *Api) getTaskTemplate(c *gin.Context) {
 	taskTemplate, err := h.app.GetTaskTemplate(c.Param("taskTemplateTitle"))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTemplate))
+}
+
+// ListTaskTemplates godoc
+//
+//	@Summary		List task templates
+//	@Description	List all task templates
+//	@Produce		json
+//	@Success		200	{object}	[]tp.TaskTemplate
+//	@Router			/task-templates [get]
+func (h *Api) listTaskTemplates(c *gin.Context) {
+	taskTemplates, err := h.app.ListTaskTemplates()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTemplates))
 }
 
 // UpdateTaskTemplate godoc

@@ -85,25 +85,6 @@ func (h *Api) deleteTaskTool(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTaskTools godoc
-//
-//	@Summary		List asset task tools
-//	@Description	List all asset task tools
-//	@Tags			task-tools
-//	@Produce		json
-//	@Param			groupTitle	path		string	true	"Group Title"
-//	@Param			assetTitle	path		string	true	"Asset Title"
-//	@Param			taskId		path		string	true	"Asset Task Id"
-//	@Success		200			{object}	[]tp.TaskTool
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
-//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools [get]
-func (h *Api) listTaskTools(c *gin.Context) {
-	taskTools, err := h.app.ListTaskTools(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTools))
-}
-
 // GetTaskTool godoc
 //
 //	@Summary		Get an asset task tool
@@ -122,4 +103,23 @@ func (h *Api) listTaskTools(c *gin.Context) {
 func (h *Api) getTaskTool(c *gin.Context) {
 	taskTool, err := h.app.GetTaskTool(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(toolId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTool))
+}
+
+// ListTaskTools godoc
+//
+//	@Summary		List asset task tools
+//	@Description	List all asset task tools
+//	@Tags			task-tools
+//	@Produce		json
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Title"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Success		200			{object}	[]tp.TaskTool
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools [get]
+func (h *Api) listTaskTools(c *gin.Context) {
+	taskTools, err := h.app.ListTaskTools(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskTools))
 }

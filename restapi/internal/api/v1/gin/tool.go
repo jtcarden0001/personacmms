@@ -61,22 +61,6 @@ func (h *Api) DeleteTool(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
-// ListTools godoc
-//
-//	@Summary		List tools
-//	@Description	List all tools
-//	@Tags			tools
-//	@Produce		json
-//	@Success		200	{object}	[]tp.Tool
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
-//	@Router			/tools [get]
-func (h *Api) ListTools(c *gin.Context) {
-	tools, err := h.app.ListTools()
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tools))
-}
-
 // GetTool godoc
 //
 //	@Summary		Get a tool
@@ -92,6 +76,22 @@ func (h *Api) ListTools(c *gin.Context) {
 func (h *Api) GetTool(c *gin.Context) {
 	tool, err := h.app.GetTool(c.Param(toolTitle))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
+}
+
+// ListTools godoc
+//
+//	@Summary		List tools
+//	@Description	List all tools
+//	@Tags			tools
+//	@Produce		json
+//	@Success		200	{object}	[]tp.Tool
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
+//	@Router			/tools [get]
+func (h *Api) ListTools(c *gin.Context) {
+	tools, err := h.app.ListTools()
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tools))
 }
 
 // UpdateTool godoc
