@@ -16,9 +16,14 @@ func getStatus(err error, successCode int) int {
 	var appErr ae.AppError
 	if errors.As(err, &appErr) {
 		switch appErr.Code {
+
 		case ae.CodeNotFound:
 			return http.StatusNotFound
+
+		case ae.CodeInvalid:
+			return http.StatusBadRequest
 		}
+
 	}
 
 	return http.StatusInternalServerError

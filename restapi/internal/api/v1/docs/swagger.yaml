@@ -1,5 +1,24 @@
 basePath: /api/v1
 definitions:
+  types.Asset:
+    properties:
+      categoryTitle:
+        type: string
+      description:
+        type: string
+      make:
+        type: string
+      modelNumber:
+        type: string
+      serialNumber:
+        type: string
+      title:
+        type: string
+      year:
+        type: integer
+    required:
+    - title
+    type: object
   types.Category:
     properties:
       description:
@@ -150,19 +169,19 @@ definitions:
     - title
     type: object
 externalDocs:
-  description: OpenAPI
-  url: https://swagger.io/resources/open-api/
+  description: 'TODO:'
+  url: 'TODO:'
 host: 127.0.0.1:8080
 info:
   contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
+    email: 'TODO:'
+    name: 'TODO:'
+    url: 'TODO:'
   description: This is the Personal Computer Maintenance Management System REST API.
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
+    name: 'TODO:'
+    url: 'TODO:'
+  termsOfService: 'TODO:'
   title: PersonaCMMS API
   version: "1.0"
 paths:
@@ -429,6 +448,206 @@ paths:
           schema:
             $ref: '#/definitions/types.Group'
       summary: Update an asset group
+  /groups/{groupTitle}/assets:
+    get:
+      description: List all assets belonging to a group
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Asset'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List assets
+      tags:
+      - assets
+    post:
+      consumes:
+      - application/json
+      description: Create an asset
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset object
+        in: body
+        name: asset
+        required: true
+        schema:
+          $ref: '#/definitions/types.Asset'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create an asset
+      tags:
+      - assets
+  /groups/{groupTitle}/assets/{assetTitle}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an asset
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete an asset
+      tags:
+      - assets
+    get:
+      description: Get an asset
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get an asset
+      tags:
+      - assets
+    put:
+      consumes:
+      - application/json
+      description: Update an asset
+      parameters:
+      - description: Group Title
+        in: path
+        name: groupTitle
+        required: true
+        type: string
+      - description: Asset Title
+        in: path
+        name: assetTitle
+        required: true
+        type: string
+      - description: Asset object
+        in: body
+        name: asset
+        required: true
+        schema:
+          $ref: '#/definitions/types.Asset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update an asset
+      tags:
+      - assets
   /groups/{groupTitle}/assets/{assetTitle}/tasks:
     get:
       description: List all asset tasks

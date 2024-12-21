@@ -16,22 +16,22 @@ import (
 //	@title			PersonaCMMS API
 //	@version		1.0
 //	@description	This is the Personal Computer Maintenance Management System REST API.
-//	@termsOfService	http://swagger.io/terms/
+//	@termsOfService	TODO:
 
-//	@contact.name	API Support
-//	@contact.url	http://www.swagger.io/support
-//	@contact.email	support@swagger.io
+//	@contact.name	TODO:
+//	@contact.url	TODO:
+//	@contact.email	TODO:
 
-//	@license.name	Apache 2.0
-//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name	TODO:
+//	@license.url	TODO:
 
 //	@host		127.0.0.1:8080
 //	@BasePath	/api/v1
 
 //	@securityDefinitions.basic	BasicAuth
 
-//	@externalDocs.description	OpenAPI
-//	@externalDocs.url			https://swagger.io/resources/open-api/
+//	@externalDocs.description	TODO:
+//	@externalDocs.url			TODO:
 
 type Api struct {
 	app    a.App
