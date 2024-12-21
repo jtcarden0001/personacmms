@@ -17,8 +17,10 @@ func (h *Api) registerUsageUnitRoutes() {
 //
 //	@Summary		List usage units
 //	@Description	List all usage units
+//	@Tags			usage-units
 //	@Produce		json
 //	@Success		200	{object}	[]types.UsageUnit
+//	@Failure		500	{object}	map[string]any
 //	@Router			/usage-units [get]
 func (h *Api) listUsageUnits(c *gin.Context) {
 	usageUnits, err := h.app.ListUsageUnits()

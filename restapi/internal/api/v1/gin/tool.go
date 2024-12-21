@@ -25,10 +25,14 @@ func (h *Api) registerToolRoutes() {
 //
 //	@Summary		Create a tool
 //	@Description	Create a tool
+//	@Tags			tools
 //	@Accept			json
-//	@Param			tool	body	tp.Tool	true	"Tool object"
 //	@Produce		json
-//	@Success		201	{object}	tp.Tool
+//	@Param			tool	body		tp.Tool	true	"Tool object"
+//	@Success		201		{object}	tp.Tool
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/tools [post]
 func (h *Api) CreateTool(c *gin.Context) {
 	var tool tp.Tool
@@ -45,9 +49,12 @@ func (h *Api) CreateTool(c *gin.Context) {
 //
 //	@Summary		Delete a tool
 //	@Description	Delete a tool
+//	@Tags			tools
 //	@Param			toolTitle	path	string	true	"Tool Title"
 //	@Success		204
-//	@Failure		404
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/tools/{toolTitle} [delete]
 func (h *Api) DeleteTool(c *gin.Context) {
 	err := h.app.DeleteTool(c.Param(toolTitle))
@@ -58,8 +65,12 @@ func (h *Api) DeleteTool(c *gin.Context) {
 //
 //	@Summary		List tools
 //	@Description	List all tools
+//	@Tags			tools
 //	@Produce		json
 //	@Success		200	{object}	[]tp.Tool
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/tools [get]
 func (h *Api) ListTools(c *gin.Context) {
 	tools, err := h.app.ListTools()
@@ -70,9 +81,13 @@ func (h *Api) ListTools(c *gin.Context) {
 //
 //	@Summary		Get a tool
 //	@Description	Get a tool
+//	@Tags			tools
 //	@Param			toolTitle	path	string	true	"Tool Title"
 //	@Produce		json
 //	@Success		200	{object}	tp.Tool
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/tools/{toolTitle} [get]
 func (h *Api) GetTool(c *gin.Context) {
 	tool, err := h.app.GetTool(c.Param(toolTitle))
@@ -83,10 +98,15 @@ func (h *Api) GetTool(c *gin.Context) {
 //
 //	@Summary		Update a tool
 //	@Description	Update a tool
+//	@Tags			tools
 //	@Accept			json
-//	@Param			toolTitle	path	string	true	"Tool Title"
 //	@Produce		json
-//	@Success		200	{object}	tp.Tool
+//	@Param			toolTitle	path		string	true	"Tool Title"
+//	@Param			tool		body		tp.Tool	true	"Tool object"
+//	@Success		200			{object}	tp.Tool
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/tools/{toolTitle} [put]
 func (h *Api) UpdateTool(c *gin.Context) {
 	var tool tp.Tool

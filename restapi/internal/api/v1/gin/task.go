@@ -25,12 +25,16 @@ func (h *Api) registerTaskRoutes() {
 //
 //	@Summary		Create an asset task
 //	@Description	Create an asset task
+//	@Tags			tasks
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			task		body	tp.Task	true	"Asset Task object"
 //	@Produce		json
-//	@Success		201	{object}	tp.Task
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			task		body		tp.Task	true	"Asset Task object"
+//	@Success		201			{object}	tp.Task
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [post]
 func (h *Api) createTask(c *gin.Context) {
 	var task tp.Task
@@ -47,11 +51,14 @@ func (h *Api) createTask(c *gin.Context) {
 //
 //	@Summary		Delete an asset task
 //	@Description	Delete an asset task
+//	@Tags			tasks
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
 //	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Success		204
-//	@Failure		404
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [delete]
 func (h *Api) deleteTask(c *gin.Context) {
 	err := h.app.DeleteTask(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
@@ -62,10 +69,14 @@ func (h *Api) deleteTask(c *gin.Context) {
 //
 //	@Summary		List asset tasks
 //	@Description	List all asset tasks
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
+//	@Tags			tasks
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Task
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Success		200			{object}	[]tp.Task
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks [get]
 func (h *Api) listTasks(c *gin.Context) {
 	tasks, err := h.app.ListTasks(c.Param(groupTitle), c.Param(assetTitle))
@@ -76,11 +87,15 @@ func (h *Api) listTasks(c *gin.Context) {
 //
 //	@Summary		Get an asset task
 //	@Description	Get an asset task
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId		path	string	true	"Asset Task Id"
+//	@Tags			tasks
 //	@Produce		json
-//	@Success		200	{object}	tp.Task
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Success		200			{object}	tp.Task
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [get]
 func (h *Api) getTask(c *gin.Context) {
 	task, err := h.app.GetTask(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
@@ -91,13 +106,17 @@ func (h *Api) getTask(c *gin.Context) {
 //
 //	@Summary		Update an asset task
 //	@Description	Update an asset task
+//	@Tags			tasks
 //	@Accept			json
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId		path	string	true	"Asset Task Id"
-//	@Param			task		body	tp.Task	true	"Asset Task object"
 //	@Produce		json
-//	@Success		200	{object}	tp.Task
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Param			task		body		tp.Task	true	"Asset Task object"
+//	@Success		200			{object}	tp.Task
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId} [put]
 func (h *Api) updateTask(c *gin.Context) {
 	var task tp.Task

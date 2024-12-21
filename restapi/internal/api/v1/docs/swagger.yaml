@@ -829,7 +829,24 @@ paths:
             items:
               $ref: '#/definitions/types.Task'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List asset tasks
+      tags:
+      - tasks
     post:
       consumes:
       - application/json
@@ -858,7 +875,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create an asset task
+      tags:
+      - tasks
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}:
     delete:
       description: Delete an asset task
@@ -881,9 +915,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete an asset task
+      tags:
+      - tasks
     get:
       description: Get an asset task
       parameters:
@@ -909,7 +958,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get an asset task
+      tags:
+      - tasks
     put:
       consumes:
       - application/json
@@ -943,7 +1009,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update an asset task
+      tags:
+      - tasks
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables:
     get:
       description: List all asset task consumables
@@ -1386,7 +1469,24 @@ paths:
             items:
               $ref: '#/definitions/types.TimeTrigger'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List time triggers
+      tags:
+      - time-triggers
     post:
       consumes:
       - application/json
@@ -1420,7 +1520,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a time trigger
+      tags:
+      - time-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers/{timeTriggerId}:
     delete:
       description: Delete a time trigger
@@ -1448,9 +1565,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a time trigger
+      tags:
+      - time-triggers
     get:
       description: Get a time trigger
       parameters:
@@ -1481,7 +1613,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get a time trigger
+      tags:
+      - time-triggers
     put:
       consumes:
       - application/json
@@ -1520,7 +1669,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update a time trigger
+      tags:
+      - time-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools:
     get:
       description: List all asset task tools
@@ -1549,7 +1715,24 @@ paths:
             items:
               $ref: '#/definitions/types.TaskTool'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List asset task tools
+      tags:
+      - task-tools
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId}:
     delete:
       description: Delete a relationship between an asset task and a tool
@@ -1577,9 +1760,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a relationship between an asset task and a tool
+      tags:
+      - task-tools
     get:
       description: Get an asset task tool
       parameters:
@@ -1610,8 +1808,27 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.TaskTool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get an asset task tool
+      tags:
+      - task-tools
     post:
+      consumes:
+      - application/json
       description: Create a relationship between an asset task and a tool with path
         parameters
       parameters:
@@ -1642,7 +1859,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.TaskTool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a relationship between an asset task and a tool with path parameters
+      tags:
+      - task-tools
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers:
     get:
       description: List usage triggers
@@ -1671,7 +1905,24 @@ paths:
             items:
               $ref: '#/definitions/types.UsageTrigger'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List usage triggers
+      tags:
+      - usage-triggers
     post:
       consumes:
       - application/json
@@ -1705,7 +1956,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a usage trigger
+      tags:
+      - usage-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers/{usageTriggerId}:
     delete:
       description: Delete a usage trigger
@@ -1733,9 +2001,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a usage trigger
+      tags:
+      - usage-triggers
     get:
       description: Get a usage trigger
       parameters:
@@ -1766,7 +2049,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get a usage trigger
+      tags:
+      - usage-triggers
     put:
       consumes:
       - application/json
@@ -1805,7 +2105,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update a usage trigger
+      tags:
+      - usage-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders:
     get:
       description: List all asset task work orders
@@ -1834,7 +2151,24 @@ paths:
             items:
               $ref: '#/definitions/types.WorkOrder'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List asset task work orders
+      tags:
+      - work-orders
     post:
       consumes:
       - application/json
@@ -1868,7 +2202,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a work order
+      tags:
+      - work-orders
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId}:
     delete:
       description: Delete an asset task work order
@@ -1896,9 +2247,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete an asset task work order
+      tags:
+      - work-orders
     get:
       description: Get an asset task work order
       parameters:
@@ -1929,7 +2295,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get an asset task work order
+      tags:
+      - work-orders
     put:
       consumes:
       - application/json
@@ -1968,7 +2351,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update an asset task work order
+      tags:
+      - work-orders
   /task-consumables:
     post:
       consumes:
@@ -2116,7 +2516,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.TaskTool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a relationship between an asset task and a tool with json body
+      tags:
+      - task-tools
   /time-units:
     get:
       description: List all time units
@@ -2129,7 +2546,24 @@ paths:
             items:
               $ref: '#/definitions/types.TimeUnit'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List time units
+      tags:
+      - time-units
   /tools:
     get:
       description: List all tools
@@ -2142,7 +2576,24 @@ paths:
             items:
               $ref: '#/definitions/types.Tool'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List tools
+      tags:
+      - tools
     post:
       consumes:
       - application/json
@@ -2161,7 +2612,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.Tool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a tool
+      tags:
+      - tools
   /tools/{toolTitle}:
     delete:
       description: Delete a tool
@@ -2174,9 +2642,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a tool
+      tags:
+      - tools
     get:
       description: Get a tool
       parameters:
@@ -2192,7 +2675,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Tool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get a tool
+      tags:
+      - tools
     put:
       consumes:
       - application/json
@@ -2203,6 +2703,12 @@ paths:
         name: toolTitle
         required: true
         type: string
+      - description: Tool object
+        in: body
+        name: tool
+        required: true
+        schema:
+          $ref: '#/definitions/types.Tool'
       produces:
       - application/json
       responses:
@@ -2210,7 +2716,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Tool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update a tool
+      tags:
+      - tools
   /usage-units:
     get:
       description: List all usage units
@@ -2223,7 +2746,14 @@ paths:
             items:
               $ref: '#/definitions/types.UsageUnit'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List usage units
+      tags:
+      - usage-units
   /work-order-statuses:
     get:
       description: List all work order statuses
@@ -2236,7 +2766,14 @@ paths:
             items:
               $ref: '#/definitions/types.WorkOrderStatus'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List work order statuses
+      tags:
+      - work-order-statuses
 securityDefinitions:
   BasicAuth:
     type: basic

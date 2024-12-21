@@ -25,13 +25,17 @@ func (h *Api) registerWorkOrderRoutes() {
 //
 //	@Summary		Create a work order
 //	@Description	Create a work order
+//	@Tags			work-orders
 //	@Accept			json
-//	@Param			groupTitle	path	string			true	"Group Title"
-//	@Param			assetTitle	path	string			true	"Asset Id"
-//	@Param			taskId		path	string			true	"Asset Task Id"
-//	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
-//	@Success		201	{object}	tp.WorkOrder
+//	@Param			groupTitle	path		string			true	"Group Title"
+//	@Param			assetTitle	path		string			true	"Asset Id"
+//	@Param			taskId		path		string			true	"Asset Task Id"
+//	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"
+//	@Success		201			{object}	tp.WorkOrder
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [post]
 func (h *Api) createWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
@@ -48,12 +52,15 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //
 //	@Summary		Delete an asset task work order
 //	@Description	Delete an asset task work order
+//	@Tags			work-orders
 //	@Param			groupTitle	path	string	true	"Group Title"
 //	@Param			assetTitle	path	string	true	"Asset Id"
 //	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
-//	@Failure		404
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [delete]
 func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 	err := h.app.DeleteWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
@@ -64,11 +71,15 @@ func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 //
 //	@Summary		List asset task work orders
 //	@Description	List all asset task work orders
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId		path	string	true	"Asset Task Id"
+//	@Tags			work-orders
 //	@Produce		json
-//	@Success		200	{object}	[]tp.WorkOrder
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Success		200			{object}	[]tp.WorkOrder
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
 func (h *Api) listTaskWorkOrders(c *gin.Context) {
 	workOrders, err := h.app.ListWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
@@ -79,12 +90,16 @@ func (h *Api) listTaskWorkOrders(c *gin.Context) {
 //
 //	@Summary		Get an asset task work order
 //	@Description	Get an asset task work order
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Id"
-//	@Param			taskId		path	string	true	"Asset Task Id"
-//	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Tags			work-orders
 //	@Produce		json
-//	@Success		200	{object}	tp.WorkOrder
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Id"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Param			workOrderId	path		string	true	"Work Order Id"
+//	@Success		200			{object}	tp.WorkOrder
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [get]
 func (h *Api) getTaskWorkOrder(c *gin.Context) {
 	workOrder, err := h.app.GetWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
@@ -95,14 +110,18 @@ func (h *Api) getTaskWorkOrder(c *gin.Context) {
 //
 //	@Summary		Update an asset task work order
 //	@Description	Update an asset task work order
+//	@Tags			work-orders
 //	@Accept			json
-//	@Param			groupTitle	path	string			true	"Group Title"
-//	@Param			assetTitle	path	string			true	"Asset Id"
-//	@Param			taskId		path	string			true	"Asset Task Id"
-//	@Param			workOrderId	path	string			true	"Work Order Id"
-//	@Param			workOrder	body	tp.WorkOrder	true	"Work Order object"
 //	@Produce		json
-//	@Success		200	{object}	tp.WorkOrder
+//	@Param			groupTitle	path		string			true	"Group Title"
+//	@Param			assetTitle	path		string			true	"Asset Id"
+//	@Param			taskId		path		string			true	"Asset Task Id"
+//	@Param			workOrderId	path		string			true	"Work Order Id"
+//	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"
+//	@Success		200			{object}	tp.WorkOrder
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [put]
 func (h *Api) updateTaskWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder

@@ -18,8 +18,10 @@ func (h *Api) registerWorkOrderStatusRoutes() {
 //
 //	@Summary		List work order statuses
 //	@Description	List all work order statuses
+//	@Tags			work-order-statuses
 //	@Produce		json
 //	@Success		200	{object}	[]types.WorkOrderStatus
+//	@Failure		500	{object}	map[string]any
 //	@Router			/work-order-statuses [get]
 func (h *Api) listWorkOrderStatus(c *gin.Context) {
 	wos, err := h.app.ListWorkOrderStatus()

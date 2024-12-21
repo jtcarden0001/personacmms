@@ -944,6 +944,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tasks"
+                ],
                 "summary": "List asset tasks",
                 "parameters": [
                     {
@@ -970,6 +973,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.Task"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -980,6 +1004,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tasks"
                 ],
                 "summary": "Create an asset task",
                 "parameters": [
@@ -1013,6 +1040,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Task"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1022,6 +1070,9 @@ const docTemplate = `{
                 "description": "Get an asset task",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tasks"
                 ],
                 "summary": "Get an asset task",
                 "parameters": [
@@ -1053,6 +1104,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Task"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -1063,6 +1135,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tasks"
                 ],
                 "summary": "Update an asset task",
                 "parameters": [
@@ -1103,11 +1178,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Task"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete an asset task",
+                "tags": [
+                    "tasks"
+                ],
                 "summary": "Delete an asset task",
                 "parameters": [
                     {
@@ -1136,8 +1235,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1747,6 +1864,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "time-triggers"
+                ],
                 "summary": "List time triggers",
                 "parameters": [
                     {
@@ -1780,6 +1900,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.TimeTrigger"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -1790,6 +1931,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "time-triggers"
                 ],
                 "summary": "Create a time trigger",
                 "parameters": [
@@ -1830,6 +1974,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TimeTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1839,6 +2004,9 @@ const docTemplate = `{
                 "description": "Get a time trigger",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "time-triggers"
                 ],
                 "summary": "Get a time trigger",
                 "parameters": [
@@ -1877,6 +2045,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TimeTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -1887,6 +2076,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "time-triggers"
                 ],
                 "summary": "Update a time trigger",
                 "parameters": [
@@ -1934,11 +2126,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TimeTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a time trigger",
+                "tags": [
+                    "time-triggers"
+                ],
                 "summary": "Delete a time trigger",
                 "parameters": [
                     {
@@ -1974,8 +2190,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1985,6 +2219,9 @@ const docTemplate = `{
                 "description": "List all asset task tools",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "task-tools"
                 ],
                 "summary": "List asset task tools",
                 "parameters": [
@@ -2019,6 +2256,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.TaskTool"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2028,6 +2286,9 @@ const docTemplate = `{
                 "description": "Get an asset task tool",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "task-tools"
                 ],
                 "summary": "Get an asset task tool",
                 "parameters": [
@@ -2066,13 +2327,40 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TaskTool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "post": {
                 "description": "Create a relationship between an asset task and a tool with path parameters",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "task-tools"
                 ],
                 "summary": "Create a relationship between an asset task and a tool with path parameters",
                 "parameters": [
@@ -2111,11 +2399,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TaskTool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a relationship between an asset task and a tool",
+                "tags": [
+                    "task-tools"
+                ],
                 "summary": "Delete a relationship between an asset task and a tool",
                 "parameters": [
                     {
@@ -2151,8 +2463,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2162,6 +2492,9 @@ const docTemplate = `{
                 "description": "List usage triggers",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "usage-triggers"
                 ],
                 "summary": "List usage triggers",
                 "parameters": [
@@ -2196,6 +2529,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.UsageTrigger"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2206,6 +2560,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "usage-triggers"
                 ],
                 "summary": "Create a usage trigger",
                 "parameters": [
@@ -2246,6 +2603,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.UsageTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2255,6 +2633,9 @@ const docTemplate = `{
                 "description": "Get a usage trigger",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "usage-triggers"
                 ],
                 "summary": "Get a usage trigger",
                 "parameters": [
@@ -2293,6 +2674,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.UsageTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2303,6 +2705,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "usage-triggers"
                 ],
                 "summary": "Update a usage trigger",
                 "parameters": [
@@ -2350,11 +2755,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.UsageTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a usage trigger",
+                "tags": [
+                    "usage-triggers"
+                ],
                 "summary": "Delete a usage trigger",
                 "parameters": [
                     {
@@ -2390,8 +2819,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2401,6 +2848,9 @@ const docTemplate = `{
                 "description": "List all asset task work orders",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "work-orders"
                 ],
                 "summary": "List asset task work orders",
                 "parameters": [
@@ -2435,6 +2885,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.WorkOrder"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2445,6 +2916,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "work-orders"
                 ],
                 "summary": "Create a work order",
                 "parameters": [
@@ -2485,6 +2959,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.WorkOrder"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2494,6 +2989,9 @@ const docTemplate = `{
                 "description": "Get an asset task work order",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "work-orders"
                 ],
                 "summary": "Get an asset task work order",
                 "parameters": [
@@ -2532,6 +3030,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.WorkOrder"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2542,6 +3061,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "work-orders"
                 ],
                 "summary": "Update an asset task work order",
                 "parameters": [
@@ -2589,11 +3111,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.WorkOrder"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete an asset task work order",
+                "tags": [
+                    "work-orders"
+                ],
                 "summary": "Delete an asset task work order",
                 "parameters": [
                     {
@@ -2629,8 +3175,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2835,6 +3399,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "task-tools"
+                ],
                 "summary": "Create a relationship between an asset task and a tool with json body",
                 "parameters": [
                     {
@@ -2853,6 +3420,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.TaskTool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2862,6 +3450,9 @@ const docTemplate = `{
                 "description": "List all time units",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "time-units"
                 ],
                 "summary": "List time units",
                 "responses": {
@@ -2873,6 +3464,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.TimeUnit"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2882,6 +3494,9 @@ const docTemplate = `{
                 "description": "List all tools",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tools"
                 ],
                 "summary": "List tools",
                 "responses": {
@@ -2893,6 +3508,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.Tool"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2903,6 +3539,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tools"
                 ],
                 "summary": "Create a tool",
                 "parameters": [
@@ -2922,6 +3561,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Tool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -2931,6 +3591,9 @@ const docTemplate = `{
                 "description": "Get a tool",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tools"
                 ],
                 "summary": "Get a tool",
                 "parameters": [
@@ -2948,6 +3611,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Tool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -2959,6 +3643,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tools"
+                ],
                 "summary": "Update a tool",
                 "parameters": [
                     {
@@ -2967,6 +3654,15 @@ const docTemplate = `{
                         "name": "toolTitle",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Tool object",
+                        "name": "tool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.Tool"
+                        }
                     }
                 ],
                 "responses": {
@@ -2975,11 +3671,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Tool"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a tool",
+                "tags": [
+                    "tools"
+                ],
                 "summary": "Delete a tool",
                 "parameters": [
                     {
@@ -2994,8 +3714,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -3005,6 +3743,9 @@ const docTemplate = `{
                 "description": "List all usage units",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "usage-units"
                 ],
                 "summary": "List usage units",
                 "responses": {
@@ -3016,6 +3757,13 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.UsageUnit"
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -3026,6 +3774,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "work-order-statuses"
+                ],
                 "summary": "List work order statuses",
                 "responses": {
                     "200": {
@@ -3035,6 +3786,13 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/types.WorkOrderStatus"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
