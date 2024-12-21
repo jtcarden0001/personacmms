@@ -54,6 +54,7 @@ func (m *MockStore) UpdateGroup(title string, group tp.Group) (tp.Group, error) 
 	if _, ok := m.data["groups"][title]; !ok {
 		return tp.Group{}, ae.New(ae.CodeNotFound, "group not found")
 	}
-	m.data["groups"][title] = group
+	delete(m.data["groups"], title)
+	m.data["groups"][group.Title] = group
 	return group, nil
 }
