@@ -147,3 +147,15 @@ func TestUpdateNonExistentAsset(t *testing.T) {
 	_, err := app.UpdateAsset("group1", "nonexistentasset", updatedAsset)
 	assert.Error(t, err)
 }
+
+func TestCreateAssetWithMismatchedGroup(t *testing.T) {
+	db := mock.New()
+	app := &App{db: db}
+
+	group := tp.Group{Id: uuid.New(), Title: "group1"}
+	db.CreateGroup(group)
+
+	asset := tp.Asset{Title: "asset1", GroupTitle: "group2"}
+	_, err := app.CreateAsset("group1", asset)
+	assert.Error(t, err)
+}

@@ -34,7 +34,7 @@ func (m *MockStore) GetCategory(title string) (tp.Category, error) {
 	if category, ok := m.data["categories"][title]; ok {
 		return category.(tp.Category), nil
 	}
-	return tp.Category{}, nil
+	return tp.Category{}, ae.ErrNotFound
 }
 
 func (m *MockStore) ListCategories() ([]tp.Category, error) {
@@ -53,6 +53,7 @@ func (m *MockStore) UpdateCategory(title string, category tp.Category) (tp.Categ
 	if _, ok := m.data["categories"][title]; !ok {
 		return tp.Category{}, ae.New(ae.CodeNotFound, "category not found")
 	}
-	m.data["categories"][title] = category
+	delete(m.data["categories"], title)
+	m.data["categories"][category.Title] = category
 	return category, nil
 }

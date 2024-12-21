@@ -7,6 +7,9 @@ import (
 
 // Create a Category
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
+	if cat.Title == "" {
+		return tp.Category{}, ae.New(ae.CodeInvalid, "category title is required")
+	}
 	return a.db.CreateCategory(cat)
 }
 
