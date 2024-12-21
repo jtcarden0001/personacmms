@@ -14,7 +14,7 @@ func (m *MockStore) CreateTaskTemplate(tt tp.TaskTemplate) (tp.TaskTemplate, err
 		m.data["taskTemplates"] = make(map[string]interface{})
 	}
 	tt.Id = uuid.New()
-	m.data["taskTemplates"][tt.Id.String()] = tt
+	m.data["taskTemplates"][tt.Title] = tt
 	return tt, nil
 }
 
@@ -47,12 +47,13 @@ func (m *MockStore) ListTaskTemplates() ([]tp.TaskTemplate, error) {
 	return taskTemplates, nil
 }
 
-func (m *MockStore) UpdateTaskTemplate(id string, tt tp.TaskTemplate) (tp.TaskTemplate, error) {
+func (m *MockStore) UpdateTaskTemplate(title string, tt tp.TaskTemplate) (tp.TaskTemplate, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["taskTemplates"][id]; !ok {
+	if _, ok := m.data["taskTemplates"][title]; !ok {
 		return tp.TaskTemplate{}, ae.New(ae.CodeNotFound, "task template not found")
 	}
-	m.data["taskTemplates"][id] = tt
+	delete(m.data["taskTemplates"], title)
+	m.data["taskTemplates"][tt.Title] = tt
 	return tt, nil
 }
