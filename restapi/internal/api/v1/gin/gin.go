@@ -58,19 +58,21 @@ var routePrefix = "/api/v1"
 
 func (h *Api) registerRoutes() {
 	h.registerAssetRoutes()
-	h.registerTaskRoutes()
 	h.registerCategoryRoutes()
 	h.registerConsumableRoutes()
 	h.registerDateTriggerRoutes()
 	h.registerGroupRoutes()
+	h.registerTaskRoutes()
+	h.registerTaskConsumableRoutes()
 	h.registerTaskTemplateRoutes()
+	h.registerTaskToolRoutes()
 	h.registerTimeTriggerRoutes()
 	h.registerTimeUnitRoutes()
 	h.registerToolRoutes()
 	h.registerUsageTriggerRoutes()
 	h.registerUsageUnitRoutes()
-	h.registerWorkOrderStatusRoutes()
 	h.registerWorkOrderRoutes()
+	h.registerWorkOrderStatusRoutes()
 	h.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
