@@ -13,7 +13,7 @@ func TestCreateTaskConsumable(t *testing.T) {
 	app := &App{db: db}
 
 	// setup group, asset, task, and consumable
-	_, _, task, _ := setupGroupAssetTaskTask(app)
+	_, _, task := setupGroupAssetTask(app)
 	consumable, _ := db.CreateConsumable(tp.Consumable{Title: "consumable1"})
 
 	taskConsumable := tp.TaskConsumable{TaskId: task.Id, ConsumableId: consumable.Id, QuantityNote: "note1"}
@@ -28,7 +28,7 @@ func TestDeleteTaskConsumable(t *testing.T) {
 	app := &App{db: db}
 
 	// setup group, asset, task, and consumable
-	_, _, task, _ := setupGroupAssetTaskTask(app)
+	_, _, task := setupGroupAssetTask(app)
 	consumable, _ := db.CreateConsumable(tp.Consumable{Title: "consumable1"})
 	db.CreateTaskConsumable(tp.TaskConsumable{TaskId: task.Id, ConsumableId: consumable.Id})
 
@@ -41,7 +41,8 @@ func TestListTaskConsumables(t *testing.T) {
 	app := &App{db: db}
 
 	// setup group, asset, task, and consumable
-	_, _, task1, task2 := setupGroupAssetTaskTask(app)
+	group, asset, task1 := setupGroupAssetTask(app)
+	task2, _ := app.CreateTask(group.Title, asset.Title, tp.Task{Title: "task2"})
 	consumable, _ := db.CreateConsumable(tp.Consumable{Title: "consumable1"})
 	db.CreateTaskConsumable(tp.TaskConsumable{TaskId: task1.Id, ConsumableId: consumable.Id})
 	db.CreateTaskConsumable(tp.TaskConsumable{TaskId: task2.Id, ConsumableId: consumable.Id})
