@@ -361,7 +361,24 @@ paths:
             items:
               $ref: '#/definitions/types.Consumable'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List consumables
+      tags:
+      - consumables
     post:
       consumes:
       - application/json
@@ -380,7 +397,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.Consumable'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a consumable
+      tags:
+      - consumables
   /consumables/{consumableTitle}:
     delete:
       description: Delete a consumable
@@ -393,9 +427,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a consumable
+      tags:
+      - consumables
     get:
       description: Get a consumable
       parameters:
@@ -411,7 +460,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Consumable'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get a consumable
+      tags:
+      - consumables
     put:
       consumes:
       - application/json
@@ -435,7 +501,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Consumable'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update a consumable
+      tags:
+      - consumables
   /groups:
     get:
       description: List all groups
@@ -1057,7 +1140,24 @@ paths:
             items:
               $ref: '#/definitions/types.DateTrigger'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List date triggers
+      tags:
+      - date-triggers
     post:
       consumes:
       - application/json
@@ -1091,7 +1191,24 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a date trigger
+      tags:
+      - date-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId}:
     delete:
       description: Delete a date trigger
@@ -1119,9 +1236,24 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Delete a date trigger
+      tags:
+      - date-triggers
     get:
       description: Get a date trigger
       parameters:
@@ -1152,7 +1284,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get a date trigger
+      tags:
+      - date-triggers
     put:
       consumes:
       - application/json
@@ -1191,7 +1340,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Update a date trigger
+      tags:
+      - date-triggers
   /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers:
     get:
       description: List all time triggers

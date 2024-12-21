@@ -24,13 +24,17 @@ func (h *Api) registerDateTriggerRoutes() {
 //
 //	@Summary		Create a date trigger
 //	@Description	Create a date trigger
+//	@Tags			date-triggers
 //	@Accept			json
-//	@Param			groupTitle	path	string			true	"Group Title"
-//	@Param			assetTitle	path	string			true	"Asset Id"
-//	@Param			taskId		path	string			true	"Asset Task Id"
-//	@Param			dateTrigger	body	tp.DateTrigger	true	"Date Trigger object"
 //	@Produce		json
-//	@Success		201	{object}	tp.DateTrigger
+//	@Param			groupTitle	path		string			true	"Group Title"
+//	@Param			assetTitle	path		string			true	"Asset Id"
+//	@Param			taskId		path		string			true	"Asset Task Id"
+//	@Param			dateTrigger	body		tp.DateTrigger	true	"Date Trigger object"
+//	@Success		201			{object}	tp.DateTrigger
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers [post]
 func (h *Api) createDateTrigger(c *gin.Context) {
 	var dateTrigger tp.DateTrigger
@@ -47,12 +51,15 @@ func (h *Api) createDateTrigger(c *gin.Context) {
 //
 //	@Summary		Delete a date trigger
 //	@Description	Delete a date trigger
+//	@Tags			date-triggers
 //	@Param			groupTitle		path	string	true	"Group Title"
 //	@Param			assetTitle		path	string	true	"Asset Title"
 //	@Param			taskId			path	string	true	"Asset Task Id"
 //	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
 //	@Success		204
-//	@Failure		404
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [delete]
 func (h *Api) deleteDateTrigger(c *gin.Context) {
 	err := h.app.DeleteDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(dateTriggerId))
@@ -63,12 +70,16 @@ func (h *Api) deleteDateTrigger(c *gin.Context) {
 //
 //	@Summary		Get a date trigger
 //	@Description	Get a date trigger
-//	@Param			groupTitle		path	string	true	"Group Title"
-//	@Param			assetTitle		path	string	true	"Asset Title"
-//	@Param			taskId			path	string	true	"Asset Task Id"
-//	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
+//	@Tags			date-triggers
 //	@Produce		json
-//	@Success		200	{object}	tp.DateTrigger
+//	@Param			groupTitle		path		string	true	"Group Title"
+//	@Param			assetTitle		path		string	true	"Asset Title"
+//	@Param			taskId			path		string	true	"Asset Task Id"
+//	@Param			dateTriggerId	path		string	true	"Date Trigger Id"
+//	@Success		200				{object}	tp.DateTrigger
+//	@Failure		400				{object}	map[string]any
+//	@Failure		404				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [get]
 func (h *Api) getDateTrigger(c *gin.Context) {
 	dateTrigger, err := h.app.GetDateTrigger(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(dateTriggerId))
@@ -79,11 +90,15 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 //
 //	@Summary		List date triggers
 //	@Description	List date triggers
-//	@Param			groupTitle	path	string	true	"Group Title"
-//	@Param			assetTitle	path	string	true	"Asset Title"
-//	@Param			taskId		path	string	true	"Asset Task Id"
+//	@Tags			date-triggers
 //	@Produce		json
-//	@Success		200	{object}	[]tp.DateTrigger
+//	@Param			groupTitle	path		string	true	"Group Title"
+//	@Param			assetTitle	path		string	true	"Asset Title"
+//	@Param			taskId		path		string	true	"Asset Task Id"
+//	@Success		200			{object}	[]tp.DateTrigger
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers [get]
 func (h *Api) listDateTriggers(c *gin.Context) {
 	dateTriggers, err := h.app.ListDateTriggers(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
@@ -94,14 +109,18 @@ func (h *Api) listDateTriggers(c *gin.Context) {
 //
 //	@Summary		Update a date trigger
 //	@Description	Update a date trigger
+//	@Tags			date-triggers
 //	@Accept			json
-//	@Param			groupTitle		path	string			true	"Group Title"
-//	@Param			assetTitle		path	string			true	"Asset Title"
-//	@Param			taskId			path	string			true	"Asset Task Id"
-//	@Param			dateTriggerId	path	string			true	"Date Trigger Id"
-//	@Param			dateTrigger		body	tp.DateTrigger	true	"Date Trigger object"
 //	@Produce		json
-//	@Success		200	{object}	tp.DateTrigger
+//	@Param			groupTitle		path		string			true	"Group Title"
+//	@Param			assetTitle		path		string			true	"Asset Title"
+//	@Param			taskId			path		string			true	"Asset Task Id"
+//	@Param			dateTriggerId	path		string			true	"Date Trigger Id"
+//	@Param			dateTrigger		body		tp.DateTrigger	true	"Date Trigger object"
+//	@Success		200				{object}	tp.DateTrigger
+//	@Failure		400				{object}	map[string]any
+//	@Failure		404				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId} [put]
 func (h *Api) updateDateTrigger(c *gin.Context) {
 	var dateTrigger tp.DateTrigger

@@ -23,10 +23,14 @@ func (h *Api) registerConsumableRoutes() {
 //
 //	@Summary		Create a consumable
 //	@Description	Create a consumable
+//	@Tags			consumables
 //	@Accept			json
-//	@Param			consumable	body	tp.Consumable	true	"Consumable object"
 //	@Produce		json
-//	@Success		201	{object}	tp.Consumable
+//	@Param			consumable	body		tp.Consumable	true	"Consumable object"
+//	@Success		201			{object}	tp.Consumable
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
 //	@Router			/consumables [post]
 func (h *Api) createConsumable(c *gin.Context) {
 	var consumable tp.Consumable
@@ -43,9 +47,12 @@ func (h *Api) createConsumable(c *gin.Context) {
 //
 //	@Summary		Delete a consumable
 //	@Description	Delete a consumable
+//	@Tags			consumables
 //	@Param			consumableTitle	path	string	true	"Consumable ID"
 //	@Success		204
-//	@Failure		404
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/consumables/{consumableTitle} [delete]
 func (h *Api) deleteConsumable(c *gin.Context) {
 	err := h.app.DeleteConsumable(c.Param("consumableTitle"))
@@ -56,8 +63,12 @@ func (h *Api) deleteConsumable(c *gin.Context) {
 //
 //	@Summary		List consumables
 //	@Description	List all consumables
+//	@Tags			consumables
 //	@Produce		json
 //	@Success		200	{object}	[]tp.Consumable
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/consumables [get]
 func (h *Api) listConsumables(c *gin.Context) {
 	consumables, err := h.app.ListConsumables()
@@ -68,9 +79,13 @@ func (h *Api) listConsumables(c *gin.Context) {
 //
 //	@Summary		Get a consumable
 //	@Description	Get a consumable
-//	@Param			consumableTitle	path	string	true	"Consumable ID"
+//	@Tags			consumables
 //	@Produce		json
-//	@Success		200	{object}	tp.Consumable
+//	@Param			consumableTitle	path		string	true	"Consumable ID"
+//	@Success		200				{object}	tp.Consumable
+//	@Failure		400				{object}	map[string]any
+//	@Failure		404				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/consumables/{consumableTitle} [get]
 func (h *Api) getConsumable(c *gin.Context) {
 	consumable, err := h.app.GetConsumable(c.Param("consumableTitle"))
@@ -81,11 +96,15 @@ func (h *Api) getConsumable(c *gin.Context) {
 //
 //	@Summary		Update a consumable
 //	@Description	Update a consumable
+//	@Tags			consumables
 //	@Accept			json
-//	@Param			consumableTitle	path	string			true	"Consumable ID"
-//	@Param			consumable		body	tp.Consumable	true	"Consumable object"
 //	@Produce		json
-//	@Success		200	{object}	tp.Consumable
+//	@Param			consumableTitle	path		string			true	"Consumable ID"
+//	@Param			consumable		body		tp.Consumable	true	"Consumable object"
+//	@Success		200				{object}	tp.Consumable
+//	@Failure		400				{object}	map[string]any
+//	@Failure		404				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/consumables/{consumableTitle} [put]
 func (h *Api) updateConsumable(c *gin.Context) {
 	var consumable tp.Consumable

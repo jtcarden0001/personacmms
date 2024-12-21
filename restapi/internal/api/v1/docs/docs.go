@@ -271,6 +271,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "consumables"
+                ],
                 "summary": "List consumables",
                 "responses": {
                     "200": {
@@ -280,6 +283,27 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/types.Consumable"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -291,6 +315,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "consumables"
                 ],
                 "summary": "Create a consumable",
                 "parameters": [
@@ -310,6 +337,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -319,6 +367,9 @@ const docTemplate = `{
                 "description": "Get a consumable",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "consumables"
                 ],
                 "summary": "Get a consumable",
                 "parameters": [
@@ -336,6 +387,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -346,6 +418,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "consumables"
                 ],
                 "summary": "Update a consumable",
                 "parameters": [
@@ -372,11 +447,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a consumable",
+                "tags": [
+                    "consumables"
+                ],
                 "summary": "Delete a consumable",
                 "parameters": [
                     {
@@ -391,8 +490,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1274,6 +1391,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "date-triggers"
+                ],
                 "summary": "List date triggers",
                 "parameters": [
                     {
@@ -1307,6 +1427,27 @@ const docTemplate = `{
                                 "$ref": "#/definitions/types.DateTrigger"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -1317,6 +1458,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "date-triggers"
                 ],
                 "summary": "Create a date trigger",
                 "parameters": [
@@ -1357,6 +1501,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.DateTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
@@ -1366,6 +1531,9 @@ const docTemplate = `{
                 "description": "Get a date trigger",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "date-triggers"
                 ],
                 "summary": "Get a date trigger",
                 "parameters": [
@@ -1404,6 +1572,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.DateTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
@@ -1414,6 +1603,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "date-triggers"
                 ],
                 "summary": "Update a date trigger",
                 "parameters": [
@@ -1461,11 +1653,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.DateTrigger"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "Delete a date trigger",
+                "tags": [
+                    "date-triggers"
+                ],
                 "summary": "Delete a date trigger",
                 "parameters": [
                     {
@@ -1501,8 +1717,26 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
                     }
                 }
             }
