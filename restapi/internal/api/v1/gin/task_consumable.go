@@ -10,7 +10,8 @@ import (
 
 var rootTaskConsumableRoute = fmt.Sprintf("%s/task-consumables", routePrefix)
 var taskConsumableRoute = fmt.Sprintf("%s/consumables", indTaskRoute)
-var consumableId = "ConsumableId"
+
+// var consumableId = "ConsumableId"
 var indTaskConsumableRoute = fmt.Sprintf("%s/:%s", taskConsumableRoute, consumableId)
 
 func (h *Api) registerTaskConsumableRoutes() {

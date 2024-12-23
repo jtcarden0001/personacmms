@@ -15,17 +15,19 @@ import (
 // - DEL  /assets/{assetId}/work-orders/{workOrderId}
 // - PUT  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}
 
-// start with long routes then evaluate short routes later
-var baseLongWorkOrderRoute = fmt.Sprintf("%s/work-orders", indTaskRoute)
 var workOrderId = "workOrderId"
-var indLongWorkOrderRoute = fmt.Sprintf("%s/:workOrderId", baseLongWorkOrderRoute)
+var workOrderGp = "work-orders"
+var workOrderResource = fmt.Sprintf("%s/:%s", workOrderGp, workOrderId)
+
+var baseWorkOrderRoute = fmt.Sprintf("%s/%s", indAssetRoute, workOrderGp)
+var indWorkOrderRoute = fmt.Sprintf("%s/%s", indAssetRoute, workOrderResource)
 
 func (h *Api) registerWorkOrderRoutes() {
-	h.router.POST(baseLongWorkOrderRoute, h.createWorkOrder)
-	h.router.DELETE(indLongWorkOrderRoute, h.deleteTaskWorkOrder)
-	h.router.GET(baseLongWorkOrderRoute, h.listTaskWorkOrders)
-	h.router.GET(indLongWorkOrderRoute, h.getTaskWorkOrder)
-	h.router.PUT(indLongWorkOrderRoute, h.updateTaskWorkOrder)
+	h.router.POST(baseWorkOrderRoute, h.createWorkOrder)
+	h.router.DELETE(indWorkOrderRoute, h.deleteWorkOrder)
+	h.router.GET(baseWorkOrderRoute, h.listWorkOrders)
+	h.router.GET(indWorkOrderRoute, h.getWorkOrder)
+	h.router.PUT(indWorkOrderRoute, h.updateWorkOrder)
 }
 
 // CreateWorkOrder godoc
@@ -69,7 +71,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [delete]
-func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
+func (h *Api) deleteWorkOrder(c *gin.Context) {
 	err := h.app.DeleteWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
@@ -89,7 +91,7 @@ func (h *Api) deleteTaskWorkOrder(c *gin.Context) {
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [get]
-func (h *Api) getTaskWorkOrder(c *gin.Context) {
+func (h *Api) getWorkOrder(c *gin.Context) {
 	workOrder, err := h.app.GetWorkOrder(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }
@@ -108,7 +110,7 @@ func (h *Api) getTaskWorkOrder(c *gin.Context) {
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders [get]
-func (h *Api) listTaskWorkOrders(c *gin.Context) {
+func (h *Api) listWorkOrders(c *gin.Context) {
 	workOrders, err := h.app.ListWorkOrders(c.Param(groupTitle), c.Param(assetTitle), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
 }
@@ -130,7 +132,7 @@ func (h *Api) listTaskWorkOrders(c *gin.Context) {
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
 //	@Router			/groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId} [put]
-func (h *Api) updateTaskWorkOrder(c *gin.Context) {
+func (h *Api) updateWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
 	if err := c.BindJSON(&workOrder); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

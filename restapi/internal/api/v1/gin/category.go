@@ -8,23 +8,31 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// - POST /categories (JSON)
-// - GET  /categories/{categoryId}
-// - GET  /categories
-// - PUT  /categories/{categoryId} (JSON)
-// - DEL  /categories/{categoryId}
+// - POST /categories (JSON) done
+// - GET  /categories/{categoryId} done
+// - GET  /categories done
+// - PUT  /categories/{categoryId} (JSON) done
+// - DEL  /categories/{categoryId} done
 //
-// - GET /assets/{assetId}/categories
+// - GET /assets/{assetId}/categories done
+
+var categoryId = "categoryId"
+var categoryGp = "categories"
+
+var categoryResource = fmt.Sprintf("%s/:%s", categoryGp, categoryId)
+var baseCategoryRoute = fmt.Sprintf("%s/%s", routePrefix, categoryGp)
+var indCategoryRoute = fmt.Sprintf("%s/%s", routePrefix, categoryResource)
 
 func (h *Api) registerCategoryRoutes() {
-	baseRoute := fmt.Sprintf("%s/categories", routePrefix)
-	individualRoute := fmt.Sprintf("%s/:categoryTitle", baseRoute)
+	h.router.POST(baseCategoryRoute, h.createCategory)
 
-	h.router.POST(baseRoute, h.createCategory)
-	h.router.DELETE(individualRoute, h.deleteCategory)
-	h.router.GET(baseRoute, h.listCategories)
-	h.router.GET(individualRoute, h.getCategory)
-	h.router.PUT(individualRoute, h.updateCategory)
+	h.router.DELETE(indCategoryRoute, h.deleteCategory)
+
+	h.router.GET(indCategoryRoute, h.getCategory)
+	h.router.GET(baseCategoryRoute, h.listCategories)
+	h.router.GET(fmt.Sprintf("%s/%s", indAssetRoute, categoryGp), h.listCategoriesByAsset)
+
+	h.router.PUT(indCategoryRoute, h.updateCategory)
 }
 
 // createCategory godoc
@@ -43,7 +51,7 @@ func (h *Api) registerCategoryRoutes() {
 func (h *Api) createCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
 	}
 
@@ -58,14 +66,14 @@ func (h *Api) createCategory(c *gin.Context) {
 //	@Tags			categories
 //	@Accept			json
 //	@Produce		json
-//	@Param			categoryTitle	path	string	true	"Category Title"
+//	@Param			categoryId	path	string	true	"Category Id"
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
-//	@Router			/categories/{categoryTitle} [delete]
+//	@Router			/categories/{categoryId} [delete]
 func (h *Api) deleteCategory(c *gin.Context) {
-	err := h.app.DeleteCategory(c.Param("categoryTitle"))
+	err := h.app.DeleteCategory(c.Param(categoryId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -75,14 +83,14 @@ func (h *Api) deleteCategory(c *gin.Context) {
 //	@Description	Get a category
 //	@Tags			categories
 //	@Produce		json
-//	@Param			categoryTitle	path		string	true	"Category Title"
-//	@Success		200				{object}	tp.Category
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
-//	@Router			/categories/{categoryTitle} [get]
+//	@Param			categoryId	path		string	true	"Category Id"
+//	@Success		200			{object}	tp.Category
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/categories/{categoryId} [get]
 func (h *Api) getCategory(c *gin.Context) {
-	cat, err := h.app.GetCategory(c.Param("categoryTitle"))
+	cat, err := h.app.GetCategory(c.Param(categoryId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cat))
 }
 
@@ -100,6 +108,23 @@ func (h *Api) listCategories(c *gin.Context) {
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cats))
 }
 
+// listCategoriesByAsset godoc
+//
+//	@Summary		List asset categories
+//	@Description	List asset categories
+//	@Tags			categories
+//	@Produce		json
+//	@Param			assetId	path		string	true	"Asset Id"
+//	@Success		200		{object}	[]tp.Category
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
+//	@Router			/assets/{assetId}/categories [get]
+func (h *Api) listCategoriesByAsset(c *gin.Context) {
+	cats, err := h.app.ListCategoriesByAsset(c.Param(assetId))
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, cats))
+}
+
 // updateCategory godoc
 //
 //	@Summary		Update an asset category
@@ -107,20 +132,20 @@ func (h *Api) listCategories(c *gin.Context) {
 //	@Tags			categories
 //	@Accept			json
 //	@Produce		json
-//	@Param			categoryTitle	path		string		true	"Category Title"
-//	@Param			category		body		tp.Category	true	"Category object"
-//	@Success		200				{object}	tp.Category
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
-//	@Router			/categories/{categoryTitle} [put]
+//	@Param			categoryId	path		string		true	"Category Id"
+//	@Param			category	body		tp.Category	true	"Category object"
+//	@Success		200			{object}	tp.Category
+//	@Failure		400			{object}	map[string]any
+//	@Failure		404			{object}	map[string]any
+//	@Failure		500			{object}	map[string]any
+//	@Router			/categories/{categoryId} [put]
 func (h *Api) updateCategory(c *gin.Context) {
 	var cat tp.Category
 	if err := c.BindJSON(&cat); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
 	}
 
-	newCat, err := h.app.UpdateCategory(c.Param("categoryTitle"), cat)
+	newCat, err := h.app.UpdateCategory(c.Param(categoryId), cat)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, newCat))
 }

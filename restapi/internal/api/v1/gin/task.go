@@ -16,11 +16,13 @@ import (
 //
 // - DEL  /assets/{assetId}/work-orders/{workOrderId}/tasks
 
-var baseTaskRoute = fmt.Sprintf("%s/tasks", indAssetRoute)
 var taskId = "TaskId"
-var indTaskRoute = fmt.Sprintf("%s/:%s", baseTaskRoute, taskId)
+var taskGp = "tasks"
+var taskResource = fmt.Sprintf("%s/:%s", taskGp, taskId)
 
-// general route that treats all asset tasks the same, can CRUD any type through this route
+var baseTaskRoute = fmt.Sprintf("%s/%s", indAssetRoute, taskGp)
+var indTaskRoute = fmt.Sprintf("%s/%s", indAssetRoute, taskResource)
+
 func (h *Api) registerTaskRoutes() {
 	h.router.POST(baseTaskRoute, h.createTask)
 	h.router.DELETE(indTaskRoute, h.deleteTask)

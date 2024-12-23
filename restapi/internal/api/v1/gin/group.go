@@ -14,10 +14,11 @@ import (
 // - PUT  /groups/{groupdId}
 // - DEL  /groups/{groupId}
 // - GET  /assets/{assetId}/groups
-
-var baseGroupRoute = fmt.Sprintf("%s/groups", routePrefix)
-var groupTitle = "groupTitle"
-var indGroupRoute = fmt.Sprintf("%s/:%s", baseGroupRoute, groupTitle)
+var groupId = "groupId"
+var groupGp = "groups"
+var groupResource = fmt.Sprintf("%s/:%s", groupGp, groupId)
+var baseGroupRoute = fmt.Sprintf("%s/%s", routePrefix, groupGp)
+var indGroupRoute = fmt.Sprintf("%s/%s", routePrefix, groupResource)
 
 func (h *Api) registerGroupRoutes() {
 
