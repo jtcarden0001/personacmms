@@ -8,11 +8,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// - POST /assets/{assetId}/tasks/{taskId}/date-triggers (JSON)
-// - GET  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
-// - GET  /assets/{assetId}/tasks/{taskId}/date-triggers
-// - PUT  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} (JSON)
-// - DEL  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
+// - POST /assets/{assetId}/tasks/{taskId}/date-triggers (JSON) done
+// - GET  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} done
+// - GET  /assets/{assetId}/tasks/{taskId}/date-triggers done
+// - PUT  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} (JSON) done
+// - DEL  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} done
 
 var dateTriggerId = "dateTriggerId"
 var dateTriggerGp = "date-triggers"
@@ -26,7 +26,7 @@ func (h *Api) registerDateTriggerRoutes() {
 
 	h.router.DELETE(indDateTriggerRoute, h.deleteDateTrigger)
 
-	h.router.GET(baseDateTriggerRoute, h.listDateTriggers)
+	h.router.GET(baseDateTriggerRoute, h.listDateTriggersVyAssetAndTask)
 	h.router.GET(indDateTriggerRoute, h.getDateTrigger)
 
 	h.router.PUT(indDateTriggerRoute, h.updateDateTrigger)
@@ -108,8 +108,8 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 //	@Failure		404		{object}	map[string]any
 //	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers [get]
-func (h *Api) listDateTriggers(c *gin.Context) {
-	dateTriggers, err := h.app.ListDateTriggers(c.Param(assetId), c.Param(taskId))
+func (h *Api) listDateTriggersVyAssetAndTask(c *gin.Context) {
+	dateTriggers, err := h.app.ListDateTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTriggers))
 }
 

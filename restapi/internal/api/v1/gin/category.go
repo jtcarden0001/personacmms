@@ -18,8 +18,8 @@ import (
 
 var categoryId = "categoryId"
 var categoryGp = "categories"
-
 var categoryResource = fmt.Sprintf("%s/:%s", categoryGp, categoryId)
+
 var baseCategoryRoute = fmt.Sprintf("%s/%s", routePrefix, categoryGp)
 var indCategoryRoute = fmt.Sprintf("%s/%s", routePrefix, categoryResource)
 

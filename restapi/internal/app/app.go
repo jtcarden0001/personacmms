@@ -45,7 +45,7 @@ type App interface {
 	CreateDateTrigger(string, string, tp.DateTrigger) (tp.DateTrigger, error)
 	DeleteDateTrigger(string, string, string) error
 	GetDateTrigger(string, string, string) (tp.DateTrigger, error)
-	ListDateTriggers(string, string) ([]tp.DateTrigger, error)
+	ListDateTriggersByAssetAndTask(string, string) ([]tp.DateTrigger, error)
 	UpdateDateTrigger(string, string, string, tp.DateTrigger) (tp.DateTrigger, error)
 
 	// group
@@ -53,6 +53,7 @@ type App interface {
 	DeleteGroup(string) error
 	GetGroup(string) (tp.Group, error)
 	ListGroups() ([]tp.Group, error)
+	ListGroupsByAsset(string) ([]tp.Group, error)
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 
 	// task

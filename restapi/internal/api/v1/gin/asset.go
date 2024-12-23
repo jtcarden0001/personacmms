@@ -25,8 +25,8 @@ import (
 
 var assetGp = "assets"
 var assetId = "assetId"
-
 var assetResource = fmt.Sprintf("%s/:%s", assetGp, assetId)
+
 var baseAssetRoute = fmt.Sprintf("%s/%s", routePrefix, assetGp)
 var indAssetRoute = fmt.Sprintf("%s/%s", routePrefix, assetResource)
 

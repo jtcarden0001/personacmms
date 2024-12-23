@@ -21,8 +21,8 @@ import (
 
 var consumableId = "consumableId"
 var consumableGp = "consumables"
-
 var consumableResource = fmt.Sprintf("%s/:%s", consumableGp, consumableId)
+
 var baseConsumableRoute = fmt.Sprintf("%s/%s", routePrefix, consumableGp)
 var indConsumableRoute = fmt.Sprintf("%s/%s", routePrefix, consumableResource)
 
