@@ -8,11 +8,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// - POST /task-templates (JSON)
-// - GET  /task-templates/{taskTemplateId}
-// - GET  /task-templates
-// - PUT  /task-templates/{taskTemplateId} (JSON)
-// - DEL  /task-templates/{taskTemplateId}
+// - POST /task-templates (JSON) done
+// - GET  /task-templates/{taskTemplateId} done
+// - GET  /task-templates done
+// - PUT  /task-templates/{taskTemplateId} (JSON) done
+// - DEL  /task-templates/{taskTemplateId} done
 
 var taskTemplateId = "taskTemplateId"
 var taskTemplateGp = "task-templates"

@@ -57,11 +57,12 @@ type App interface {
 	UpdateGroup(string, tp.Group) (tp.Group, error)
 
 	// task
-	CreateTask(string, string, tp.Task) (tp.Task, error)
-	DeleteTask(string, string, string) error
-	GetTask(string, string, string) (tp.Task, error)
-	ListTasks(string, string) ([]tp.Task, error)
-	UpdateTask(string, string, string, tp.Task) (tp.Task, error)
+	CreateTask(string, tp.Task) (tp.Task, error)
+	DeleteTask(string, string) error
+	DisassociateTaskWithWorkOrder(string, string, string) error
+	GetTask(string, string) (tp.Task, error)
+	ListTasksByAsset(string) ([]tp.Task, error)
+	UpdateTask(string, string, tp.Task) (tp.Task, error)
 
 	// task consumable
 	CreateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
