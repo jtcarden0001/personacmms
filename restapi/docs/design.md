@@ -39,6 +39,12 @@
     - Not a common operation, but in case of accident, I should be able to disassociate a work-order from a task
     - I can create an ad-hoc work order for an asset not based on a task
     - I can enumerate the work order history for an asset including complete, open, and cancelled work orders
+- I can use triggers to create work orders based off a task at specified intervals
+    - I can list all the triggers for a task
+    - I can CRUD triggers based on a calendar date
+    - I can CRUD triggers based on time elapsed
+        - I can chain time elapsed based triggers (ex. task A,B,C. loop through tasks with 7 day interval) (future feature)
+    - I can CRUD triggers based on reported resource usage
 - I can use tools as requirements to complete a work order or task
     - I can CRUD tools
     - I can associate and disassociate tools to a task that are required for that tasks completion
@@ -59,7 +65,7 @@
         - POST /assets (JSON)
         - GET  /assets/{assetId}
         - GET  /assets
-        - POST /assets/{assetId} (JSON)
+        - PUT  /assets/{assetId} (JSON)
         - DEL  /assets/{assetId}
 - I can optionally logically categorize assets (all assets of category vehicle) assets are not limited to a single category
     - I can CRUD a category
@@ -124,6 +130,28 @@
         - covered by work order CRUD
     - I can enumerate the work order history for an asset including complete, open, and cancelled work orders
         - covered by work order CRUD
+- I can use triggers to create work orders based off a task at specified intervals
+    - I can CRUD triggers based on a calendar date
+        - POST /assets/{assetId}/tasks/{taskId}/date-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/date-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
+    - I can CRUD triggers based on time elapsed
+        - POST /assets/{assetId}/tasks/{taskId}/time-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/time-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId}
+        - I can chain time elapsed based triggers (ex. task A,B,C. loop through tasks with 7 day interval) (future feature)
+    - I can CRUD triggers based on reported resource usage
+        - POST /assets/{assetId}/tasks/{taskId}/usage-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usagedTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/usage-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTiggerId}
+    - I can list all the triggers for a task
+        - GET  /assets/{assetId}/tasks/{taskId}/triggers
 - I can use tools as requirements to complete a work order or task
     - I can CRUD tools
         - POST /tools (JSON)
