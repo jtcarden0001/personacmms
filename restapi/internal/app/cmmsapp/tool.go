@@ -5,48 +5,38 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// Create a tool
+func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string) (tp.Tool, error) {
+	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "AssociateToolWithTask not implemented")
+}
+
+func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) (tp.Tool, error) {
+	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "AssociateToolWithWorkOrder not implemented")
+}
+
 func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
-	if err := a.validateTool(tool); err != nil {
-		return tp.Tool{}, err
-	}
-
-	return a.db.CreateTool(tool)
+	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "CreateTool not implemented")
 }
 
-// Delete a tool
-func (a *App) DeleteTool(title string) error {
-	// Get before delete so we can return a not found error.
-	if _, err := a.GetTool(title); err != nil {
-		return err
-	}
-
-	return a.db.DeleteTool(title)
+func (a *App) DeleteTool(toolId string) error {
+	return ae.New(ae.CodeNotImplemented, "DeleteTool not implemented")
 }
 
-// List all tools
+func (a *App) DisassociateToolWithTask(assetId string, taskId string, toolId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateToolWithTask not implemented")
+}
+
+func (a *App) DisassociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateToolWithWorkOrder not implemented")
+}
+
+func (a *App) GetTool(toolId string) (tp.Tool, error) {
+	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "GetTool not implemented")
+}
+
 func (a *App) ListTools() ([]tp.Tool, error) {
-	return a.db.ListTools()
+	return nil, ae.New(ae.CodeNotImplemented, "ListTools not implemented")
 }
 
-// Get a tool
-func (a *App) GetTool(title string) (tp.Tool, error) {
-	return a.db.GetTool(title)
-}
-
-// Update a tool
-func (a *App) UpdateTool(oldTitle string, tool tp.Tool) (tp.Tool, error) {
-	if err := a.validateTool(tool); err != nil {
-		return tp.Tool{}, err
-	}
-
-	return a.db.UpdateTool(oldTitle, tool)
-}
-
-func (a *App) validateTool(tool tp.Tool) error {
-	if tool.Title == "" {
-		return ae.ErrToolTitleRequired
-	}
-
-	return nil
+func (a *App) UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error) {
+	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "UpdateTool not implemented")
 }

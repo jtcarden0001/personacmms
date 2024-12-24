@@ -1,37 +1,42 @@
 package cmmsapp
 
-import tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+import (
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+)
 
-// Create a Consumable
+func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string) (tp.Consumable, error) {
+	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithTask not implemented")
+}
+
+func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) (tp.Consumable, error) {
+	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithWorkOrder not implemented")
+}
+
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
-	return a.db.CreateConsumable(consumable)
+	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "CreateConsumable not implemented")
 }
 
-// Delete a Consumable
-func (a *App) DeleteConsumable(consumableTitle string) error {
-	// Get before delete so we can return a not found error.
-	if _, err := a.GetConsumable(consumableTitle); err != nil {
-		return err
-	}
-
-	return a.db.DeleteConsumable(consumableTitle)
+func (a *App) DeleteConsumable(consumableId string) error {
+	return ae.New(ae.CodeNotImplemented, "DeleteConsumable not implemented")
 }
 
-// List all Consumables
+func (a *App) DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithTask not implemented")
+}
+
+func (a *App) DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithWorkOrder not implemented")
+}
+
+func (a *App) GetConsumable(consumableId string) (tp.Consumable, error) {
+	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "GetConsumable not implemented")
+}
+
 func (a *App) ListConsumables() ([]tp.Consumable, error) {
-	return a.db.ListConsumables()
+	return nil, ae.New(ae.CodeNotImplemented, "ListConsumables not implemented")
 }
 
-// Get a Consumable
-func (a *App) GetConsumable(consumableTitle string) (tp.Consumable, error) {
-	return a.db.GetConsumableByTitle(consumableTitle)
-}
-
-// Update a Consumable
-func (a *App) UpdateConsumable(oldTitle string, consumable tp.Consumable) (tp.Consumable, error) {
-	if consumable.Title == "" {
-		consumable.Title = oldTitle
-	}
-
-	return a.db.UpdateConsumable(oldTitle, consumable)
+func (a *App) UpdateConsumable(consumableId string, consumable tp.Consumable) (tp.Consumable, error) {
+	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "UpdateConsumable not implemented")
 }

@@ -1,72 +1,64 @@
 package cmmsapp
 
-import (
-	"testing"
+// func TestCreateTaskTemplate(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	"github.com/stretchr/testify/assert"
-)
+// 	taskTemplate := tp.TaskTemplate{Title: "template1"}
+// 	createdTaskTemplate, err := app.CreateTaskTemplate(taskTemplate)
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, taskTemplate.Title, createdTaskTemplate.Title)
+// }
 
-func TestCreateTaskTemplate(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// func TestDeleteTaskTemplate(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	taskTemplate := tp.TaskTemplate{Title: "template1"}
-	createdTaskTemplate, err := app.CreateTaskTemplate(taskTemplate)
-	assert.NoError(t, err)
-	assert.Equal(t, taskTemplate.Title, createdTaskTemplate.Title)
-}
+// 	taskTemplate := tp.TaskTemplate{Title: "template1"}
+// 	db.CreateTaskTemplate(taskTemplate)
 
-func TestDeleteTaskTemplate(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	err := app.DeleteTaskTemplate("template1")
+// 	assert.NoError(t, err)
+// }
 
-	taskTemplate := tp.TaskTemplate{Title: "template1"}
-	db.CreateTaskTemplate(taskTemplate)
+// func TestListTaskTemplates(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	err := app.DeleteTaskTemplate("template1")
-	assert.NoError(t, err)
-}
+// 	taskTemplate1 := tp.TaskTemplate{Title: "template1"}
+// 	taskTemplate2 := tp.TaskTemplate{Title: "template2"}
+// 	db.CreateTaskTemplate(taskTemplate1)
+// 	db.CreateTaskTemplate(taskTemplate2)
 
-func TestListTaskTemplates(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	taskTemplates, err := app.ListTaskTemplates()
+// 	assert.NoError(t, err)
+// 	assert.Len(t, taskTemplates, 2)
+// }
 
-	taskTemplate1 := tp.TaskTemplate{Title: "template1"}
-	taskTemplate2 := tp.TaskTemplate{Title: "template2"}
-	db.CreateTaskTemplate(taskTemplate1)
-	db.CreateTaskTemplate(taskTemplate2)
+// func TestGetTaskTemplate(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	taskTemplates, err := app.ListTaskTemplates()
-	assert.NoError(t, err)
-	assert.Len(t, taskTemplates, 2)
-}
+// 	taskTemplate := tp.TaskTemplate{Title: "template1"}
+// 	db.CreateTaskTemplate(taskTemplate)
 
-func TestGetTaskTemplate(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	retrievedTaskTemplate, err := app.GetTaskTemplate("template1")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, taskTemplate.Title, retrievedTaskTemplate.Title)
+// }
 
-	taskTemplate := tp.TaskTemplate{Title: "template1"}
-	db.CreateTaskTemplate(taskTemplate)
+// func TestUpdateTaskTemplate(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	retrievedTaskTemplate, err := app.GetTaskTemplate("template1")
-	assert.NoError(t, err)
-	assert.Equal(t, taskTemplate.Title, retrievedTaskTemplate.Title)
-}
+// 	taskTemplate := tp.TaskTemplate{Title: "template1"}
+// 	db.CreateTaskTemplate(taskTemplate)
 
-func TestUpdateTaskTemplate(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	updatedTaskTemplate := tp.TaskTemplate{Title: "template1_updated"}
+// 	_, err := app.UpdateTaskTemplate("template1", updatedTaskTemplate)
+// 	assert.NoError(t, err)
 
-	taskTemplate := tp.TaskTemplate{Title: "template1"}
-	db.CreateTaskTemplate(taskTemplate)
-
-	updatedTaskTemplate := tp.TaskTemplate{Title: "template1_updated"}
-	_, err := app.UpdateTaskTemplate("template1", updatedTaskTemplate)
-	assert.NoError(t, err)
-
-	retrievedTaskTemplate, err := app.GetTaskTemplate("template1_updated")
-	assert.NoError(t, err)
-	assert.Equal(t, updatedTaskTemplate.Title, retrievedTaskTemplate.Title)
-}
+// 	retrievedTaskTemplate, err := app.GetTaskTemplate("template1_updated")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, updatedTaskTemplate.Title, retrievedTaskTemplate.Title)
+// }

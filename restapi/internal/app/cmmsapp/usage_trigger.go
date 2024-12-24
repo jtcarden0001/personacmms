@@ -1,92 +1,26 @@
 package cmmsapp
 
 import (
-	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// Create a UsageTrigger
-func (a *App) CreateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
-	if err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger); err != nil {
-		return tp.UsageTrigger{}, err
-	}
-
-	return a.db.CreateUsageTrigger(usageTrigger)
+func (a *App) CreateUsageTrigger(assetId string, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
+	return tp.UsageTrigger{}, ae.New(ae.CodeNotImplemented, "CreateUsageTrigger not implemented")
 }
 
-// Delete a UsageTrigger
-func (a *App) DeleteUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) error {
-	// Get before delete to provide opportunity to return not found error
-	ut, err := a.GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId)
-	if err != nil {
-		return err
-	}
-
-	return a.db.DeleteUsageTrigger(ut.Id)
+func (a *App) DeleteUsageTrigger(assetId string, taskId string, usageTriggerId string) error {
+	return ae.New(ae.CodeNotImplemented, "DeleteUsageTrigger not implemented")
 }
 
-// Get a usage trigger that is essentially namespaced under the task specificed
-func (a *App) GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) (tp.UsageTrigger, error) {
-	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
-		return tp.UsageTrigger{}, err
-	}
-
-	parsedutId, err := uuid.Parse(usageTriggerId)
-	if err != nil {
-		return tp.UsageTrigger{}, err
-	}
-
-	return a.db.GetUsageTrigger(parsedutId)
+func (a *App) GetUsageTrigger(assetId string, taskId string, usageTriggerId string) (tp.UsageTrigger, error) {
+	return tp.UsageTrigger{}, ae.New(ae.CodeNotImplemented, "GetUsageTrigger not implemented")
 }
 
-// List all usage triggers for a particular task
-func (a *App) ListUsageTriggers(groupTitle, assetTitle, taskId string) ([]tp.UsageTrigger, error) {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
-	if err != nil {
-		return []tp.UsageTrigger{}, err
-	}
-
-	return a.db.ListUsageTriggersByTaskId(tid)
+func (a *App) ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]tp.UsageTrigger, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListUsageTriggersByAssetAndTask not implemented")
 }
 
-// Update a usage trigger
-func (a *App) UpdateUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
-	err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger)
-	if err != nil {
-		return tp.UsageTrigger{}, err
-	}
-
-	utId, err := uuid.Parse(usageTriggerId)
-	if err != nil {
-		return tp.UsageTrigger{}, err
-	}
-
-	if usageTrigger.Id == uuid.Nil {
-		usageTrigger.Id = utId
-	} else if usageTrigger.Id != utId {
-		return tp.UsageTrigger{}, ae.ErrIdMismatch
-	}
-
-	return a.db.UpdateUsageTrigger(utId, usageTrigger)
-}
-
-func (a *App) validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger *tp.UsageTrigger) error {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
-	if err != nil {
-		return err
-	}
-	usageTrigger.TaskId = tid
-
-	// validate usageunit
-	if _, err := a.db.GetUsageUnit(usageTrigger.UsageUnit); err != nil {
-		return err
-	}
-
-	// validate quantity
-	if usageTrigger.Quantity <= 0 {
-		return ae.ErrQuantityMustBePositive
-	}
-
-	return nil
+func (a *App) UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
+	return tp.UsageTrigger{}, ae.New(ae.CodeNotImplemented, "UpdateUsageTrigger not implemented")
 }

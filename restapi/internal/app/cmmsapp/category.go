@@ -5,39 +5,26 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// Create a Category
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
-	if cat.Title == "" {
-		return tp.Category{}, ae.New(ae.CodeInvalid, "category title is required")
-	}
-	return a.db.CreateCategory(cat)
+	return tp.Category{}, ae.New(ae.CodeNotImplemented, "CreateCategory not implemented")
 }
 
-// Delete a Category
 func (a *App) DeleteCategory(title string) error {
-	// Get before delete so we can return a not found error.
-	if _, err := a.GetCategory(title); err != nil {
-		return err
-	}
-
-	return a.db.DeleteCategory(title)
+	return ae.New(ae.CodeNotImplemented, "DeleteCategory not implemented")
 }
 
-// List all Categories
 func (a *App) ListCategories() ([]tp.Category, error) {
-	return a.db.ListCategories()
+	return nil, ae.New(ae.CodeNotImplemented, "ListCategories not implemented")
 }
 
-// Get a Category
 func (a *App) GetCategory(title string) (tp.Category, error) {
-	return a.db.GetCategory(title)
+	return tp.Category{}, ae.New(ae.CodeNotImplemented, "GetCategory not implemented")
 }
 
-// Update a Category
 func (a *App) UpdateCategory(oldTitle string, cat tp.Category) (tp.Category, error) {
-	if cat.Title == "" {
-		return tp.Category{}, ae.ErrCategoryTitleRequired
-	}
+	return tp.Category{}, ae.New(ae.CodeNotImplemented, "UpdateCategory not implemented")
+}
 
-	return a.db.UpdateCategory(oldTitle, cat)
+func (a *App) ListCategoriesByAsset(assetId string) ([]tp.Category, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListCategoriesByAsset not implemented")
 }

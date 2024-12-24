@@ -58,26 +58,6 @@ definitions:
       type:
         type: string
     type: object
-  types.TaskConsumable:
-    properties:
-      consumableId:
-        type: string
-      quantityNote:
-        type: string
-      taskId:
-        type: string
-    required:
-    - consumableId
-    - quantityNote
-    - taskId
-    type: object
-  types.TaskConsumableForPath:
-    properties:
-      quantityNote:
-        type: string
-    required:
-    - quantityNote
-    type: object
   types.TaskTemplate:
     properties:
       description:
@@ -88,16 +68,6 @@ definitions:
         type: string
     required:
     - title
-    type: object
-  types.TaskTool:
-    properties:
-      taskId:
-        type: string
-      toolId:
-        type: string
-    required:
-    - taskId
-    - toolId
     type: object
   types.TimeTrigger:
     properties:
@@ -185,6 +155,1697 @@ info:
   title: PersonaCMMS API
   version: "1.0"
 paths:
+  /assets:
+    get:
+      description: List all assets
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Asset'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List assets
+      tags:
+      - assets
+    post:
+      consumes:
+      - application/json
+      description: Create an asset
+      parameters:
+      - description: Asset object
+        in: body
+        name: asset
+        required: true
+        schema:
+          $ref: '#/definitions/types.Asset'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create an asset
+      tags:
+      - assets
+  /assets/{assetId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an asset
+      parameters:
+      - description: Asset Title
+        in: path
+        name: assetId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete an asset
+      tags:
+      - assets
+    get:
+      description: Get an asset
+      parameters:
+      - description: Asset Title
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get an asset
+      tags:
+      - assets
+    put:
+      consumes:
+      - application/json
+      description: Update an asset
+      parameters:
+      - description: Asset Title
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset object
+        in: body
+        name: asset
+        required: true
+        schema:
+          $ref: '#/definitions/types.Asset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update an asset
+      tags:
+      - assets
+  /assets/{assetId}/categories:
+    get:
+      description: List asset categories
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Category'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List asset categories
+      tags:
+      - categories
+  /assets/{assetId}/groups:
+    get:
+      description: List groups by asset
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Group'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List groups by asset
+      tags:
+      - groups
+  /assets/{assetId}/tasks:
+    get:
+      description: List tasks by asset
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Task'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List tasks by asset
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Create a task for an asset
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task object
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/types.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a task
+      tags:
+      - tasks
+  /assets/{assetId}/tasks/{taskId}:
+    delete:
+      description: Delete a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a task
+      tags:
+      - tasks
+    get:
+      description: Get a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a task
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Update a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Task object
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/types.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a task
+      tags:
+      - tasks
+  /assets/{assetId}/tasks/{taskId}/consumables/{consumableId}:
+    delete:
+      description: Disassociate a consumable with a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Consumable Id
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a consumable with a task
+      tags:
+      - consumables
+    put:
+      description: Associate a consumable with a task
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Consumable ID
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Consumable'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate a consumable with a task
+      tags:
+      - consumables
+  /assets/{assetId}/tasks/{taskId}/date-triggers:
+    get:
+      description: List date triggers for a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.DateTrigger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List date triggers
+      tags:
+      - date-triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a date trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Date Trigger object
+        in: body
+        name: dateTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.DateTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a date trigger
+      tags:
+      - date-triggers
+  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTriggerId}:
+    delete:
+      description: Delete a date trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a date trigger
+      tags:
+      - date-triggers
+    get:
+      description: Get a date trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a date trigger
+      tags:
+      - date-triggers
+    put:
+      consumes:
+      - application/json
+      description: Update a date trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Date Trigger Id
+        in: path
+        name: dateTriggerId
+        required: true
+        type: string
+      - description: Date Trigger object
+        in: body
+        name: dateTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.DateTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.DateTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a date trigger
+      tags:
+      - date-triggers
+  /assets/{assetId}/tasks/{taskId}/time-triggers:
+    get:
+      description: List all time triggers for a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.TimeTrigger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List time triggers
+      tags:
+      - time-triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a time trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Time Trigger object
+        in: body
+        name: timeTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.TimeTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a time trigger
+      tags:
+      - time-triggers
+  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTriggerId}:
+    delete:
+      description: Delete a time trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a time trigger
+      tags:
+      - time-triggers
+    get:
+      description: Get a time trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a time trigger
+      tags:
+      - time-triggers
+    put:
+      consumes:
+      - application/json
+      description: Update a time trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Time Trigger Id
+        in: path
+        name: timeTriggerId
+        required: true
+        type: string
+      - description: Time Trigger object
+        in: body
+        name: timeTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.TimeTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TimeTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a time trigger
+      tags:
+      - time-triggers
+  /assets/{assetId}/tasks/{taskId}/tools/{toolId}:
+    delete:
+      description: Disassociate a tool with a task
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Tool ID
+        in: path
+        name: toolId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a tool with a task
+      tags:
+      - tools
+    put:
+      description: Associate a tool with a task
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Tool ID
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Tool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate a tool with a task
+      tags:
+      - tools
+  /assets/{assetId}/tasks/{taskId}/usage-triggers:
+    get:
+      description: List usage triggers for a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.UsageTrigger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List usage triggers
+      tags:
+      - usage-triggers
+    post:
+      consumes:
+      - application/json
+      description: Create a usage trigger for a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Usage Trigger object
+        in: body
+        name: usageTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.UsageTrigger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a usage trigger
+      tags:
+      - usage-triggers
+  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTriggerId}:
+    delete:
+      description: Delete a usage trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a usage trigger
+      tags:
+      - usage-triggers
+    get:
+      description: Get a usage trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a usage trigger
+      tags:
+      - usage-triggers
+    put:
+      consumes:
+      - application/json
+      description: Update a usage trigger
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Usage Trigger Id
+        in: path
+        name: usageTriggerId
+        required: true
+        type: string
+      - description: Usage Trigger object
+        in: body
+        name: usageTrigger
+        required: true
+        schema:
+          $ref: '#/definitions/types.UsageTrigger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.UsageTrigger'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a usage trigger
+      tags:
+      - usage-triggers
+  /assets/{assetId}/tasks/{taskId}/work-orders:
+    get:
+      description: List all asset task work orders
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.WorkOrder'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List asset task work orders
+      tags:
+      - work-orders
+    post:
+      consumes:
+      - application/json
+      description: Create a work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Work Order object
+        in: body
+        name: workOrder
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrder'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a work order
+      tags:
+      - work-orders
+  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}:
+    delete:
+      description: Delete an asset task work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete an asset task work order
+      tags:
+      - work-orders
+    get:
+      description: Get an asset task work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get an asset task work order
+      tags:
+      - work-orders
+    put:
+      consumes:
+      - application/json
+      description: Update an asset task work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Work Order object
+        in: body
+        name: workOrder
+        required: true
+        schema:
+          $ref: '#/definitions/types.WorkOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update an asset task work order
+      tags:
+      - work-orders
+  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}:
+    delete:
+      description: Disassociate a consumable with a work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Consumable Id
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a consumable with a work order
+      tags:
+      - consumables
+    put:
+      description: Associate a consumable with a work order
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Consumable Id
+        in: path
+        name: consumableId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Consumable'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate a consumable with a work order
+      tags:
+      - consumables
+  /assets/{assetId}/work-orders/{workOrderId}/tasks:
+    delete:
+      description: Disassociate a work order with a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a work order with a task
+      tags:
+      - work-orders
+  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}:
+    delete:
+      description: Disassociate a tool with a work order
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order ID
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Tool ID
+        in: path
+        name: toolId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a tool with a work order
+      tags:
+      - tools
+    put:
+      description: Associate a tool with a work order
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order ID
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      - description: Tool ID
+        in: path
+        name: toolId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Tool'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate a tool with a work order
+      tags:
+      - tools
   /categories:
     get:
       description: List asset categories
@@ -241,15 +1902,15 @@ paths:
       summary: Create an asset category
       tags:
       - categories
-  /categories/{categoryTitle}:
+  /categories/{categoryId}:
     delete:
       consumes:
       - application/json
       description: Delete an asset category
       parameters:
-      - description: Category Title
+      - description: Category Id
         in: path
-        name: categoryTitle
+        name: categoryId
         required: true
         type: string
       produces:
@@ -278,9 +1939,9 @@ paths:
     get:
       description: Get a category
       parameters:
-      - description: Category Title
+      - description: Category Id
         in: path
-        name: categoryTitle
+        name: categoryId
         required: true
         type: string
       produces:
@@ -313,9 +1974,9 @@ paths:
       - application/json
       description: Update an asset category
       parameters:
-      - description: Category Title
+      - description: Category Id
         in: path
-        name: categoryTitle
+        name: categoryId
         required: true
         type: string
       - description: Category object
@@ -349,6 +2010,156 @@ paths:
       summary: Update an asset category
       tags:
       - categories
+  /categories/{categoryId}/assets:
+    get:
+      description: List all assets by category
+      parameters:
+      - description: Category Id
+        in: path
+        name: categoryId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Asset'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List assets by category
+      tags:
+      - assets
+  /categories/{categoryId}/assets/{assetId}:
+    delete:
+      description: Disassociate an asset with a category
+      parameters:
+      - description: Category Id
+        in: path
+        name: categoryId
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate an asset with a category
+      tags:
+      - assets
+    put:
+      description: Associate an asset with a category
+      parameters:
+      - description: Category Id
+        in: path
+        name: categoryId
+        required: true
+        type: string
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Asset'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate an asset with a category
+      tags:
+      - assets
+  /categories/{categoryId}/groups/{groupId}/assets:
+    get:
+      description: List all assets by category and group
+      parameters:
+      - description: Category Id
+        in: path
+        name: categoryId
+        required: true
+        type: string
+      - description: Group Id
+        in: path
+        name: groupId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Asset'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List assets by category and group
+      tags:
+      - assets
   /consumables:
     get:
       description: List all consumables
@@ -415,13 +2226,13 @@ paths:
       summary: Create a consumable
       tags:
       - consumables
-  /consumables/{consumableTitle}:
+  /consumables/{consumableId}:
     delete:
       description: Delete a consumable
       parameters:
-      - description: Consumable ID
+      - description: Consumable Id
         in: path
-        name: consumableTitle
+        name: consumableId
         required: true
         type: string
       responses:
@@ -448,9 +2259,9 @@ paths:
     get:
       description: Get a consumable
       parameters:
-      - description: Consumable ID
+      - description: Consumable Id
         in: path
-        name: consumableTitle
+        name: consumableId
         required: true
         type: string
       produces:
@@ -478,14 +2289,15 @@ paths:
       summary: Get a consumable
       tags:
       - consumables
+  /consumables/{consumableTitle}:
     put:
       consumes:
       - application/json
       description: Update a consumable
       parameters:
-      - description: Consumable ID
+      - description: Consumable Id
         in: path
-        name: consumableTitle
+        name: consumableId
         required: true
         type: string
       - description: Consumable object
@@ -531,7 +2343,19 @@ paths:
             items:
               $ref: '#/definitions/types.Group'
             type: array
-      summary: List asset groups
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List all groups
+      tags:
+      - groups
     post:
       consumes:
       - application/json
@@ -550,28 +2374,55 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.Group'
-      summary: Create an asset group
-  /groups/{groupTitle}:
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a group
+      tags:
+      - groups
+  /groups/{groupId}:
     delete:
       description: Delete a group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
-      summary: Delete an asset group
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a group
+      tags:
+      - groups
     get:
       description: Get a group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
       produces:
@@ -581,15 +2432,32 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Group'
-      summary: Get an asset group
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a group
+      tags:
+      - groups
     put:
       consumes:
       - application/json
       description: Update a group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
       - description: Group object
@@ -605,14 +2473,31 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.Group'
-      summary: Update an asset group
-  /groups/{groupTitle}/assets:
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a group
+      tags:
+      - groups
+  /groups/{groupId}/assets:
     get:
-      description: List all assets belonging to a group
+      description: List all assets by group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
       produces:
@@ -639,68 +2524,23 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      summary: List assets
+      summary: List assets by group
       tags:
       - assets
-    post:
-      consumes:
-      - application/json
-      description: Create an asset
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset object
-        in: body
-        name: asset
-        required: true
-        schema:
-          $ref: '#/definitions/types.Asset'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.Asset'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create an asset
-      tags:
-      - assets
-  /groups/{groupTitle}/assets/{assetTitle}:
+  /groups/{groupId}/assets/{assetId}:
     delete:
-      consumes:
-      - application/json
-      description: Delete an asset
+      description: Disassociate an asset with a group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
-      - description: Asset Title
+      - description: Asset Id
         in: path
-        name: assetTitle
+        name: assetId
         required: true
         type: string
-      produces:
-      - application/json
       responses:
         "204":
           description: No Content
@@ -719,20 +2559,20 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      summary: Delete an asset
+      summary: Disassociate an asset with a group
       tags:
       - assets
-    get:
-      description: Get an asset
+    put:
+      description: Associate an asset with a group
       parameters:
-      - description: Group Title
+      - description: Group Id
         in: path
-        name: groupTitle
+        name: groupId
         required: true
         type: string
-      - description: Asset Title
+      - description: Asset Id
         in: path
-        name: assetTitle
+        name: assetId
         required: true
         type: string
       produces:
@@ -757,1660 +2597,9 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      summary: Get an asset
+      summary: Associate an asset with a group
       tags:
       - assets
-    put:
-      consumes:
-      - application/json
-      description: Update an asset
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset object
-        in: body
-        name: asset
-        required: true
-        schema:
-          $ref: '#/definitions/types.Asset'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Asset'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update an asset
-      tags:
-      - assets
-  /groups/{groupTitle}/assets/{assetTitle}/tasks:
-    get:
-      description: List all asset tasks
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.Task'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List asset tasks
-      tags:
-      - tasks
-    post:
-      consumes:
-      - application/json
-      description: Create an asset task
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task object
-        in: body
-        name: task
-        required: true
-        schema:
-          $ref: '#/definitions/types.Task'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.Task'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create an asset task
-      tags:
-      - tasks
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}:
-    delete:
-      description: Delete an asset task
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete an asset task
-      tags:
-      - tasks
-    get:
-      description: Get an asset task
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Task'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get an asset task
-      tags:
-      - tasks
-    put:
-      consumes:
-      - application/json
-      description: Update an asset task
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Asset Task object
-        in: body
-        name: task
-        required: true
-        schema:
-          $ref: '#/definitions/types.Task'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.Task'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update an asset task
-      tags:
-      - tasks
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables:
-    get:
-      description: List all asset task consumables
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task ID
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.TaskConsumable'
-            type: array
-      summary: List asset task consumables
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/consumables/{consumableId}:
-    delete:
-      description: Delete an asset task consumable
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task ID
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Consumable ID
-        in: path
-        name: consumableId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      summary: Delete an asset task consumable
-    get:
-      description: Get an asset task consumable
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task ID
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Consumable ID
-        in: path
-        name: consumableId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TaskConsumable'
-      summary: Get an asset task consumable
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a consumable with
-        path parameters
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task ID
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Consumable ID
-        in: path
-        name: consumableId
-        required: true
-        type: string
-      - description: Asset Task Consumable object
-        in: body
-        name: taskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskConsumableForPath'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskConsumable'
-      summary: Create a relationship between an asset task and a consumable with path
-        parameters
-    put:
-      description: Update an asset task consumable with path parameters
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task ID
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Consumable ID
-        in: path
-        name: consumableId
-        required: true
-        type: string
-      - description: Asset Task Consumable object
-        in: body
-        name: taskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskConsumableForPath'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskConsumable'
-      summary: Update an asset task consumable with path parameters
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers:
-    get:
-      description: List date triggers
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.DateTrigger'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List date triggers
-      tags:
-      - date-triggers
-    post:
-      consumes:
-      - application/json
-      description: Create a date trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Date Trigger object
-        in: body
-        name: dateTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.DateTrigger'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.DateTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a date trigger
-      tags:
-      - date-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/date-triggers/{dateTriggerId}:
-    delete:
-      description: Delete a date trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Date Trigger Id
-        in: path
-        name: dateTriggerId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete a date trigger
-      tags:
-      - date-triggers
-    get:
-      description: Get a date trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Date Trigger Id
-        in: path
-        name: dateTriggerId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.DateTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get a date trigger
-      tags:
-      - date-triggers
-    put:
-      consumes:
-      - application/json
-      description: Update a date trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Date Trigger Id
-        in: path
-        name: dateTriggerId
-        required: true
-        type: string
-      - description: Date Trigger object
-        in: body
-        name: dateTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.DateTrigger'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.DateTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update a date trigger
-      tags:
-      - date-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers:
-    get:
-      description: List all time triggers
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.TimeTrigger'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List time triggers
-      tags:
-      - time-triggers
-    post:
-      consumes:
-      - application/json
-      description: Create a time trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Time Trigger object
-        in: body
-        name: timeTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.TimeTrigger'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TimeTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a time trigger
-      tags:
-      - time-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/time-triggers/{timeTriggerId}:
-    delete:
-      description: Delete a time trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Time Trigger Id
-        in: path
-        name: timeTriggerId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete a time trigger
-      tags:
-      - time-triggers
-    get:
-      description: Get a time trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Time Trigger Id
-        in: path
-        name: timeTriggerId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TimeTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get a time trigger
-      tags:
-      - time-triggers
-    put:
-      consumes:
-      - application/json
-      description: Update a time trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Time Trigger Id
-        in: path
-        name: timeTriggerId
-        required: true
-        type: string
-      - description: Time Trigger object
-        in: body
-        name: timeTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.TimeTrigger'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TimeTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update a time trigger
-      tags:
-      - time-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools:
-    get:
-      description: List all asset task tools
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.TaskTool'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List asset task tools
-      tags:
-      - task-tools
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/tools/{toolId}:
-    delete:
-      description: Delete a relationship between an asset task and a tool
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete a relationship between an asset task and a tool
-      tags:
-      - task-tools
-    get:
-      description: Get an asset task tool
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TaskTool'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get an asset task tool
-      tags:
-      - task-tools
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a tool with path
-        parameters
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Tool Id
-        in: path
-        name: toolId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskTool'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a relationship between an asset task and a tool with path parameters
-      tags:
-      - task-tools
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers:
-    get:
-      description: List usage triggers
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.UsageTrigger'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List usage triggers
-      tags:
-      - usage-triggers
-    post:
-      consumes:
-      - application/json
-      description: Create a usage trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Usage Trigger object
-        in: body
-        name: usageTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.UsageTrigger'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.UsageTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a usage trigger
-      tags:
-      - usage-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/usage-triggers/{usageTriggerId}:
-    delete:
-      description: Delete a usage trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Usage Trigger Id
-        in: path
-        name: usageTriggerId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete a usage trigger
-      tags:
-      - usage-triggers
-    get:
-      description: Get a usage trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Usage Trigger Id
-        in: path
-        name: usageTriggerId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.UsageTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get a usage trigger
-      tags:
-      - usage-triggers
-    put:
-      consumes:
-      - application/json
-      description: Update a usage trigger
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Title
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Usage Trigger Id
-        in: path
-        name: usageTriggerId
-        required: true
-        type: string
-      - description: Usage Trigger object
-        in: body
-        name: usageTrigger
-        required: true
-        schema:
-          $ref: '#/definitions/types.UsageTrigger'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.UsageTrigger'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update a usage trigger
-      tags:
-      - usage-triggers
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders:
-    get:
-      description: List all asset task work orders
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.WorkOrder'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List asset task work orders
-      tags:
-      - work-orders
-    post:
-      consumes:
-      - application/json
-      description: Create a work order
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Work Order object
-        in: body
-        name: workOrder
-        required: true
-        schema:
-          $ref: '#/definitions/types.WorkOrder'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.WorkOrder'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a work order
-      tags:
-      - work-orders
-  /groups/{groupTitle}/assets/{assetTitle}/tasks/{taskId}/work-orders/{workOrderId}:
-    delete:
-      description: Delete an asset task work order
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Work Order Id
-        in: path
-        name: workOrderId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete an asset task work order
-      tags:
-      - work-orders
-    get:
-      description: Get an asset task work order
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Work Order Id
-        in: path
-        name: workOrderId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.WorkOrder'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get an asset task work order
-      tags:
-      - work-orders
-    put:
-      consumes:
-      - application/json
-      description: Update an asset task work order
-      parameters:
-      - description: Group Title
-        in: path
-        name: groupTitle
-        required: true
-        type: string
-      - description: Asset Id
-        in: path
-        name: assetTitle
-        required: true
-        type: string
-      - description: Asset Task Id
-        in: path
-        name: taskId
-        required: true
-        type: string
-      - description: Work Order Id
-        in: path
-        name: workOrderId
-        required: true
-        type: string
-      - description: Work Order object
-        in: body
-        name: workOrder
-        required: true
-        schema:
-          $ref: '#/definitions/types.WorkOrder'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.WorkOrder'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update an asset task work order
-      tags:
-      - work-orders
-  /task-consumables:
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a consumable with
-        json body
-      parameters:
-      - description: Asset Task Consumable object
-        in: body
-        name: taskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskConsumable'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskConsumable'
-      summary: Create a relationship between an asset task and a consumable with json
-        body
-  /task-consumables/{consumableId}:
-    put:
-      consumes:
-      - application/json
-      description: Update an asset task consumable with json body
-      parameters:
-      - description: Asset Task Consumable object
-        in: body
-        name: taskConsumable
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskConsumable'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskConsumable'
-      summary: Update an asset task consumable with json body
   /task-templates:
     get:
       description: List all task templates
@@ -2423,7 +2612,14 @@ paths:
             items:
               $ref: '#/definitions/types.TaskTemplate'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: List task templates
+      tags:
+      - task-templates
     post:
       consumes:
       - application/json
@@ -2442,80 +2638,31 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/types.TaskTemplate'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Create a task template
-  /task-templates/{taskTemplateTitle}:
+      tags:
+      - task-templates
+  /task-templates/{taskTemplateId}:
     delete:
       description: Delete a task template
       parameters:
-      - description: TaskTemplate Title
+      - description: TaskTemplate Id
         in: path
-        name: taskTemplateTitle
+        name: taskTemplateId
         required: true
         type: string
       responses:
         "204":
           description: No Content
-        "404":
-          description: Not Found
-      summary: Delete a task template
-    get:
-      description: Get a task template
-      parameters:
-      - description: TaskTemplate Title
-        in: path
-        name: taskTemplateTitle
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TaskTemplate'
-      summary: Get a task template
-    put:
-      consumes:
-      - application/json
-      description: Update a task template
-      parameters:
-      - description: TaskTemplate Title
-        in: path
-        name: taskTemplateTitle
-        required: true
-        type: string
-      - description: TaskTemplate object
-        in: body
-        name: taskTemplate
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskTemplate'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-      summary: Update a task template
-  /task-tools:
-    post:
-      consumes:
-      - application/json
-      description: Create a relationship between an asset task and a tool with json
-        body
-      parameters:
-      - description: Asset Task Tool object
-        in: body
-        name: taskTool
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskTool'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskTool'
         "400":
           description: Bad Request
           schema:
@@ -2531,21 +2678,24 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      summary: Create a relationship between an asset task and a tool with json body
+      summary: Delete a task template
       tags:
-      - task-tools
-  /time-units:
+      - task-templates
     get:
-      description: List all time units
+      description: Get a task template
+      parameters:
+      - description: TaskTemplate Id
+        in: path
+        name: taskTemplateId
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/types.TimeUnit'
-            type: array
+            $ref: '#/definitions/types.TaskTemplate'
         "400":
           description: Bad Request
           schema:
@@ -2556,6 +2706,65 @@ paths:
           schema:
             additionalProperties: true
             type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a task template
+      tags:
+      - task-templates
+    put:
+      consumes:
+      - application/json
+      description: Update a task template
+      parameters:
+      - description: TaskTemplate Id
+        in: path
+        name: taskTemplateId
+        required: true
+        type: string
+      - description: TaskTemplate object
+        in: body
+        name: taskTemplate
+        required: true
+        schema:
+          $ref: '#/definitions/types.TaskTemplate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.TaskTemplate'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a task template
+  /time-units:
+    get:
+      description: List all time units that can be used with time-triggers and usage-triggers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.TimeUnit'
+            type: array
         "500":
           description: Internal Server Error
           schema:
@@ -2630,13 +2839,13 @@ paths:
       summary: Create a tool
       tags:
       - tools
-  /tools/{toolTitle}:
+  /tools/{toolId}:
     delete:
       description: Delete a tool
       parameters:
       - description: Tool Title
         in: path
-        name: toolTitle
+        name: toolId
         required: true
         type: string
       responses:
@@ -2665,7 +2874,7 @@ paths:
       parameters:
       - description: Tool Title
         in: path
-        name: toolTitle
+        name: toolId
         required: true
         type: string
       produces:
@@ -2700,7 +2909,7 @@ paths:
       parameters:
       - description: Tool Title
         in: path
-        name: toolTitle
+        name: toolId
         required: true
         type: string
       - description: Tool object
@@ -2736,7 +2945,7 @@ paths:
       - tools
   /usage-units:
     get:
-      description: List all usage units
+      description: List all usage units tht can be used with usage triggers
       produces:
       - application/json
       responses:
@@ -2756,7 +2965,7 @@ paths:
       - usage-units
   /work-order-statuses:
     get:
-      description: List all work order statuses
+      description: List all work order statuses that can be used with work orders
       produces:
       - application/json
       responses:

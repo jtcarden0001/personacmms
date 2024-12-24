@@ -1,72 +1,64 @@
 package cmmsapp
 
-import (
-	"testing"
+// func TestCreateGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	"github.com/stretchr/testify/assert"
-)
+// 	group := tp.Group{Title: "group1"}
+// 	createdGroup, err := app.CreateGroup(group)
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, group.Title, createdGroup.Title)
+// }
 
-func TestCreateGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// func TestDeleteGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	group := tp.Group{Title: "group1"}
-	createdGroup, err := app.CreateGroup(group)
-	assert.NoError(t, err)
-	assert.Equal(t, group.Title, createdGroup.Title)
-}
+// 	group := tp.Group{Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestDeleteGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	err := app.DeleteGroup("group1")
+// 	assert.NoError(t, err)
+// }
 
-	group := tp.Group{Title: "group1"}
-	db.CreateGroup(group)
+// func TestListGroups(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	err := app.DeleteGroup("group1")
-	assert.NoError(t, err)
-}
+// 	group1 := tp.Group{Title: "group1"}
+// 	group2 := tp.Group{Title: "group2"}
+// 	db.CreateGroup(group1)
+// 	db.CreateGroup(group2)
 
-func TestListGroups(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	groups, err := app.ListGroups()
+// 	assert.NoError(t, err)
+// 	assert.Len(t, groups, 2)
+// }
 
-	group1 := tp.Group{Title: "group1"}
-	group2 := tp.Group{Title: "group2"}
-	db.CreateGroup(group1)
-	db.CreateGroup(group2)
+// func TestGetGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	groups, err := app.ListGroups()
-	assert.NoError(t, err)
-	assert.Len(t, groups, 2)
-}
+// 	group := tp.Group{Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestGetGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	retrievedGroup, err := app.GetGroup("group1")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, group.Title, retrievedGroup.Title)
+// }
 
-	group := tp.Group{Title: "group1"}
-	db.CreateGroup(group)
+// func TestUpdateGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	retrievedGroup, err := app.GetGroup("group1")
-	assert.NoError(t, err)
-	assert.Equal(t, group.Title, retrievedGroup.Title)
-}
+// 	group := tp.Group{Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestUpdateGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	updatedGroup := tp.Group{Title: "group1_updated"}
+// 	_, err := app.UpdateGroup("group1", updatedGroup)
+// 	assert.NoError(t, err)
 
-	group := tp.Group{Title: "group1"}
-	db.CreateGroup(group)
-
-	updatedGroup := tp.Group{Title: "group1_updated"}
-	_, err := app.UpdateGroup("group1", updatedGroup)
-	assert.NoError(t, err)
-
-	retrievedGroup, err := app.GetGroup("group1_updated")
-	assert.NoError(t, err)
-	assert.Equal(t, updatedGroup.Title, retrievedGroup.Title)
-}
+// 	retrievedGroup, err := app.GetGroup("group1_updated")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, updatedGroup.Title, retrievedGroup.Title)
+// }

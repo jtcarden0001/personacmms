@@ -43,9 +43,9 @@ func (h *Api) registerWorkOrderRoutes() {
 //	@Description	Associate a work order with a task
 //	@Tags			work-orders
 //	@Produce		json
-//	@Param			assetId		path	string	true	"Asset ID"
-//	@Param			taskId		path	string	true	"Task ID"
-//	@Param			workOrderId	path	string	true	"Work Order ID"
+//	@Param			assetId		path		string	true	"Asset ID"
+//	@Param			taskId		path		string	true	"Task ID"
+//	@Param			workOrderId	path		string	true	"Work Order ID"
 //	@Success		200			{object}	tp.WorkOrder
 //	@Failure		400			{object}	map[string]any
 //	@Failure		404			{object}	map[string]any
@@ -63,7 +63,7 @@ func (h *Api) associateWorkOrderWithTask(c *gin.Context) {
 //	@Tags			work-orders
 //	@Accept			json
 //	@Produce		json
-//	@Param			assetId	path		string			true	"Asset Id"
+//	@Param			assetId		path		string			true	"Asset Id"
 //	@Param			taskId		path		string			true	"Asset Task Id"
 //	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"
 //	@Success		201			{object}	tp.WorkOrder
@@ -87,7 +87,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Summary		Delete an asset task work order
 //	@Description	Delete an asset task work order
 //	@Tags			work-orders
-//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			assetId		path	string	true	"Asset Id"
 //	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
@@ -105,7 +105,7 @@ func (h *Api) deleteWorkOrder(c *gin.Context) {
 //	@Summary		Disassociate a work order with a task
 //	@Description	Disassociate a work order with a task
 //	@Tags			work-orders
-//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			assetId		path	string	true	"Asset Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
@@ -123,7 +123,7 @@ func (h *Api) disassociateWorkOrderWithTask(c *gin.Context) {
 //	@Description	Get an asset task work order
 //	@Tags			work-orders
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
+//	@Param			assetId		path		string	true	"Asset Id"
 //	@Param			taskId		path		string	true	"Asset Task Id"
 //	@Param			workOrderId	path		string	true	"Work Order Id"
 //	@Success		200			{object}	tp.WorkOrder
@@ -143,11 +143,11 @@ func (h *Api) getWorkOrder(c *gin.Context) {
 //	@Tags			work-orders
 //	@Produce		json
 //	@Param			assetId	path		string	true	"Asset Id"
-//	@Param			taskId		path		string	true	"Asset Task Id"
-//	@Success		200			{object}	[]tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Param			taskId	path		string	true	"Asset Task Id"
+//	@Success		200		{object}	[]tp.WorkOrder
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/work-orders [get]
 func (h *Api) listWorkOrders(c *gin.Context) {
 	workOrders, err := h.app.ListWorkOrders(c.Param(assetId), c.Param(taskId))
@@ -161,7 +161,7 @@ func (h *Api) listWorkOrders(c *gin.Context) {
 //	@Tags			work-orders
 //	@Accept			json
 //	@Produce		json
-//	@Param			assetId	path		string			true	"Asset Id"
+//	@Param			assetId		path		string			true	"Asset Id"
 //	@Param			taskId		path		string			true	"Asset Task Id"
 //	@Param			workOrderId	path		string			true	"Work Order Id"
 //	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"

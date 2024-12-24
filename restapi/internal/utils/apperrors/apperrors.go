@@ -23,12 +23,16 @@ func New(code string, message string) AppError {
 	return AppError{Code: code, Message: message}
 }
 
-// Already Exists Errors
+// Error codes
 var CodeAlreadyExists = "ALREADY_EXISTS"
+var CodeInvalid = "INVALID"
+var CodeNotFound = "NOT_FOUND"
+var CodeNotImplemented = "NOT_IMPLEMENTED"
+
+// Already Exists Errors
 var ErrAlreadyExists = AppError{Code: CodeAlreadyExists, Message: "already exists"}
 
 // Invalid Errors
-var CodeInvalid = "INVALID"
 
 var ErrCategoryTitleRequired = AppError{Code: CodeInvalid, Message: "category title mismatch"}
 
@@ -45,7 +49,6 @@ var ErrUsageUnitTypeInvalid = AppError{Code: CodeInvalid, Message: createInvalid
 var ErrWorkOrderStatusTitleRequired = AppError{Code: CodeInvalid, Message: "work order status title required"}
 
 // Not Found Errors
-var CodeNotFound = "NOT_FOUND"
 var ErrNotFound = AppError{Code: CodeNotFound, Message: "not found"}
 
 // dynamic error message generation functions

@@ -1,161 +1,152 @@
 package cmmsapp
 
-import (
-	"testing"
+// func TestCreateAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	"github.com/google/uuid"
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	"github.com/stretchr/testify/assert"
-)
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestCreateAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
+// 	createdAsset, err := app.CreateAsset("group1", asset)
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, asset.Title, createdAsset.Title)
+// 	assert.Equal(t, asset.GroupTitle, createdAsset.GroupTitle)
+// }
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// func TestDeleteAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
-	createdAsset, err := app.CreateAsset("group1", asset)
-	assert.NoError(t, err)
-	assert.Equal(t, asset.Title, createdAsset.Title)
-	assert.Equal(t, asset.GroupTitle, createdAsset.GroupTitle)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestDeleteAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
+// 	db.CreateAsset(asset)
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// 	err := app.DeleteAsset("group1", "asset1")
+// 	assert.NoError(t, err)
 
-	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
-	db.CreateAsset(asset)
+// 	_, err = app.GetAsset("group1", "asset1")
+// 	assert.Error(t, err)
+// }
 
-	err := app.DeleteAsset("group1", "asset1")
-	assert.NoError(t, err)
+// func TestListAssets(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	_, err = app.GetAsset("group1", "asset1")
-	assert.Error(t, err)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestListAssets(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset1 := tp.Asset{Title: "asset1", GroupTitle: "group1"}
+// 	asset2 := tp.Asset{Title: "asset2", GroupTitle: "group1"}
+// 	db.CreateAsset(asset1)
+// 	db.CreateAsset(asset2)
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// 	assets, err := app.ListAssets("group1")
+// 	assert.NoError(t, err)
+// 	assert.Len(t, assets, 2)
+// }
 
-	asset1 := tp.Asset{Title: "asset1", GroupTitle: "group1"}
-	asset2 := tp.Asset{Title: "asset2", GroupTitle: "group1"}
-	db.CreateAsset(asset1)
-	db.CreateAsset(asset2)
+// func TestGetAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	assets, err := app.ListAssets("group1")
-	assert.NoError(t, err)
-	assert.Len(t, assets, 2)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestGetAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
+// 	db.CreateAsset(asset)
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// 	retrievedAsset, err := app.GetAsset("group1", "asset1")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, asset.Title, retrievedAsset.Title)
+// 	assert.Equal(t, asset.GroupTitle, retrievedAsset.GroupTitle)
+// }
 
-	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
-	db.CreateAsset(asset)
+// func TestUpdateAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	retrievedAsset, err := app.GetAsset("group1", "asset1")
-	assert.NoError(t, err)
-	assert.Equal(t, asset.Title, retrievedAsset.Title)
-	assert.Equal(t, asset.GroupTitle, retrievedAsset.GroupTitle)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestUpdateAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
+// 	db.CreateAsset(asset)
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// 	updatedAsset := tp.Asset{Title: "asset1_updated", GroupTitle: "group1"}
+// 	_, err := app.UpdateAsset("group1", "asset1", updatedAsset)
+// 	assert.NoError(t, err)
 
-	asset := tp.Asset{Title: "asset1", GroupTitle: "group1"}
-	db.CreateAsset(asset)
+// 	retrievedAsset, err := app.GetAsset("group1", "asset1_updated")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, updatedAsset.Title, retrievedAsset.Title)
+// 	assert.Equal(t, updatedAsset.GroupTitle, retrievedAsset.GroupTitle)
+// }
 
-	updatedAsset := tp.Asset{Title: "asset1_updated", GroupTitle: "group1"}
-	_, err := app.UpdateAsset("group1", "asset1", updatedAsset)
-	assert.NoError(t, err)
+// func TestCreateAssetWithEmptyTitle(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	retrievedAsset, err := app.GetAsset("group1", "asset1_updated")
-	assert.NoError(t, err)
-	assert.Equal(t, updatedAsset.Title, retrievedAsset.Title)
-	assert.Equal(t, updatedAsset.GroupTitle, retrievedAsset.GroupTitle)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestCreateAssetWithEmptyTitle(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	asset := tp.Asset{Title: "", GroupTitle: "group1"}
+// 	_, err := app.CreateAsset("group1", asset)
+// 	assert.Error(t, err)
+// }
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// func TestCreateAssetWithNonExistentGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	asset := tp.Asset{Title: "", GroupTitle: "group1"}
-	_, err := app.CreateAsset("group1", asset)
-	assert.Error(t, err)
-}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "nonexistentgroup"}
+// 	_, err := app.CreateAsset("nonexistentgroup", asset)
+// 	assert.Error(t, err)
+// }
 
-func TestCreateAssetWithNonExistentGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// func TestDeleteNonExistentAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	asset := tp.Asset{Title: "asset1", GroupTitle: "nonexistentgroup"}
-	_, err := app.CreateAsset("nonexistentgroup", asset)
-	assert.Error(t, err)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestDeleteNonExistentAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	err := app.DeleteAsset("group1", "nonexistentasset")
+// 	assert.Error(t, err)
+// }
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// func TestGetNonExistentAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	err := app.DeleteAsset("group1", "nonexistentasset")
-	assert.Error(t, err)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestGetNonExistentAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	_, err := app.GetAsset("group1", "nonexistentasset")
+// 	assert.Error(t, err)
+// }
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// func TestUpdateNonExistentAsset(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	_, err := app.GetAsset("group1", "nonexistentasset")
-	assert.Error(t, err)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestUpdateNonExistentAsset(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+// 	updatedAsset := tp.Asset{Title: "asset1_updated", GroupTitle: "group1"}
+// 	_, err := app.UpdateAsset("group1", "nonexistentasset", updatedAsset)
+// 	assert.Error(t, err)
+// }
 
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
+// func TestCreateAssetWithMismatchedGroup(t *testing.T) {
+// 	db := mock.New()
+// 	app := &App{db: db}
 
-	updatedAsset := tp.Asset{Title: "asset1_updated", GroupTitle: "group1"}
-	_, err := app.UpdateAsset("group1", "nonexistentasset", updatedAsset)
-	assert.Error(t, err)
-}
+// 	group := tp.Group{Id: uuid.New(), Title: "group1"}
+// 	db.CreateGroup(group)
 
-func TestCreateAssetWithMismatchedGroup(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
-
-	group := tp.Group{Id: uuid.New(), Title: "group1"}
-	db.CreateGroup(group)
-
-	asset := tp.Asset{Title: "asset1", GroupTitle: "group2"}
-	_, err := app.CreateAsset("group1", asset)
-	assert.Error(t, err)
-}
+// 	asset := tp.Asset{Title: "asset1", GroupTitle: "group2"}
+// 	_, err := app.CreateAsset("group1", asset)
+// 	assert.Error(t, err)
+// }

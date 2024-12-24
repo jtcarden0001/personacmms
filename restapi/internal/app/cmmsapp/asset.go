@@ -5,69 +5,50 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// Create an Asset
-func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return tp.Asset{}, err
-	}
-
-	if asset.GroupTitle != groupTitle {
-		return tp.Asset{}, ae.ErrGroupTitleMismatch
-	}
-
-	if asset.Title == "" {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset title is required")
-	}
-
-	return a.db.CreateAsset(asset)
+func (a *App) AssociateAssetWithCategory(AssetId string, CategoryId string) (tp.Asset, error) {
+	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithCategory not implemented")
 }
 
-// Delete an Asset
-func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
-	// Get Asset will validate the group as well, Get before delete so we can return a not found error.
-	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
-		return err
-	}
-
-	return a.db.DeleteAsset(groupTitle, assetTitle)
+func (a *App) AssociateAssetWithGroup(AssetId string, GroupId string) (tp.Asset, error) {
+	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithGroup not implemented")
 }
 
-// List all Assets in a Group
-func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return []tp.Asset{}, err
-	}
-
-	assets, err := a.db.ListAssetsByGroup(groupTitle)
-	if err != nil {
-		return []tp.Asset{}, err
-	}
-
-	return assets, nil
+func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
+	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "CreateAsset not implemented")
 }
 
-// Get an Asset
-func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return tp.Asset{}, err
-	}
-
-	return a.db.GetAsset(groupTitle, assetTitle)
+func (a *App) DeleteAsset(assetId string) error {
+	return ae.New(ae.CodeNotImplemented, "DeleteAsset not implemented")
 }
 
-// Update an Asset
-func (a *App) UpdateAsset(oldGroupTitle string, oldAssetTitle string, asset tp.Asset) (tp.Asset, error) {
-	if _, err := a.GetGroup(oldGroupTitle); err != nil {
-		return tp.Asset{}, err
-	}
+func (a *App) DisassociateAssetWithCategory(AssetId string, CategoryId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithCategory not implemented")
+}
 
-	if asset.GroupTitle == "" {
-		asset.GroupTitle = oldGroupTitle
-	}
+func (a *App) DisassociateAssetWithGroup(AssetId string, GroupId string) error {
+	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithGroup not implemented")
+}
 
-	if asset.Title == "" {
-		asset.Title = oldAssetTitle
-	}
+func (a *App) GetAsset(assetId string) (tp.Asset, error) {
+	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "GetAsset not implemented")
+}
 
-	return a.db.UpdateAsset(oldGroupTitle, oldAssetTitle, asset)
+func (a *App) ListAssets() ([]tp.Asset, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListAssets not implemented")
+}
+
+func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByCategory not implemented")
+}
+
+func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByCategoryAndGroup not implemented")
+}
+
+func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByGroup not implemented")
+}
+
+func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
+	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "UpdateAsset not implemented")
 }
