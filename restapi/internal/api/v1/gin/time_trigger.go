@@ -101,12 +101,12 @@ func (h *Api) getTimeTrigger(c *gin.Context) {
 //	@Description	List all time triggers
 //	@Tags			time-triggers
 //	@Produce		json
-//	@Param			assetId		path		string	true	"Asset Id"
-//	@Param			taskId		path		string	true	"Asset Task Id"
-//	@Success		200			{object}	[]tp.TimeTrigger
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Param			assetId	path		string	true	"Asset Id"
+//	@Param			taskId	path		string	true	"Asset Task Id"
+//	@Success		200		{object}	[]tp.TimeTrigger
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers [get]
 func (h *Api) listTimeTriggers(c *gin.Context) {
 	timeTriggers, err := h.app.ListTimeTriggers(c.Param(assetId), c.Param(taskId))

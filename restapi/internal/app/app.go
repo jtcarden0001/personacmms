@@ -103,8 +103,12 @@ type App interface {
 	UpdateTimeUnit(string, tp.TimeUnit) (tp.TimeUnit, error)
 
 	// tool
+	AssociateToolWithTask(string, string, string) (tp.Tool, error)
+	AssociateToolWithWorkOrder(string, string, string) (tp.Tool, error)
 	CreateTool(tp.Tool) (tp.Tool, error)
 	DeleteTool(string) error
+	DisassociateToolWithTask(string, string, string) error
+	DisassociateToolWithWorkOrder(string, string, string) error
 	GetTool(string) (tp.Tool, error)
 	ListTools() ([]tp.Tool, error)
 	UpdateTool(string, tp.Tool) (tp.Tool, error)
