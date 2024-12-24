@@ -8,16 +8,18 @@ import (
 	_ "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerTimeUnitRoutes() {
-	baseRoute := fmt.Sprintf("%s/time-units", routePrefix)
+var timeUnitGp = "time-units"
 
-	h.router.GET(baseRoute, h.listTimeUnits)
+var baseTimeUnitRoute = fmt.Sprintf("%s/%s", routePrefix, timeUnitGp)
+
+func (h *Api) registerTimeUnitRoutes() {
+	h.router.GET(baseTimeUnitRoute, h.listTimeUnits)
 }
 
 // ListTimeUnits godoc
 //
 //	@Summary		List time units
-//	@Description	List all time units that can be used with time and usage triggers
+//	@Description	List all time units that can be used with time-triggers and usage-triggers
 //	@Tags			time-units
 //	@Produce		json
 //	@Success		200	{object}	[]types.TimeUnit

@@ -27,7 +27,7 @@ func (h *Api) registerTimeTriggerRoutes() {
 	h.router.DELETE(indTimeTriggerRoute, h.deleteTimeTrigger)
 
 	h.router.GET(indTimeTriggerRoute, h.getTimeTrigger)
-	h.router.GET(baseTimeTriggerRoute, h.listTimeTriggers)
+	h.router.GET(baseTimeTriggerRoute, h.listTimeTriggersByAssetAndTask)
 
 	h.router.PUT(indTimeTriggerRoute, h.updateTimeTrigger)
 }
@@ -98,7 +98,7 @@ func (h *Api) getTimeTrigger(c *gin.Context) {
 // ListTimeTriggers godoc
 //
 //	@Summary		List time triggers
-//	@Description	List all time triggers
+//	@Description	List all time triggers for a task
 //	@Tags			time-triggers
 //	@Produce		json
 //	@Param			assetId	path		string	true	"Asset Id"
@@ -108,8 +108,8 @@ func (h *Api) getTimeTrigger(c *gin.Context) {
 //	@Failure		404		{object}	map[string]any
 //	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers [get]
-func (h *Api) listTimeTriggers(c *gin.Context) {
-	timeTriggers, err := h.app.ListTimeTriggers(c.Param(assetId), c.Param(taskId))
+func (h *Api) listTimeTriggersByAssetAndTask(c *gin.Context) {
+	timeTriggers, err := h.app.ListTimeTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeTriggers))
 }
 

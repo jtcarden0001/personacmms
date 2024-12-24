@@ -8,10 +8,12 @@ import (
 	_ "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-func (h *Api) registerWorkOrderStatusRoutes() {
-	baseRoute := fmt.Sprintf("%s/work-order-statuses", routePrefix)
+var workOrderStatusGp = "work-order-statuses"
 
-	h.router.GET(baseRoute, h.listWorkOrderStatus)
+var baseWorkOrderStatusRoute = fmt.Sprintf("%s/%s", routePrefix, workOrderStatusGp)
+
+func (h *Api) registerWorkOrderStatusRoutes() {
+	h.router.GET(baseWorkOrderStatusRoute, h.listWorkOrderStatus)
 }
 
 // ListWorkOrderStatus godoc

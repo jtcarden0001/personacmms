@@ -8,15 +8,18 @@ import (
 	_ "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
+var usageUnitGp = "usage-units"
+
+var baseUsageUnitRoute = fmt.Sprintf("%s/%s", routePrefix, usageUnitGp)
+
 func (h *Api) registerUsageUnitRoutes() {
-	baseRoute := fmt.Sprintf("%s/usage-units", routePrefix)
-	h.router.GET(baseRoute, h.listUsageUnits)
+	h.router.GET(baseUsageUnitRoute, h.listUsageUnits)
 }
 
 // ListUsageUnits godoc
 //
 //	@Summary		List usage units
-//	@Description	List all usage units
+//	@Description	List all usage units tht can be used with usage triggers
 //	@Tags			usage-units
 //	@Produce		json
 //	@Success		200	{object}	[]types.UsageUnit

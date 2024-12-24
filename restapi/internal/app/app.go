@@ -114,11 +114,11 @@ type App interface {
 	UpdateTool(string, tp.Tool) (tp.Tool, error)
 
 	// usage trigger
-	CreateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
-	DeleteUsageTrigger(string, string, string, string) error
-	GetUsageTrigger(string, string, string, string) (tp.UsageTrigger, error)
-	ListUsageTriggers(string, string, string) ([]tp.UsageTrigger, error)
-	UpdateUsageTrigger(string, string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
+	CreateUsageTrigger(string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
+	DeleteUsageTrigger(string, string, string) error
+	GetUsageTrigger(string, string, string) (tp.UsageTrigger, error)
+	ListUsageTriggersByAssetAndTask(string, string) ([]tp.UsageTrigger, error)
+	UpdateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
 
 	// usage unit
 	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)

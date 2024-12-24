@@ -26,7 +26,7 @@ func (h *Api) registerDateTriggerRoutes() {
 
 	h.router.DELETE(indDateTriggerRoute, h.deleteDateTrigger)
 
-	h.router.GET(baseDateTriggerRoute, h.listDateTriggersVyAssetAndTask)
+	h.router.GET(baseDateTriggerRoute, h.listDateTriggersByAssetAndTask)
 	h.router.GET(indDateTriggerRoute, h.getDateTrigger)
 
 	h.router.PUT(indDateTriggerRoute, h.updateDateTrigger)
@@ -98,7 +98,7 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 // ListDateTriggers godoc
 //
 //	@Summary		List date triggers
-//	@Description	List date triggers
+//	@Description	List date triggers for a task
 //	@Tags			date-triggers
 //	@Produce		json
 //	@Param			assetId	path		string	true	"Asset Id"
@@ -108,7 +108,7 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 //	@Failure		404		{object}	map[string]any
 //	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers [get]
-func (h *Api) listDateTriggersVyAssetAndTask(c *gin.Context) {
+func (h *Api) listDateTriggersByAssetAndTask(c *gin.Context) {
 	dateTriggers, err := h.app.ListDateTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTriggers))
 }
