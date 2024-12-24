@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -39,4 +40,12 @@ func (a *App) ListTools() ([]tp.Tool, error) {
 
 func (a *App) UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error) {
 	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "UpdateTool not implemented")
+}
+
+func (a *App) validateTool(tool tp.Tool) error {
+	return ae.New(ae.CodeNotImplemented, "validateTool not implemented")
+}
+
+func (a *App) toolExists(id uuid.UUID) (bool, error) {
+	return false, ae.New(ae.CodeNotImplemented, "toolExists not implemented")
 }

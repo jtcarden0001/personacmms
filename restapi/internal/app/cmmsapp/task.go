@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -27,4 +28,12 @@ func (a *App) ListTasksByAsset(assetId string) ([]tp.Task, error) {
 
 func (a *App) UpdateTask(assetId string, taskId string, task tp.Task) (tp.Task, error) {
 	return tp.Task{}, ae.New(ae.CodeNotImplemented, "UpdateTask not implemented")
+}
+
+func (a *App) validateTask(task tp.Task) error {
+	return ae.New(ae.CodeNotImplemented, "validateTask not implemented")
+}
+
+func (a *App) taskExists(id uuid.UUID) (bool, error) {
+	return false, ae.New(ae.CodeNotImplemented, "taskExists not implemented")
 }

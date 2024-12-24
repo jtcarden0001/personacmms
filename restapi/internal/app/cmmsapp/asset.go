@@ -1,15 +1,16 @@
 package cmmsapp
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-func (a *App) AssociateAssetWithCategory(AssetId string, CategoryId string) (tp.Asset, error) {
+func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error) {
 	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithCategory not implemented")
 }
 
-func (a *App) AssociateAssetWithGroup(AssetId string, GroupId string) (tp.Asset, error) {
+func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error) {
 	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithGroup not implemented")
 }
 
@@ -21,11 +22,11 @@ func (a *App) DeleteAsset(assetId string) error {
 	return ae.New(ae.CodeNotImplemented, "DeleteAsset not implemented")
 }
 
-func (a *App) DisassociateAssetWithCategory(AssetId string, CategoryId string) error {
+func (a *App) DisassociateAssetWithCategory(assetId string, categoryId string) error {
 	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithCategory not implemented")
 }
 
-func (a *App) DisassociateAssetWithGroup(AssetId string, GroupId string) error {
+func (a *App) DisassociateAssetWithGroup(assetId string, groupId string) error {
 	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithGroup not implemented")
 }
 
@@ -51,4 +52,12 @@ func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
 
 func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
 	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "UpdateAsset not implemented")
+}
+
+func (a *App) validateAsset(asset tp.Asset) error {
+	return ae.New(ae.CodeNotImplemented, "validateAsset not implemented")
+}
+
+func (a *App) assetExists(assetId uuid.UUID) (bool, error) {
+	return false, ae.New(ae.CodeNotImplemented, "assetExists not implemented")
 }

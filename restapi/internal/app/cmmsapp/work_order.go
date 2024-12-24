@@ -32,3 +32,11 @@ func (a *App) ListWorkOrders(assetId string, atId string) ([]tp.WorkOrder, error
 func (a *App) UpdateWorkOrder(assetId string, tId string, woId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "UpdateWorkOrder not implemented")
 }
+
+func (a *App) validateWorkOrder(wo tp.WorkOrder) error {
+	return ae.New(ae.CodeNotImplemented, "validateWorkOrder not implemented")
+}
+
+func (a *App) workOrderExists(id string) (bool, error) {
+	return false, ae.New(ae.CodeNotImplemented, "workOrderExists not implemented")
+}

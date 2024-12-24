@@ -40,3 +40,11 @@ func (a *App) ListConsumables() ([]tp.Consumable, error) {
 func (a *App) UpdateConsumable(consumableId string, consumable tp.Consumable) (tp.Consumable, error) {
 	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "UpdateConsumable not implemented")
 }
+
+func (a *App) validateConsumable(consumable tp.Consumable) error {
+	return ae.New(ae.CodeNotImplemented, "validateConsumable not implemented")
+}
+
+func (a *App) consumableExists(consumableId string) (bool, error) {
+	return false, ae.New(ae.CodeNotImplemented, "consumableExists not implemented")
+}
