@@ -92,7 +92,7 @@ type App interface {
 	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 	DeleteTimeTrigger(string, string, string) error
 	GetTimeTrigger(string, string, string) (tp.TimeTrigger, error)
-	ListTimeTriggers(string, string) ([]tp.TimeTrigger, error)
+	ListTimeTriggersByAssetAndTask(string, string) ([]tp.TimeTrigger, error)
 	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// time unit
@@ -135,11 +135,13 @@ type App interface {
 	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
 
 	// work order
-	CreateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteWorkOrder(string, string, string, string) error
-	GetWorkOrder(string, string, string, string) (tp.WorkOrder, error)
-	ListWorkOrders(string, string, string) ([]tp.WorkOrder, error)
-	UpdateWorkOrder(string, string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	AssociateWorkOrderWithTask(string, string, string) (tp.WorkOrder, error)
+	CreateWorkOrder(string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(string, string, string) error
+	DisassociateWorkOrderWithTask(string, string, string) error
+	GetWorkOrder(string, string, string) (tp.WorkOrder, error)
+	ListWorkOrders(string, string) ([]tp.WorkOrder, error)
+	UpdateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
 type AppTest interface {
