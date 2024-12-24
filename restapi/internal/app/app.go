@@ -103,11 +103,7 @@ type App interface {
 	ListUsageUnits() ([]tp.UsageUnit, error)
 
 	// work order status
-	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
-	DeleteWorkOrderStatus(title string) error
-	GetWorkOrderStatus(title string) (tp.WorkOrderStatus, error)
 	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
-	UpdateWorkOrderStatus(title string, wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
 
 	// work order
 	AssociateWorkOrderWithTask(string, string, string) (tp.WorkOrder, error)
