@@ -42,12 +42,12 @@ func (h *Api) registerTaskRoutes() {
 //	@Tags			tasks
 //	@Accept			json
 //	@Produce		json
-//	@Param			assetId		path	string	true	"Asset Id"
+//	@Param			assetId	path		string	true	"Asset Id"
 //	@Param			task	body		tp.Task	true	"Task object"
-//	@Success		201			{object}	tp.Task
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201		{object}	tp.Task
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks [post]
 func (h *Api) createTask(c *gin.Context) {
 	var task tp.Task
@@ -82,8 +82,8 @@ func (h *Api) deleteTask(c *gin.Context) {
 //	@Summary		Disassociate a task with a work order
 //	@Description	Disassociate a task with a work order
 //	@Tags			tasks
-//	@Param			assetId			path	string	true	"Asset Id"
-//	@Param			workOrderId		path	string	true	"Work Order Id"
+//	@Param			assetId		path	string	true	"Asset Id"
+//	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -100,12 +100,12 @@ func (h *Api) disassociateTaskWithWorkOrder(c *gin.Context) {
 //	@Description	Get a task
 //	@Tags			tasks
 //	@Produce		json
-//	@Param			assetId	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Task Id"
-//	@Success		200	{object}	tp.Task
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
+//	@Param			assetId	path		string	true	"Asset Id"
+//	@Param			taskId	path		string	true	"Task Id"
+//	@Success		200		{object}	tp.Task
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId} [get]
 func (h *Api) getTask(c *gin.Context) {
 	task, err := h.app.GetTask(c.Param(assetId), c.Param(taskId))
@@ -118,11 +118,11 @@ func (h *Api) getTask(c *gin.Context) {
 //	@Description	List tasks by asset
 //	@Tags			tasks
 //	@Produce		json
-//	@Param			assetId	path	string	true	"Asset Id"
-//	@Success		200	{object}	[]tp.Task
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
+//	@Param			assetId	path		string	true	"Asset Id"
+//	@Success		200		{object}	[]tp.Task
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks [get]
 func (h *Api) listTasksByAsset(c *gin.Context) {
 	tasks, err := h.app.ListTasksByAsset(c.Param(assetId))
@@ -136,13 +136,13 @@ func (h *Api) listTasksByAsset(c *gin.Context) {
 //	@Tags			tasks
 //	@Accept			json
 //	@Produce		json
-//	@Param			assetId	path	string	true	"Asset Id"
-//	@Param			taskId	path	string	true	"Task Id"
-//	@Param			task	body	tp.Task	true	"Task object"
-//	@Success		200	{object}	tp.Task
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
+//	@Param			assetId	path		string	true	"Asset Id"
+//	@Param			taskId	path		string	true	"Task Id"
+//	@Param			task	body		tp.Task	true	"Task object"
+//	@Success		200		{object}	tp.Task
+//	@Failure		400		{object}	map[string]any
+//	@Failure		404		{object}	map[string]any
+//	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId} [put]
 func (h *Api) updateTask(c *gin.Context) {
 	var task tp.Task

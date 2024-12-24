@@ -89,11 +89,11 @@ type App interface {
 	UpdateTaskTool(tp.TaskTool) (tp.TaskTool, error)
 
 	// time trigger
-	CreateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
-	DeleteTimeTrigger(string, string, string, string) error
-	GetTimeTrigger(string, string, string, string) (tp.TimeTrigger, error)
-	ListTimeTriggers(string, string, string) ([]tp.TimeTrigger, error)
-	UpdateTimeTrigger(string, string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
+	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
+	DeleteTimeTrigger(string, string, string) error
+	GetTimeTrigger(string, string, string) (tp.TimeTrigger, error)
+	ListTimeTriggers(string, string) ([]tp.TimeTrigger, error)
+	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// time unit
 	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)

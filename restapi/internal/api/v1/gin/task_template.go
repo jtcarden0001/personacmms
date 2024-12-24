@@ -39,10 +39,10 @@ func (h *Api) registerTaskTemplateRoutes() {
 //	@Tags			task-templates
 //	@Accept			json
 //	@Produce		json
-//	@Param			taskTemplate	body	tp.TaskTemplate	true	"TaskTemplate object"
-//	@Success		201	{object}	tp.TaskTemplate
-//	@Failure		400	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
+//	@Param			taskTemplate	body		tp.TaskTemplate	true	"TaskTemplate object"
+//	@Success		201				{object}	tp.TaskTemplate
+//	@Failure		400				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/task-templates [post]
 func (h *Api) createTaskTemplate(c *gin.Context) {
 	var taskTemplate tp.TaskTemplate
@@ -62,9 +62,9 @@ func (h *Api) createTaskTemplate(c *gin.Context) {
 //	@Tags			task-templates
 //	@Param			taskTemplateId	path	string	true	"TaskTemplate Id"
 //	@Success		204
-//	@Failure		400 {object} map[string]any
-//	@Failure		404 {object} map[string]any
-//	@Failure		500 {object} map[string]any
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/task-templates/{taskTemplateId} [delete]
 func (h *Api) deleteTaskTemplate(c *gin.Context) {
 	err := h.app.DeleteTaskTemplate(c.Param(taskTemplateId))
@@ -77,11 +77,11 @@ func (h *Api) deleteTaskTemplate(c *gin.Context) {
 //	@Description	Get a task template
 //	@Tags			task-templates
 //	@Produce		json
-//	@Param			taskTemplateId	path	string	true	"TaskTemplate Id"
-//	@Success		200	{object}	tp.TaskTemplate
-//	@Failure		400	{object}	map[string]any
-//	@Failure		404	{object}	map[string]any
-//	@Failure		500	{object}	map[string]any
+//	@Param			taskTemplateId	path		string	true	"TaskTemplate Id"
+//	@Success		200				{object}	tp.TaskTemplate
+//	@Failure		400				{object}	map[string]any
+//	@Failure		404				{object}	map[string]any
+//	@Failure		500				{object}	map[string]any
 //	@Router			/task-templates/{taskTemplateId} [get]
 func (h *Api) getTaskTemplate(c *gin.Context) {
 	taskTemplate, err := h.app.GetTaskTemplate(c.Param(taskTemplateId))
@@ -108,7 +108,7 @@ func (h *Api) listTaskTemplates(c *gin.Context) {
 //	@Description	Update a task template
 //	@Accept			json
 //	@Param			taskTemplateId	path	string			true	"TaskTemplate Id"
-//	@Param			taskTemplate		body	tp.TaskTemplate	true	"TaskTemplate object"
+//	@Param			taskTemplate	body	tp.TaskTemplate	true	"TaskTemplate object"
 //	@Produce		json
 //	@Success		200	{object}	tp.TaskTemplate
 //	@Failure		400	{object}	map[string]any

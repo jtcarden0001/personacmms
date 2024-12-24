@@ -8,11 +8,11 @@ import (
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
 
-// - POST /groups (JSON)
-// - GET  /groups/{groupId}
-// - GET  /groups
-// - PUT  /groups/{groupdId}
-// - DEL  /groups/{groupId}
+// - POST /groups (JSON) done
+// - GET  /groups/{groupId} done
+// - GET  /groups done
+// - PUT  /groups/{groupdId} done
+// - DEL  /groups/{groupId} done
 //
 // - GET  /assets/{assetId}/groups
 

@@ -17,7 +17,7 @@ func (h *Api) registerWorkOrderStatusRoutes() {
 // ListWorkOrderStatus godoc
 //
 //	@Summary		List work order statuses
-//	@Description	List all work order statuses
+//	@Description	List all work order statuses that can be used with work orders
 //	@Tags			work-order-statuses
 //	@Produce		json
 //	@Success		200	{object}	[]types.WorkOrderStatus
