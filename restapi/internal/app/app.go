@@ -64,29 +64,12 @@ type App interface {
 	ListTasksByAsset(string) ([]tp.Task, error)
 	UpdateTask(string, string, tp.Task) (tp.Task, error)
 
-	// task consumable
-	CreateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
-	CreateTaskConsumableWithValidation(string, string, string, string, string) (tp.TaskConsumable, error)
-	DeleteTaskConsumable(string, string, string, string) error
-	GetTaskConsumable(string, string, string, string) (tp.TaskConsumable, error)
-	ListTaskConsumables(string, string, string) ([]tp.TaskConsumable, error)
-	UpdateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
-	UpdateTaskConsumableWithValidation(string, string, string, string, string) (tp.TaskConsumable, error)
-
 	// task template
 	CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
 	DeleteTaskTemplate(string) error
 	GetTaskTemplate(string) (tp.TaskTemplate, error)
 	ListTaskTemplates() ([]tp.TaskTemplate, error)
 	UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
-
-	// task tools
-	CreateTaskTool(tp.TaskTool) (tp.TaskTool, error)
-	CreateTaskToolWithValidation(string, string, string, string) (tp.TaskTool, error)
-	DeleteTaskTool(string, string, string, string) error
-	GetTaskTool(string, string, string, string) (tp.TaskTool, error)
-	ListTaskTools(string, string, string) ([]tp.TaskTool, error)
-	UpdateTaskTool(tp.TaskTool) (tp.TaskTool, error)
 
 	// time trigger
 	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
@@ -96,11 +79,7 @@ type App interface {
 	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// time unit
-	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
-	DeleteTimeUnit(string) error
-	GetTimeUnit(string) (tp.TimeUnit, error)
 	ListTimeUnits() ([]tp.TimeUnit, error)
-	UpdateTimeUnit(string, tp.TimeUnit) (tp.TimeUnit, error)
 
 	// tool
 	AssociateToolWithTask(string, string, string) (tp.Tool, error)
@@ -121,11 +100,7 @@ type App interface {
 	UpdateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
 
 	// usage unit
-	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
-	DeleteUsageUnit(string) error
-	GetUsageUnit(string) (tp.UsageUnit, error)
 	ListUsageUnits() ([]tp.UsageUnit, error)
-	UpdateUsageUnit(string, tp.UsageUnit) (tp.UsageUnit, error)
 
 	// work order status
 	CreateWorkOrderStatus(wos tp.WorkOrderStatus) (tp.WorkOrderStatus, error)
