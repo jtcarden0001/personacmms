@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
@@ -20,7 +21,7 @@ func (pg *PostgresStore) CreateTaskTool(tool tp.TaskTool) (tp.TaskTool, error) {
 	return tool, nil
 }
 
-func (pg *PostgresStore) DeleteTaskTool(atId, tId tp.UUID) error {
+func (pg *PostgresStore) DeleteTaskTool(atId, tId uuid.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE task_id = $1 AND tool_id = $2", assetTaskToolTable)
 	result, err := pg.db.Exec(query, atId, tId)
 	if err != nil {
@@ -58,7 +59,7 @@ func (pg *PostgresStore) ListTaskTools() ([]tp.TaskTool, error) {
 }
 
 // TODO: add testing for this function
-func (pg *PostgresStore) ListTaskToolsByTaskId(atId tp.UUID) ([]tp.TaskTool, error) {
+func (pg *PostgresStore) ListTaskToolsByTaskId(atId uuid.UUID) ([]tp.TaskTool, error) {
 	query := fmt.Sprintf("SELECT task_id, tool_id FROM %s WHERE task_id = $1", assetTaskToolTable)
 	rows, err := pg.db.Query(query, atId)
 	if err != nil {
@@ -79,7 +80,7 @@ func (pg *PostgresStore) ListTaskToolsByTaskId(atId tp.UUID) ([]tp.TaskTool, err
 	return at, nil
 }
 
-func (pg *PostgresStore) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
+func (pg *PostgresStore) GetTaskTool(atId, tId uuid.UUID) (tp.TaskTool, error) {
 	query := fmt.Sprintf("SELECT task_id, tool_id FROM %s WHERE task_id = $1 AND tool_id = $2", assetTaskToolTable)
 	var e tp.TaskTool
 	err := pg.db.QueryRow(query, atId, tId).Scan(&e.TaskId, &e.ToolId)
@@ -90,7 +91,7 @@ func (pg *PostgresStore) GetTaskTool(atId, tId tp.UUID) (tp.TaskTool, error) {
 	return e, nil
 }
 
-func (pg *PostgresStore) UpdateTaskTool(atId, tId tp.UUID, tool tp.TaskTool) (tp.TaskTool, error) {
+func (pg *PostgresStore) UpdateTaskTool(atId, tId uuid.UUID, tool tp.TaskTool) (tp.TaskTool, error) {
 	query := fmt.Sprintf("UPDATE %s SET tool_id = $1 WHERE task_id = $2 AND tool_id = $3", assetTaskToolTable)
 	result, err := pg.db.Exec(query, tool.ToolId, atId, tId)
 	if err != nil {

@@ -1,11 +1,13 @@
 package types
 
+import "github.com/google/uuid"
+
 // a task template is a predefined task that a real task can be spawned from and assigned to an asset
 type TaskTemplate struct {
-	Title       string  `json:"title" binding:"required"`
-	Id          UUID    `json:"id" swaggerignore:"true"`
-	Description *string `json:"description"`
-	Type        *string `json:"type"`
+	Title       string    `json:"title" binding:"required"`
+	Id          uuid.UUID `json:"id" swaggerignore:"true"`
+	Description *string   `json:"description"`
+	Type        *string   `json:"type"`
 }
 
 // TaskType Enum, if you add something here, ensure to add it to ValidTaskTypes, and

@@ -3,6 +3,7 @@ package integration
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -64,7 +65,7 @@ func TestTimeTriggerDeleteNotFound(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	err := store.DeleteTimeTrigger(tp.UUID{})
+	err := store.DeleteTimeTrigger(uuid.UUID{})
 	if err == nil {
 		t.Errorf("DeleteTimeTrigger() should have failed")
 	}
@@ -83,7 +84,7 @@ func TestTimeTriggerList(t *testing.T) {
 	}
 
 	// make a map ttId -> tt
-	ttMap := make(map[tp.UUID]tp.TimeTrigger)
+	ttMap := make(map[uuid.UUID]tp.TimeTrigger)
 	for _, tt := range tts {
 		ttMap[tt.Id] = tt
 	}
@@ -134,13 +135,13 @@ func TestTimeTriggerListByTaskId(t *testing.T) {
 	defer utest.CloseStore(store, dbName)
 
 	// List
-	tts, err := store.ListTimeTriggersByTaskId(tp.UUID{})
+	tts, err := store.ListTimeTriggersByTaskId(uuid.UUID{})
 	if err != nil {
 		t.Errorf("ListTimeTriggersByTaskId() failed: %v", err)
 	}
 
 	// make a map ttId -> tt
-	ttMap := make(map[tp.UUID]tp.TimeTrigger)
+	ttMap := make(map[uuid.UUID]tp.TimeTrigger)
 	for _, tt := range tts {
 		ttMap[tt.Id] = tt
 	}
@@ -228,8 +229,8 @@ func TestTimeTriggerUpdateNotFound(t *testing.T) {
 	defer utest.CloseStore(store, dbName)
 
 	tt := tp.TimeTrigger{
-		Id:       tp.UUID{},
-		TaskId:   tp.UUID{},
+		Id:       uuid.UUID{},
+		TaskId:   uuid.UUID{},
 		Quantity: 30,
 		TimeUnit: tp.TimeUnitDays,
 	}

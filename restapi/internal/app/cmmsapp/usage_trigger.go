@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateUsageTrigger(assetId string, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
+	if usageTrigger.Id != uuid.Nil {
+		return tp.UsageTrigger{}, ae.New(ae.CodeInvalid, "usageTrigger id must be nil on create, we will create an id for you")
+	}
+	usageTrigger.Id = uuid.New()
+
 	return tp.UsageTrigger{}, ae.New(ae.CodeNotImplemented, "CreateUsageTrigger not implemented")
 }
 

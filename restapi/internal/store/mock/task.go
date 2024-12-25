@@ -18,7 +18,7 @@ func (m *MockStore) CreateTask(task tp.Task) (tp.Task, error) {
 	return task, nil
 }
 
-func (m *MockStore) DeleteTask(id tp.UUID) error {
+func (m *MockStore) DeleteTask(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["tasks"][id.String()]; !ok {
@@ -28,7 +28,7 @@ func (m *MockStore) DeleteTask(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
+func (m *MockStore) GetTask(id uuid.UUID) (tp.Task, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if task, ok := m.data["tasks"][id.String()]; ok {
@@ -37,7 +37,7 @@ func (m *MockStore) GetTask(id tp.UUID) (tp.Task, error) {
 	return tp.Task{}, nil
 }
 
-func (m *MockStore) GetTaskByAssetId(assetId tp.UUID, taskId tp.UUID) (tp.Task, error) {
+func (m *MockStore) GetTaskByAssetId(assetId uuid.UUID, taskId uuid.UUID) (tp.Task, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if task, ok := m.data["tasks"][taskId.String()]; ok {
@@ -59,7 +59,7 @@ func (m *MockStore) ListTasks() ([]tp.Task, error) {
 	return tasks, nil
 }
 
-func (m *MockStore) ListTasksByAssetId(id tp.UUID) ([]tp.Task, error) {
+func (m *MockStore) ListTasksByAssetId(id uuid.UUID) ([]tp.Task, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var tasks []tp.Task
@@ -71,7 +71,7 @@ func (m *MockStore) ListTasksByAssetId(id tp.UUID) ([]tp.Task, error) {
 	return tasks, nil
 }
 
-func (m *MockStore) UpdateTask(id tp.UUID, task tp.Task) (tp.Task, error) {
+func (m *MockStore) UpdateTask(id uuid.UUID, task tp.Task) (tp.Task, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["tasks"][id.String()]; !ok {

@@ -1,9 +1,11 @@
 package types
 
+import "github.com/google/uuid"
+
 // bit self explanatory, discrete definition of a work order status
 type WorkOrderStatus struct {
-	Title string `json:"title" binding:"required"`
-	Id    UUID   `json:"id" swaggerignore:"true"`
+	Title string    `json:"title" binding:"required"`
+	Id    uuid.UUID `json:"id" swaggerignore:"true"`
 }
 
 // WorkOrderStatus Enum, if you add something here, ensure to add it to ValidWorkOrderStatuses,

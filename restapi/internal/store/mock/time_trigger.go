@@ -18,7 +18,7 @@ func (m *MockStore) CreateTimeTrigger(tt tp.TimeTrigger) (tp.TimeTrigger, error)
 	return tt, nil
 }
 
-func (m *MockStore) DeleteTimeTrigger(id tp.UUID) error {
+func (m *MockStore) DeleteTimeTrigger(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["timeTriggers"][id.String()]; !ok {
@@ -28,7 +28,7 @@ func (m *MockStore) DeleteTimeTrigger(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetTimeTrigger(id tp.UUID) (tp.TimeTrigger, error) {
+func (m *MockStore) GetTimeTrigger(id uuid.UUID) (tp.TimeTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if tt, ok := m.data["timeTriggers"][id.String()]; ok {
@@ -47,7 +47,7 @@ func (m *MockStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
 	return timeTriggers, nil
 }
 
-func (m *MockStore) ListTimeTriggersByTaskId(id tp.UUID) ([]tp.TimeTrigger, error) {
+func (m *MockStore) ListTimeTriggersByTaskId(id uuid.UUID) ([]tp.TimeTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var timeTriggers []tp.TimeTrigger
@@ -59,7 +59,7 @@ func (m *MockStore) ListTimeTriggersByTaskId(id tp.UUID) ([]tp.TimeTrigger, erro
 	return timeTriggers, nil
 }
 
-func (m *MockStore) UpdateTimeTrigger(id tp.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
+func (m *MockStore) UpdateTimeTrigger(id uuid.UUID, tt tp.TimeTrigger) (tp.TimeTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["timeTriggers"][id.String()]; !ok {

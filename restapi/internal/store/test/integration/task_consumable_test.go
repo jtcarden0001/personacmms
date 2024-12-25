@@ -3,6 +3,7 @@ package integration
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -123,7 +124,7 @@ func TestTaskConsumableDeleteNotFound(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	err := store.DeleteTaskConsumable(tp.UUID{}, tp.UUID{})
+	err := store.DeleteTaskConsumable(uuid.UUID{}, uuid.UUID{})
 	if err == nil {
 		t.Errorf("DeleteTaskConsumable() should have failed")
 	}
@@ -136,8 +137,8 @@ func TestTaskConsumableUpdateNotFound(t *testing.T) {
 	defer utest.CloseStore(store, dbname)
 
 	at := tp.TaskConsumable{
-		TaskId:       tp.UUID{},
-		ConsumableId: tp.UUID{},
+		TaskId:       uuid.UUID{},
+		ConsumableId: uuid.UUID{},
 		QuantityNote: "1",
 	}
 	_, err := store.UpdateTaskConsumable(at)

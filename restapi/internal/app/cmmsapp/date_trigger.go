@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
+	if dateTrigger.Id != uuid.Nil {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be nil on create, we will create an id for you")
+	}
+	dateTrigger.Id = uuid.New()
+
 	return tp.DateTrigger{}, ae.New(ae.CodeNotImplemented, "CreateDateTrigger not implemented")
 }
 

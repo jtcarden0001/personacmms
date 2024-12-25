@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -63,7 +64,7 @@ func TestDateTriggerDeleteNotFound(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	err := store.DeleteDateTrigger(tp.UUID{})
+	err := store.DeleteDateTrigger(uuid.UUID{})
 	if err == nil {
 		t.Errorf("DeleteDateTrigger() should have failed")
 	}
@@ -84,7 +85,7 @@ func TestDateTriggerList(t *testing.T) {
 		t.Errorf("ListDateTriggers() failed: %v", err)
 	}
 
-	triggerMap := make(map[tp.UUID]tp.DateTrigger)
+	triggerMap := make(map[uuid.UUID]tp.DateTrigger)
 	for _, trigger := range dts {
 		triggerMap[trigger.Id] = trigger
 	}
@@ -164,9 +165,9 @@ func TestDateTriggerUpdateNotFound(t *testing.T) {
 	defer utest.CloseStore(store, dbName)
 
 	dt := tp.DateTrigger{
-		Id:     tp.UUID{},
+		Id:     uuid.UUID{},
 		Date:   time.Now().AddDate(1, 0, 0),
-		TaskId: tp.UUID{},
+		TaskId: uuid.UUID{},
 	}
 	_, err := store.UpdateDateTrigger(dt.Id, dt)
 	if err == nil {

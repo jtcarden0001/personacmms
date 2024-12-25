@@ -3,7 +3,6 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
@@ -12,8 +11,6 @@ import (
 var assetTableName = "asset"
 
 func (pg *PostgresStore) CreateAsset(asset tp.Asset) (tp.Asset, error) {
-	asset.Id = uuid.New()
-	// TODO: make this line length more tenable
 	query := fmt.Sprintf(`
 		INSERT INTO %s (
 			id, title, group_title, year, make, model_number, serial_number, description, category_title

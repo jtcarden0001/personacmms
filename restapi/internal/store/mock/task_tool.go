@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -17,7 +18,7 @@ func (m *MockStore) CreateTaskTool(tt tp.TaskTool) (tp.TaskTool, error) {
 	return tt, nil
 }
 
-func (m *MockStore) DeleteTaskTool(taskId, toolId tp.UUID) error {
+func (m *MockStore) DeleteTaskTool(taskId, toolId uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	id := taskId.String() + toolId.String()
@@ -28,7 +29,7 @@ func (m *MockStore) DeleteTaskTool(taskId, toolId tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetTaskTool(taskId, toolId tp.UUID) (tp.TaskTool, error) {
+func (m *MockStore) GetTaskTool(taskId, toolId uuid.UUID) (tp.TaskTool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	id := taskId.String() + toolId.String()
@@ -48,7 +49,7 @@ func (m *MockStore) ListTaskTools() ([]tp.TaskTool, error) {
 	return taskTools, nil
 }
 
-func (m *MockStore) ListTaskToolsByTaskId(taskId tp.UUID) ([]tp.TaskTool, error) {
+func (m *MockStore) ListTaskToolsByTaskId(taskId uuid.UUID) ([]tp.TaskTool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var taskTools []tp.TaskTool

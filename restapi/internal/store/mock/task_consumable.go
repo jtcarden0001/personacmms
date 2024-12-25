@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -17,7 +18,7 @@ func (m *MockStore) CreateTaskConsumable(tc tp.TaskConsumable) (tp.TaskConsumabl
 	return tc, nil
 }
 
-func (m *MockStore) DeleteTaskConsumable(taskId, consumableId tp.UUID) error {
+func (m *MockStore) DeleteTaskConsumable(taskId, consumableId uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	id := taskId.String() + consumableId.String()
@@ -28,7 +29,7 @@ func (m *MockStore) DeleteTaskConsumable(taskId, consumableId tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetTaskConsumable(taskId, consumableId tp.UUID) (tp.TaskConsumable, error) {
+func (m *MockStore) GetTaskConsumable(taskId, consumableId uuid.UUID) (tp.TaskConsumable, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	id := taskId.String() + consumableId.String()
@@ -48,7 +49,7 @@ func (m *MockStore) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 	return taskConsumables, nil
 }
 
-func (m *MockStore) ListTaskConsumablesByTaskId(taskId tp.UUID) ([]tp.TaskConsumable, error) {
+func (m *MockStore) ListTaskConsumablesByTaskId(taskId uuid.UUID) ([]tp.TaskConsumable, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var taskConsumables []tp.TaskConsumable

@@ -18,7 +18,7 @@ func (m *MockStore) CreateUsageTrigger(ut tp.UsageTrigger) (tp.UsageTrigger, err
 	return ut, nil
 }
 
-func (m *MockStore) DeleteUsageTrigger(id tp.UUID) error {
+func (m *MockStore) DeleteUsageTrigger(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["usageTriggers"][id.String()]; !ok {
@@ -28,7 +28,7 @@ func (m *MockStore) DeleteUsageTrigger(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetUsageTrigger(id tp.UUID) (tp.UsageTrigger, error) {
+func (m *MockStore) GetUsageTrigger(id uuid.UUID) (tp.UsageTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if ut, ok := m.data["usageTriggers"][id.String()]; ok {
@@ -47,7 +47,7 @@ func (m *MockStore) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	return usageTriggers, nil
 }
 
-func (m *MockStore) ListUsageTriggersByTaskId(id tp.UUID) ([]tp.UsageTrigger, error) {
+func (m *MockStore) ListUsageTriggersByTaskId(id uuid.UUID) ([]tp.UsageTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var usageTriggers []tp.UsageTrigger
@@ -59,7 +59,7 @@ func (m *MockStore) ListUsageTriggersByTaskId(id tp.UUID) ([]tp.UsageTrigger, er
 	return usageTriggers, nil
 }
 
-func (m *MockStore) UpdateUsageTrigger(id tp.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
+func (m *MockStore) UpdateUsageTrigger(id uuid.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["usageTriggers"][id.String()]; !ok {

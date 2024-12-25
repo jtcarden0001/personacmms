@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -14,6 +15,11 @@ func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId strin
 }
 
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
+	if consumable.Id != uuid.Nil {
+		return tp.Consumable{}, ae.New(ae.CodeInvalid, "consumable id must be nil on create, we will create an id for you")
+	}
+	consumable.Id = uuid.New()
+
 	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "CreateConsumable not implemented")
 }
 

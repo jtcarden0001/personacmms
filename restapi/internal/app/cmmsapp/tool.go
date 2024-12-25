@@ -15,6 +15,11 @@ func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, too
 }
 
 func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
+	if tool.Id != uuid.Nil {
+		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be nil on create, we will create an id for you")
+	}
+	tool.Id = uuid.New()
+
 	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "CreateTool not implemented")
 }
 

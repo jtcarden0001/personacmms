@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
+	if cat.Id != uuid.Nil {
+		return tp.Category{}, ae.New(ae.CodeInvalid, "category id must be nil on create, we will create an id for you")
+	}
+	cat.Id = uuid.New()
+
 	return tp.Category{}, ae.New(ae.CodeNotImplemented, "CreateCategory not implemented")
 }
 

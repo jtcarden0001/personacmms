@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateTimeTrigger(assetId string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
+	if timeTrigger.Id != uuid.Nil {
+		return tp.TimeTrigger{}, ae.New(ae.CodeInvalid, "timeTrigger id must be nil on create, we will create an id for you")
+	}
+	timeTrigger.Id = uuid.New()
+
 	return tp.TimeTrigger{}, ae.New(ae.CodeNotImplemented, "CreateTimeTrigger not implemented")
 }
 

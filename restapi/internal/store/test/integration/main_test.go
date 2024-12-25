@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/google/uuid"
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
@@ -50,7 +51,7 @@ func setupCategory(t *testing.T, store st.Store, identifier string) string {
 	return category.Title
 }
 
-func setupConsumable(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupConsumable(t *testing.T, store st.Store, identifier string) uuid.UUID {
 	consumable := tp.Consumable{
 		Title: fmt.Sprintf("Consumable %s", identifier),
 	}
@@ -61,7 +62,7 @@ func setupConsumable(t *testing.T, store st.Store, identifier string) tp.UUID {
 	return consumable.Id
 }
 
-func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupTool(t *testing.T, store st.Store, identifier string) uuid.UUID {
 	tool := tp.Tool{
 		Title: fmt.Sprintf("Tool %s", identifier),
 		Size:  utest.ToPtr(fmt.Sprintf("Tool %s Size", identifier)),
@@ -73,7 +74,7 @@ func setupTool(t *testing.T, store st.Store, identifier string) tp.UUID {
 	return tool.Id
 }
 
-func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupAsset(t *testing.T, store st.Store, identifier string) uuid.UUID {
 	groupTitle := setupGroup(t, store, identifier)
 	categoryTitle := setupCategory(t, store, identifier)
 	asset := tp.Asset{
@@ -89,7 +90,7 @@ func setupAsset(t *testing.T, store st.Store, identifier string) tp.UUID {
 	return asset.Id
 }
 
-func setupTaskTemplate(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupTaskTemplate(t *testing.T, store st.Store, identifier string) uuid.UUID {
 	task := tp.TaskTemplate{
 		Title:       fmt.Sprintf("Task %s", identifier),
 		Description: utest.ToPtr(fmt.Sprintf("Task %s description", identifier)),
@@ -102,7 +103,7 @@ func setupTaskTemplate(t *testing.T, store st.Store, identifier string) tp.UUID 
 	return task.Id
 }
 
-func setupTask(t *testing.T, store st.Store, identifier string) tp.UUID {
+func setupTask(t *testing.T, store st.Store, identifier string) uuid.UUID {
 	assetId := setupAsset(t, store, identifier)
 	taskId := setupTaskTemplate(t, store, identifier)
 	assetTask := tp.Task{

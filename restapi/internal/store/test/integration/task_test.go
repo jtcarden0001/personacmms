@@ -3,6 +3,7 @@ package integration
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -66,7 +67,7 @@ func TestTaskDeleteNotFound(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	err := store.DeleteTask(tp.UUID{})
+	err := store.DeleteTask(uuid.UUID{})
 	if err == nil {
 		t.Errorf("DeleteTask() should have failed")
 	}
@@ -185,11 +186,11 @@ func TestTaskUpdateNotFound(t *testing.T) {
 	defer utest.CloseStore(store, dbname)
 
 	at := tp.Task{
-		Id:             tp.UUID{},
+		Id:             uuid.UUID{},
 		Title:          "testtask1",
 		Instructions:   utest.ToPtr("test instructions"),
-		AssetId:        tp.UUID{},
-		TaskTemplateId: utest.ToPtr(tp.UUID{}),
+		AssetId:        uuid.UUID{},
+		TaskTemplateId: utest.ToPtr(uuid.UUID{}),
 	}
 	_, err := store.UpdateTask(at.Id, at)
 	if err == nil {

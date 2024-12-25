@@ -84,7 +84,7 @@ func TestUsageTriggerList(t *testing.T) {
 	}
 
 	// make a map utId -> ut
-	utMap := make(map[tp.UUID]tp.UsageTrigger)
+	utMap := make(map[uuid.UUID]tp.UsageTrigger)
 	for _, ut := range uts {
 		utMap[ut.Id] = ut
 	}

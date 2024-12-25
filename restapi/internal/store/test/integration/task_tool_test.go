@@ -3,6 +3,7 @@ package integration
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -121,7 +122,7 @@ func TestTaskToolDeleteNotFound(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	err := store.DeleteTaskTool(tp.UUID{}, tp.UUID{})
+	err := store.DeleteTaskTool(uuid.UUID{}, uuid.UUID{})
 	if err == nil {
 		t.Errorf("DeleteTaskTool() should have failed")
 	}

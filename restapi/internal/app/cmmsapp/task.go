@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateTask(assetId string, task tp.Task) (tp.Task, error) {
+	if task.Id != uuid.Nil {
+		return tp.Task{}, ae.New(ae.CodeInvalid, "task id must be nil on create, we will create an id for you")
+	}
+	task.Id = uuid.New()
+
 	return tp.Task{}, ae.New(ae.CodeNotImplemented, "CreateTask not implemented")
 }
 

@@ -7,6 +7,11 @@ import (
 )
 
 func (a *App) CreateGroup(grp tp.Group) (tp.Group, error) {
+	if grp.Id != uuid.Nil {
+		return tp.Group{}, ae.New(ae.CodeInvalid, "group id must be nil on create, we will create an id for you")
+	}
+	grp.Id = uuid.New()
+
 	return tp.Group{}, ae.New(ae.CodeNotImplemented, "CreateGroup not implemented")
 }
 

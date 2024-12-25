@@ -34,11 +34,11 @@ type Store interface {
 
 	// date trigger
 	CreateDateTrigger(tp.DateTrigger) (tp.DateTrigger, error)
-	DeleteDateTrigger(tp.UUID) error
-	GetDateTrigger(tp.UUID) (tp.DateTrigger, error)
+	DeleteDateTrigger(uuid.UUID) error
+	GetDateTrigger(uuid.UUID) (tp.DateTrigger, error)
 	ListDateTriggers() ([]tp.DateTrigger, error)
-	ListDateTriggersByTaskId(tp.UUID) ([]tp.DateTrigger, error)
-	UpdateDateTrigger(tp.UUID, tp.DateTrigger) (tp.DateTrigger, error)
+	ListDateTriggersByTaskId(uuid.UUID) ([]tp.DateTrigger, error)
+	UpdateDateTrigger(uuid.UUID, tp.DateTrigger) (tp.DateTrigger, error)
 
 	// group
 	CreateGroup(tp.Group) (tp.Group, error)
@@ -49,19 +49,19 @@ type Store interface {
 
 	// task
 	CreateTask(tp.Task) (tp.Task, error)
-	DeleteTask(tp.UUID) error
-	GetTask(tp.UUID) (tp.Task, error)
-	GetTaskByAssetId(tp.UUID, tp.UUID) (tp.Task, error)
+	DeleteTask(uuid.UUID) error
+	GetTask(uuid.UUID) (tp.Task, error)
+	GetTaskByAssetId(uuid.UUID, uuid.UUID) (tp.Task, error)
 	ListTasks() ([]tp.Task, error)
-	ListTasksByAssetId(tp.UUID) ([]tp.Task, error)
-	UpdateTask(tp.UUID, tp.Task) (tp.Task, error)
+	ListTasksByAssetId(uuid.UUID) ([]tp.Task, error)
+	UpdateTask(uuid.UUID, tp.Task) (tp.Task, error)
 
 	// task consumable
 	CreateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
-	DeleteTaskConsumable(tp.UUID, tp.UUID) error
-	GetTaskConsumable(tp.UUID, tp.UUID) (tp.TaskConsumable, error)
+	DeleteTaskConsumable(uuid.UUID, uuid.UUID) error
+	GetTaskConsumable(uuid.UUID, uuid.UUID) (tp.TaskConsumable, error)
 	ListTaskConsumables() ([]tp.TaskConsumable, error)
-	ListTaskConsumablesByTaskId(tp.UUID) ([]tp.TaskConsumable, error)
+	ListTaskConsumablesByTaskId(uuid.UUID) ([]tp.TaskConsumable, error)
 	UpdateTaskConsumable(tp.TaskConsumable) (tp.TaskConsumable, error)
 
 	// task template
@@ -73,24 +73,24 @@ type Store interface {
 
 	// task tool
 	CreateTaskTool(tp.TaskTool) (tp.TaskTool, error)
-	DeleteTaskTool(tp.UUID, tp.UUID) error
-	GetTaskTool(tp.UUID, tp.UUID) (tp.TaskTool, error)
+	DeleteTaskTool(uuid.UUID, uuid.UUID) error
+	GetTaskTool(uuid.UUID, uuid.UUID) (tp.TaskTool, error)
 	ListTaskTools() ([]tp.TaskTool, error)
-	ListTaskToolsByTaskId(tp.UUID) ([]tp.TaskTool, error)
+	ListTaskToolsByTaskId(uuid.UUID) ([]tp.TaskTool, error)
 
 	// time trigger
 	CreateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
-	DeleteTimeTrigger(tp.UUID) error
-	GetTimeTrigger(tp.UUID) (tp.TimeTrigger, error)
+	DeleteTimeTrigger(uuid.UUID) error
+	GetTimeTrigger(uuid.UUID) (tp.TimeTrigger, error)
 	ListTimeTriggers() ([]tp.TimeTrigger, error)
-	UpdateTimeTrigger(tp.UUID, tp.TimeTrigger) (tp.TimeTrigger, error)
+	UpdateTimeTrigger(uuid.UUID, tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// time unit
 	CreateTimeUnit(tp.TimeUnit) (tp.TimeUnit, error)
 	DeleteTimeUnit(string) error
 	GetTimeUnit(string) (tp.TimeUnit, error)
 	ListTimeUnits() ([]tp.TimeUnit, error)
-	ListTimeTriggersByTaskId(tp.UUID) ([]tp.TimeTrigger, error)
+	ListTimeTriggersByTaskId(uuid.UUID) ([]tp.TimeTrigger, error)
 	UpdateTimeUnit(string, tp.TimeUnit) (tp.TimeUnit, error)
 
 	// tool
@@ -103,11 +103,11 @@ type Store interface {
 
 	// usage trigger
 	CreateUsageTrigger(tp.UsageTrigger) (tp.UsageTrigger, error)
-	DeleteUsageTrigger(tp.UUID) error
-	GetUsageTrigger(tp.UUID) (tp.UsageTrigger, error)
+	DeleteUsageTrigger(uuid.UUID) error
+	GetUsageTrigger(uuid.UUID) (tp.UsageTrigger, error)
 	ListUsageTriggers() ([]tp.UsageTrigger, error)
-	ListUsageTriggersByTaskId(tp.UUID) ([]tp.UsageTrigger, error)
-	UpdateUsageTrigger(tp.UUID, tp.UsageTrigger) (tp.UsageTrigger, error)
+	ListUsageTriggersByTaskId(uuid.UUID) ([]tp.UsageTrigger, error)
+	UpdateUsageTrigger(uuid.UUID, tp.UsageTrigger) (tp.UsageTrigger, error)
 
 	// usage unit
 	CreateUsageUnit(tp.UsageUnit) (tp.UsageUnit, error)
@@ -118,12 +118,12 @@ type Store interface {
 
 	// work order
 	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteWorkOrder(tp.UUID) error
-	GetWorkOrder(tp.UUID) (tp.WorkOrder, error)
-	GetWorkOrderForTask(tp.UUID, tp.UUID) (tp.WorkOrder, error)
+	DeleteWorkOrder(uuid.UUID) error
+	GetWorkOrder(uuid.UUID) (tp.WorkOrder, error)
+	GetWorkOrderForTask(uuid.UUID, uuid.UUID) (tp.WorkOrder, error)
 	ListWorkOrders() ([]tp.WorkOrder, error)
-	ListWorkOrdersByTaskId(tp.UUID) ([]tp.WorkOrder, error)
-	UpdateWorkOrder(tp.UUID, tp.WorkOrder) (tp.WorkOrder, error)
+	ListWorkOrdersByTaskId(uuid.UUID) ([]tp.WorkOrder, error)
+	UpdateWorkOrder(uuid.UUID, tp.WorkOrder) (tp.WorkOrder, error)
 
 	// work order status
 	CreateWorkOrderStatus(tp.WorkOrderStatus) (tp.WorkOrderStatus, error)

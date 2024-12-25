@@ -18,7 +18,7 @@ func (m *MockStore) CreateDateTrigger(dt tp.DateTrigger) (tp.DateTrigger, error)
 	return dt, nil
 }
 
-func (m *MockStore) DeleteDateTrigger(id tp.UUID) error {
+func (m *MockStore) DeleteDateTrigger(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["dateTriggers"][id.String()]; !ok {
@@ -28,7 +28,7 @@ func (m *MockStore) DeleteDateTrigger(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetDateTrigger(id tp.UUID) (tp.DateTrigger, error) {
+func (m *MockStore) GetDateTrigger(id uuid.UUID) (tp.DateTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if dt, ok := m.data["dateTriggers"][id.String()]; ok {
@@ -47,7 +47,7 @@ func (m *MockStore) ListDateTriggers() ([]tp.DateTrigger, error) {
 	return dateTriggers, nil
 }
 
-func (m *MockStore) ListDateTriggersByTaskId(id tp.UUID) ([]tp.DateTrigger, error) {
+func (m *MockStore) ListDateTriggersByTaskId(id uuid.UUID) ([]tp.DateTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var dateTriggers []tp.DateTrigger
@@ -59,7 +59,7 @@ func (m *MockStore) ListDateTriggersByTaskId(id tp.UUID) ([]tp.DateTrigger, erro
 	return dateTriggers, nil
 }
 
-func (m *MockStore) UpdateDateTrigger(id tp.UUID, dt tp.DateTrigger) (tp.DateTrigger, error) {
+func (m *MockStore) UpdateDateTrigger(id uuid.UUID, dt tp.DateTrigger) (tp.DateTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["dateTriggers"][id.String()]; !ok {

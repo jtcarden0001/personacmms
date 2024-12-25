@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
@@ -20,7 +21,7 @@ func (pg *PostgresStore) CreateTaskConsumable(consumable tp.TaskConsumable) (tp.
 	return consumable, nil
 }
 
-func (pg *PostgresStore) DeleteTaskConsumable(atId, cId tp.UUID) error {
+func (pg *PostgresStore) DeleteTaskConsumable(atId, cId uuid.UUID) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE task_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
 	result, err := pg.db.Exec(query, atId, cId)
 	if err != nil {
@@ -36,7 +37,7 @@ func (pg *PostgresStore) DeleteTaskConsumable(atId, cId tp.UUID) error {
 	return nil
 }
 
-func (pg *PostgresStore) GetTaskConsumable(atId, cId tp.UUID) (tp.TaskConsumable, error) {
+func (pg *PostgresStore) GetTaskConsumable(atId, cId uuid.UUID) (tp.TaskConsumable, error) {
 	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s WHERE task_id = $1 AND consumable_id = $2", assetTaskConsumableTable)
 	var e tp.TaskConsumable
 	err := pg.db.QueryRow(query, atId, cId).Scan(&e.TaskId, &e.ConsumableId, &e.QuantityNote)
@@ -69,7 +70,7 @@ func (pg *PostgresStore) ListTaskConsumables() ([]tp.TaskConsumable, error) {
 }
 
 // TODO: add testing for this
-func (pg *PostgresStore) ListTaskConsumablesByTaskId(atId tp.UUID) ([]tp.TaskConsumable, error) {
+func (pg *PostgresStore) ListTaskConsumablesByTaskId(atId uuid.UUID) ([]tp.TaskConsumable, error) {
 	query := fmt.Sprintf("SELECT task_id, consumable_id, quantity_note FROM %s WHERE task_id = $1", assetTaskConsumableTable)
 	rows, err := pg.db.Query(query, atId)
 	if err != nil {

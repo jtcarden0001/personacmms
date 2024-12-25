@@ -82,7 +82,7 @@ func TestWorkOrderList(t *testing.T) {
 		t.Errorf("ListWorkOrders() failed: %v", err)
 	}
 	// make a map
-	wosMap := make(map[tp.UUID]tp.WorkOrder)
+	wosMap := make(map[uuid.UUID]tp.WorkOrder)
 	for _, wo := range wos {
 		wosMap[wo.Id] = wo
 	}
@@ -169,7 +169,7 @@ func TestWorkOrderUpdateNotFound(t *testing.T) {
 }
 
 // different values except assetTaskId and statusTitle
-func getTestWorkOrder(assetTaskId tp.UUID, id int) tp.WorkOrder {
+func getTestWorkOrder(assetTaskId uuid.UUID, id int) tp.WorkOrder {
 	return tp.WorkOrder{
 		CreatedDate:     time.Now().Add(time.Duration(id) * time.Hour),
 		CompletedDate:   func(t time.Time) *time.Time { return &t }(time.Now().Add(time.Duration(id) * time.Hour).UTC().Truncate(time.Millisecond)),

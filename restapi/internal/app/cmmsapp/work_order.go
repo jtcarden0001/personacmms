@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
@@ -10,6 +11,11 @@ func (a *App) AssociateWorkOrderWithTask(assetId string, taskId string, workOrde
 }
 
 func (a *App) CreateWorkOrder(assetId string, taskId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
+	if wo.Id != uuid.Nil {
+		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "work order id must be nil on create, we will create an id for you")
+	}
+	wo.Id = uuid.New()
+
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "CreateWorkOrder not implemented")
 }
 

@@ -18,7 +18,7 @@ func (m *MockStore) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 	return wo, nil
 }
 
-func (m *MockStore) DeleteWorkOrder(id tp.UUID) error {
+func (m *MockStore) DeleteWorkOrder(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["workOrders"][id.String()]; !ok {
@@ -28,7 +28,7 @@ func (m *MockStore) DeleteWorkOrder(id tp.UUID) error {
 	return nil
 }
 
-func (m *MockStore) GetWorkOrder(id tp.UUID) (tp.WorkOrder, error) {
+func (m *MockStore) GetWorkOrder(id uuid.UUID) (tp.WorkOrder, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if wo, ok := m.data["workOrders"][id.String()]; ok {
@@ -37,7 +37,7 @@ func (m *MockStore) GetWorkOrder(id tp.UUID) (tp.WorkOrder, error) {
 	return tp.WorkOrder{}, nil
 }
 
-func (m *MockStore) GetWorkOrderForTask(taskId tp.UUID, woId tp.UUID) (tp.WorkOrder, error) {
+func (m *MockStore) GetWorkOrderForTask(taskId uuid.UUID, woId uuid.UUID) (tp.WorkOrder, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	if wo, ok := m.data["workOrders"][woId.String()]; ok {
@@ -58,7 +58,7 @@ func (m *MockStore) ListWorkOrders() ([]tp.WorkOrder, error) {
 	return workOrders, nil
 }
 
-func (m *MockStore) ListWorkOrdersByTaskId(taskId tp.UUID) ([]tp.WorkOrder, error) {
+func (m *MockStore) ListWorkOrdersByTaskId(taskId uuid.UUID) ([]tp.WorkOrder, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var workOrders []tp.WorkOrder
@@ -70,7 +70,7 @@ func (m *MockStore) ListWorkOrdersByTaskId(taskId tp.UUID) ([]tp.WorkOrder, erro
 	return workOrders, nil
 }
 
-func (m *MockStore) UpdateWorkOrder(id tp.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (m *MockStore) UpdateWorkOrder(id uuid.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, ok := m.data["workOrders"][id.String()]; !ok {

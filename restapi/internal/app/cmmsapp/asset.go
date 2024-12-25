@@ -15,6 +15,11 @@ func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset,
 }
 
 func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
+	if asset.Id != uuid.Nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
+	}
+	asset.Id = uuid.New()
+
 	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "CreateAsset not implemented")
 }
 
