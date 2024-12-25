@@ -6,6 +6,8 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
+// cut out of mvp scope.  Will implement in future.
+
 func (a *App) CreateTaskTemplate(taskTemplate tp.TaskTemplate) (tp.TaskTemplate, error) {
 	return tp.TaskTemplate{}, ae.New(ae.CodeNotImplemented, "CreateTaskTemplate not implemented")
 }

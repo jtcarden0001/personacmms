@@ -28,9 +28,6 @@
     - I can assign an asset to a group
     - I can remove an asset from a group
     - I can see the groups that an asset is assigned
-- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
-    - I can CRUD task templates
-    - I can create a task for an asset using an existing task template as a starting point
 - I can use tasks to digitally represent work for an asset that does not represent a need to do the work
     - I can CRUD tasks
 - I can use work orders to represent work that needs to be done or work that has been done, a work order has to be associated to an asset. Treat a work order as a sub resource of a asset
@@ -56,7 +53,11 @@
 
 ## out of scope
 - I can create a work order not associated with a particular asset.
+- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
+    - I can CRUD task templates
+    - I can create a task for an asset using an existing task template as a starting point
 - we don't need to persist a link between a task template and a task, the task template is just there for convenience.
+- 
 
 # User Stories With Supporting Routes
 ## In Scope
@@ -99,15 +100,6 @@
         - DEL  /groups/{groupId}/assets/{assetId} -> No, seems like it would delete the asset
     - I can see the groups that an asset is assigned
         - GET  /assets/{assetId}/groups
-- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
-    - I can CRUD task templates
-        - POST /task-templates (JSON)
-        - GET  /task-templates/{taskTemplateId}
-        - GET  /task-templates
-        - PUT  /task-templates/{taskTemplateId} (JSON)
-        - DEL  /task-templates/{taskTemplateId}
-    - I can create a task for an asset using an existing task template as a starting point
-        - I don't think we need a path for this, we can list or get a task template and load that into a template that will be used as a partially complete task that can then be posted.
 - I can use tasks to digitally represent work for an asset that does not represent a need to do the work
     - I can CRUD tasks
         - POST /assets/{assetId}/tasks (JSON)
@@ -179,7 +171,16 @@
         - PUT  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
         - DEL  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
 
-
+## Future work
+- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
+    - I can CRUD task templates
+        - POST /task-templates (JSON)
+        - GET  /task-templates/{taskTemplateId}
+        - GET  /task-templates
+        - PUT  /task-templates/{taskTemplateId} (JSON)
+        - DEL  /task-templates/{taskTemplateId}
+    - I can create a task for an asset using an existing task template as a starting point
+        - I don't think we need a path for this, we can list or get a task template and load that into a template that will be used as a partially complete task that can then be posted.
 
 # Architecture
 ## Layering

@@ -1,5 +1,7 @@
 package cmmsapp
 
+// cur out of mvp scope, will implement in future
+
 // func TestCreateTaskTemplate(t *testing.T) {
 // 	db := mock.New()
 // 	app := &App{db: db}
