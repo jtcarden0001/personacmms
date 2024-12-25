@@ -37,7 +37,7 @@ CREATE TABLE agroup_asset (
 CREATE TABLE task (
   id uuid,
   title varchar NOT NULL,
-  unique_instructions varchar,
+  instructions varchar,
   PRIMARY KEY (id)
 );
 
@@ -46,9 +46,11 @@ CREATE TABLE workorder (
   title varchar NOT NULL,
   created_date timestamptz NOT NULL,
   completed_date timestamptz,
+  instructions varchar,
   notes varchar,
   cumulative_miles int, 
   cumulative_hours int,
+  status varchar NOT NULL,
   PRIMARY KEY (id)
 );
 

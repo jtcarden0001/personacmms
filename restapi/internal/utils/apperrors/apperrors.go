@@ -54,18 +54,8 @@ var ErrNotFound = AppError{Code: CodeNotFound, Message: "not found"}
 // dynamic error message generation functions
 func createInvalidUsageUnitTypeMessage() string {
 	prefix := "invalid usage unit type, must be one of:"
-	keys := make([]string, 0, len(tp.ValidUsageUnitTypes))
-	for key := range tp.ValidUsageUnitTypes {
-		keys = append(keys, key)
-	}
-	commaDelimitedString := strings.Join(keys, ", ")
-	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
-}
-
-func CreateInvalidTaskTypeMessage() string {
-	prefix := "invalid task type, must be one of:"
-	keys := make([]string, 0, len(tp.ValidTaskTypes))
-	for key := range tp.ValidTaskTypes {
+	keys := make([]string, 0, len(tp.ValidUsageTriggerUnitTypes))
+	for key := range tp.ValidUsageTriggerUnitTypes {
 		keys = append(keys, key)
 	}
 	commaDelimitedString := strings.Join(keys, ", ")

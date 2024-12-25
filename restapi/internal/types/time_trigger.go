@@ -10,3 +10,10 @@ type TimeTrigger struct {
 	TimeUnit string    `json:"time_unit" binding:"required"`
 	TaskId   uuid.UUID `json:"asset_task_id" swaggerignore:"true"`
 }
+
+const (
+	TimeTriggerUnitDays   = "day"
+	TimeTriggerUnitWeeks  = "week"
+	TimeTriggerUnitMonths = "month"
+	TimeTriggerUnitYears  = "year"
+)
