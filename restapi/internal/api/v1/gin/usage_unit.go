@@ -26,6 +26,6 @@ func (h *Api) registerUsageUnitRoutes() {
 //	@Failure		500	{object}	map[string]any
 //	@Router			/usage-units [get]
 func (h *Api) listUsageUnits(c *gin.Context) {
-	usageUnits, err := h.app.ListUsageUnits()
+	usageUnits, err := h.app.ListUsageTriggerUnits()
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, usageUnits))
 }

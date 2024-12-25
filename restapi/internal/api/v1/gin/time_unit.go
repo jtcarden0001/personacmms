@@ -26,6 +26,6 @@ func (h *Api) registerTimeUnitRoutes() {
 //	@Failure		500	{object}	map[string]any
 //	@Router			/time-units [get]
 func (h *Api) listTimeUnits(c *gin.Context) {
-	timeUnits, err := h.app.ListTimeUnits()
+	timeUnits, err := h.app.ListTimeTriggerUnits()
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeUnits))
 }

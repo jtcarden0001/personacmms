@@ -27,6 +27,10 @@ func (a *App) ListTimeTriggersByAssetAndTask(assetId string, taskId string) ([]t
 	return nil, ae.New(ae.CodeNotImplemented, "ListTimeTriggersByAssetAndTask not implemented")
 }
 
+func (a *App) ListTimeTriggerUnits() ([]string, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListTimeUnits not implemented")
+}
+
 func (a *App) UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
 	return tp.TimeTrigger{}, ae.New(ae.CodeNotImplemented, "UpdateTimeTrigger not implemented")
 }

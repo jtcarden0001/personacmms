@@ -27,6 +27,10 @@ func (a *App) ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]
 	return nil, ae.New(ae.CodeNotImplemented, "ListUsageTriggersByAssetAndTask not implemented")
 }
 
+func (a *App) ListUsageTriggerUnits() ([]string, error) {
+	return nil, ae.New(ae.CodeNotImplemented, "ListUsageUnits not implemented")
+}
+
 func (a *App) UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
 	return tp.UsageTrigger{}, ae.New(ae.CodeNotImplemented, "UpdateUsageTrigger not implemented")
 }

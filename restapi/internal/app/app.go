@@ -64,22 +64,20 @@ type App interface {
 	ListTasksByAsset(string) ([]tp.Task, error)
 	UpdateTask(string, string, tp.Task) (tp.Task, error)
 
-	// task template
-	CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
-	DeleteTaskTemplate(string) error
-	GetTaskTemplate(string) (tp.TaskTemplate, error)
-	ListTaskTemplates() ([]tp.TaskTemplate, error)
-	UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
+	// // task template - cut out of mvp scope, but will be implemented in future
+	// CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
+	// DeleteTaskTemplate(string) error
+	// GetTaskTemplate(string) (tp.TaskTemplate, error)
+	// ListTaskTemplates() ([]tp.TaskTemplate, error)
+	// UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
 
 	// time trigger
 	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 	DeleteTimeTrigger(string, string, string) error
 	GetTimeTrigger(string, string, string) (tp.TimeTrigger, error)
 	ListTimeTriggersByAssetAndTask(string, string) ([]tp.TimeTrigger, error)
+	ListTimeTriggerUnits() ([]string, error)
 	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
-
-	// time unit
-	ListTimeUnits() ([]tp.TimeUnit, error)
 
 	// tool
 	AssociateToolWithTask(string, string, string) (tp.Tool, error)
@@ -97,13 +95,8 @@ type App interface {
 	DeleteUsageTrigger(string, string, string) error
 	GetUsageTrigger(string, string, string) (tp.UsageTrigger, error)
 	ListUsageTriggersByAssetAndTask(string, string) ([]tp.UsageTrigger, error)
+	ListUsageTriggerUnits() ([]string, error)
 	UpdateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
-
-	// usage unit
-	ListUsageUnits() ([]tp.UsageUnit, error)
-
-	// work order status
-	ListWorkOrderStatus() ([]tp.WorkOrderStatus, error)
 
 	// work order
 	AssociateWorkOrderWithTask(string, string, string) (tp.WorkOrder, error)
@@ -112,6 +105,7 @@ type App interface {
 	DisassociateWorkOrderWithTask(string, string, string) error
 	GetWorkOrder(string, string, string) (tp.WorkOrder, error)
 	ListWorkOrders(string, string) ([]tp.WorkOrder, error)
+	ListWorkOrderStatus() ([]string, error)
 	UpdateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
