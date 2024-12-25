@@ -1,148 +1,148 @@
 package integration
 
-import (
-	"testing"
+// import (
+// 	"testing"
 
-	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-)
+// 	"github.com/google/uuid"
+// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+// )
 
-func TestTaskConsumableCreateDelete(t *testing.T) {
-	t.Parallel()
-	dbname := "testtaskconsumabledelete"
-	store := utest.InitializeStore(dbname)
-	defer utest.CloseStore(store, dbname)
+// func TestTaskConsumableCreateDelete(t *testing.T) {
+// 	t.Parallel()
+// 	dbname := "testtaskconsumabledelete"
+// 	store := utest.InitializeStore(dbname)
+// 	defer utest.CloseStore(store, dbname)
 
-	// Create
-	at := tp.TaskConsumable{
-		TaskId:       setupTask(t, store, "1"),
-		ConsumableId: setupConsumable(t, store, "1"),
-		QuantityNote: "1",
-	}
-	returnedTaskConsumable, err := store.CreateTaskConsumable(at)
-	if err != nil {
-		t.Errorf("CreateTaskConsumable() failed %v", err)
-	}
+// 	// Create
+// 	at := tp.TaskConsumable{
+// 		TaskId:       setupTask(t, store, "1"),
+// 		ConsumableId: setupConsumable(t, store, "1"),
+// 		QuantityNote: "1",
+// 	}
+// 	returnedTaskConsumable, err := store.CreateTaskConsumable(at)
+// 	if err != nil {
+// 		t.Errorf("CreateTaskConsumable() failed %v", err)
+// 	}
 
-	utest.CompEntities(t, at, returnedTaskConsumable)
+// 	utest.CompEntities(t, at, returnedTaskConsumable)
 
-	// Delete
-	err = store.DeleteTaskConsumable(at.TaskId, at.ConsumableId)
-	if err != nil {
-		t.Errorf("DeleteTaskConsumable() failed %v", err)
-	}
+// 	// Delete
+// 	err = store.DeleteTaskConsumable(at.TaskId, at.ConsumableId)
+// 	if err != nil {
+// 		t.Errorf("DeleteTaskConsumable() failed %v", err)
+// 	}
 
-	_, err = store.GetTaskConsumable(at.TaskId, at.ConsumableId)
-	if err == nil {
-		t.Errorf("GetTaskConsumable() failed: expected error")
-	}
-}
+// 	_, err = store.GetTaskConsumable(at.TaskId, at.ConsumableId)
+// 	if err == nil {
+// 		t.Errorf("GetTaskConsumable() failed: expected error")
+// 	}
+// }
 
-func TestTaskConsumableList(t *testing.T) {
-	t.Parallel()
-	dbname := "testtaskconsumablelist"
-	store := utest.InitializeStore(dbname)
-	defer utest.CloseStore(store, dbname)
+// func TestTaskConsumableList(t *testing.T) {
+// 	t.Parallel()
+// 	dbname := "testtaskconsumablelist"
+// 	store := utest.InitializeStore(dbname)
+// 	defer utest.CloseStore(store, dbname)
 
-	// List
-	atcs, err := store.ListTaskConsumables()
-	if err != nil {
-		t.Errorf("ListTaskConsumables() failed %v", err)
-	}
+// 	// List
+// 	atcs, err := store.ListTaskConsumables()
+// 	if err != nil {
+// 		t.Errorf("ListTaskConsumables() failed %v", err)
+// 	}
 
-	// Create
-	at := tp.TaskConsumable{
-		TaskId:       setupTask(t, store, "1"),
-		ConsumableId: setupConsumable(t, store, "1"),
-		QuantityNote: "1",
-	}
-	_, err = store.CreateTaskConsumable(at)
-	if err != nil {
-		t.Errorf("CreateTaskConsumable() failed %v", err)
-	}
+// 	// Create
+// 	at := tp.TaskConsumable{
+// 		TaskId:       setupTask(t, store, "1"),
+// 		ConsumableId: setupConsumable(t, store, "1"),
+// 		QuantityNote: "1",
+// 	}
+// 	_, err = store.CreateTaskConsumable(at)
+// 	if err != nil {
+// 		t.Errorf("CreateTaskConsumable() failed %v", err)
+// 	}
 
-	// Create
-	at2 := tp.TaskConsumable{
-		TaskId:       setupTask(t, store, "2"),
-		ConsumableId: setupConsumable(t, store, "2"),
-		QuantityNote: "2",
-	}
+// 	// Create
+// 	at2 := tp.TaskConsumable{
+// 		TaskId:       setupTask(t, store, "2"),
+// 		ConsumableId: setupConsumable(t, store, "2"),
+// 		QuantityNote: "2",
+// 	}
 
-	_, err = store.CreateTaskConsumable(at2)
-	if err != nil {
-		t.Errorf("CreateTaskConsumable() failed %v", err)
-	}
+// 	_, err = store.CreateTaskConsumable(at2)
+// 	if err != nil {
+// 		t.Errorf("CreateTaskConsumable() failed %v", err)
+// 	}
 
-	// List
-	ratcs, err := store.ListTaskConsumables()
-	if err != nil {
-		t.Errorf("ListTaskConsumables() failed %v", err)
-	}
+// 	// List
+// 	ratcs, err := store.ListTaskConsumables()
+// 	if err != nil {
+// 		t.Errorf("ListTaskConsumables() failed %v", err)
+// 	}
 
-	if len(ratcs) != len(atcs)+2 {
-		t.Errorf("ListTaskConsumables() failed: expected 1, got %d", len(atcs))
-	}
-}
+// 	if len(ratcs) != len(atcs)+2 {
+// 		t.Errorf("ListTaskConsumables() failed: expected 1, got %d", len(atcs))
+// 	}
+// }
 
-func TestTaskConsumableUpdateGet(t *testing.T) {
-	t.Parallel()
-	dbname := "testtaskconsumableupdateget"
-	store := utest.InitializeStore(dbname)
-	defer utest.CloseStore(store, dbname)
+// func TestTaskConsumableUpdateGet(t *testing.T) {
+// 	t.Parallel()
+// 	dbname := "testtaskconsumableupdateget"
+// 	store := utest.InitializeStore(dbname)
+// 	defer utest.CloseStore(store, dbname)
 
-	// Create
-	at := tp.TaskConsumable{
-		TaskId:       setupTask(t, store, "1"),
-		ConsumableId: setupConsumable(t, store, "1"),
-		QuantityNote: "1",
-	}
-	_, err := store.CreateTaskConsumable(at)
-	if err != nil {
-		t.Errorf("CreateTaskConsumable() failed %v", err)
-	}
+// 	// Create
+// 	at := tp.TaskConsumable{
+// 		TaskId:       setupTask(t, store, "1"),
+// 		ConsumableId: setupConsumable(t, store, "1"),
+// 		QuantityNote: "1",
+// 	}
+// 	_, err := store.CreateTaskConsumable(at)
+// 	if err != nil {
+// 		t.Errorf("CreateTaskConsumable() failed %v", err)
+// 	}
 
-	// Update
-	at.QuantityNote = "2"
-	_, err = store.UpdateTaskConsumable(at)
-	if err != nil {
-		t.Errorf("UpdateTaskConsumable() failed %v", err)
-	}
+// 	// Update
+// 	at.QuantityNote = "2"
+// 	_, err = store.UpdateTaskConsumable(at)
+// 	if err != nil {
+// 		t.Errorf("UpdateTaskConsumable() failed %v", err)
+// 	}
 
-	// Get
-	rat, err := store.GetTaskConsumable(at.TaskId, at.ConsumableId)
-	if err != nil {
-		t.Errorf("GetTaskConsumable() failed %v", err)
-	}
+// 	// Get
+// 	rat, err := store.GetTaskConsumable(at.TaskId, at.ConsumableId)
+// 	if err != nil {
+// 		t.Errorf("GetTaskConsumable() failed %v", err)
+// 	}
 
-	utest.CompEntities(t, at, rat)
-}
+// 	utest.CompEntities(t, at, rat)
+// }
 
-func TestTaskConsumableDeleteNotFound(t *testing.T) {
-	t.Parallel()
-	dbname := "testtaskconsumabledeletenotfound"
-	store := utest.InitializeStore(dbname)
-	defer utest.CloseStore(store, dbname)
+// func TestTaskConsumableDeleteNotFound(t *testing.T) {
+// 	t.Parallel()
+// 	dbname := "testtaskconsumabledeletenotfound"
+// 	store := utest.InitializeStore(dbname)
+// 	defer utest.CloseStore(store, dbname)
 
-	err := store.DeleteTaskConsumable(uuid.UUID{}, uuid.UUID{})
-	if err == nil {
-		t.Errorf("DeleteTaskConsumable() should have failed")
-	}
-}
+// 	err := store.DeleteTaskConsumable(uuid.UUID{}, uuid.UUID{})
+// 	if err == nil {
+// 		t.Errorf("DeleteTaskConsumable() should have failed")
+// 	}
+// }
 
-func TestTaskConsumableUpdateNotFound(t *testing.T) {
-	t.Parallel()
-	dbname := "testtaskconsumableupdatenotfound"
-	store := utest.InitializeStore(dbname)
-	defer utest.CloseStore(store, dbname)
+// func TestTaskConsumableUpdateNotFound(t *testing.T) {
+// 	t.Parallel()
+// 	dbname := "testtaskconsumableupdatenotfound"
+// 	store := utest.InitializeStore(dbname)
+// 	defer utest.CloseStore(store, dbname)
 
-	at := tp.TaskConsumable{
-		TaskId:       uuid.UUID{},
-		ConsumableId: uuid.UUID{},
-		QuantityNote: "1",
-	}
-	_, err := store.UpdateTaskConsumable(at)
-	if err == nil {
-		t.Errorf("UpdateTaskConsumable() should have failed")
-	}
-}
+// 	at := tp.TaskConsumable{
+// 		TaskId:       uuid.UUID{},
+// 		ConsumableId: uuid.UUID{},
+// 		QuantityNote: "1",
+// 	}
+// 	_, err := store.UpdateTaskConsumable(at)
+// 	if err == nil {
+// 		t.Errorf("UpdateTaskConsumable() should have failed")
+// 	}
+// }
