@@ -50,7 +50,13 @@ CREATE TABLE workorder (
   notes varchar,
   cumulative_miles int, 
   cumulative_hours int,
-  status varchar NOT NULL,
+  status_id uuid NOT NULL REFERENCES workorderstatus(id),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE workorderstatus (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
 
@@ -97,16 +103,28 @@ CREATE TABLE workorder_consumable (
 CREATE TABLE timetrigger (
   id uuid,
   quantity int NOT NULL,
-  timeunit varchar NOT NULL, -- managed by application
+  timeunit_id uuid NOT NULL REFERENCES timeunit(id), -- managed by application
   task_id uuid NOT NULL REFERENCES task(id),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE timeunit (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE usagetrigger (
   id uuid,
   quantity int NOT NULL,
-  usageunit varchar NOT NULL, -- managed by application
+  usageunit_id uuid NOT NULL REFERENCES usageunit(id), -- managed by application
   task_id uuid NOT NULL REFERENCES task(id),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE usageunit (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
 
@@ -116,5 +134,24 @@ CREATE TABLE datetrigger (
   task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
+
+------ seed data
+
+-- timeunit
+INSERT INTO timeunit (id, title) VALUES ('A8208F4-D335-4706-9EC0-E228832BA0FE', 'day');
+INSERT INTO timeunit (id, title) VALUES ('B8208F4-D335-4706-9EC0-E228832BA0FE', 'week');
+INSERT INTO timeunit (id, title) VALUES ('C8208F4-D335-4706-9EC0-E228832BA0FE', 'month');
+INSERT INTO timeunit (id, title) VALUES ('D8208F4-D335-4706-9EC0-E228832BA0FE', 'year');
+
+-- usageunit
+INSERT INTO usageunit (id, title) VALUES ('AACD1682-1FA4-4C75-A870-CF953B8859B9', 'hour');
+INSERT INTO usageunit (id, title) VALUES ('BACD1682-1FA4-4C75-A870-CF953B8859B9', 'day');
+INSERT INTO usageunit (id, title) VALUES ('CACD1682-1FA4-4C75-A870-CF953B8859B9', 'mile');
+
+-- workorderstatus
+INSERT INTO workorderstatus (id, title) VALUES ('AB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'new');
+INSERT INTO workorderstatus (id, title) VALUES ('BB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'in progress');
+INSERT INTO workorderstatus (id, title) VALUES ('CB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'complete');
+INSERT INTO workorderstatus (id, title) VALUES ('DB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'cancelled');
 
 

@@ -14,10 +14,6 @@ type UsageTrigger struct {
 // If you add something here then add it below in the validUsageUnitTypes map
 // TODO: make sure the swagger documentation reflects the possible values
 const (
-	// types
-	UsageTriggerUnitTypeTime     = "time"
-	UsageUTriggernitTypeDistance = "distance"
-
 	// units
 	// time based
 	UsageTriggerUnitHours = "hour"
@@ -27,10 +23,8 @@ const (
 	UsageTriggerUnitMiles = "mile"
 )
 
-var ValidUsageTriggerUnitTypes = map[string]bool{
-	UsageTriggerUnitTypeTime:     true,
-	UsageUTriggernitTypeDistance: true,
-	UsageTriggerUnitHours:        true,
-	UsageTriggerUnitDays:         true,
-	UsageTriggerUnitMiles:        true,
+var ValidUsageTriggerUnits = map[string]bool{
+	UsageTriggerUnitHours: true,
+	UsageTriggerUnitDays:  true,
+	UsageTriggerUnitMiles: true,
 }

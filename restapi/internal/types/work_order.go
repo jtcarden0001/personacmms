@@ -10,6 +10,7 @@ import (
 // status of the work order
 type WorkOrder struct {
 	Id              uuid.UUID `json:"id" swaggerignore:"true"`
+	Title           string    `json:"title" binding:"required"`
 	CreatedDate     tm.Time   `json:"createdDate" swaggerignore:"true"`
 	CompletedDate   *tm.Time  `json:"completedDate"`
 	Instructions    *string   `json:"instructions"`
