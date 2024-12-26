@@ -54,8 +54,8 @@ var ErrNotFound = AppError{Code: CodeNotFound, Message: "not found"}
 // dynamic error message generation functions
 func createInvalidUsageUnitTypeMessage() string {
 	prefix := "invalid usage unit type, must be one of:"
-	keys := make([]string, 0, len(tp.ValidUsageTriggerUnitTypes))
-	for key := range tp.ValidUsageTriggerUnitTypes {
+	keys := make([]string, 0, len(tp.ValidUsageTriggerUnits))
+	for key := range tp.ValidUsageTriggerUnits {
 		keys = append(keys, key)
 	}
 	commaDelimitedString := strings.Join(keys, ", ")
