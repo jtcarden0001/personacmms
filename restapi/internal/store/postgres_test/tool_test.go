@@ -1,166 +1,161 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
+import (
+	"strconv"
+	"testing"
 
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestCreateTool(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcreatetool"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupTool(identifier int) tp.Tool {
+	return tp.Tool{
+		Id:    uuid.New(),
+		Title: "Tool " + strconv.Itoa(identifier),
+	}
+}
 
-// 	// Create
-// 	tool := tp.Tool{
-// 		Title: "testtool1",
-// 		Size:  utest.ToPtr("13mm"),
-// 	}
+func TestToolCreate(t *testing.T) {
+	t.Parallel()
 
-// 	returnedTool, err := store.CreateTool(tool)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testtoolcreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, tool, returnedTool, fieldsToExclude)
-// }
+	tool := setupTool(1)
 
-// func TestDeleteTool(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testdeletetool"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	createdTool, err := store.CreateTool(tool)
+	if err != nil {
+		t.Errorf("CreateTool() failed: %v", err)
+	}
 
-// 	// Create
-// 	tool := tp.Tool{
-// 		Title: "testtool1",
-// 		Size:  utest.ToPtr("13mm"),
-// 	}
+	utest.CompEntities(t, tool, createdTool)
+}
 
-// 	_, err := store.CreateTool(tool)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+func TestToolDelete(t *testing.T) {
+	t.Parallel()
 
-// 	// Delete
-// 	err = store.DeleteTool(tool.Title)
-// 	if err != nil {
-// 		t.Errorf("Delete() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testtooldelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Confirm deletion
-// 	_, err = store.GetTool(tool.Title)
-// 	if err == nil {
-// 		t.Errorf("Get() failed: expected error, got nil")
-// 	}
-// }
+	tool := setupTool(1)
+	_, err := store.CreateTool(tool)
+	if err != nil {
+		t.Errorf("TestToolDelete: failed during setup. CreateTool() failed: %v", err)
+	}
 
-// func TestDeleteToolNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testdeletetoolnotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	err = store.DeleteTool(tool.Id)
+	if err != nil {
+		t.Errorf("TestToolDelete: DeleteTool() failed: %v", err)
+	}
 
-// 	err := store.DeleteTool("nonexistent-title")
-// 	if err == nil {
-// 		t.Errorf("DeleteTool() failed: expected error, got nil")
-// 	}
-// }
+	_, err = store.GetTool(tool.Id)
+	if err == nil {
+		t.Errorf("TestToolDelete: GetTool() returned nil error after deletion")
+	}
+}
 
-// func TestListTool(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testlisttool"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func TestToolGet(t *testing.T) {
+	t.Parallel()
 
-// 	// List
-// 	tools, err := store.ListTools()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
-// 	count := len(tools)
+	// setup
+	dbname := "testtoolget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Create
-// 	tool := tp.Tool{
-// 		Title: "testtool1",
-// 		Size:  utest.ToPtr("13mm"),
-// 	}
-// 	_, err = store.CreateTool(tool)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	tool := setupTool(1)
+	_, err := store.CreateTool(tool)
+	if err != nil {
+		t.Errorf("TestToolGet: failed during setup. CreateTool() failed: %v", err)
+	}
 
-// 	tool.Title = "testtool2"
-// 	_, err = store.CreateTool(tool)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// test
+	getTool, err := store.GetTool(tool.Id)
+	if err != nil {
+		t.Errorf("GetTool() failed: %v", err)
+	}
 
-// 	// List
-// 	tools, err = store.ListTools()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+	utest.CompEntities(t, tool, getTool)
+}
 
-// 	if len(tools) != 2+count {
-// 		t.Errorf("ListTool() failed: expected 2, got %d", len(tools))
-// 	}
+func TestToolList(t *testing.T) {
+	t.Parallel()
 
-// 	// TODO: test list content
-// }
+	// setup
+	dbname := "testtoollist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestUpdateGetTool(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testupdategettool"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tool1 := setupTool(1)
+	tool2 := setupTool(2)
+	tool3 := setupTool(3)
 
-// 	// Create
-// 	tool := tp.Tool{
-// 		Title: "testtool1",
-// 		Size:  utest.ToPtr("13mm"),
-// 	}
+	_, err := store.CreateTool(tool1)
+	if err != nil {
+		t.Errorf("TestToolList: failed during setup. CreateTool() failed: %v", err)
+	}
+	_, err = store.CreateTool(tool2)
+	if err != nil {
+		t.Errorf("TestToolList: failed during setup. CreateTool() failed: %v", err)
+	}
+	_, err = store.CreateTool(tool3)
+	if err != nil {
+		t.Errorf("TestToolList: failed during setup. CreateTool() failed: %v", err)
+	}
 
-// 	cTool, err := store.CreateTool(tool)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// test
+	tools, err := store.ListTools()
+	if err != nil {
+		t.Errorf("ListTools() failed: %v", err)
+	}
 
-// 	// Update
-// 	tool.Size = utest.ToPtr("14mm")
-// 	uTool, err := store.UpdateTool(tool.Title, tool)
-// 	if err != nil {
-// 		t.Errorf("Update() failed: %v", err)
-// 	}
+	if len(tools) != 3 {
+		t.Errorf("ListTools() failed: expected 3 tools, got %d", len(tools))
+	}
 
-// 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Size"})
-// 	utest.CompEntitiesFieldsShouldBeDifferent(t, cTool, uTool, fieldsShouldBeDifferent)
+	toolMap := map[string]tp.Tool{
+		tool1.Title: tool1,
+		tool2.Title: tool2,
+		tool3.Title: tool3,
+	}
 
-// 	// Get
-// 	gTool, err := store.GetTool(tool.Title)
-// 	if err != nil {
-// 		t.Errorf("Get() failed: %v", err)
-// 	}
+	for _, tool := range tools {
+		expectedTool, ok := toolMap[tool.Title]
+		if !ok {
+			t.Errorf("ListTools() failed: unexpected tool with Title %v", tool.Title)
+		}
+		utest.CompEntities(t, expectedTool, tool)
+	}
+}
 
-// 	utest.CompEntities(t, uTool, gTool)
+func TestToolUpdate(t *testing.T) {
+	t.Parallel()
 
-// }
+	// setup
+	dbname := "testtoolupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestUpdateToolNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testupdatetoolnotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tool := setupTool(1)
+	createTool, err := store.CreateTool(tool)
+	if err != nil {
+		t.Errorf("TestToolUpdate: failed during setup. CreateTool() failed: %v", err)
+	}
 
-// 	tool := tp.Tool{
-// 		Title: "nonexistent-title",
-// 		Size:  utest.ToPtr("13mm"),
-// 	}
-// 	_, err := store.UpdateTool("nonexistent-title", tool)
-// 	if err == nil {
-// 		t.Errorf("UpdateTool() failed: expected error, got nil")
-// 	}
-// }
+	// test
+	tool.Title = "Updated Tool Title"
+
+	updatedTool, err := store.UpdateTool(tool)
+	if err != nil {
+		t.Errorf("UpdateTool() failed: %v", err)
+	}
+
+	differentFields := utest.ConvertStrArrToSet([]string{"Title"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createTool, updatedTool, differentFields)
+}

@@ -1,4 +1,4 @@
-package integration
+package postgres_test
 
 import (
 	"testing"
@@ -68,22 +68,6 @@ func TestMain(m *testing.M) {
 // 		t.Errorf("CreateTool() failed: %v", err)
 // 	}
 // 	return tool.Id
-// }
-
-// func setupAsset(t *testing.T, store st.Store, identifier string) uuid.UUID {
-// 	groupTitle := setupGroup(t, store, identifier)
-// 	categoryTitle := setupCategory(t, store, identifier)
-// 	asset := tp.Asset{
-// 		Title:         fmt.Sprintf("Asset %s", identifier),
-// 		Description:   utest.ToPtr(fmt.Sprintf("Asset %s description", identifier)),
-// 		GroupTitle:    groupTitle,
-// 		CategoryTitle: &categoryTitle,
-// 	}
-// 	asset, err := store.CreateAsset(asset)
-// 	if err != nil {
-// 		t.Errorf("CreateAsset() failed: %v", err)
-// 	}
-// 	return asset.Id
 // }
 
 // func setupTaskTemplate(t *testing.T, store st.Store, identifier string) uuid.UUID {

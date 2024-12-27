@@ -1,182 +1,171 @@
-package integration
+package postgres_test
 
-// import (
-// 	"fmt"
-// 	"strconv"
-// 	"testing"
-// 	"time"
+import (
+	"strconv"
+	"testing"
+	"time"
 
-// 	"github.com/google/uuid"
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestWorkOrderCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkordercreate"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupWorkOrder(identifier int) tp.WorkOrder {
+	return tp.WorkOrder{
+		Id:              uuid.New(),
+		Title:           "Work Order " + strconv.Itoa(identifier),
+		CreatedDate:     time.Now().AddDate(0, 0, -identifier),
+		CompletedDate:   utest.ToPtr(time.Now().AddDate(0, 0, identifier)),
+		Instructions:    utest.ToPtr("Instructions " + strconv.Itoa(identifier)),
+		Notes:           utest.ToPtr("Notes " + strconv.Itoa(identifier)),
+		CumulativeMiles: utest.ToPtr(identifier * 100),
+		CumulativeHours: utest.ToPtr(identifier * 10),
+		Status:          tp.WorkOrderStatusComplete,
+	}
+}
 
-// 	atId := setupTask(t, store, "1")
-// 	wo := getTestWorkOrder(atId, 1)
+func TestWorkOrderCreate(t *testing.T) {
+	t.Parallel()
 
-// 	// Create a new work order
-// 	returnedWo, err := store.CreateWorkOrder(wo)
-// 	if err != nil {
-// 		t.Errorf("CreateWorkOrder() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testworkordercreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, wo, returnedWo, fieldsToExclude)
-// }
+	wo := setupWorkOrder(1)
 
-// func TestWorkOrderDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkorderdelete"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	createdWorkOrder, err := store.CreateWorkOrder(wo)
+	if err != nil {
+		t.Errorf("CreateWorkOrder() failed: %v", err)
+	}
 
-// 	atId := setupTask(t, store, "1")
-// 	wo := getTestWorkOrder(atId, 1)
+	utest.CompEntities(t, wo, createdWorkOrder)
+}
 
-// 	// Create a new work order
-// 	returnedWo, err := store.CreateWorkOrder(wo)
-// 	if err != nil {
-// 		t.Errorf("CreateWorkOrder() failed: %v", err)
-// 	}
+func TestWorkOrderDelete(t *testing.T) {
+	t.Parallel()
 
-// 	// Delete the work order
-// 	err = store.DeleteWorkOrder(returnedWo.Id)
-// 	if err != nil {
-// 		t.Errorf("DeleteWorkOrder() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testworkorderdelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Confirm deletion
-// 	_, err = store.GetWorkOrder(returnedWo.Id)
-// 	if err == nil {
-// 		t.Errorf("GetWorkOrder() failed: expected error, got nil")
-// 	}
-// }
+	wo := setupWorkOrder(1)
+	createdWorkOrder, err := store.CreateWorkOrder(wo)
+	if err != nil {
+		t.Errorf("TestWorkOrderDelete: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
 
-// func TestWorkOrderDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkorderdeletenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	err = store.DeleteWorkOrder(createdWorkOrder.Id)
+	if err != nil {
+		t.Errorf("DeleteWorkOrder() failed: %v", err)
+	}
 
-// 	err := store.DeleteWorkOrder(uuid.New())
-// 	if err == nil {
-// 		t.Errorf("DeleteWorkOrder() failed: expected error, got nil")
-// 	}
-// }
+	_, err = store.GetWorkOrder(createdWorkOrder.Id)
+	if err == nil {
+		t.Errorf("GetWorkOrder() returned nil error after deletion")
+	}
+}
 
-// func TestWorkOrderList(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkorderlist"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func TestWorkOrderGet(t *testing.T) {
+	t.Parallel()
 
-// 	// List
-// 	wos, err := store.ListWorkOrders()
-// 	if err != nil {
-// 		t.Errorf("ListWorkOrders() failed: %v", err)
-// 	}
-// 	// make a map
-// 	wosMap := make(map[uuid.UUID]tp.WorkOrder)
-// 	for _, wo := range wos {
-// 		wosMap[wo.Id] = wo
-// 	}
+	// setup
+	dbname := "testworkorderget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	atId := setupTask(t, store, "1")
+	wo := setupWorkOrder(1)
+	createWorkOrder, err := store.CreateWorkOrder(wo)
+	if err != nil {
+		t.Errorf("TestWorkOrderGet: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
 
-// 	// Create a new work order
-// 	wo1 := getTestWorkOrder(atId, 1)
-// 	cwo1, err := store.CreateWorkOrder(wo1)
-// 	if err != nil {
-// 		t.Errorf("CreateWorkOrder() failed: %v", err)
-// 	}
-// 	wosMap[cwo1.Id] = cwo1
+	// test
+	getWorkOrder, err := store.GetWorkOrder(createWorkOrder.Id)
+	if err != nil {
+		t.Errorf("GetWorkOrder() failed: %v", err)
+	}
 
-// 	wo2 := getTestWorkOrder(atId, 2)
-// 	cwo2, err := store.CreateWorkOrder(wo2)
-// 	if err != nil {
-// 		t.Errorf("CreateWorkOrder() failed: %v", err)
-// 	}
-// 	wosMap[cwo2.Id] = cwo2
+	utest.CompEntities(t, wo, getWorkOrder)
+}
 
-// 	// List all work orders
-// 	workOrders, err := store.ListWorkOrders()
-// 	if err != nil {
-// 		t.Errorf("ListWorkOrders() failed: %v", err)
-// 	}
+func TestWorkOrderList(t *testing.T) {
+	t.Parallel()
 
-// 	if len(workOrders) != len(wosMap) {
-// 		t.Errorf("ListWorkOrders() failed: expected %d work orders, got %d", len(wosMap), len(workOrders))
-// 	}
+	// setup
+	dbname := "testworkorderlist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	for _, wo := range workOrders {
-// 		utest.CompEntities(t, wo, wosMap[wo.Id])
-// 	}
-// }
+	wo1 := setupWorkOrder(1)
+	wo2 := setupWorkOrder(2)
+	wo3 := setupWorkOrder(3)
 
-// func TestWorkOrderUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkorderupdateget"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	_, err := store.CreateWorkOrder(wo1)
+	if err != nil {
+		t.Errorf("TestWorkOrderList: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+	_, err = store.CreateWorkOrder(wo2)
+	if err != nil {
+		t.Errorf("TestWorkOrderList: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+	_, err = store.CreateWorkOrder(wo3)
+	if err != nil {
+		t.Errorf("TestWorkOrderList: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
 
-// 	atId := setupTask(t, store, "1")
-// 	wo1 := getTestWorkOrder(atId, 1)
+	// test
+	workOrders, err := store.ListWorkOrders()
+	if err != nil {
+		t.Errorf("ListWorkOrders() failed: %v", err)
+	}
 
-// 	// Create a new work order
-// 	cwo, err := store.CreateWorkOrder(wo1)
-// 	if err != nil {
-// 		t.Errorf("CreateWorkOrder() failed: %v", err)
-// 	}
+	if len(workOrders) != 3 {
+		t.Errorf("ListWorkOrders() failed: expected 3 work orders, got %d", len(workOrders))
+	}
 
-// 	// Update the work order
-// 	wo2 := getTestWorkOrder(atId, 2)
-// 	wo2.Id = cwo.Id
+	workOrderMap := map[uuid.UUID]tp.WorkOrder{
+		wo1.Id: wo1,
+		wo2.Id: wo2,
+		wo3.Id: wo3,
+	}
 
-// 	updatedWo, err := store.UpdateWorkOrder(cwo.Id, wo2)
-// 	if err != nil {
-// 		t.Errorf("UpdateWorkOrder() failed: %v", err)
-// 	}
+	for _, workOrder := range workOrders {
+		expectedWorkOrder, ok := workOrderMap[workOrder.Id]
+		if !ok {
+			t.Errorf("ListWorkOrders() failed: unexpected work order with ID %v", workOrder.Id)
+		}
+		utest.CompEntities(t, expectedWorkOrder, workOrder)
+	}
+}
 
-// 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"CreatedDate", "CompletedDate", "CumulativeMiles", "CumulativeHours"})
-// 	utest.CompEntitiesFieldsShouldBeDifferent(t, cwo, updatedWo, fieldsShouldBeDifferent)
+func TestWorkOrderUpdate(t *testing.T) {
+	t.Parallel()
 
-// 	// Get the work order
-// 	returnedWo, err := store.GetWorkOrder(updatedWo.Id)
-// 	if err != nil {
-// 		t.Errorf("GetWorkOrder() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testworkorderupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	utest.CompEntities(t, updatedWo, returnedWo)
-// }
+	wo := setupWorkOrder(1)
+	createWorkOrder, err := store.CreateWorkOrder(wo)
+	if err != nil {
+		t.Errorf("TestWorkOrderUpdate: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
 
-// func TestWorkOrderUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testworkorderupdatenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	wo.Notes = utest.ToPtr("Updated Work Order Notes")
+	wo.CumulativeMiles = utest.ToPtr(200)
+	wo.CumulativeHours = utest.ToPtr(20)
 
-// 	wo := getTestWorkOrder(uuid.New(), 1)
-// 	_, err := store.UpdateWorkOrder(uuid.New(), wo)
-// 	if err == nil {
-// 		t.Errorf("UpdateWorkOrder() failed: expected error, got nil")
-// 	}
-// }
+	updatedWorkOrder, err := store.UpdateWorkOrder(wo)
+	if err != nil {
+		t.Errorf("UpdateWorkOrder() failed: %v", err)
+	}
 
-// // different values except assetTaskId and statusTitle
-// func getTestWorkOrder(assetTaskId uuid.UUID, id int) tp.WorkOrder {
-// 	return tp.WorkOrder{
-// 		CreatedDate:     time.Now().Add(time.Duration(id) * time.Hour),
-// 		CompletedDate:   func(t time.Time) *time.Time { return &t }(time.Now().Add(time.Duration(id) * time.Hour).UTC().Truncate(time.Millisecond)),
-// 		Notes:           nil, // func(s string) *string { return &s }(fmt.Sprintf("Test work order %s", id)),
-// 		CumulativeMiles: func() *int { miles, _ := strconv.Atoi(fmt.Sprintf("20%d", id)); return &miles }(),
-// 		CumulativeHours: func() *int { hours, _ := strconv.Atoi(fmt.Sprintf("20%d", id)); return &hours }(),
-// 		TaskId:          assetTaskId,
-// 		StatusTitle:     tp.WorkOrderStatusComplete,
-// 	}
-// }
+	differentFields := utest.ConvertStrArrToSet([]string{"Notes", "CumulativeMiles", "CumulativeHours"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createWorkOrder, updatedWorkOrder, differentFields)
+}

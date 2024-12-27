@@ -1,204 +1,148 @@
-package integration
+package postgres_test
 
-// import (
-// 	"errors"
-// 	"testing"
+import (
+	"fmt"
+	"testing"
 
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestCategoryCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategorycreate"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupCategory(identifier int) tp.Category {
+	return tp.Category{
+		Id:          uuid.New(),
+		Title:       fmt.Sprintf("Category %d", identifier),
+		Description: utest.ToPtr(fmt.Sprintf("Category %d description", identifier)),
+	}
+}
 
-// 	// Create
-// 	cat := tp.Category{
-// 		Title:       "testcategory1",
-// 		Description: utest.ToPtr("test description"),
-// 	}
+func TestCategoryCreate(t *testing.T) {
+	t.Parallel()
 
-// 	returnCat, err := store.CreateCategory(cat)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testcategorycreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, cat, returnCat, fieldsToExclude)
-// }
+	c := setupCategory(1)
 
-// func TestCategoryDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategorydelete"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	createdCategory, err := store.CreateCategory(c)
+	if err != nil {
+		t.Errorf("CreateCategory() failed: %v", err)
+	}
 
-// 	// Delete something that doesn't exist
-// 	err := store.DeleteCategory("notfound")
-// 	if err == nil {
-// 		t.Errorf("Delete() failed: expected error, got nil")
-// 	}
+	utest.CompEntities(t, c, createdCategory)
+}
 
-// 	cat := tp.Category{
-// 		Title:       "testcategory1",
-// 		Description: utest.ToPtr("test description"),
-// 	}
-// 	_, err = store.CreateCategory(cat)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+func TestCategoryDelete(t *testing.T) {
+	t.Parallel()
 
-// 	err = store.DeleteCategory(cat.Title)
-// 	if err != nil {
-// 		t.Errorf("Delete() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testcategorydelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Get
-// 	_, err = store.GetCategory(cat.Title)
-// 	if err == nil {
-// 		t.Errorf("Get() failed: expected error, got nil")
-// 	}
-// }
+	c := setupCategory(1)
+	createdCategory, err := store.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestCategoryDelete: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// func TestCategoryList(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategorylist"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	err = store.DeleteCategory(createdCategory.Id)
+	if err != nil {
+		t.Errorf("TestCategoryDelete: DeleteCategory() failed: %v", err)
+	}
 
-// 	// List
-// 	cats, err := store.ListCategories()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+	_, err = store.GetCategory(createdCategory.Id)
+	if err == nil {
+		t.Errorf("TestCategoryDelete: GetCategory() returned nil error after deletion")
+	}
+}
 
-// 	// create a map of the categories title: tp.category
-// 	catMap := make(map[string]tp.Category)
-// 	for _, cat := range cats {
-// 		catMap[cat.Title] = cat
-// 	}
+func TestCategoryGet(t *testing.T) {
+	t.Parallel()
 
-// 	catMap["testcategory1"] = tp.Category{
-// 		Title:       "testcategory1",
-// 		Description: utest.ToPtr("test description"),
-// 	}
+	// setup
+	dbname := "testcategoryget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	catMap["testcategory2"] = tp.Category{
-// 		Title:       "testcategory2",
-// 		Description: utest.ToPtr("test description"),
-// 	}
+	c := setupCategory(1)
+	createCategory, err := store.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestCategoryGet: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// 	// create the 2 new categories
-// 	_, err = store.CreateCategory(catMap["testcategory1"])
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// test
+	getCategory, err := store.GetCategory(createCategory.Id)
+	if err != nil {
+		t.Errorf("GetCategory() failed: %v", err)
+	}
 
-// 	_, err = store.CreateCategory(catMap["testcategory2"])
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	utest.CompEntities(t, createCategory, getCategory)
+}
 
-// 	// List
-// 	newCats, err := store.ListCategories()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+func TestCategoryList(t *testing.T) {
+	t.Parallel()
 
-// 	if len(newCats) != len(cats)+2 {
-// 		t.Errorf("List() failed: expected %d, got %d", len(cats)+2, len(newCats))
-// 	}
+	// setup
+	dbname := "testcategorylist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	newCatMap := make(map[string]tp.Category)
-// 	for _, cat := range newCats {
-// 		newCatMap[cat.Title] = cat
-// 	}
+	c1 := setupCategory(1)
+	c2 := setupCategory(2)
+	c3 := setupCategory(3)
 
-// 	// compare the two maps
-// 	for key, cat := range catMap {
-// 		fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 		utest.CompEntitiesExcludeFields(t, cat, newCatMap[key], fieldsToExclude)
-// 	}
-// }
+	_, err := store.CreateCategory(c1)
+	if err != nil {
+		t.Errorf("TestCategoryList: failed during setup. CreateCategory() failed: %v", err)
+	}
+	_, err = store.CreateCategory(c2)
+	if err != nil {
+		t.Errorf("TestCategoryList: failed during setup. CreateCategory() failed: %v", err)
+	}
+	_, err = store.CreateCategory(c3)
+	if err != nil {
+		t.Errorf("TestCategoryList: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// func TestCategoryUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategoryupdateget"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	categories, err := store.ListCategories()
+	if err != nil {
+		t.Errorf("ListCategories() failed: %v", err)
+	}
 
-// 	// Update
-// 	cat := tp.Category{
-// 		Title:       "testcategory1",
-// 		Description: utest.ToPtr("test description"),
-// 	}
-// 	createCat, err := store.CreateCategory(cat)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	if len(categories) != 3 {
+		t.Errorf("ListCategories() returned %d categories, expected 3", len(categories))
+	}
+}
 
-// 	cat.Description = utest.ToPtr("new description")
-// 	updateCat, err := store.UpdateCategory(cat.Title, cat)
-// 	if err != nil {
-// 		t.Errorf("Update() failed: %v", err)
-// 	}
+func TestCategoryUpdate(t *testing.T) {
+	t.Parallel()
 
-// 	differentFields := utest.ConvertToSet([]string{"Description"})
-// 	utest.CompEntitiesFieldsShouldBeDifferent(t, createCat, updateCat, differentFields)
+	// setup
+	dbname := "testcategoryupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	getCat, err := store.GetCategory(cat.Title)
-// 	if err != nil {
-// 		t.Errorf("Get() failed: %v", err)
-// 	}
+	c := setupCategory(1)
+	createdCategory, err := store.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestCategoryUpdate: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// 	// exclude no fields
-// 	utest.CompEntities(t, updateCat, getCat)
-// }
+	// test
+	c.Title = "Updated Name"
+	c.Description = utest.ToPtr("Updated Description")
+	updatedCategory, err := store.UpdateCategory(c)
+	if err != nil {
+		t.Errorf("UpdateCategory() failed: %v", err)
+	}
 
-// func TestCategoryNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategorynotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	_, err := store.GetCategory("notfound")
-// 	var appErr ae.AppError
-// 	if !errors.As(err, &appErr) {
-// 		t.Errorf("Get() failed: expected AppError, got %v", err)
-// 	}
-
-// 	if appErr.Code != ae.CodeNotFound {
-// 		t.Errorf("Get() failed: expected CodeNotFound, got %v", appErr.Code)
-// 	}
-// }
-
-// func TestCategoryDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategorydeletenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	err := store.DeleteCategory("notfound")
-// 	if err == nil {
-// 		t.Errorf("DeleteCategory() should have failed")
-// 	}
-// }
-
-// func TestCategoryUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testcategoryupdatenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	cat := tp.Category{
-// 		Title:       "notfound",
-// 		Description: utest.ToPtr("test description"),
-// 	}
-// 	_, err := store.UpdateCategory(cat.Title, cat)
-// 	if err == nil {
-// 		t.Errorf("UpdateCategory() should have failed")
-// 	}
-// }
+	differentFields := utest.ConvertStrArrToSet([]string{"Title", "Description"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdCategory, updatedCategory, differentFields)
+}

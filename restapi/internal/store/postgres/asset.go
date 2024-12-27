@@ -14,12 +14,12 @@ var assetTableName = "asset"
 func (pg *PostgresStore) CreateAsset(a tp.Asset) (tp.Asset, error) {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (
-			id, title, year, make, model_number, serial_number, description
+			id, title, year, manufacturer, make, model_number, serial_number, description
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7
+			$1, $2, $3, $4, $5, $6, $7, $8
 		)`, assetTableName)
 
-	_, err := pg.db.Exec(query, a.Id, a.Title, a.Year, a.Make, a.ModelNumber, a.SerialNumber, a.Description)
+	_, err := pg.db.Exec(query, a.Id, a.Title, a.Year, a.Manufacturer, a.Make, a.ModelNumber, a.SerialNumber, a.Description)
 	if err != nil {
 		return tp.Asset{}, handleDbError(err, "asset")
 	}
@@ -46,7 +46,7 @@ func (pg *PostgresStore) DeleteAsset(id uuid.UUID) error {
 func (pg *PostgresStore) GetAsset(id uuid.UUID) (tp.Asset, error) {
 	var asset tp.Asset
 	query := fmt.Sprintf(`
-		SELECT id, title, year, make, model_number, serial_number, description
+		SELECT id, title, year, manufacturer, make, model_number, serial_number, description
 		FROM %s 
 		WHERE id = $1`, assetTableName)
 
@@ -54,6 +54,7 @@ func (pg *PostgresStore) GetAsset(id uuid.UUID) (tp.Asset, error) {
 		&asset.Id,
 		&asset.Title,
 		&asset.Year,
+		&asset.Manufacturer,
 		&asset.Make,
 		&asset.ModelNumber,
 		&asset.SerialNumber,
@@ -93,16 +94,18 @@ func (pg *PostgresStore) UpdateAsset(a tp.Asset) (tp.Asset, error) {
 		UPDATE %s 
 		SET title = $1,
 		year = $2, 
-		make = $3, 
-		model_number = $4, 
-		serial_number = $5, 
-		description = $6, 
-		WHERE id = $7`, assetTableName)
+		manufacturer = $3,
+		make = $4, 
+		model_number = $5, 
+		serial_number = $6, 
+		description = $7
+		WHERE id = $8`, assetTableName)
 
 	result, err := pg.db.Exec(
 		query,
 		a.Title,
 		a.Year,
+		a.Manufacturer,
 		a.Make,
 		a.ModelNumber,
 		a.SerialNumber,

@@ -65,7 +65,7 @@ func (pg *PostgresStore) GetTimeTrigger(id uuid.UUID) (tp.TimeTrigger, error) {
 }
 
 func (pg *PostgresStore) ListTimeTriggers() ([]tp.TimeTrigger, error) {
-	query := fmt.Sprintf(`SELECT id, quantity, timeunit, task_id FROM %s`, timeTriggerTableName)
+	query := fmt.Sprintf(`SELECT id, quantity, timeunit_id, task_id FROM %s`, timeTriggerTableName)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return []tp.TimeTrigger{}, handleDbError(err, "time-trigger")

@@ -64,12 +64,11 @@ func (pg *PostgresStore) DeleteWorkOrder(woId uuid.UUID) error {
 func (pg *PostgresStore) GetWorkOrder(woId uuid.UUID) (tp.WorkOrder, error) {
 	var wo tp.WorkOrder
 	var statusId uuid.UUID
-	query := fmt.Sprintf(`SELECT (
-	  id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
-	  ) FROM %s WHERE id = $1`, workOrderTable)
-	err := pg.db.QueryRow(
-		query,
-		woId).Scan(
+	query := fmt.Sprintf(`
+		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
+	  	FROM %s 
+		WHERE id = $1`, workOrderTable)
+	err := pg.db.QueryRow(query, woId).Scan(
 		&wo.Id,
 		&wo.Title,
 		&wo.CreatedDate,
@@ -94,9 +93,9 @@ func (pg *PostgresStore) GetWorkOrder(woId uuid.UUID) (tp.WorkOrder, error) {
 }
 
 func (pg *PostgresStore) ListWorkOrders() ([]tp.WorkOrder, error) {
-	query := fmt.Sprintf(`SELECT (
-	  id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
-	  ) FROM %s`, workOrderTable)
+	query := fmt.Sprintf(`
+		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
+	  	FROM %s`, workOrderTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, handleDbError(err, "work-order")
@@ -140,7 +139,7 @@ func (pg *PostgresStore) UpdateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) 
 	}
 
 	query := fmt.Sprintf(`UPDATE %s SET 
-		title = $1
+		title = $1,
 		created_date = $2, 
 		completed_date = $3,
 		instructions = $4,

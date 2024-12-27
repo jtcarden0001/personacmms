@@ -1,199 +1,163 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
+import (
+	"fmt"
+	"testing"
 
-// 	"github.com/google/uuid"
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestTaskCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtaskcreate"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+func setupTask(identifier int) tp.Task {
+	return tp.Task{
+		Id:           uuid.New(),
+		Title:        fmt.Sprintf("Task %d", identifier),
+		Instructions: utest.ToPtr(fmt.Sprintf("Task %d instructions", identifier)),
+	}
+}
 
-// 	// Create
-// 	at := tp.Task{
-// 		Title:          "testtask1",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        setupAsset(t, store, "1"),
-// 		TaskTemplateId: utest.ToPtr(setupTaskTemplate(t, store, "1")),
-// 	}
-// 	returnedTask, err := store.CreateTask(at)
-// 	if err != nil {
-// 		t.Errorf("CreateTask() failed: %v", err)
-// 	}
+func TestTaskCreate(t *testing.T) {
+	t.Parallel()
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, at, returnedTask, fieldsToExclude)
-// }
+	// setup
+	dbname := "testtaskcreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestTaskDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtaskdelete"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	tk := setupTask(1)
 
-// 	// Create
-// 	at := tp.Task{
-// 		Title:          "testtask1",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        setupAsset(t, store, "1"),
-// 		TaskTemplateId: utest.ToPtr(setupTaskTemplate(t, store, "1")),
-// 	}
+	// test
+	createdTask, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("CreateTask() failed: %v", err)
+	}
 
-// 	at, err := store.CreateTask(at)
-// 	if err != nil {
-// 		t.Errorf("CreateTask() failed: %v", err)
-// 	}
+	utest.CompEntities(t, tk, createdTask)
+}
 
-// 	err = store.DeleteTask(at.Id)
-// 	if err != nil {
-// 		t.Errorf("DeleteTask() failed: %v", err)
-// 	}
+func TestTaskDelete(t *testing.T) {
+	t.Parallel()
 
-// 	// Get
-// 	_, err = store.GetTask(at.Id)
-// 	if err == nil {
-// 		t.Errorf("GetTask() failed: expected error, got nil")
-// 	}
-// }
+	// setup
+	dbname := "testtaskdelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestTaskDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtaskdeletenotfound"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	tk := setupTask(1)
+	createdTask, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTaskDelete: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	err := store.DeleteTask(uuid.UUID{})
-// 	if err == nil {
-// 		t.Errorf("DeleteTask() should have failed")
-// 	}
-// }
+	// test
+	err = store.DeleteTask(createdTask.Id)
+	if err != nil {
+		t.Errorf("TestTaskDelete: DeleteTask() failed: %v", err)
+	}
 
-// func TestTaskList(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtasklist"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	_, err = store.GetTask(createdTask.Id)
+	if err == nil {
+		t.Errorf("TestTaskDelete: GetTask() returned nil error after deletion")
+	}
+}
 
-// 	// List
-// 	tasks, err := store.ListTasks()
-// 	if err != nil {
-// 		t.Errorf("ListTasks() failed: %v", err)
-// 	}
+func TestTaskGet(t *testing.T) {
+	t.Parallel()
 
-// 	// create a map of the tasks title: tp.task
-// 	taskMap := make(map[string]tp.Task)
-// 	for _, task := range tasks {
-// 		taskMap[task.Title] = task
-// 	}
+	// setup
+	dbname := "testtaskget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	taskMap["testtask1"] = tp.Task{
-// 		Title:          "testtask1",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        setupAsset(t, store, "1"),
-// 		TaskTemplateId: utest.ToPtr(setupTaskTemplate(t, store, "1")),
-// 	}
+	tk := setupTask(1)
+	createTask, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTaskGet: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	taskMap["testtask2"] = tp.Task{
-// 		Title:          "testtask2",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        setupAsset(t, store, "2"),
-// 		TaskTemplateId: utest.ToPtr(setupTaskTemplate(t, store, "2")),
-// 	}
+	// test
+	getTask, err := store.GetTask(createTask.Id)
+	if err != nil {
+		t.Errorf("GetTask() failed: %v", err)
+	}
 
-// 	// Create the tasks
-// 	taskMap["testtask1"], err = store.CreateTask(taskMap["testtask1"])
-// 	if err != nil {
-// 		t.Errorf("CreateTask() failed: %v", err)
-// 	}
+	utest.CompEntities(t, createTask, getTask)
+}
 
-// 	taskMap["testtask2"], err = store.CreateTask(taskMap["testtask2"])
-// 	if err != nil {
-// 		t.Errorf("CreateTask() failed: %v", err)
-// 	}
+func TestTaskList(t *testing.T) {
+	t.Parallel()
 
-// 	// List
-// 	newTasks, err := store.ListTasks()
-// 	if err != nil {
-// 		t.Errorf("ListTasks() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testtasklist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	if len(newTasks) != len(taskMap) {
-// 		t.Errorf("ListTasks() failed: expected %v, got %v", len(taskMap), len(newTasks))
-// 	}
+	tk1 := setupTask(1)
+	tk2 := setupTask(2)
+	tk3 := setupTask(3)
 
-// 	// create a map of the tasks title: tp.task
-// 	newTaskMap := make(map[string]tp.Task)
-// 	for _, task := range newTasks {
-// 		newTaskMap[task.Title] = task
-// 	}
+	_, err := store.CreateTask(tk1)
+	if err != nil {
+		t.Errorf("TestTaskList: failed during setup. CreateTask() failed: %v", err)
+	}
+	_, err = store.CreateTask(tk2)
+	if err != nil {
+		t.Errorf("TestTaskList: failed during setup. CreateTask() failed: %v", err)
+	}
+	_, err = store.CreateTask(tk3)
+	if err != nil {
+		t.Errorf("TestTaskList: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	// compare the 2 maps
-// 	for title, task := range taskMap {
-// 		utest.CompEntities(t, task, newTaskMap[title])
-// 	}
-// }
+	// test
+	tasks, err := store.ListTasks()
+	if err != nil {
+		t.Errorf("ListTasks() failed: %v", err)
+	}
 
-// func TestTaskUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtaskupdateget"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	if len(tasks) != 3 {
+		t.Errorf("ListTasks() failed: expected 3 tasks, got %d", len(tasks))
+	}
 
-// 	// Create
-// 	at := tp.Task{
-// 		Title:          "testtask1",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        setupAsset(t, store, "1"),
-// 		TaskTemplateId: utest.ToPtr(setupTaskTemplate(t, store, "1")),
-// 	}
+	taskMap := map[uuid.UUID]tp.Task{
+		tk1.Id: tk1,
+		tk2.Id: tk2,
+		tk3.Id: tk3,
+	}
 
-// 	createAt, err := store.CreateTask(at)
-// 	if err != nil {
-// 		t.Errorf("CreateTask() failed: %v", err)
-// 	}
+	for _, task := range tasks {
+		expectedTask, ok := taskMap[task.Id]
+		if !ok {
+			t.Errorf("ListTasks() failed: unexpected task with ID %v", task.Id)
+		}
+		utest.CompEntities(t, expectedTask, task)
+	}
+}
 
-// 	// Update
-// 	at.Title = "testtask1updated"
-// 	at.Instructions = utest.ToPtr("test instructions updated")
-// 	at.AssetId = setupAsset(t, store, "2")
-// 	at.TaskTemplateId = utest.ToPtr(setupTaskTemplate(t, store, "2"))
-// 	updateAt, err := store.UpdateTask(createAt.Id, at)
-// 	if err != nil {
-// 		t.Errorf("UpdateTask() failed: %v", err)
-// 	}
+func TestTaskUpdate(t *testing.T) {
+	t.Parallel()
 
-// 	fields := utest.ConvertToSet([]string{"Title", "Instructions", "AssetId", "TaskTemplateId"})
-// 	utest.CompEntitiesFieldsShouldBeDifferent(t, createAt, updateAt, fields)
+	// setup
+	dbname := "testtaskupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Get
-// 	getAt, err := store.GetTask(updateAt.Id)
-// 	if err != nil {
-// 		t.Errorf("GetTask() failed: %v", err)
-// 	}
+	tk := setupTask(1)
+	createTask, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTaskUpdate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	utest.CompEntities(t, updateAt, getAt)
-// }
+	// test
+	tk.Title = "Updated Task Title"
+	tk.Instructions = utest.ToPtr("Updated Task Instructions")
 
-// func TestTaskUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testtaskupdatenotfound"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	updatedTask, err := store.UpdateTask(tk)
+	if err != nil {
+		t.Errorf("UpdateTask() failed: %v", err)
+	}
 
-// 	at := tp.Task{
-// 		Id:             uuid.UUID{},
-// 		Title:          "testtask1",
-// 		Instructions:   utest.ToPtr("test instructions"),
-// 		AssetId:        uuid.UUID{},
-// 		TaskTemplateId: utest.ToPtr(uuid.UUID{}),
-// 	}
-// 	_, err := store.UpdateTask(at.Id, at)
-// 	if err == nil {
-// 		t.Errorf("UpdateTask() should have failed")
-// 	}
-// }
+	differentFields := utest.ConvertStrArrToSet([]string{"Title", "Instructions"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createTask, updatedTask, differentFields)
+}

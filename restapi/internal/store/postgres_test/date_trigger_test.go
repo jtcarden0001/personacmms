@@ -1,176 +1,177 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
-// 	"time"
+import (
+	"testing"
+	"time"
 
-// 	"github.com/google/uuid"
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestDateTriggerCreate(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggercreate"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupDateTrigger(identifier int, taskId uuid.UUID) tp.DateTrigger {
+	return tp.DateTrigger{
+		Id:            uuid.New(),
+		ScheduledDate: time.Now().AddDate(0, identifier, 0),
+		TaskId:        taskId,
+	}
+}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	dt := tp.DateTrigger{
-// 		Date:   time.Now().AddDate(1, 0, 0),
-// 		TaskId: assetTaskId,
-// 	}
-// 	createdDt, err := store.CreateDateTrigger(dt)
-// 	if err != nil {
-// 		t.Errorf("CreateDateTrigger() failed: %v", err)
-// 	}
+func TestDateTriggerCreate(t *testing.T) {
+	t.Parallel()
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, dt, createdDt, fieldsToExclude)
-// }
+	// setup
+	dbname := "testdatetriggercreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestDateTriggerDelete(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggerdelete"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	dt := tp.DateTrigger{
-// 		Date:   time.Now().AddDate(1, 0, 0),
-// 		TaskId: assetTaskId,
-// 	}
-// 	createdDt, err := store.CreateDateTrigger(dt)
-// 	if err != nil {
-// 		t.Errorf("CreateDateTrigger() failed: %v", err)
-// 	}
+	dt := setupDateTrigger(1, tk.Id)
 
-// 	err = store.DeleteDateTrigger(createdDt.Id)
-// 	if err != nil {
-// 		t.Errorf("DeleteDateTrigger() failed: %v", err)
-// 	}
+	// test
+	createdDateTrigger, err := store.CreateDateTrigger(dt)
+	if err != nil {
+		t.Errorf("CreateDateTrigger() failed: %v", err)
+	}
 
-// 	_, err = store.GetDateTrigger(createdDt.Id)
-// 	if err == nil {
-// 		t.Errorf("GetDateTrigger() should have failed")
-// 	}
-// }
+	utest.CompEntities(t, dt, createdDateTrigger)
+}
 
-// func TestDateTriggerDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggerdeletenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func TestDateTriggerDelete(t *testing.T) {
+	t.Parallel()
 
-// 	err := store.DeleteDateTrigger(uuid.UUID{})
-// 	if err == nil {
-// 		t.Errorf("DeleteDateTrigger() should have failed")
-// 	}
-// }
+	// setup
+	dbname := "testdatetriggerdelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestDateTriggerList(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggerlist"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
+	dt := setupDateTrigger(1, tk.Id)
+	createdDateTrigger, err := store.CreateDateTrigger(dt)
+	if err != nil {
+		t.Errorf("TestDateTriggerDelete: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
 
-// 	// list
-// 	dts, err := store.ListDateTriggers()
-// 	if err != nil {
-// 		t.Errorf("ListDateTriggers() failed: %v", err)
-// 	}
+	// test
+	err = store.DeleteDateTrigger(createdDateTrigger.Id)
+	if err != nil {
+		t.Errorf("TestDateTriggerDelete: DeleteDateTrigger() failed: %v", err)
+	}
 
-// 	triggerMap := make(map[uuid.UUID]tp.DateTrigger)
-// 	for _, trigger := range dts {
-// 		triggerMap[trigger.Id] = trigger
-// 	}
+	_, err = store.GetDateTrigger(createdDateTrigger.Id)
+	if err == nil {
+		t.Errorf("TestDateTriggerDelete: GetDateTrigger() returned nil error after deletion")
+	}
+}
 
-// 	dt := tp.DateTrigger{
-// 		Date:   time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
-// 		TaskId: assetTaskId,
-// 	}
+func TestDateTriggerGet(t *testing.T) {
+	t.Parallel()
 
-// 	createdDt, err := store.CreateDateTrigger(dt)
-// 	if err != nil {
-// 		t.Errorf("CreateDateTrigger() failed: %v", err)
-// 	}
-// 	triggerMap[createdDt.Id] = createdDt
+	// setup
+	dbname := "testdatetriggerget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	dt.Date = time.Now().AddDate(2, 0, 0).UTC().Truncate(time.Second)
-// 	createdDt, err = store.CreateDateTrigger(dt)
-// 	if err != nil {
-// 		t.Errorf("CreateDateTrigger() failed: %v", err)
-// 	}
-// 	triggerMap[createdDt.Id] = createdDt
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	dts, err = store.ListDateTriggers()
-// 	if err != nil {
-// 		t.Errorf("ListDateTriggers() failed: %v", err)
-// 	}
+	dt := setupDateTrigger(1, tk.Id)
+	createDateTrigger, err := store.CreateDateTrigger(dt)
+	if err != nil {
+		t.Errorf("TestDateTriggerGet: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
 
-// 	if len(dts) != len(triggerMap) {
-// 		t.Errorf("ListDateTriggers() failed: expected %v, got %v", len(triggerMap), len(dts))
-// 	}
+	// test
+	getDateTrigger, err := store.GetDateTrigger(createDateTrigger.Id)
+	if err != nil {
+		t.Errorf("GetDateTrigger() failed: %v", err)
+	}
 
-// 	for _, trigger := range dts {
-// 		utest.CompEntities(t, trigger, triggerMap[trigger.Id])
-// 	}
-// }
+	utest.CompEntities(t, createDateTrigger, getDateTrigger)
+}
 
-// func TestDateTriggerUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggerupdateget"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func TestDateTriggerList(t *testing.T) {
+	t.Parallel()
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	dt := tp.DateTrigger{
-// 		Date:   time.Now().AddDate(1, 0, 0).UTC().Truncate(time.Second),
-// 		TaskId: assetTaskId,
-// 	}
-// 	createdDt, err := store.CreateDateTrigger(dt)
-// 	if err != nil {
-// 		t.Errorf("CreateDateTrigger() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testdatetriggerlist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// update
-// 	createdDt.Date = time.Now().AddDate(2, 0, 0).UTC().Truncate(time.Second)
-// 	updatedDt, err := store.UpdateDateTrigger(createdDt.Id, createdDt)
-// 	if err != nil {
-// 		t.Errorf("UpdateDateTrigger() failed: %v", err)
-// 	}
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	fieldsShouldBeDifferent := utest.ConvertToSet([]string{"Date"})
-// 	utest.CompEntitiesFieldsShouldBeDifferent(t, createdDt, updatedDt, fieldsShouldBeDifferent)
+	dt1 := setupDateTrigger(1, tk.Id)
+	dt2 := setupDateTrigger(2, tk.Id)
+	dt3 := setupDateTrigger(3, tk.Id)
 
-// 	// get
-// 	retrievedDt, err := store.GetDateTrigger(createdDt.Id)
-// 	if err != nil {
-// 		t.Errorf("GetDateTrigger() failed: %v", err)
-// 	}
+	_, err = store.CreateDateTrigger(dt1)
+	if err != nil {
+		t.Errorf("TestDateTriggerList: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
+	_, err = store.CreateDateTrigger(dt2)
+	if err != nil {
+		t.Errorf("TestDateTriggerList: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
+	_, err = store.CreateDateTrigger(dt3)
+	if err != nil {
+		t.Errorf("TestDateTriggerList: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
 
-// 	utest.CompEntities(t, updatedDt, retrievedDt)
-// }
+	// test
+	dateTriggers, err := store.ListDateTriggers()
+	if err != nil {
+		t.Errorf("ListDateTriggers() failed: %v", err)
+	}
 
-// func TestDateTriggerUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	var dbName = "testdatetriggerupdatenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	if len(dateTriggers) != 3 {
+		t.Errorf("ListDateTriggers() returned %d date triggers, expected 3", len(dateTriggers))
+	}
+}
 
-// 	dt := tp.DateTrigger{
-// 		Id:     uuid.UUID{},
-// 		Date:   time.Now().AddDate(1, 0, 0),
-// 		TaskId: uuid.UUID{},
-// 	}
-// 	_, err := store.UpdateDateTrigger(dt.Id, dt)
-// 	if err == nil {
-// 		t.Errorf("UpdateDateTrigger() should have failed")
-// 	}
-// }
+func TestDateTriggerUpdate(t *testing.T) {
+	t.Parallel()
+
+	// setup
+	dbname := "testdatetriggerupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
+
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	dt := setupDateTrigger(1, tk.Id)
+	createdDateTrigger, err := store.CreateDateTrigger(dt)
+	if err != nil {
+		t.Errorf("TestDateTriggerUpdate: failed during setup. CreateDateTrigger() failed: %v", err)
+	}
+
+	// test
+	dt.ScheduledDate = time.Now().AddDate(0, 2, 0)
+	updatedDateTrigger, err := store.UpdateDateTrigger(dt)
+	if err != nil {
+		t.Errorf("UpdateDateTrigger() failed: %v", err)
+	}
+
+	differentFields := utest.ConvertStrArrToSet([]string{"ScheduledDate"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdDateTrigger, updatedDateTrigger, differentFields)
+}

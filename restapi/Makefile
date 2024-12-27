@@ -59,7 +59,7 @@ test: integration-test unit-test
 integration-test: store-integration-test
 
 store-integration-test:
-	$(GOTEST) ./internal/store/test/integration/...
+	$(GOTEST) ./internal/store/postgres_test/...
 
 unit-test: app-unit-test
 

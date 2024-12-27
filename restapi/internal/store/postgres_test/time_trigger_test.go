@@ -1,241 +1,162 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
+import (
+	"testing"
 
-// 	"github.com/google/uuid"
-// 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestTimeTriggerCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggercreate"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupTimeTrigger(identifier int, taskId uuid.UUID) tp.TimeTrigger {
+	return tp.TimeTrigger{
+		Id:       uuid.New(),
+		TaskId:   taskId,
+		Quantity: identifier,
+		TimeUnit: tp.TimeTriggerUnitDays,
+	}
+}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	tt := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	createdTt, err := store.CreateTimeTrigger(tt)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
+func TestTimeTriggerCreate(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggercreate"
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
-// 	fieldsToExclude := utest.ConvertToSet([]string{"Id"})
-// 	utest.CompEntitiesExcludeFields(t, tt, createdTt, fieldsToExclude)
-// }
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTimeTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// func TestTimeTriggerDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerdelete"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tt := setupTimeTrigger(1, tk.Id)
+	createdTt, err := store.CreateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("CreateTimeTrigger() failed: %v", err)
+	}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	tt := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	createdTt, err := store.CreateTimeTrigger(tt)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
+	utest.CompEntities(t, tt, createdTt)
+}
 
-// 	err = store.DeleteTimeTrigger(createdTt.Id)
-// 	if err != nil {
-// 		t.Errorf("DeleteTimeTrigger() failed: %v", err)
-// 	}
+func TestTimeTriggerDelete(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerdelete"
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
-// 	_, err = store.GetTimeTrigger(createdTt.Id)
-// 	if err == nil {
-// 		t.Errorf("GetTimeTrigger() should have failed")
-// 	}
-// }
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// func TestTimeTriggerDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerdeletenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tt := setupTimeTrigger(1, tk.Id)
+	createdTt, err := store.CreateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
 
-// 	err := store.DeleteTimeTrigger(uuid.UUID{})
-// 	if err == nil {
-// 		t.Errorf("DeleteTimeTrigger() should have failed")
-// 	}
-// }
+	err = store.DeleteTimeTrigger(createdTt.Id)
+	if err != nil {
+		t.Errorf("DeleteTimeTrigger() failed: %v", err)
+	}
 
-// func TestTimeTriggerList(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerlist"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	_, err = store.GetTimeTrigger(createdTt.Id)
+	if err == nil {
+		t.Errorf("GetTimeTrigger() returned nil error after deletion")
+	}
+}
 
-// 	// List
-// 	tts, err := store.ListTimeTriggers()
-// 	if err != nil {
-// 		t.Errorf("ListTimeTriggers() failed: %v", err)
-// 	}
+func TestTimeTriggerGet(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerget"
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
-// 	// make a map ttId -> tt
-// 	ttMap := make(map[uuid.UUID]tp.TimeTrigger)
-// 	for _, tt := range tts {
-// 		ttMap[tt.Id] = tt
-// 	}
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	tt := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	tt, err = store.CreateTimeTrigger(tt)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
-// 	ttMap[tt.Id] = tt
+	tt := setupTimeTrigger(1, tk.Id)
+	createdTt, err := store.CreateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
 
-// 	tt2 := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 60,
-// 		TimeUnit: tp.TimeUnitWeeks,
-// 	}
-// 	tt2, err = store.CreateTimeTrigger(tt2)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
-// 	ttMap[tt2.Id] = tt2
+	getTt, err := store.GetTimeTrigger(createdTt.Id)
+	if err != nil {
+		t.Errorf("GetTimeTrigger() failed: %v", err)
+	}
 
-// 	tts, err = store.ListTimeTriggers()
-// 	if err != nil {
-// 		t.Errorf("ListTimeTriggers() failed: %v", err)
-// 	}
+	utest.CompEntities(t, createdTt, getTt)
+}
 
-// 	if len(tts) != len(ttMap) {
-// 		t.Errorf("ListTimeTriggers() failed: expected %d, got %d", len(ttMap), len(tts))
-// 	}
+func TestTimeTriggerList(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerlist"
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
-// 	// compare
-// 	for _, tt := range tts {
-// 		utest.CompEntities(t, tt, ttMap[tt.Id])
-// 	}
-// }
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTimeTriggerList: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// func TestTimeTriggerListByTaskId(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerlistbytaskid"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	tt1 := setupTimeTrigger(1, tk.Id)
+	tt2 := setupTimeTrigger(2, tk.Id)
+	tt3 := setupTimeTrigger(3, tk.Id)
 
-// 	// List
-// 	tts, err := store.ListTimeTriggersByTaskId(uuid.UUID{})
-// 	if err != nil {
-// 		t.Errorf("ListTimeTriggersByTaskId() failed: %v", err)
-// 	}
+	_, err = store.CreateTimeTrigger(tt1)
+	if err != nil {
+		t.Errorf("TestTimeTriggerList: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
+	_, err = store.CreateTimeTrigger(tt2)
+	if err != nil {
+		t.Errorf("TestTimeTriggerList: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
+	_, err = store.CreateTimeTrigger(tt3)
+	if err != nil {
+		t.Errorf("TestTimeTriggerList: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
 
-// 	// make a map ttId -> tt
-// 	ttMap := make(map[uuid.UUID]tp.TimeTrigger)
-// 	for _, tt := range tts {
-// 		ttMap[tt.Id] = tt
-// 	}
+	tts, err := store.ListTimeTriggers()
+	if err != nil {
+		t.Errorf("ListTimeTriggers() failed: %v", err)
+	}
 
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	tt := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	tt, err = store.CreateTimeTrigger(tt)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
-// 	ttMap[tt.Id] = tt
+	if len(tts) != 3 {
+		t.Errorf("ListTimeTriggers() returned %d time triggers, expected 3", len(tts))
+	}
+}
 
-// 	tt2 := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 60,
-// 		TimeUnit: tp.TimeUnitWeeks,
-// 	}
-// 	tt2, err = store.CreateTimeTrigger(tt2)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
-// 	ttMap[tt2.Id] = tt2
+func TestTimeTriggerUpdate(t *testing.T) {
+	t.Parallel()
+	dbName := "testtimetriggerupdate"
+	store := utest.InitializeStore(dbName)
+	defer utest.CloseStore(store, dbName)
 
-// 	tts, err = store.ListTimeTriggersByTaskId(assetTaskId)
-// 	if err != nil {
-// 		t.Errorf("ListTimeTriggersByTaskId() failed: %v", err)
-// 	}
+	tk := setupTask(1)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTask() failed: %v", err)
+	}
 
-// 	if len(tts) != len(ttMap) {
-// 		t.Errorf("ListTimeTriggersByTaskId() failed: expected %d, got %d", len(ttMap), len(tts))
-// 	}
+	tt := setupTimeTrigger(1, tk.Id)
+	createdTt, err := store.CreateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTimeTrigger() failed: %v", err)
+	}
 
-// 	// compare
-// 	for _, tt := range tts {
-// 		utest.CompEntities(t, tt, ttMap[tt.Id])
-// 	}
-// }
+	tt.Quantity = 60
+	tt.TimeUnit = tp.TimeTriggerUnitWeeks
+	updatedTt, err := store.UpdateTimeTrigger(tt)
+	if err != nil {
+		t.Errorf("UpdateTimeTrigger() failed: %v", err)
+	}
 
-// func TestTimeTriggerUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerupdateget"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	// setup
-// 	assetTaskId := setupTask(t, store, "1")
-// 	tt := tp.TimeTrigger{
-// 		TaskId:   assetTaskId,
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	createdTt, err := store.CreateTimeTrigger(tt)
-// 	if err != nil {
-// 		t.Errorf("CreateTimeTrigger() failed: %v", err)
-// 	}
-
-// 	// update
-// 	createdTt.Quantity = 60
-// 	createdTt.TimeUnit = tp.TimeUnitWeeks
-// 	updatedTt, err := store.UpdateTimeTrigger(createdTt.Id, createdTt)
-// 	if err != nil {
-// 		t.Errorf("UpdateTimeTrigger() failed: %v", err)
-// 	}
-
-// 	utest.CompEntities(t, createdTt, updatedTt)
-
-// 	// get
-// 	tt, err = store.GetTimeTrigger(updatedTt.Id)
-// 	if err != nil {
-// 		t.Errorf("GetTimeTrigger() failed: %v", err)
-// 	}
-
-// 	utest.CompEntities(t, updatedTt, tt)
-// }
-
-// func TestTimeTriggerUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testtimetriggerupdatenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	tt := tp.TimeTrigger{
-// 		Id:       uuid.UUID{},
-// 		TaskId:   uuid.UUID{},
-// 		Quantity: 30,
-// 		TimeUnit: tp.TimeUnitDays,
-// 	}
-// 	_, err := store.UpdateTimeTrigger(tt.Id, tt)
-// 	if err == nil {
-// 		t.Errorf("UpdateTimeTrigger() should have failed")
-// 	}
-// }
+	diffFields := utest.ConvertStrArrToSet([]string{"Quantity", "TimeUnit"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, updatedTt, createdTt, diffFields)
+}

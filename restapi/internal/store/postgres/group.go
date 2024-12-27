@@ -74,7 +74,7 @@ func (pg *PostgresStore) ListGroups() ([]tp.Group, error) {
 
 func (pg *PostgresStore) UpdateGroup(g tp.Group) (tp.Group, error) {
 	query := fmt.Sprintf(`UPDATE %s SET title = $1 WHERE id = $2`, groupTableName)
-	result, err := pg.db.Exec(query, g.Id)
+	result, err := pg.db.Exec(query, g.Title, g.Id)
 	if err != nil {
 		return tp.Group{}, handleDbError(err, "group")
 	}

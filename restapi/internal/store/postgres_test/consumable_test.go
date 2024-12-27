@@ -1,169 +1,146 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
+import (
+	"fmt"
+	"testing"
 
-// 	"github.com/google/uuid"
-// 	"github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestConsumableCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumablecreate"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+func setupConsumable(identifier int) tp.Consumable {
+	return tp.Consumable{
+		Id:    uuid.New(),
+		Title: fmt.Sprintf("Consumable %d", identifier),
+	}
+}
 
-// 	// Create
-// 	consumable := types.Consumable{
-// 		Title: "testconsumable1",
-// 	}
+func TestConsumableCreate(t *testing.T) {
+	t.Parallel()
 
-// 	returnedConsumable, err := store.CreateConsumable(consumable)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testconsumablecreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	if returnedConsumable.Title != consumable.Title {
-// 		t.Errorf("Create() failed: expected %s, got %s", consumable.Title, returnedConsumable.Title)
-// 	}
+	c := setupConsumable(1)
 
-// 	if returnedConsumable.Id == uuid.Nil {
-// 		t.Errorf("Create() failed: expected non-empty ID, got empty")
-// 	}
-// }
+	// test
+	createdConsumable, err := store.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("CreateConsumable() failed: %v", err)
+	}
 
-// func TestConsumableDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumabledelete"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	utest.CompEntities(t, c, createdConsumable)
+}
 
-// 	// Create
-// 	consumable := types.Consumable{
-// 		Title: "testconsumable1",
-// 	}
+func TestConsumableDelete(t *testing.T) {
+	t.Parallel()
 
-// 	returnedConsumable, err := store.CreateConsumable(consumable)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testconsumabledelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Delete
-// 	err = store.DeleteConsumable(returnedConsumable.Title)
-// 	if err != nil {
-// 		t.Errorf("Delete() failed: %v", err)
-// 	}
+	c := setupConsumable(1)
+	createdConsumable, err := store.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestConsumableDelete: failed during setup. CreateConsumable() failed: %v", err)
+	}
 
-// 	// Confirm deletion
-// 	_, err = store.GetConsumableByTitle(returnedConsumable.Title)
-// 	if err == nil {
-// 		t.Errorf("Get() failed: expected error, got nil")
-// 	}
-// }
+	// test
+	err = store.DeleteConsumable(createdConsumable.Id)
+	if err != nil {
+		t.Errorf("TestConsumableDelete: DeleteConsumable() failed: %v", err)
+	}
 
-// func TestConsumableDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumabledeletenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	_, err = store.GetConsumable(createdConsumable.Id)
+	if err == nil {
+		t.Errorf("TestConsumableDelete: GetConsumable() returned nil error after deletion")
+	}
+}
 
-// 	err := store.DeleteConsumable("notfound")
-// 	if err == nil {
-// 		t.Errorf("DeleteConsumable() should have failed")
-// 	}
-// }
+func TestConsumableGet(t *testing.T) {
+	t.Parallel()
 
-// func TestConsumableList(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumablelist"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// setup
+	dbname := "testconsumableget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// List
-// 	consumables, err := store.ListConsumables()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+	c := setupConsumable(1)
+	createConsumable, err := store.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestConsumableGet: failed during setup. CreateConsumable() failed: %v", err)
+	}
 
-// 	if len(consumables) != 0 {
-// 		t.Errorf("List() failed: expected 0, got %d", len(consumables))
-// 	}
+	// test
+	getConsumable, err := store.GetConsumable(createConsumable.Id)
+	if err != nil {
+		t.Errorf("GetConsumable() failed: %v", err)
+	}
 
-// 	// Create
-// 	consumable := types.Consumable{
-// 		Title: "testconsumable1",
-// 	}
+	utest.CompEntities(t, createConsumable, getConsumable)
+}
 
-// 	_, err = store.CreateConsumable(consumable)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+func TestConsumableList(t *testing.T) {
+	t.Parallel()
 
-// 	// Create
-// 	consumable.Title = "testconsumable2"
-// 	_, err = store.CreateConsumable(consumable)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testconsumablelist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// List
-// 	consumables, err = store.ListConsumables()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+	c1 := setupConsumable(1)
+	c2 := setupConsumable(2)
+	c3 := setupConsumable(3)
 
-// 	expectedConsumableCount := 2
-// 	if len(consumables) != expectedConsumableCount {
-// 		t.Errorf("List() failed: expected %d, got %d", expectedConsumableCount, len(consumables))
-// 	}
-// }
+	_, err := store.CreateConsumable(c1)
+	if err != nil {
+		t.Errorf("TestConsumableList: failed during setup. CreateConsumable() failed: %v", err)
+	}
+	_, err = store.CreateConsumable(c2)
+	if err != nil {
+		t.Errorf("TestConsumableList: failed during setup. CreateConsumable() failed: %v", err)
+	}
+	_, err = store.CreateConsumable(c3)
+	if err != nil {
+		t.Errorf("TestConsumableList: failed during setup. CreateConsumable() failed: %v", err)
+	}
 
-// func TestConsumableUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumableupdateget"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
+	// test
+	consumables, err := store.ListConsumables()
+	if err != nil {
+		t.Errorf("ListConsumables() failed: %v", err)
+	}
 
-// 	// Create
-// 	consumable := types.Consumable{
-// 		Title: "testconsumable1",
-// 	}
+	if len(consumables) != 3 {
+		t.Errorf("ListConsumables() returned %d consumables, expected 3", len(consumables))
+	}
+}
 
-// 	returnedConsumable, err := store.CreateConsumable(consumable)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+func TestConsumableUpdate(t *testing.T) {
+	t.Parallel()
 
-// 	// Update
-// 	consumable.Title = "testconsumable2"
-// 	_, err = store.UpdateConsumable(returnedConsumable.Title, consumable)
-// 	if err != nil {
-// 		t.Errorf("Update() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testconsumableupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Get
-// 	consumable, err = store.GetConsumableByTitle(consumable.Title)
-// 	if err != nil {
-// 		t.Errorf("Get() failed: %v", err)
-// 	}
+	c := setupConsumable(1)
+	createdConsumable, err := store.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestConsumableUpdate: failed during setup. CreateConsumable() failed: %v", err)
+	}
 
-// 	if consumable.Title != "testconsumable2" {
-// 		t.Errorf("Get() failed: expected testconsumable2, got %s", consumable.Title)
-// 	}
-// }
+	// test
+	c.Title = "Updated Title"
+	updatedConsumable, err := store.UpdateConsumable(c)
+	if err != nil {
+		t.Errorf("UpdateConsumable() failed: %v", err)
+	}
 
-// func TestConsumableUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbName := "testconsumableupdatenotfound"
-// 	store := utest.InitializeStore(dbName)
-// 	defer utest.CloseStore(store, dbName)
-
-// 	consumable := types.Consumable{
-// 		Title: "notfound",
-// 	}
-// 	_, err := store.UpdateConsumable("notfound", consumable)
-// 	if err == nil {
-// 		t.Errorf("UpdateConsumable() should have failed")
-// 	}
-// }
+	differentFields := utest.ConvertStrArrToSet([]string{"Title"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdConsumable, updatedConsumable, differentFields)
+}

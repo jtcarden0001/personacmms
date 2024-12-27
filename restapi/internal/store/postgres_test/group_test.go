@@ -1,162 +1,146 @@
-package integration
+package postgres_test
 
-// import (
-// 	"testing"
+import (
+	"fmt"
+	"testing"
 
-// 	"github.com/google/uuid"
-// 	"github.com/jtcarden0001/personacmms/restapi/internal/types"
-// 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
-// )
+	"github.com/google/uuid"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestGroupCreate(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgroupcreate"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+func setupGroup(identifier int) tp.Group {
+	return tp.Group{
+		Id:    uuid.New(),
+		Title: fmt.Sprintf("Group %d", identifier),
+	}
+}
 
-// 	// Create
-// 	group := types.Group{
-// 		Title: "testgroup1",
-// 	}
+func TestGroupCreate(t *testing.T) {
+	t.Parallel()
 
-// 	returnGroup, err := store.CreateGroup(group)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testgroupcreate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	if returnGroup.Title != group.Title {
-// 		t.Errorf("Create() failed: expected %s, got %s", group.Title, returnGroup.Title)
-// 	}
+	g := setupGroup(1)
 
-// 	if returnGroup.Id == uuid.Nil {
-// 		t.Errorf("Create() failed: expected non-nil id")
-// 	}
-// }
+	// test
+	createdGroup, err := store.CreateGroup(g)
+	if err != nil {
+		t.Errorf("CreateGroup() failed: %v", err)
+	}
 
-// func TestGroupDelete(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgroupdelete"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	utest.CompEntities(t, g, createdGroup)
+}
 
-// 	// Delete
-// 	group := types.Group{
-// 		Title: "testgroup1",
-// 	}
-// 	_, err := store.CreateGroup(group)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+func TestGroupDelete(t *testing.T) {
+	t.Parallel()
 
-// 	err = store.DeleteGroup(group.Title)
-// 	if err != nil {
-// 		t.Errorf("Delete() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testgroupdelete"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	// Get
-// 	_, err = store.GetGroup(group.Title)
-// 	if err == nil {
-// 		t.Errorf("Get() failed: expected error, got nil")
-// 	}
-// }
+	g := setupGroup(1)
+	createdGroup, err := store.CreateGroup(g)
+	if err != nil {
+		t.Errorf("TestGroupDelete: failed during setup. CreateGroup() failed: %v", err)
+	}
 
-// func TestGroupDeleteNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgroupdeletenotfound"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	// test
+	err = store.DeleteGroup(createdGroup.Id)
+	if err != nil {
+		t.Errorf("TestGroupDelete: DeleteGroup() failed: %v", err)
+	}
 
-// 	err := store.DeleteGroup("notfound")
-// 	if err == nil {
-// 		t.Errorf("DeleteGroup() should have failed")
-// 	}
-// }
+	_, err = store.GetGroup(createdGroup.Id)
+	if err == nil {
+		t.Errorf("TestGroupDelete: GetGroup() returned nil error after deletion")
+	}
+}
 
-// func TestGroupList(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgrouplist"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+func TestGroupGet(t *testing.T) {
+	t.Parallel()
 
-// 	// List
-// 	groups, err := store.ListGroups()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+	// setup
+	dbname := "testgroupget"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	if len(groups) != 0 {
-// 		t.Errorf("List() failed: expected 0, got %d", len(groups))
-// 	}
+	g := setupGroup(1)
+	createGroup, err := store.CreateGroup(g)
+	if err != nil {
+		t.Errorf("TestGroupGet: failed during setup. CreateGroup() failed: %v", err)
+	}
 
-// 	// Create
-// 	group := types.Group{
-// 		Title: "testgroup1",
-// 	}
-// 	_, err = store.CreateGroup(group)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	// test
+	getGroup, err := store.GetGroup(createGroup.Id)
+	if err != nil {
+		t.Errorf("GetGroup() failed: %v", err)
+	}
 
-// 	group.Title = "testgroup2"
-// 	_, err = store.CreateGroup(group)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	utest.CompEntities(t, createGroup, getGroup)
+}
 
-// 	// List
-// 	groups, err = store.ListGroups()
-// 	if err != nil {
-// 		t.Errorf("List() failed: %v", err)
-// 	}
+func TestGroupList(t *testing.T) {
+	t.Parallel()
 
-// 	if len(groups) != 2 {
-// 		t.Errorf("List() failed: expected 2, got %d", len(groups))
-// 	}
-// }
+	// setup
+	dbname := "testgrouplist"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// func TestGroupUpdateGet(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgroupupdateget"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	g1 := setupGroup(1)
+	g2 := setupGroup(2)
+	g3 := setupGroup(3)
 
-// 	// Update
-// 	group := types.Group{
-// 		Title: "testgroup1",
-// 	}
-// 	_, err := store.CreateGroup(group)
-// 	if err != nil {
-// 		t.Errorf("Create() failed: %v", err)
-// 	}
+	_, err := store.CreateGroup(g1)
+	if err != nil {
+		t.Errorf("TestGroupList: failed during setup. CreateGroup() failed: %v", err)
+	}
+	_, err = store.CreateGroup(g2)
+	if err != nil {
+		t.Errorf("TestGroupList: failed during setup. CreateGroup() failed: %v", err)
+	}
+	_, err = store.CreateGroup(g3)
+	if err != nil {
+		t.Errorf("TestGroupList: failed during setup. CreateGroup() failed: %v", err)
+	}
 
-// 	group.Title = "testgroup2"
-// 	returnGroup, err := store.UpdateGroup("testgroup1", group)
-// 	if err != nil {
-// 		t.Errorf("Update() failed: %v", err)
-// 	}
+	// test
+	groups, err := store.ListGroups()
+	if err != nil {
+		t.Errorf("ListGroups() failed: %v", err)
+	}
 
-// 	// Get
-// 	getGroup, err := store.GetGroup(group.Title)
-// 	if err != nil {
-// 		t.Errorf("Get() failed: %v", err)
-// 	}
+	if len(groups) != 3 {
+		t.Errorf("ListGroups() returned %d groups, expected 3", len(groups))
+	}
+}
 
-// 	if returnGroup.Title != group.Title || getGroup.Title != group.Title {
-// 		t.Errorf("Get() failed: expected %s, got %s", group.Title, returnGroup.Title)
-// 	}
-// }
+func TestGroupUpdate(t *testing.T) {
+	t.Parallel()
 
-// func TestGroupUpdateNotFound(t *testing.T) {
-// 	t.Parallel()
-// 	dbname := "testgroupupdatenotfound"
-// 	store := utest.InitializeStore(dbname)
-// 	defer utest.CloseStore(store, dbname)
+	// setup
+	dbname := "testgroupupdate"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
 
-// 	group := types.Group{
-// 		Title: "notfound",
-// 	}
-// 	_, err := store.UpdateGroup("notfound", group)
-// 	if err == nil {
-// 		t.Errorf("UpdateGroup() should have failed")
-// 	}
-// }
+	g := setupGroup(1)
+	createdGroup, err := store.CreateGroup(g)
+	if err != nil {
+		t.Errorf("TestGroupUpdate: failed during setup. CreateGroup() failed: %v", err)
+	}
+
+	// test
+	g.Title = "Updated Title"
+	updatedGroup, err := store.UpdateGroup(g)
+	if err != nil {
+		t.Errorf("UpdateGroup() failed: %v", err)
+	}
+
+	differentFields := utest.ConvertStrArrToSet([]string{"Title"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdGroup, updatedGroup, differentFields)
+}

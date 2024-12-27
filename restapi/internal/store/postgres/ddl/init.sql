@@ -15,6 +15,7 @@ CREATE TABLE asset (
   id uuid,
   title varchar NOT NULL UNIQUE,
   year int,
+  manufacturer varchar,
   make varchar,
   model_number varchar,
   serial_number varchar,
@@ -41,6 +42,12 @@ CREATE TABLE task (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE workorderstatus (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE workorder (
   id uuid,
   title varchar NOT NULL,
@@ -51,12 +58,6 @@ CREATE TABLE workorder (
   cumulative_miles int, 
   cumulative_hours int,
   status_id uuid NOT NULL REFERENCES workorderstatus(id),
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE workorderstatus (
-  id uuid,
-  title varchar NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
 
@@ -100,6 +101,12 @@ CREATE TABLE workorder_consumable (
   PRIMARY KEY (workorder_id, consumable_id)
 );
 
+CREATE TABLE timeunit (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE timetrigger (
   id uuid,
   quantity int NOT NULL,
@@ -108,7 +115,7 @@ CREATE TABLE timetrigger (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE timeunit (
+CREATE TABLE usageunit (
   id uuid,
   title varchar NOT NULL UNIQUE,
   PRIMARY KEY (id)
@@ -122,12 +129,6 @@ CREATE TABLE usagetrigger (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE usageunit (
-  id uuid,
-  title varchar NOT NULL UNIQUE,
-  PRIMARY KEY (id)
-);
-
 CREATE TABLE datetrigger (
   id uuid,
   scheduled_date timestamptz NOT NULL,
@@ -138,10 +139,10 @@ CREATE TABLE datetrigger (
 ------ seed data
 
 -- timeunit
-INSERT INTO timeunit (id, title) VALUES ('A8208F4-D335-4706-9EC0-E228832BA0FE', 'day');
-INSERT INTO timeunit (id, title) VALUES ('B8208F4-D335-4706-9EC0-E228832BA0FE', 'week');
-INSERT INTO timeunit (id, title) VALUES ('C8208F4-D335-4706-9EC0-E228832BA0FE', 'month');
-INSERT INTO timeunit (id, title) VALUES ('D8208F4-D335-4706-9EC0-E228832BA0FE', 'year');
+INSERT INTO timeunit (id, title) VALUES ('AA199071-058D-4942-A8CD-77103F88332B', 'day');
+INSERT INTO timeunit (id, title) VALUES ('BA199071-058D-4942-A8CD-77103F88332B', 'week');
+INSERT INTO timeunit (id, title) VALUES ('CA199071-058D-4942-A8CD-77103F88332B', 'month');
+INSERT INTO timeunit (id, title) VALUES ('DA199071-058D-4942-A8CD-77103F88332B', 'year');
 
 -- usageunit
 INSERT INTO usageunit (id, title) VALUES ('AACD1682-1FA4-4C75-A870-CF953B8859B9', 'hour');
