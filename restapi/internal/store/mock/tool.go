@@ -6,65 +6,58 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// tool
+var toolTable = "tools"
+
 func (m *MockStore) CreateTool(tool tp.Tool) (tp.Tool, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.data["tools"] == nil {
-		m.data["tools"] = make(map[string]interface{})
+	if m.data[toolTable] == nil {
+		m.data[toolTable] = make(map[uuid.UUID]interface{})
 	}
-	tool.Id = uuid.New()
-	m.data["tools"][tool.Title] = tool
+
+	m.data[toolTable][tool.Id] = tool
 	return tool, nil
 }
 
-func (m *MockStore) DeleteTool(title string) error {
+func (m *MockStore) DeleteTool(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["tools"][title]; !ok {
-		return ae.New(ae.CodeNotFound, "tool not found")
+	if _, ok := m.data[toolTable][id]; !ok {
+		return ae.New(ae.CodeNotFound, "deletetool - tool not found")
 	}
-	delete(m.data["tools"], title)
+
+	delete(m.data[toolTable], id)
 	return nil
 }
 
-func (m *MockStore) GetTool(title string) (tp.Tool, error) {
+func (m *MockStore) GetTool(id uuid.UUID) (tp.Tool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if tool, ok := m.data["tools"][title]; ok {
+	if tool, ok := m.data[toolTable][id]; ok {
 		return tool.(tp.Tool), nil
 	}
-	return tp.Tool{}, nil
-}
 
-func (m *MockStore) GetToolById(id uuid.UUID) (tp.Tool, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	for _, tool := range m.data["tools"] {
-		if tool.(tp.Tool).Id == id {
-			return tool.(tp.Tool), nil
-		}
-	}
-
-	return tp.Tool{}, nil
+	return tp.Tool{}, ae.New(ae.CodeNotFound, "gettool - tool not found")
 }
 
 func (m *MockStore) ListTools() ([]tp.Tool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var tools []tp.Tool
-	for _, tool := range m.data["tools"] {
+	for _, tool := range m.data[toolTable] {
 		tools = append(tools, tool.(tp.Tool))
 	}
+
 	return tools, nil
 }
 
-func (m *MockStore) UpdateTool(title string, tool tp.Tool) (tp.Tool, error) {
+func (m *MockStore) UpdateTool(tool tp.Tool) (tp.Tool, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["tools"][title]; !ok {
-		return tp.Tool{}, ae.New(ae.CodeNotFound, "tool not found")
+	if _, ok := m.data[toolTable][tool.Id]; !ok {
+		return tp.Tool{}, ae.New(ae.CodeNotFound, "updatetool - tool not found")
 	}
-	m.data["tools"][title] = tool
+
+	m.data[toolTable][tool.Id] = tool
 	return tool, nil
 }

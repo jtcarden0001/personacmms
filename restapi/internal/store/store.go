@@ -14,7 +14,7 @@ type Store interface {
 	DeleteAsset(uuid.UUID) error
 	GetAsset(uuid.UUID) (tp.Asset, error)
 	ListAssets() ([]tp.Asset, error)
-	UpdateAsset(tp.Asset) (tp.Asset, error)
+	UpdateAsset(asset tp.Asset) (tp.Asset, error)
 
 	// category
 	CreateCategory(tp.Category) (tp.Category, error)

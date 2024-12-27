@@ -6,55 +6,58 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// group
+var groupTable = "groups"
+
 func (m *MockStore) CreateGroup(group tp.Group) (tp.Group, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.data["groups"] == nil {
-		m.data["groups"] = make(map[string]interface{})
+	if m.data[groupTable] == nil {
+		m.data[groupTable] = make(map[uuid.UUID]interface{})
 	}
-	group.Id = uuid.New()
-	m.data["groups"][group.Title] = group
+
+	m.data[groupTable][group.Id] = group
 	return group, nil
 }
 
-func (m *MockStore) DeleteGroup(title string) error {
+func (m *MockStore) DeleteGroup(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["groups"][title]; !ok {
-		return ae.New(ae.CodeNotFound, "group not found")
+	if _, ok := m.data[groupTable][id]; !ok {
+		return ae.New(ae.CodeNotFound, "deletegroup - group not found")
 	}
-	delete(m.data["groups"], title)
+
+	delete(m.data[groupTable], id)
 	return nil
 }
 
-func (m *MockStore) GetGroup(title string) (tp.Group, error) {
+func (m *MockStore) GetGroup(id uuid.UUID) (tp.Group, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if group, ok := m.data["groups"][title]; ok {
+	if group, ok := m.data[groupTable][id]; ok {
 		return group.(tp.Group), nil
 	}
 
-	return tp.Group{}, ae.ErrNotFound
+	return tp.Group{}, ae.New(ae.CodeNotFound, "getgroup - group not found")
 }
 
 func (m *MockStore) ListGroups() ([]tp.Group, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var groups []tp.Group
-	for _, group := range m.data["groups"] {
+	for _, group := range m.data[groupTable] {
 		groups = append(groups, group.(tp.Group))
 	}
+
 	return groups, nil
 }
 
-func (m *MockStore) UpdateGroup(title string, group tp.Group) (tp.Group, error) {
+func (m *MockStore) UpdateGroup(group tp.Group) (tp.Group, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["groups"][title]; !ok {
-		return tp.Group{}, ae.New(ae.CodeNotFound, "group not found")
+	if _, ok := m.data[groupTable][group.Id]; !ok {
+		return tp.Group{}, ae.New(ae.CodeNotFound, "updategroup - group not found")
 	}
-	delete(m.data["groups"], title)
-	m.data["groups"][group.Title] = group
+
+	m.data[groupTable][group.Id] = group
 	return group, nil
 }

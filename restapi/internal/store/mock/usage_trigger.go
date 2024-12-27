@@ -6,65 +6,58 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// usage trigger
+var usageTriggerTable = "usageTriggers"
+
 func (m *MockStore) CreateUsageTrigger(ut tp.UsageTrigger) (tp.UsageTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.data["usageTriggers"] == nil {
-		m.data["usageTriggers"] = make(map[string]interface{})
+	if m.data[usageTriggerTable] == nil {
+		m.data[usageTriggerTable] = make(map[uuid.UUID]interface{})
 	}
-	ut.Id = uuid.New()
-	m.data["usageTriggers"][ut.Id.String()] = ut
+
+	m.data[usageTriggerTable][ut.Id] = ut
 	return ut, nil
 }
 
 func (m *MockStore) DeleteUsageTrigger(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["usageTriggers"][id.String()]; !ok {
-		return ae.New(ae.CodeNotFound, "usage trigger not found")
+	if _, ok := m.data[usageTriggerTable][id]; !ok {
+		return ae.New(ae.CodeNotFound, "deleteusagetrigger - usage trigger not found")
 	}
-	delete(m.data["usageTriggers"], id.String())
+
+	delete(m.data[usageTriggerTable], id)
 	return nil
 }
 
 func (m *MockStore) GetUsageTrigger(id uuid.UUID) (tp.UsageTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if ut, ok := m.data["usageTriggers"][id.String()]; ok {
+	if ut, ok := m.data[usageTriggerTable][id]; ok {
 		return ut.(tp.UsageTrigger), nil
 	}
-	return tp.UsageTrigger{}, nil
+
+	return tp.UsageTrigger{}, ae.New(ae.CodeNotFound, "getusagetrigger - usage trigger not found")
 }
 
 func (m *MockStore) ListUsageTriggers() ([]tp.UsageTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var usageTriggers []tp.UsageTrigger
-	for _, ut := range m.data["usageTriggers"] {
+	for _, ut := range m.data[usageTriggerTable] {
 		usageTriggers = append(usageTriggers, ut.(tp.UsageTrigger))
 	}
+
 	return usageTriggers, nil
 }
 
-func (m *MockStore) ListUsageTriggersByTaskId(id uuid.UUID) ([]tp.UsageTrigger, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	var usageTriggers []tp.UsageTrigger
-	for _, ut := range m.data["usageTriggers"] {
-		if ut.(tp.UsageTrigger).TaskId == id {
-			usageTriggers = append(usageTriggers, ut.(tp.UsageTrigger))
-		}
-	}
-	return usageTriggers, nil
-}
-
-func (m *MockStore) UpdateUsageTrigger(id uuid.UUID, ut tp.UsageTrigger) (tp.UsageTrigger, error) {
+func (m *MockStore) UpdateUsageTrigger(ut tp.UsageTrigger) (tp.UsageTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["usageTriggers"][id.String()]; !ok {
-		return tp.UsageTrigger{}, ae.New(ae.CodeNotFound, "usage trigger not found")
+	if _, ok := m.data[usageTriggerTable][ut.Id]; !ok {
+		return tp.UsageTrigger{}, ae.New(ae.CodeNotFound, "updateusagetrigger - usage trigger not found")
 	}
-	m.data["usageTriggers"][id.String()] = ut
+
+	m.data[usageTriggerTable][ut.Id] = ut
 	return ut, nil
 }

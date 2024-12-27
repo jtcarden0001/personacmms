@@ -6,65 +6,58 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// date trigger
+var dtTable = "dateTriggers"
+
 func (m *MockStore) CreateDateTrigger(dt tp.DateTrigger) (tp.DateTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.data["dateTriggers"] == nil {
-		m.data["dateTriggers"] = make(map[string]interface{})
+	if m.data[dtTable] == nil {
+		m.data[dtTable] = make(map[uuid.UUID]interface{})
 	}
-	dt.Id = uuid.New()
-	m.data["dateTriggers"][dt.Id.String()] = dt
+
+	m.data[dtTable][dt.Id] = dt
 	return dt, nil
 }
 
 func (m *MockStore) DeleteDateTrigger(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["dateTriggers"][id.String()]; !ok {
-		return ae.New(ae.CodeNotFound, "date trigger not found")
+	if _, ok := m.data[dtTable][id]; !ok {
+		return ae.New(ae.CodeNotFound, "deletedatetrigger - date trigger not found")
 	}
-	delete(m.data["dateTriggers"], id.String())
+
+	delete(m.data[dtTable], id)
 	return nil
 }
 
 func (m *MockStore) GetDateTrigger(id uuid.UUID) (tp.DateTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if dt, ok := m.data["dateTriggers"][id.String()]; ok {
+	if dt, ok := m.data[dtTable][id]; ok {
 		return dt.(tp.DateTrigger), nil
 	}
-	return tp.DateTrigger{}, nil
+
+	return tp.DateTrigger{}, ae.New(ae.CodeNotFound, "getdatetrigger - date trigger not found")
 }
 
 func (m *MockStore) ListDateTriggers() ([]tp.DateTrigger, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var dateTriggers []tp.DateTrigger
-	for _, dt := range m.data["dateTriggers"] {
+	for _, dt := range m.data[dtTable] {
 		dateTriggers = append(dateTriggers, dt.(tp.DateTrigger))
 	}
+
 	return dateTriggers, nil
 }
 
-func (m *MockStore) ListDateTriggersByTaskId(id uuid.UUID) ([]tp.DateTrigger, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	var dateTriggers []tp.DateTrigger
-	for _, dt := range m.data["dateTriggers"] {
-		if dt.(tp.DateTrigger).TaskId == id {
-			dateTriggers = append(dateTriggers, dt.(tp.DateTrigger))
-		}
-	}
-	return dateTriggers, nil
-}
-
-func (m *MockStore) UpdateDateTrigger(id uuid.UUID, dt tp.DateTrigger) (tp.DateTrigger, error) {
+func (m *MockStore) UpdateDateTrigger(dt tp.DateTrigger) (tp.DateTrigger, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["dateTriggers"][id.String()]; !ok {
-		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, "date trigger not found")
+	if _, ok := m.data[dtTable][dt.Id]; !ok {
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, "updatedatetrigger - date trigger not found")
 	}
-	m.data["dateTriggers"][id.String()] = dt
+
+	m.data[dtTable][dt.Id] = dt
 	return dt, nil
 }

@@ -6,76 +6,58 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
-// work order
+var workOrderTable = "workOrders"
+
 func (m *MockStore) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.data["workOrders"] == nil {
-		m.data["workOrders"] = make(map[string]interface{})
+	if m.data[workOrderTable] == nil {
+		m.data[workOrderTable] = make(map[uuid.UUID]interface{})
 	}
-	wo.Id = uuid.New()
-	m.data["workOrders"][wo.Id.String()] = wo
+
+	m.data[workOrderTable][wo.Id] = wo
 	return wo, nil
 }
 
 func (m *MockStore) DeleteWorkOrder(id uuid.UUID) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["workOrders"][id.String()]; !ok {
-		return ae.New(ae.CodeNotFound, "work order not found")
+	if _, ok := m.data[workOrderTable][id]; !ok {
+		return ae.New(ae.CodeNotFound, "deleteworkorder - work order not found")
 	}
-	delete(m.data["workOrders"], id.String())
+
+	delete(m.data[workOrderTable], id)
 	return nil
 }
 
 func (m *MockStore) GetWorkOrder(id uuid.UUID) (tp.WorkOrder, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	if wo, ok := m.data["workOrders"][id.String()]; ok {
+	if wo, ok := m.data[workOrderTable][id]; ok {
 		return wo.(tp.WorkOrder), nil
 	}
-	return tp.WorkOrder{}, nil
-}
 
-func (m *MockStore) GetWorkOrderForTask(taskId uuid.UUID, woId uuid.UUID) (tp.WorkOrder, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	if wo, ok := m.data["workOrders"][woId.String()]; ok {
-		if wo.(tp.WorkOrder).TaskId == taskId {
-			return wo.(tp.WorkOrder), nil
-		}
-	}
-	return tp.WorkOrder{}, ae.New(ae.CodeNotFound, "work order not found")
+	return tp.WorkOrder{}, ae.New(ae.CodeNotFound, "getworkorder - work order not found")
 }
 
 func (m *MockStore) ListWorkOrders() ([]tp.WorkOrder, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var workOrders []tp.WorkOrder
-	for _, wo := range m.data["workOrders"] {
+	for _, wo := range m.data[workOrderTable] {
 		workOrders = append(workOrders, wo.(tp.WorkOrder))
 	}
+
 	return workOrders, nil
 }
 
-func (m *MockStore) ListWorkOrdersByTaskId(taskId uuid.UUID) ([]tp.WorkOrder, error) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	var workOrders []tp.WorkOrder
-	for _, wo := range m.data["workOrders"] {
-		if wo.(tp.WorkOrder).TaskId == taskId {
-			workOrders = append(workOrders, wo.(tp.WorkOrder))
-		}
-	}
-	return workOrders, nil
-}
-
-func (m *MockStore) UpdateWorkOrder(id uuid.UUID, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (m *MockStore) UpdateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if _, ok := m.data["workOrders"][id.String()]; !ok {
-		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, "work order not found")
+	if _, ok := m.data[workOrderTable][wo.Id]; !ok {
+		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, "updateworkorder - work order not found")
 	}
-	m.data["workOrders"][id.String()] = wo
+
+	m.data[workOrderTable][wo.Id] = wo
 	return wo, nil
 }

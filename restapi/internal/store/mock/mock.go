@@ -2,16 +2,18 @@ package mock
 
 import (
 	"sync"
+
+	"github.com/google/uuid"
 )
 
 type MockStore struct {
-	data map[string]map[string]interface{}
+	data map[string]map[uuid.UUID]interface{}
 	mu   sync.RWMutex
 }
 
 func New() *MockStore {
 	return &MockStore{
-		data: make(map[string]map[string]interface{}),
+		data: make(map[string]map[uuid.UUID]interface{}),
 	}
 }
 

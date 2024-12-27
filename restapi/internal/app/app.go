@@ -64,13 +64,6 @@ type App interface {
 	ListTasksByAsset(string) ([]tp.Task, error)
 	UpdateTask(string, string, tp.Task) (tp.Task, error)
 
-	// // task template - cut out of mvp scope, but will be implemented in future
-	// CreateTaskTemplate(tp.TaskTemplate) (tp.TaskTemplate, error)
-	// DeleteTaskTemplate(string) error
-	// GetTaskTemplate(string) (tp.TaskTemplate, error)
-	// ListTaskTemplates() ([]tp.TaskTemplate, error)
-	// UpdateTaskTemplate(string, tp.TaskTemplate) (tp.TaskTemplate, error)
-
 	// time trigger
 	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 	DeleteTimeTrigger(string, string, string) error
