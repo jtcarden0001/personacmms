@@ -78,8 +78,12 @@ type Store interface {
 	UpdateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// tool
+	AssociateToolWithTask(uuid.UUID, uuid.UUID) (tp.Tool, error)
+	AssociateToolWithWorkOrder(uuid.UUID, uuid.UUID) (tp.Tool, error)
 	CreateTool(tp.Tool) (tp.Tool, error)
 	DeleteTool(uuid.UUID) error
+	DisassociateToolWithTask(uuid.UUID, uuid.UUID) error
+	DisassociateToolWithWorkOrder(uuid.UUID, uuid.UUID) error
 	GetTool(uuid.UUID) (tp.Tool, error)
 	ListTools() ([]tp.Tool, error)
 	UpdateTool(tp.Tool) (tp.Tool, error)

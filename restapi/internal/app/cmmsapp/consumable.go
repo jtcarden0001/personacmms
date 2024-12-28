@@ -68,6 +68,8 @@ func (a *App) DeleteConsumable(consumableId string) error {
 		return ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
 	}
 
+	// TODO: block deletion if the consumable is in use
+
 	return a.db.DeleteConsumable(consumableUuid)
 }
 

@@ -29,6 +29,8 @@ func (a *App) DeleteGroup(grpId string) error {
 		return ae.New(ae.CodeInvalid, "group id must be a valid uuid")
 	}
 
+	// TODO: block group deletion if in use
+
 	return a.db.DeleteGroup(grpUuid)
 }
 

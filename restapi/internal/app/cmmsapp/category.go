@@ -31,6 +31,8 @@ func (a *App) DeleteCategory(id string) error {
 		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
+	// TODO: block deletion if the category is in use
+
 	return a.db.DeleteCategory(catUuid)
 }
 

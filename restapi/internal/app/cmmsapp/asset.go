@@ -58,7 +58,8 @@ func (a *App) DeleteAsset(assetId string) error {
 		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	// TODO: ensure cascading deletes to delete relationships with groups/categories when an asset is deleted
+	// TODO: ensure cascading deletes to delete relationships with groups/categories, tasks, work orders,
+	// tool and consumable relationships, and triggers for the tasks
 	return a.db.DeleteAsset(assetUuid)
 }
 

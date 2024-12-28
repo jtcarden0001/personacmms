@@ -44,6 +44,8 @@ func (a *App) DeleteTask(assetId string, taskId string) error {
 		return ae.New(ae.CodeInvalid, "task id must be a valid uuid")
 	}
 
+	// TODO: ensure cascading deletions of associated consumables, tools, and triggers.
+
 	return a.db.DeleteTaskFromAsset(aUid, tUid)
 }
 

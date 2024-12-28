@@ -10,11 +10,41 @@ import (
 )
 
 func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string) (tp.Tool, error) {
-	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "AssociateToolWithTask not implemented")
+	// check asset and task exists and task is associated with asset
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.Tool{}, err
+	}
+
+	tUid, tFound, err := a.toolExists(toolId)
+	if err != nil {
+		return tp.Tool{}, errors.Wrapf(err, "error checking tool exists")
+	}
+
+	if !tFound {
+		return tp.Tool{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+	}
+
+	return a.db.AssociateToolWithTask(task.Id, tUid)
 }
 
 func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) (tp.Tool, error) {
-	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "AssociateToolWithWorkOrder not implemented")
+	// check asset and work order exists and work order is associated with asset
+	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
+	if err != nil {
+		return tp.Tool{}, err
+	}
+
+	tUid, tFound, err := a.toolExists(toolId)
+	if err != nil {
+		return tp.Tool{}, errors.Wrapf(err, "error checking tool exists")
+	}
+
+	if !tFound {
+		return tp.Tool{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+	}
+
+	return a.db.AssociateToolWithWorkOrder(workOrder.Id, tUid)
 }
 
 func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
@@ -23,31 +53,94 @@ func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
 	}
 	tool.Id = uuid.New()
 
-	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "CreateTool not implemented")
+	err := a.validateTool(tool)
+	if err != nil {
+		return tp.Tool{}, errors.Wrapf(err, "CreateTool validation failed")
+	}
+
+	return a.db.CreateTool(tool)
 }
 
 func (a *App) DeleteTool(toolId string) error {
-	return ae.New(ae.CodeNotImplemented, "DeleteTool not implemented")
+	tUid, err := uuid.Parse(toolId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+	}
+
+	// TODO: block deletion if the tool is in use
+
+	return a.db.DeleteTool(tUid)
 }
 
 func (a *App) DisassociateToolWithTask(assetId string, taskId string, toolId string) error {
-	return ae.New(ae.CodeNotImplemented, "DisassociateToolWithTask not implemented")
+	// check asset and task exists and task is associated with asset
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return err
+	}
+
+	tUid, tFound, err := a.toolExists(toolId)
+	if err != nil {
+		return errors.Wrapf(err, "error checking tool exists")
+	}
+
+	if !tFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+	}
+
+	return a.db.DisassociateToolWithTask(task.Id, tUid)
 }
 
 func (a *App) DisassociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) error {
-	return ae.New(ae.CodeNotImplemented, "DisassociateToolWithWorkOrder not implemented")
+	// check asset and work order exists and work order is associated with asset
+	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
+	if err != nil {
+		return err
+	}
+
+	tUid, tFound, err := a.toolExists(toolId)
+	if err != nil {
+		return errors.Wrapf(err, "error checking tool exists")
+	}
+
+	if !tFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+	}
+
+	return a.db.DisassociateToolWithWorkOrder(workOrder.Id, tUid)
 }
 
 func (a *App) GetTool(toolId string) (tp.Tool, error) {
-	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "GetTool not implemented")
+	tUid, err := uuid.Parse(toolId)
+	if err != nil {
+		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+	}
+
+	return a.db.GetTool(tUid)
 }
 
 func (a *App) ListTools() ([]tp.Tool, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListTools not implemented")
+	return a.db.ListTools()
 }
 
 func (a *App) UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error) {
-	return tp.Tool{}, ae.New(ae.CodeNotImplemented, "UpdateTool not implemented")
+	tuid, err := uuid.Parse(toolId)
+	if err != nil {
+		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+	}
+
+	if tool.Id != uuid.Nil && tool.Id != tuid {
+		return tp.Tool{}, ae.New(ae.CodeInvalid,
+			fmt.Sprintf("tool id mismatch between [%s] and [%s]", toolId, tool.Id))
+	}
+
+	tool.Id = tuid
+	err = a.validateTool(tool)
+	if err != nil {
+		return tp.Tool{}, errors.Wrapf(err, "UpdateTool validation failed")
+	}
+
+	return a.db.UpdateTool(tool)
 }
 
 func (a *App) validateTool(tool tp.Tool) error {
