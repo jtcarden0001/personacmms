@@ -15,27 +15,73 @@ func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
 	}
 	cat.Id = uuid.New()
 
-	return tp.Category{}, ae.New(ae.CodeNotImplemented, "CreateCategory not implemented")
+	err := a.validateCategory(cat)
+	if err != nil {
+		return tp.Category{}, errors.Wrapf(err, "CreateCategory validation failed")
+	}
+
+	return a.db.CreateCategory(cat)
 }
 
 func (a *App) DeleteCategory(id string) error {
-	return ae.New(ae.CodeNotImplemented, "DeleteCategory not implemented")
+	catUuid, err := uuid.Parse(id)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.DeleteCategory(catUuid)
 }
 
 func (a *App) ListCategories() ([]tp.Category, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListCategories not implemented")
+	return a.db.ListCategories()
 }
 
 func (a *App) GetCategory(id string) (tp.Category, error) {
-	return tp.Category{}, ae.New(ae.CodeNotImplemented, "GetCategory not implemented")
+	catUuid, err := uuid.Parse(id)
+	if err != nil {
+		return tp.Category{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.GetCategory(catUuid)
 }
 
 func (a *App) UpdateCategory(id string, cat tp.Category) (tp.Category, error) {
-	return tp.Category{}, ae.New(ae.CodeNotImplemented, "UpdateCategory not implemented")
+	catUuid, err := uuid.Parse(id)
+	if err != nil {
+		return tp.Category{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	if cat.Id != uuid.Nil && cat.Id != catUuid {
+		return tp.Category{}, ae.New(ae.CodeInvalid, fmt.Sprintf("category id mismatch between [%s] and [%s]", id, cat.Id.String()))
+	}
+
+	cat.Id = catUuid
+	err = a.validateCategory(cat)
+	if err != nil {
+		return tp.Category{}, errors.Wrapf(err, "UpdateCategory validation failed")
+	}
+
+	return a.db.UpdateCategory(cat)
 }
 
+// candidate to offload to store layer
 func (a *App) ListCategoriesByAsset(assetId string) ([]tp.Category, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListCategoriesByAsset not implemented")
+	assetUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return nil, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	aex, err := a.assetExists(assetUuid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListCategoriesByAsset - GetAsset failed")
+	}
+
+	if !aex {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetUuid.String()))
+	}
+
+	// TODO: implement supporting functionality in the store layer
+	return []tp.Category{}, ae.New(ae.CodeNotImplemented, "ListCategoriesByAsset not implemented")
 }
 
 func (a *App) validateCategory(cat tp.Category) error {

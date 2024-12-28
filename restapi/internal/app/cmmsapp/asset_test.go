@@ -116,7 +116,7 @@ func TestGetAsset(t *testing.T) {
 		t.Errorf("TestAssetGet: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	getA, err := app.GetAsset(a.Id.String())
+	getA, err := app.GetAsset(creA.Id.String())
 	if err != nil {
 		t.Errorf("TestAssetGet: GetAsset() failed: %v", err)
 	}
@@ -176,5 +176,5 @@ func TestUpdateAsset(t *testing.T) {
 	}
 
 	diffFields := utest.ConvertStrArrToSet([]string{"Title"})
-	utest.CompEntitiesFieldsShouldBeDifferent(t, a, updatedAsset, diffFields)
+	utest.CompEntitiesFieldsShouldBeDifferent(t, creA, updatedAsset, diffFields)
 }

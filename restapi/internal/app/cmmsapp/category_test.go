@@ -1,101 +1,77 @@
 package cmmsapp
 
-// func TestCreateCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
+import (
+	"testing"
 
-// 	category := tp.Category{Id: uuid.New(), Title: "category1"}
-// 	createdCategory, err := app.CreateCategory(category)
-// 	assert.NoError(t, err)
-// 	assert.Equal(t, category.Title, createdCategory.Title)
-// }
+	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+)
 
-// func TestDeleteCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
+func TestCategoryCreate(t *testing.T) {
+	app := &App{db: mock.New()}
 
-// 	category := tp.Category{Title: "category1"}
-// 	db.CreateCategory(category)
+	c := utest.SetupCategory(1, false)
+	creC, err := app.CreateCategory(c)
+	if err != nil {
+		t.Fatalf("CreateCategory() failed: %v", err)
+	}
 
-// 	err := app.DeleteCategory("category1")
-// 	assert.NoError(t, err)
+	diffFields := utest.ConvertStrArrToSet([]string{"Id"})
+	utest.CompEntitiesExcludeFields(t, c, creC, diffFields)
+}
 
-// 	_, err = app.GetCategory("category1")
-// 	assert.Error(t, err)
-// }
+func TestCategoryDelete(t *testing.T) {
+	app := &App{db: mock.New()}
 
-// func TestListCategories(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Fatalf("TestCategoryDelete: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// 	category1 := tp.Category{Id: uuid.New(), Title: "category1"}
-// 	category2 := tp.Category{Id: uuid.New(), Title: "category2"}
-// 	db.CreateCategory(category1)
-// 	db.CreateCategory(category2)
+	err = app.DeleteCategory(createdCategory.Id.String())
+	if err != nil {
+		t.Errorf("DeleteCategory() failed: %v", err)
+	}
 
-// 	categories, err := app.ListCategories()
-// 	assert.NoError(t, err)
-// 	assert.Len(t, categories, 2)
-// }
+	_, err = app.GetCategory(createdCategory.Id.String())
+	if err == nil {
+		t.Errorf("GetCategory() returned nil error after deletion")
+	}
+}
 
-// func TestGetCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
+func TestCategoryGet(t *testing.T) {
+	app := &App{db: mock.New()}
 
-// 	category := tp.Category{Id: uuid.New(), Title: "category1"}
-// 	db.CreateCategory(category)
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Fatalf("TestCategoryGet: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// 	retrievedCategory, err := app.GetCategory("category1")
-// 	assert.NoError(t, err)
-// 	assert.Equal(t, category.Title, retrievedCategory.Title)
-// }
+	gotCategory, err := app.GetCategory(createdCategory.Id.String())
+	if err != nil {
+		t.Errorf("GetCategory() failed: %v", err)
+	}
 
-// func TestUpdateCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
+	utest.CompEntities(t, createdCategory, gotCategory)
+}
 
-// 	category := tp.Category{Id: uuid.New(), Title: "category1"}
-// 	db.CreateCategory(category)
+func TestCategoryUpdate(t *testing.T) {
+	app := &App{db: mock.New()}
 
-// 	updatedCategory := tp.Category{Title: "category1_updated"}
-// 	_, err := app.UpdateCategory("category1", updatedCategory)
-// 	assert.NoError(t, err)
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Fatalf("TestCategoryUpdate: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-// 	retrievedCategory, err := app.GetCategory("category1_updated")
-// 	assert.NoError(t, err)
-// 	assert.Equal(t, updatedCategory.Title, retrievedCategory.Title)
-// }
+	c.Description = utest.ToPtr("updated description")
+	updatedCategory, err := app.UpdateCategory(createdCategory.Id.String(), c)
+	if err != nil {
+		t.Errorf("UpdateCategory() failed: %v", err)
+	}
 
-// func TestCreateCategoryWithEmptyTitle(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
-
-// 	category := tp.Category{Id: uuid.New(), Title: ""}
-// 	_, err := app.CreateCategory(category)
-// 	assert.Error(t, err)
-// }
-
-// func TestDeleteNonExistentCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
-
-// 	err := app.DeleteCategory("nonexistentcategory")
-// 	assert.Error(t, err)
-// }
-
-// func TestGetNonExistentCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
-
-// 	_, err := app.GetCategory("nonexistentcategory")
-// 	assert.Error(t, err)
-// }
-
-// func TestUpdateNonExistentCategory(t *testing.T) {
-// 	db := mock.New()
-// 	app := &App{db: db}
-
-// 	updatedCategory := tp.Category{Title: "category1_updated"}
-// 	_, err := app.UpdateCategory("nonexistentcategory", updatedCategory)
-// 	assert.Error(t, err)
-// }
+	diffFields := utest.ConvertStrArrToSet([]string{"Description"})
+	utest.CompEntitiesFieldsShouldBeDifferent(t, createdCategory, updatedCategory, diffFields)
+}
