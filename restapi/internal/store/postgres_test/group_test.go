@@ -1,20 +1,10 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupGroup(identifier int) tp.Group {
-	return tp.Group{
-		Id:    uuid.New(),
-		Title: fmt.Sprintf("Group %d", identifier),
-	}
-}
 
 func TestGroupCreate(t *testing.T) {
 	t.Parallel()
@@ -24,7 +14,7 @@ func TestGroupCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	g := setupGroup(1)
+	g := utest.SetupGroup(1, true)
 
 	// test
 	createdGroup, err := store.CreateGroup(g)
@@ -43,7 +33,7 @@ func TestGroupDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	g := setupGroup(1)
+	g := utest.SetupGroup(1, true)
 	createdGroup, err := store.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestGroupDelete: failed during setup. CreateGroup() failed: %v", err)
@@ -69,7 +59,7 @@ func TestGroupGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	g := setupGroup(1)
+	g := utest.SetupGroup(1, true)
 	createGroup, err := store.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestGroupGet: failed during setup. CreateGroup() failed: %v", err)
@@ -92,9 +82,9 @@ func TestGroupList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	g1 := setupGroup(1)
-	g2 := setupGroup(2)
-	g3 := setupGroup(3)
+	g1 := utest.SetupGroup(1, true)
+	g2 := utest.SetupGroup(2, true)
+	g3 := utest.SetupGroup(3, true)
 
 	_, err := store.CreateGroup(g1)
 	if err != nil {
@@ -128,7 +118,7 @@ func TestGroupUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	g := setupGroup(1)
+	g := utest.SetupGroup(1, true)
 	createdGroup, err := store.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestGroupUpdate: failed during setup. CreateGroup() failed: %v", err)

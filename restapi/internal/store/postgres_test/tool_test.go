@@ -1,20 +1,11 @@
 package postgres_test
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupTool(identifier int) tp.Tool {
-	return tp.Tool{
-		Id:    uuid.New(),
-		Title: "Tool " + strconv.Itoa(identifier),
-	}
-}
 
 func TestToolCreate(t *testing.T) {
 	t.Parallel()
@@ -24,7 +15,7 @@ func TestToolCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tool := setupTool(1)
+	tool := utest.SetupTool(1, true)
 
 	// test
 	createdTool, err := store.CreateTool(tool)
@@ -43,7 +34,7 @@ func TestToolDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tool := setupTool(1)
+	tool := utest.SetupTool(1, true)
 	_, err := store.CreateTool(tool)
 	if err != nil {
 		t.Errorf("TestToolDelete: failed during setup. CreateTool() failed: %v", err)
@@ -69,7 +60,7 @@ func TestToolGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tool := setupTool(1)
+	tool := utest.SetupTool(1, true)
 	_, err := store.CreateTool(tool)
 	if err != nil {
 		t.Errorf("TestToolGet: failed during setup. CreateTool() failed: %v", err)
@@ -92,9 +83,9 @@ func TestToolList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tool1 := setupTool(1)
-	tool2 := setupTool(2)
-	tool3 := setupTool(3)
+	tool1 := utest.SetupTool(1, true)
+	tool2 := utest.SetupTool(2, true)
+	tool3 := utest.SetupTool(3, true)
 
 	_, err := store.CreateTool(tool1)
 	if err != nil {
@@ -142,7 +133,7 @@ func TestToolUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tool := setupTool(1)
+	tool := utest.SetupTool(1, true)
 	createTool, err := store.CreateTool(tool)
 	if err != nil {
 		t.Errorf("TestToolUpdate: failed during setup. CreateTool() failed: %v", err)

@@ -1,21 +1,12 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupTask(identifier int) tp.Task {
-	return tp.Task{
-		Id:           uuid.New(),
-		Title:        fmt.Sprintf("Task %d", identifier),
-		Instructions: utest.ToPtr(fmt.Sprintf("Task %d instructions", identifier)),
-	}
-}
 
 func TestTaskCreate(t *testing.T) {
 	t.Parallel()
@@ -25,7 +16,7 @@ func TestTaskCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 
 	// test
 	createdTask, err := store.CreateTask(tk)
@@ -44,7 +35,7 @@ func TestTaskDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	createdTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskDelete: failed during setup. CreateTask() failed: %v", err)
@@ -70,7 +61,7 @@ func TestTaskGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	createTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskGet: failed during setup. CreateTask() failed: %v", err)
@@ -93,9 +84,9 @@ func TestTaskList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tk1 := setupTask(1)
-	tk2 := setupTask(2)
-	tk3 := setupTask(3)
+	tk1 := utest.SetupTask(1, true)
+	tk2 := utest.SetupTask(2, true)
+	tk3 := utest.SetupTask(3, true)
 
 	_, err := store.CreateTask(tk1)
 	if err != nil {
@@ -143,7 +134,7 @@ func TestTaskUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	createTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskUpdate: failed during setup. CreateTask() failed: %v", err)

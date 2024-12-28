@@ -1,21 +1,10 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupCategory(identifier int) tp.Category {
-	return tp.Category{
-		Id:          uuid.New(),
-		Title:       fmt.Sprintf("Category %d", identifier),
-		Description: utest.ToPtr(fmt.Sprintf("Category %d description", identifier)),
-	}
-}
 
 func TestCategoryCreate(t *testing.T) {
 	t.Parallel()
@@ -25,7 +14,7 @@ func TestCategoryCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupCategory(1)
+	c := utest.SetupCategory(1, true)
 
 	// test
 	createdCategory, err := store.CreateCategory(c)
@@ -44,7 +33,7 @@ func TestCategoryDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupCategory(1)
+	c := utest.SetupCategory(1, true)
 	createdCategory, err := store.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestCategoryDelete: failed during setup. CreateCategory() failed: %v", err)
@@ -70,7 +59,7 @@ func TestCategoryGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupCategory(1)
+	c := utest.SetupCategory(1, true)
 	createCategory, err := store.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestCategoryGet: failed during setup. CreateCategory() failed: %v", err)
@@ -93,9 +82,9 @@ func TestCategoryList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c1 := setupCategory(1)
-	c2 := setupCategory(2)
-	c3 := setupCategory(3)
+	c1 := utest.SetupCategory(1, true)
+	c2 := utest.SetupCategory(2, true)
+	c3 := utest.SetupCategory(3, true)
 
 	_, err := store.CreateCategory(c1)
 	if err != nil {
@@ -129,7 +118,7 @@ func TestCategoryUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupCategory(1)
+	c := utest.SetupCategory(1, true)
 	createdCategory, err := store.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestCategoryUpdate: failed during setup. CreateCategory() failed: %v", err)

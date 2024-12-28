@@ -3,19 +3,9 @@ package postgres_test
 import (
 	"testing"
 
-	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupTimeTrigger(identifier int, taskId uuid.UUID) tp.TimeTrigger {
-	return tp.TimeTrigger{
-		Id:       uuid.New(),
-		TaskId:   taskId,
-		Quantity: identifier,
-		TimeUnit: tp.TimeTriggerUnitDays,
-	}
-}
 
 func TestTimeTriggerCreate(t *testing.T) {
 	t.Parallel()
@@ -23,13 +13,13 @@ func TestTimeTriggerCreate(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	_, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerCreate: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := setupTimeTrigger(1, tk.Id)
+	tt := utest.SetupTimeTrigger(1, tk.Id, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("CreateTimeTrigger() failed: %v", err)
@@ -44,13 +34,13 @@ func TestTimeTriggerDelete(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	_, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := setupTimeTrigger(1, tk.Id)
+	tt := utest.SetupTimeTrigger(1, tk.Id, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -73,13 +63,13 @@ func TestTimeTriggerGet(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	_, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := setupTimeTrigger(1, tk.Id)
+	tt := utest.SetupTimeTrigger(1, tk.Id, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -99,15 +89,15 @@ func TestTimeTriggerList(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	_, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerList: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt1 := setupTimeTrigger(1, tk.Id)
-	tt2 := setupTimeTrigger(2, tk.Id)
-	tt3 := setupTimeTrigger(3, tk.Id)
+	tt1 := utest.SetupTimeTrigger(1, tk.Id, true)
+	tt2 := utest.SetupTimeTrigger(2, tk.Id, true)
+	tt3 := utest.SetupTimeTrigger(3, tk.Id, true)
 
 	_, err = store.CreateTimeTrigger(tt1)
 	if err != nil {
@@ -138,13 +128,13 @@ func TestTimeTriggerUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
 
-	tk := setupTask(1)
+	tk := utest.SetupTask(1, true)
 	_, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := setupTimeTrigger(1, tk.Id)
+	tt := utest.SetupTimeTrigger(1, tk.Id, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTimeTrigger() failed: %v", err)

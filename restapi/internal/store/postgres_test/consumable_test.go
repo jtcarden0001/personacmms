@@ -1,20 +1,10 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupConsumable(identifier int) tp.Consumable {
-	return tp.Consumable{
-		Id:    uuid.New(),
-		Title: fmt.Sprintf("Consumable %d", identifier),
-	}
-}
 
 func TestConsumableCreate(t *testing.T) {
 	t.Parallel()
@@ -24,7 +14,7 @@ func TestConsumableCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupConsumable(1)
+	c := utest.SetupConsumable(1, true)
 
 	// test
 	createdConsumable, err := store.CreateConsumable(c)
@@ -43,7 +33,7 @@ func TestConsumableDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupConsumable(1)
+	c := utest.SetupConsumable(1, true)
 	createdConsumable, err := store.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestConsumableDelete: failed during setup. CreateConsumable() failed: %v", err)
@@ -69,7 +59,7 @@ func TestConsumableGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupConsumable(1)
+	c := utest.SetupConsumable(1, true)
 	createConsumable, err := store.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestConsumableGet: failed during setup. CreateConsumable() failed: %v", err)
@@ -92,9 +82,9 @@ func TestConsumableList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c1 := setupConsumable(1)
-	c2 := setupConsumable(2)
-	c3 := setupConsumable(3)
+	c1 := utest.SetupConsumable(1, true)
+	c2 := utest.SetupConsumable(2, true)
+	c3 := utest.SetupConsumable(3, true)
 
 	_, err := store.CreateConsumable(c1)
 	if err != nil {
@@ -128,7 +118,7 @@ func TestConsumableUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	c := setupConsumable(1)
+	c := utest.SetupConsumable(1, true)
 	createdConsumable, err := store.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestConsumableUpdate: failed during setup. CreateConsumable() failed: %v", err)

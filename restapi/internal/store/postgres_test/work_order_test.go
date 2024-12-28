@@ -1,28 +1,12 @@
 package postgres_test
 
 import (
-	"strconv"
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupWorkOrder(identifier int) tp.WorkOrder {
-	return tp.WorkOrder{
-		Id:              uuid.New(),
-		Title:           "Work Order " + strconv.Itoa(identifier),
-		CreatedDate:     time.Now().AddDate(0, 0, -identifier),
-		CompletedDate:   utest.ToPtr(time.Now().AddDate(0, 0, identifier)),
-		Instructions:    utest.ToPtr("Instructions " + strconv.Itoa(identifier)),
-		Notes:           utest.ToPtr("Notes " + strconv.Itoa(identifier)),
-		CumulativeMiles: utest.ToPtr(identifier * 100),
-		CumulativeHours: utest.ToPtr(identifier * 10),
-		Status:          tp.WorkOrderStatusComplete,
-	}
-}
 
 func TestWorkOrderCreate(t *testing.T) {
 	t.Parallel()
@@ -32,7 +16,7 @@ func TestWorkOrderCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	wo := setupWorkOrder(1)
+	wo := utest.SetupWorkOrder(1, true)
 
 	// test
 	createdWorkOrder, err := store.CreateWorkOrder(wo)
@@ -51,7 +35,7 @@ func TestWorkOrderDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	wo := setupWorkOrder(1)
+	wo := utest.SetupWorkOrder(1, true)
 	createdWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderDelete: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -77,7 +61,7 @@ func TestWorkOrderGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	wo := setupWorkOrder(1)
+	wo := utest.SetupWorkOrder(1, true)
 	createWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderGet: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -100,9 +84,9 @@ func TestWorkOrderList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	wo1 := setupWorkOrder(1)
-	wo2 := setupWorkOrder(2)
-	wo3 := setupWorkOrder(3)
+	wo1 := utest.SetupWorkOrder(1, true)
+	wo2 := utest.SetupWorkOrder(2, true)
+	wo3 := utest.SetupWorkOrder(3, true)
 
 	_, err := store.CreateWorkOrder(wo1)
 	if err != nil {
@@ -150,7 +134,7 @@ func TestWorkOrderUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	wo := setupWorkOrder(1)
+	wo := utest.SetupWorkOrder(1, true)
 	createWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderUpdate: failed during setup. CreateWorkOrder() failed: %v", err)
