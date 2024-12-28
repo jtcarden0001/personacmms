@@ -3,6 +3,7 @@ package cmmsapp
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -18,6 +19,34 @@ func TestCategoryCreate(t *testing.T) {
 
 	diffFields := utest.ConvertStrArrToSet([]string{"Id"})
 	utest.CompEntitiesExcludeFields(t, c, creC, diffFields)
+}
+
+func TestCategoryExists(t *testing.T) {
+	app := &App{db: mock.New()}
+
+	c := utest.SetupCategory(1, false)
+	creCat, err := app.CreateCategory(c)
+	if err != nil {
+		t.Fatalf("TestCategoryExistsOnAbsentCategory: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	exists, err := app.categoryExists(creCat.Id)
+	if err != nil {
+		t.Errorf("CategoryExists() failed: %v", err)
+	}
+
+	if !exists {
+		t.Errorf("CategoryExists() returned false for existing category")
+	}
+
+	exists, err = app.categoryExists(uuid.New())
+	if err != nil {
+		t.Errorf("CategoryExists() failed: %v", err)
+	}
+
+	if exists {
+		t.Errorf("CategoryExists() returned true for non-existing category")
+	}
 }
 
 func TestCategoryDelete(t *testing.T) {

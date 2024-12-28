@@ -10,10 +10,12 @@ import (
 )
 
 func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string) (tp.Consumable, error) {
+	// TODO: implement supporting functionality in the store layer
 	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithTask not implemented")
 }
 
 func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) (tp.Consumable, error) {
+	// TODO: implement supporting functionality in the store layer
 	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithWorkOrder not implemented")
 }
 
@@ -23,31 +25,62 @@ func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) 
 	}
 	consumable.Id = uuid.New()
 
-	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "CreateConsumable not implemented")
+	err := a.validateConsumable(consumable)
+	if err != nil {
+		return tp.Consumable{}, errors.Wrapf(err, "CreateConsumable validation failed")
+	}
+
+	return a.db.CreateConsumable(consumable)
 }
 
 func (a *App) DeleteConsumable(consumableId string) error {
-	return ae.New(ae.CodeNotImplemented, "DeleteConsumable not implemented")
+	consumableUuid, err := uuid.Parse(consumableId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+	}
+
+	return a.db.DeleteConsumable(consumableUuid)
 }
 
 func (a *App) DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error {
+	// TODO: implement supporting functionality in the store layer
 	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithTask not implemented")
 }
 
 func (a *App) DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error {
+	// TODO: implement supporting functionality in the store layer
 	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithWorkOrder not implemented")
 }
 
 func (a *App) GetConsumable(consumableId string) (tp.Consumable, error) {
-	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "GetConsumable not implemented")
+	consumableUuid, err := uuid.Parse(consumableId)
+	if err != nil {
+		return tp.Consumable{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+	}
+
+	return a.db.GetConsumable(consumableUuid)
 }
 
 func (a *App) ListConsumables() ([]tp.Consumable, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListConsumables not implemented")
+	return a.db.ListConsumables()
 }
 
 func (a *App) UpdateConsumable(consumableId string, consumable tp.Consumable) (tp.Consumable, error) {
-	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "UpdateConsumable not implemented")
+	consumableUuid, err := uuid.Parse(consumableId)
+	if err != nil {
+		return tp.Consumable{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+	}
+
+	if consumable.Id != uuid.Nil && consumable.Id != consumableUuid {
+		return tp.Consumable{}, ae.New(ae.CodeInvalid, fmt.Sprintf("consumable id mismatch between [%s] and [%s]", consumableId, consumable.Id.String()))
+	}
+
+	err = a.validateConsumable(consumable)
+	if err != nil {
+		return tp.Consumable{}, errors.Wrapf(err, "UpdateConsumable validation failed")
+	}
+
+	return a.db.UpdateConsumable(consumable)
 }
 
 func (a *App) validateConsumable(consumable tp.Consumable) error {
