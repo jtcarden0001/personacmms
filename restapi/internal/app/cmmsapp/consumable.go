@@ -10,13 +10,42 @@ import (
 )
 
 func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string) (tp.Consumable, error) {
-	// TODO: implement supporting functionality in the store layer
-	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithTask not implemented")
+	// check asset and task exists and task is associated with asset
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.Consumable{}, err
+	}
+
+	cUid, cFound, err := a.consumableExists(consumableId)
+	if err != nil {
+		return tp.Consumable{}, errors.Wrapf(err, "error checking consumable exists")
+	}
+
+	if !cFound {
+		return tp.Consumable{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+	}
+
+	return a.db.AssociateConsumableWithTask(task.Id, cUid)
+
 }
 
 func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) (tp.Consumable, error) {
-	// TODO: implement supporting functionality in the store layer
-	return tp.Consumable{}, ae.New(ae.CodeNotImplemented, "AssociateConsumableWithWorkOrder not implemented")
+	// check asset and work order exists and work order is associated with asset
+	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
+	if err != nil {
+		return tp.Consumable{}, err
+	}
+
+	cUid, cFound, err := a.consumableExists(consumableId)
+	if err != nil {
+		return tp.Consumable{}, errors.Wrapf(err, "error checking consumable exists")
+	}
+
+	if !cFound {
+		return tp.Consumable{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+	}
+
+	return a.db.AssociateConsumableWithWorkOrder(workOrder.Id, cUid)
 }
 
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
@@ -43,13 +72,41 @@ func (a *App) DeleteConsumable(consumableId string) error {
 }
 
 func (a *App) DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error {
-	// TODO: implement supporting functionality in the store layer
-	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithTask not implemented")
+	// check asset and task exists and task is associated with asset
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return err
+	}
+
+	cUid, cFound, err := a.consumableExists(consumableId)
+	if err != nil {
+		return errors.Wrapf(err, "error checking consumable exists")
+	}
+
+	if !cFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+	}
+
+	return a.db.DisassociateConsumableWithTask(task.Id, cUid)
 }
 
 func (a *App) DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error {
-	// TODO: implement supporting functionality in the store layer
-	return ae.New(ae.CodeNotImplemented, "DisassociateConsumableWithWorkOrder not implemented")
+	// check asset and work order exists and work order is associated with asset
+	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
+	if err != nil {
+		return err
+	}
+
+	cUid, cFound, err := a.consumableExists(consumableId)
+	if err != nil {
+		return errors.Wrapf(err, "error checking consumable exists")
+	}
+
+	if !cFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+	}
+
+	return a.db.DisassociateConsumableWithWorkOrder(workOrder.Id, cUid)
 }
 
 func (a *App) GetConsumable(consumableId string) (tp.Consumable, error) {
@@ -75,6 +132,7 @@ func (a *App) UpdateConsumable(consumableId string, consumable tp.Consumable) (t
 		return tp.Consumable{}, ae.New(ae.CodeInvalid, fmt.Sprintf("consumable id mismatch between [%s] and [%s]", consumableId, consumable.Id.String()))
 	}
 
+	consumable.Id = consumableUuid
 	err = a.validateConsumable(consumable)
 	if err != nil {
 		return tp.Consumable{}, errors.Wrapf(err, "UpdateConsumable validation failed")
@@ -98,15 +156,20 @@ func (a *App) validateConsumable(consumable tp.Consumable) error {
 	return nil
 }
 
-func (a *App) consumableExists(consumableId uuid.UUID) (bool, error) {
-	_, err := a.db.GetConsumable(consumableId)
+func (a *App) consumableExists(consumableId string) (uuid.UUID, bool, error) {
+	consumableUuid, err := uuid.Parse(consumableId)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+	}
+
+	_, err = a.db.GetConsumable(consumableUuid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return consumableUuid, false, nil
 		}
-		return false, err
+		return consumableUuid, false, err
 	}
 
-	return true, nil
+	return consumableUuid, true, nil
 }

@@ -9,6 +9,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TODO: ensure the returned category has a list of asset referenes associated with it
+
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
 	if cat.Id != uuid.Nil {
 		return tp.Category{}, ae.New(ae.CodeInvalid, "category id must be nil on create, we will create an id for you")
@@ -66,22 +68,16 @@ func (a *App) UpdateCategory(id string, cat tp.Category) (tp.Category, error) {
 
 // candidate to offload to store layer
 func (a *App) ListCategoriesByAsset(assetId string) ([]tp.Category, error) {
-	assetUuid, err := uuid.Parse(assetId)
-	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
-	}
-
-	aex, err := a.assetExists(assetUuid)
+	auid, aex, err := a.assetExists(assetId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ListCategoriesByAsset - GetAsset failed")
 	}
 
 	if !aex {
-		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetUuid.String()))
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
-	// TODO: implement supporting functionality in the store layer
-	return []tp.Category{}, ae.New(ae.CodeNotImplemented, "ListCategoriesByAsset not implemented")
+	return a.db.ListCategoriesByAsset(auid)
 }
 
 func (a *App) validateCategory(cat tp.Category) error {
@@ -99,15 +95,20 @@ func (a *App) validateCategory(cat tp.Category) error {
 	return nil
 }
 
-func (a *App) categoryExists(id uuid.UUID) (bool, error) {
-	_, err := a.db.GetCategory(id)
+func (a *App) categoryExists(id string) (uuid.UUID, bool, error) {
+	cUuid, err := uuid.Parse(id)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	_, err = a.db.GetCategory(cUuid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return cUuid, false, nil
 		}
-		return false, err
+		return cUuid, false, err
 	}
 
-	return true, nil
+	return cUuid, true, nil
 }

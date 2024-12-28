@@ -9,14 +9,34 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TODO: ensure the returned Asset hsa a list of references for the associated entities (categories and groups)
+
 func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error) {
-	// TODO: implement supporting functionality in the store layer
-	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithCategory not implemented")
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.AssociateAssetWithCategory(aUuid, cUuid)
 }
 
 func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error) {
-	// TODO: implement supporting functionality in the store layer
-	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "AssociateAssetWithGroup not implemented")
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.AssociateAssetWithGroup(aUuid, gUuid)
 }
 
 func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
@@ -38,17 +58,36 @@ func (a *App) DeleteAsset(assetId string) error {
 		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
+	// TODO: ensure cascading deletes to delete relationships with groups/categories when an asset is deleted
 	return a.db.DeleteAsset(assetUuid)
 }
 
 func (a *App) DisassociateAssetWithCategory(assetId string, categoryId string) error {
-	// TODO: implement supporting functionality in the store layer
-	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithCategory not implemented")
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.DisassociateAssetWithCategory(aUuid, cUuid)
 }
 
 func (a *App) DisassociateAssetWithGroup(assetId string, groupId string) error {
-	// TODO: implement supporting functionality in the store layer
-	return ae.New(ae.CodeNotImplemented, "DisassociateAssetWithGroup not implemented")
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.DisassociateAssetWithGroup(aUuid, gUuid)
 }
 
 func (a *App) GetAsset(assetId string) (tp.Asset, error) {
@@ -65,18 +104,35 @@ func (a *App) ListAssets() ([]tp.Asset, error) {
 }
 
 func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
-	// TODO: implement supporting functionality in the store layer
-	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByCategory not implemented")
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return nil, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.ListAssetsByCategory(cUuid)
 }
 
 func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error) {
-	// TODO: implement supporting functionality in the store layer
-	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByCategoryAndGroup not implemented")
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return nil, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return nil, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+	}
+
+	return a.db.ListAssetsByCategoryAndGroup(cUuid, gUuid)
 }
 
 func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
-	// TODO: implement supporting functionality in the store layer
-	return nil, ae.New(ae.CodeNotImplemented, "ListAssetsByGroup not implemented")
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return nil, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+	}
+
+	return a.db.ListAssetsByGroup(gUuid)
 }
 
 func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
@@ -116,16 +172,21 @@ func (a *App) validateAsset(asset tp.Asset) error {
 	return nil
 }
 
-func (a *App) assetExists(assetId uuid.UUID) (bool, error) {
-	_, err := a.db.GetAsset(assetId)
+func (a *App) assetExists(assetId string) (uuid.UUID, bool, error) {
+	assetUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	_, err = a.db.GetAsset(assetUuid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return assetUuid, false, nil
 		}
 
-		return false, errors.Wrapf(err, "assetExists failed")
+		return assetUuid, false, errors.Wrapf(err, "assetExists failed")
 	}
 
-	return true, nil
+	return assetUuid, true, nil
 }

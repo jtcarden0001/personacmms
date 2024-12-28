@@ -64,14 +64,19 @@ func (a *App) validateTimeTrigger(timeTrigger tp.TimeTrigger) error {
 	return nil
 }
 
-func (a *App) timeTriggerExists(id uuid.UUID) (bool, error) {
-	_, err := a.db.GetTimeTrigger(id)
+func (a *App) timeTriggerExists(id string) (uuid.UUID, bool, error) {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
+	}
+
+	_, err = a.db.GetTimeTrigger(uid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return uid, false, nil
 		}
-		return false, err
+		return uid, false, err
 	}
-	return true, nil
+	return uid, true, nil
 }

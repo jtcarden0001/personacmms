@@ -11,28 +11,107 @@ import (
 )
 
 func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "CreateDateTrigger - error checking task exists")
+	}
+
 	if dateTrigger.Id != uuid.Nil {
 		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be nil on create, we will create an id for you")
 	}
 	dateTrigger.Id = uuid.New()
 
-	return tp.DateTrigger{}, ae.New(ae.CodeNotImplemented, "CreateDateTrigger not implemented")
+	if dateTrigger.TaskId != uuid.Nil && dateTrigger.TaskId != task.Id {
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("task id mismatch [%s] does not match [%s]", dateTrigger.TaskId, task.Id))
+	}
+
+	dateTrigger.TaskId = task.Id
+	err = a.validateDateTrigger(dateTrigger)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "CreateDateTrigger validation failed")
+	}
+
+	return a.db.CreateDateTrigger(dateTrigger)
 }
 
 func (a *App) DeleteDateTrigger(assetId string, taskId string, dateTriggerId string) error {
-	return ae.New(ae.CodeNotImplemented, "DeleteDateTrigger not implemented")
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return errors.Wrapf(err, "DeleteDateTrigger - error checking task exists")
+	}
+
+	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
+	return a.db.DeleteDateTriggerFromTask(task.Id, dateTriggerUuid)
 }
 
 func (a *App) GetDateTrigger(assetId string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
-	return tp.DateTrigger{}, ae.New(ae.CodeNotImplemented, "GetDateTrigger not implemented")
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "DeleteDateTrigger - error checking task exists")
+	}
+
+	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
+	if err != nil {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
+	dateTrigger, err := a.db.GetDateTrigger(dateTriggerUuid)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "DeleteDateTrigger - error checking dateTrigger exists")
+	}
+
+	if dateTrigger.TaskId != task.Id {
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("dateTrigger with id [%s] not found in task with id [%s]", dateTriggerId, taskId))
+	}
+
+	return dateTrigger, nil
 }
 
 func (a *App) ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]tp.DateTrigger, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListDateTriggers not implemented")
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListDateTriggersByAssetAndTask - error checking task exists")
+	}
+
+	return a.db.ListDateTriggersByTask(task.Id)
 }
 
 func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
-	return tp.DateTrigger{}, ae.New(ae.CodeNotImplemented, "UpdateDateTrigger not implemented")
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "UpdateDateTrigger - error checking task exists")
+	}
+
+	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
+	if err != nil {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
+	if dateTrigger.Id != uuid.Nil && dateTrigger.Id != dateTriggerUuid {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, fmt.Sprintf("dateTrigger id mismatch between [%s] and [%s]", dateTriggerId, dateTrigger.Id))
+	}
+	dateTrigger.Id = dateTriggerUuid
+
+	if dateTrigger.TaskId != uuid.Nil && dateTrigger.TaskId != task.Id {
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("dateTrigger with id [%s] not found in task with id [%s]", dateTrigger.Id, task.Id))
+	}
+
+	dateTrigger.TaskId = task.Id
+	err = a.validateDateTrigger(dateTrigger)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "UpdateDateTrigger validation failed")
+	}
+
+	return a.db.UpdateDateTrigger(dateTrigger)
 }
 
 func (a *App) validateDateTrigger(dateTrigger tp.DateTrigger) error {
@@ -44,7 +123,7 @@ func (a *App) validateDateTrigger(dateTrigger tp.DateTrigger) error {
 		return ae.New(ae.CodeInvalid, "scheduled date must be in the future")
 	}
 
-	te, err := a.taskExists(dateTrigger.TaskId)
+	_, te, err := a.taskExists(dateTrigger.TaskId.String())
 	if err != nil {
 		return errors.Wrapf(err, "validateDateTrigger - unexpected error validating task exists")
 	}
@@ -56,14 +135,19 @@ func (a *App) validateDateTrigger(dateTrigger tp.DateTrigger) error {
 	return nil
 }
 
-func (a *App) dateTriggerExists(dtId uuid.UUID) (bool, error) {
-	_, err := a.db.GetDateTrigger(dtId)
+func (a *App) dateTriggerExists(dtId string) (uuid.UUID, bool, error) {
+	uid, err := uuid.Parse(dtId)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
+	_, err = a.db.GetDateTrigger(uid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return uid, false, nil
 		}
-		return false, err
+		return uid, false, err
 	}
-	return true, nil
+	return uid, true, nil
 }

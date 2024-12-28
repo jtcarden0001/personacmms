@@ -65,14 +65,19 @@ func (a *App) validateTool(tool tp.Tool) error {
 	return nil
 }
 
-func (a *App) toolExists(id uuid.UUID) (bool, error) {
-	_, err := a.db.GetTool(id)
+func (a *App) toolExists(id string) (uuid.UUID, bool, error) {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+	}
+
+	_, err = a.db.GetTool(uid)
 	if err != nil {
 		var appErr ae.AppError
 		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
-			return false, nil
+			return uid, false, nil
 		}
-		return false, err
+		return uid, false, err
 	}
-	return true, nil
+	return uid, true, nil
 }
