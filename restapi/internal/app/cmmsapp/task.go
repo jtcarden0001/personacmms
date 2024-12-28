@@ -19,8 +19,12 @@ func (a *App) CreateTask(assetId string, task tp.Task) (tp.Task, error) {
 	if err != nil {
 		return tp.Task{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
-	task.AssetId = aUid
 
+	if task.AssetId != uuid.Nil && task.AssetId != aUid {
+		return tp.Task{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", task.AssetId, assetId))
+	}
+
+	task.AssetId = aUid
 	err = a.validateTask(task)
 	if err != nil {
 		return tp.Task{}, errors.Wrapf(err, "CreateTask validation failed")
@@ -30,6 +34,11 @@ func (a *App) CreateTask(assetId string, task tp.Task) (tp.Task, error) {
 }
 
 func (a *App) DeleteTask(assetId string, taskId string) error {
+	tUid, err := uuid.Parse(taskId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "task id must be a valid uuid")
+	}
+
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
 		return errors.Wrapf(err, "error checking asset exists")
@@ -37,11 +46,6 @@ func (a *App) DeleteTask(assetId string, taskId string) error {
 
 	if !aFound {
 		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
-	}
-
-	tUid, err := uuid.Parse(taskId)
-	if err != nil {
-		return ae.New(ae.CodeInvalid, "task id must be a valid uuid")
 	}
 
 	// TODO: ensure cascading deletions of associated consumables, tools, and triggers.
@@ -66,6 +70,11 @@ func (a *App) DisassociateTaskWithWorkOrder(assetId string, taskId string, workO
 }
 
 func (a *App) GetTask(assetId string, taskId string) (tp.Task, error) {
+	tUid, err := uuid.Parse(taskId)
+	if err != nil {
+		return tp.Task{}, ae.New(ae.CodeInvalid, "task id must be a valid uuid")
+	}
+
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
 		return tp.Task{}, errors.Wrapf(err, "error checking asset exists")
@@ -73,11 +82,6 @@ func (a *App) GetTask(assetId string, taskId string) (tp.Task, error) {
 
 	if !aFound {
 		return tp.Task{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
-	}
-
-	tUid, err := uuid.Parse(taskId)
-	if err != nil {
-		return tp.Task{}, ae.New(ae.CodeInvalid, "task id must be a valid uuid")
 	}
 
 	t, err := a.db.GetTask(tUid)
@@ -141,8 +145,13 @@ func (a *App) validateTask(task tp.Task) error {
 			tp.MaxEntityTitleLength))
 	}
 
-	if _, err := a.db.GetAsset(task.AssetId); err != nil {
-		return err
+	_, aFound, err := a.assetExists(task.AssetId.String())
+	if err != nil {
+		return errors.Wrapf(err, "error checking asset exists")
+	}
+
+	if !aFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", task.AssetId))
 	}
 
 	return nil

@@ -97,7 +97,7 @@ type App interface {
 	DeleteWorkOrder(string, string) error
 	DisassociateWorkOrderWithTask(string, string, string) error
 	GetWorkOrder(string, string) (tp.WorkOrder, error)
-	ListWorkOrders(string) ([]tp.WorkOrder, error)
+	ListWorkOrdersByAsset(string) ([]tp.WorkOrder, error)
 	ListWorkOrderStatus() ([]string, error)
 	UpdateWorkOrder(string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }

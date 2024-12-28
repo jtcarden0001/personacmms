@@ -11,7 +11,21 @@ import (
 )
 
 func (a *App) AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (tp.WorkOrder, error) {
-	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "AssociateWorkOrderWithTask not implemented")
+	wUid, wFound, err := a.workOrderExists(workOrderId)
+	if err != nil {
+		return tp.WorkOrder{}, errors.Wrapf(err, "error checking work order exists")
+	}
+
+	if !wFound {
+		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found", workOrderId))
+	}
+
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
+
+	return a.db.AssociateWorkOrderWithTask(task.Id, wUid)
 }
 
 func (a *App) CreateWorkOrder(assetId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
@@ -20,31 +34,121 @@ func (a *App) CreateWorkOrder(assetId string, wo tp.WorkOrder) (tp.WorkOrder, er
 	}
 	wo.Id = uuid.New()
 
-	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "CreateWorkOrder not implemented")
+	aUid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	if wo.AssetId != uuid.Nil && wo.AssetId != aUid {
+		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", wo.AssetId, assetId))
+	}
+
+	wo.AssetId = aUid
+	err = a.validateWorkOrder(wo)
+	if err != nil {
+		return tp.WorkOrder{}, errors.Wrapf(err, "CreateWorkOrder validation failed")
+	}
+
+	return a.db.CreateWorkOrder(wo)
 }
 
 func (a *App) DeleteWorkOrder(assetId string, woId string) error {
-	return ae.New(ae.CodeNotImplemented, "DeleteWorkOrder not implemented")
+	wUid, err := uuid.Parse(woId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "work order id must be a valid uuid")
+	}
+
+	aUid, aFound, err := a.assetExists(assetId)
+	if err != nil {
+		return errors.Wrapf(err, "error checking asset exists")
+	}
+
+	if !aFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
+	}
+
+	// TODO: ensure cascading deletions of associate consumables, tools, and task relationships
+
+	return a.db.DeleteWorkOrderFromAsset(aUid, wUid)
+
 }
 
 func (a *App) DisassociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) error {
-	return ae.New(ae.CodeNotImplemented, "DisassociateWorkOrderWithTask not implemented")
+	return a.DisassociateTaskWithWorkOrder(assetId, taskId, workOrderId)
 }
 
 func (a *App) GetWorkOrder(assetId string, woId string) (tp.WorkOrder, error) {
-	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "GetWorkOrder not implemented")
+	woUid, err := uuid.Parse(woId)
+	if err != nil {
+		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "work order id must be a valid uuid")
+	}
+
+	aUid, aFound, err := a.assetExists(assetId)
+	if err != nil {
+		return tp.WorkOrder{}, errors.Wrapf(err, "error checking asset exists")
+	}
+
+	if !aFound {
+		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
+	}
+
+	wo, err := a.db.GetWorkOrder(woUid)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
+
+	if wo.AssetId != aUid {
+		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found on asset with id [%s]", woId, assetId))
+	}
+
+	return wo, nil
 }
 
-func (a *App) ListWorkOrders(assetId string) ([]tp.WorkOrder, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListWorkOrders not implemented")
+func (a *App) ListWorkOrdersByAsset(assetId string) ([]tp.WorkOrder, error) {
+	aUid, aFound, err := a.assetExists(assetId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "error checking asset exists")
+	}
+
+	if !aFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
+	}
+
+	return a.db.ListWorkOrdersByAsset(aUid)
 }
 
 func (a *App) ListWorkOrderStatus() ([]string, error) {
-	return nil, ae.New(ae.CodeNotImplemented, "ListWorkOrderStatus not implemented")
+	keys := make([]string, 0, len(tp.ValidWorkOrderStatuses))
+	for k := range tp.ValidWorkOrderStatuses {
+		keys = append(keys, k)
+	}
+
+	return keys, nil
 }
 
 func (a *App) UpdateWorkOrder(assetId string, woId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
-	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "UpdateWorkOrder not implemented")
+	// check asset and work order existence and coherency
+	gwo, err := a.GetWorkOrder(assetId, woId)
+	if err != nil {
+		return tp.WorkOrder{}, err
+	}
+
+	if wo.Id != uuid.Nil && wo.Id != gwo.Id {
+		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, fmt.Sprintf("work order id mismatch [%s] and [%s]", wo.Id, gwo.Id))
+	}
+	wo.Id = gwo.Id
+
+	if wo.AssetId != uuid.Nil && wo.AssetId != gwo.AssetId {
+		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", wo.AssetId, gwo.AssetId))
+	}
+	wo.AssetId = gwo.AssetId
+
+	err = a.validateWorkOrder(wo)
+	if err != nil {
+		return tp.WorkOrder{}, errors.Wrapf(err, "UpdateWorkOrder validation failed")
+	}
+
+	return a.db.UpdateWorkOrder(wo)
 }
 
 func (a *App) validateWorkOrder(wo tp.WorkOrder) error {
@@ -65,6 +169,15 @@ func (a *App) validateWorkOrder(wo tp.WorkOrder) error {
 
 	if !tp.ValidWorkOrderStatuses[wo.Status] {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("work order status must be one of [%s]", tp.PrintValidWorkOrderStatuses()))
+	}
+
+	_, aFound, err := a.assetExists(wo.AssetId.String())
+	if err != nil {
+		return errors.Wrapf(err, "error checking asset exists")
+	}
+
+	if !aFound {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", wo.AssetId))
 	}
 
 	return nil

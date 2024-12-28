@@ -150,7 +150,7 @@ func (h *Api) getWorkOrder(c *gin.Context) {
 //	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders [get]
 func (h *Api) listWorkOrders(c *gin.Context) {
-	workOrders, err := h.app.ListWorkOrders(c.Param(assetId))
+	workOrders, err := h.app.ListWorkOrdersByAsset(c.Param(assetId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
 }
 
