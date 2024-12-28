@@ -1,27 +1,10 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
-
-func setupAsset(identifier int) tp.Asset {
-	year := 2000 + (identifier % 22) // Random year based on identifier
-	return tp.Asset{
-		Id:           uuid.New(),
-		Title:        fmt.Sprintf("Asset %d", identifier),
-		Year:         utest.ToPtr(year),
-		Manufacturer: utest.ToPtr(fmt.Sprintf("Asset %d manufacturer", identifier)),
-		Make:         utest.ToPtr(fmt.Sprintf("Asset %d make", identifier)),
-		ModelNumber:  utest.ToPtr(fmt.Sprintf("Asset %d model number", identifier)),
-		SerialNumber: utest.ToPtr(fmt.Sprintf("Asset %d serial number", identifier)),
-		Description:  utest.ToPtr(fmt.Sprintf("Asset %d description", identifier)),
-	}
-}
 
 func TestAssetCreate(t *testing.T) {
 	t.Parallel()
@@ -31,7 +14,7 @@ func TestAssetCreate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	a := setupAsset(1)
+	a := utest.SetupAsset(1, true)
 
 	// test
 	createdAsset, err := store.CreateAsset(a)
@@ -50,7 +33,7 @@ func TestAssetDelete(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	a := setupAsset(1)
+	a := utest.SetupAsset(1, true)
 	createdAsset, err := store.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssetDelete: failed during setup. CreateAsset() failed: %v", err)
@@ -76,7 +59,7 @@ func TestAssetGet(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	a := setupAsset(1)
+	a := utest.SetupAsset(1, true)
 	createAsset, err := store.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssetGet: failed during setup. CreateAsset() failed: %v", err)
@@ -99,9 +82,9 @@ func TestAssetList(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	a1 := setupAsset(1)
-	a2 := setupAsset(2)
-	a3 := setupAsset(3)
+	a1 := utest.SetupAsset(1, true)
+	a2 := utest.SetupAsset(2, true)
+	a3 := utest.SetupAsset(3, true)
 
 	_, err := store.CreateAsset(a1)
 	if err != nil {
@@ -135,7 +118,7 @@ func TestAssetUpdate(t *testing.T) {
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
 
-	a := setupAsset(1)
+	a := utest.SetupAsset(1, true)
 	createdAsset, err := store.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssetUpdate: failed during setup. CreateAsset() failed: %v", err)
