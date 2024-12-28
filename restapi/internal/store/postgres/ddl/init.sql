@@ -39,6 +39,7 @@ CREATE TABLE task (
   id uuid,
   title varchar NOT NULL,
   instructions varchar,
+  asset_id uuid NOT NULL REFERENCES asset(id),
   PRIMARY KEY (id)
 );
 
@@ -57,8 +58,15 @@ CREATE TABLE workorder (
   notes varchar,
   cumulative_miles int, 
   cumulative_hours int,
+  asset_id uuid NOT NULL REFERENCES asset(id),
   status_id uuid NOT NULL REFERENCES workorderstatus(id),
   PRIMARY KEY (id)
+);
+
+CREATE TABLE task_workorder (
+  workorder_id uuid REFERENCES workorder(id),
+  task_id uuid REFERENCES task(id),
+  PRIMARY KEY (workorder_id)
 );
 
 CREATE TABLE tool (

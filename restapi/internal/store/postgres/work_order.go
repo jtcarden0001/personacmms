@@ -18,9 +18,9 @@ func (pg *PostgresStore) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) 
 	}
 
 	query := fmt.Sprintf(`INSERT INTO %s (
-		id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
+		id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, asset_id, status_id
 	) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 	)`, workOrderTable)
 
 	_, err = pg.db.Exec(
@@ -33,6 +33,7 @@ func (pg *PostgresStore) CreateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) 
 		wo.Notes,
 		wo.CumulativeMiles,
 		wo.CumulativeHours,
+		wo.AssetId,
 		wosId,
 	)
 	if err != nil {
@@ -65,7 +66,7 @@ func (pg *PostgresStore) GetWorkOrder(woId uuid.UUID) (tp.WorkOrder, error) {
 	var wo tp.WorkOrder
 	var statusId uuid.UUID
 	query := fmt.Sprintf(`
-		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
+		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, asset_id, status_id
 	  	FROM %s 
 		WHERE id = $1`, workOrderTable)
 	err := pg.db.QueryRow(query, woId).Scan(
@@ -77,6 +78,7 @@ func (pg *PostgresStore) GetWorkOrder(woId uuid.UUID) (tp.WorkOrder, error) {
 		&wo.Notes,
 		&wo.CumulativeMiles,
 		&wo.CumulativeHours,
+		&wo.AssetId,
 		&statusId,
 	)
 	if err != nil {
@@ -94,7 +96,7 @@ func (pg *PostgresStore) GetWorkOrder(woId uuid.UUID) (tp.WorkOrder, error) {
 
 func (pg *PostgresStore) ListWorkOrders() ([]tp.WorkOrder, error) {
 	query := fmt.Sprintf(`
-		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, status_id
+		SELECT id, title, created_date, completed_date, instructions, notes, cumulative_miles, cumulative_hours, asset_id, status_id
 	  	FROM %s`, workOrderTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
@@ -114,6 +116,7 @@ func (pg *PostgresStore) ListWorkOrders() ([]tp.WorkOrder, error) {
 			&wo.Notes,
 			&wo.CumulativeMiles,
 			&wo.CumulativeHours,
+			&wo.AssetId,
 			&statusId,
 		)
 		if err != nil {
@@ -146,8 +149,9 @@ func (pg *PostgresStore) UpdateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) 
 		notes = $5,
 		cumulative_miles = $6,
 		cumulative_hours = $7,
-		status_id = $8
-		WHERE id = $9`, workOrderTable)
+		asset_id = $8,
+		status_id = $9
+		WHERE id = $10`, workOrderTable)
 
 	result, err := pg.db.Exec(
 		query,
@@ -158,6 +162,7 @@ func (pg *PostgresStore) UpdateWorkOrder(wo tp.WorkOrder) (tp.WorkOrder, error) 
 		wo.Notes,
 		wo.CumulativeMiles,
 		wo.CumulativeHours,
+		wo.AssetId,
 		wosId,
 		wo.Id,
 	)

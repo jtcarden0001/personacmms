@@ -12,8 +12,8 @@ import (
 var taskTable = "task"
 
 func (pg *PostgresStore) CreateTask(t tp.Task) (tp.Task, error) {
-	query := fmt.Sprintf(`INSERT INTO %s (id, title, instructions) VALUES ($1, $2, $3)`, taskTable)
-	_, err := pg.db.Exec(query, t.Id, t.Title, t.Instructions)
+	query := fmt.Sprintf(`INSERT INTO %s (id, title, instructions, asset_id) VALUES ($1, $2, $3, $4)`, taskTable)
+	_, err := pg.db.Exec(query, t.Id, t.Title, t.Instructions, t.AssetId)
 	if err != nil {
 		return tp.Task{}, handleDbError(err, "tasks")
 	}
@@ -41,9 +41,9 @@ func (pg *PostgresStore) DeleteTask(id uuid.UUID) error {
 }
 
 func (pg *PostgresStore) GetTask(id uuid.UUID) (tp.Task, error) {
-	query := fmt.Sprintf(`SELECT id, title, instructions FROM %s WHERE id = $1`, taskTable)
+	query := fmt.Sprintf(`SELECT id, title, instructions, asset_id FROM %s WHERE id = $1`, taskTable)
 	var t tp.Task
-	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title, &t.Instructions)
+	err := pg.db.QueryRow(query, id).Scan(&t.Id, &t.Title, &t.Instructions, &t.AssetId)
 	if err != nil {
 		return tp.Task{}, handleDbError(err, "tasks")
 	}
@@ -52,7 +52,7 @@ func (pg *PostgresStore) GetTask(id uuid.UUID) (tp.Task, error) {
 }
 
 func (pg *PostgresStore) ListTasks() ([]tp.Task, error) {
-	query := fmt.Sprintf(`SELECT id, title, instructions FROM %s`, taskTable)
+	query := fmt.Sprintf(`SELECT id, title, instructions, asset_id FROM %s`, taskTable)
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, handleDbError(err, "tasks")
@@ -62,7 +62,7 @@ func (pg *PostgresStore) ListTasks() ([]tp.Task, error) {
 	var tasks []tp.Task
 	for rows.Next() {
 		var t tp.Task
-		err = rows.Scan(&t.Id, &t.Title, &t.Instructions)
+		err = rows.Scan(&t.Id, &t.Title, &t.Instructions, &t.AssetId)
 		if err != nil {
 			return nil, handleDbError(err, "tasks")
 		}
@@ -73,8 +73,8 @@ func (pg *PostgresStore) ListTasks() ([]tp.Task, error) {
 }
 
 func (pg *PostgresStore) UpdateTask(t tp.Task) (tp.Task, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, instructions = $2 WHERE id = $3`, taskTable)
-	result, err := pg.db.Exec(query, t.Title, t.Instructions, t.Id)
+	query := fmt.Sprintf(`UPDATE %s SET title = $1, instructions = $2, asset_id = $3 WHERE id = $4`, taskTable)
+	result, err := pg.db.Exec(query, t.Title, t.Instructions, t.AssetId, t.Id)
 	if err != nil {
 		return tp.Task{}, handleDbError(err, "tasks")
 	}
@@ -85,7 +85,7 @@ func (pg *PostgresStore) UpdateTask(t tp.Task) (tp.Task, error) {
 	}
 
 	if rowsAffected == 0 {
-		return tp.Task{}, errors.Wrapf(ae.ErrNotFound, "task with id '%s' not found", t.Id)
+		return tp.Task{}, errors.Wrapf(ae.ErrNotFound, "task with id [%s] not found", t.Id)
 	}
 
 	return t, nil
