@@ -71,8 +71,10 @@ type Store interface {
 	// time trigger
 	CreateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
 	DeleteTimeTrigger(uuid.UUID) error
+	DeleteTimeTriggerFromTask(uuid.UUID, uuid.UUID) error
 	GetTimeTrigger(uuid.UUID) (tp.TimeTrigger, error)
 	ListTimeTriggers() ([]tp.TimeTrigger, error)
+	ListTimeTriggersByTask(uuid.UUID) ([]tp.TimeTrigger, error)
 	UpdateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// tool

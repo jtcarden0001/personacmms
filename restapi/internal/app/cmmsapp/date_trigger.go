@@ -11,19 +11,21 @@ import (
 )
 
 func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
+	if dateTrigger.Id != uuid.Nil {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be nil on create, we will create an id for you")
+	}
+	dateTrigger.Id = uuid.New()
+
 	// check namespace coherency
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
 		return tp.DateTrigger{}, errors.Wrapf(err, "CreateDateTrigger - error checking task exists")
 	}
 
-	if dateTrigger.Id != uuid.Nil {
-		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be nil on create, we will create an id for you")
-	}
-	dateTrigger.Id = uuid.New()
-
 	if dateTrigger.TaskId != uuid.Nil && dateTrigger.TaskId != task.Id {
-		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("task id mismatch [%s] does not match [%s]", dateTrigger.TaskId, task.Id))
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound,
+			fmt.Sprintf("task id mismatch [%s] does not match [%s]",
+				dateTrigger.TaskId, task.Id))
 	}
 
 	dateTrigger.TaskId = task.Id
@@ -36,30 +38,30 @@ func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger tp.Da
 }
 
 func (a *App) DeleteDateTrigger(assetId string, taskId string, dateTriggerId string) error {
+	dtUid, err := uuid.Parse(dateTriggerId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
 	// check namespace coherency
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
 		return errors.Wrapf(err, "DeleteDateTrigger - error checking task exists")
 	}
 
-	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
-	if err != nil {
-		return ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
-	}
-
-	return a.db.DeleteDateTriggerFromTask(task.Id, dateTriggerUuid)
+	return a.db.DeleteDateTriggerFromTask(task.Id, dtUid)
 }
 
 func (a *App) GetDateTrigger(assetId string, taskId string, dateTriggerId string) (tp.DateTrigger, error) {
+	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
+	if err != nil {
+		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	}
+
 	// check namespace coherency
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
 		return tp.DateTrigger{}, errors.Wrapf(err, "DeleteDateTrigger - error checking task exists")
-	}
-
-	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
-	if err != nil {
-		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
 	}
 
 	dateTrigger, err := a.db.GetDateTrigger(dateTriggerUuid)
@@ -68,7 +70,10 @@ func (a *App) GetDateTrigger(assetId string, taskId string, dateTriggerId string
 	}
 
 	if dateTrigger.TaskId != task.Id {
-		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("dateTrigger with id [%s] not found in task with id [%s]", dateTriggerId, taskId))
+		return tp.DateTrigger{}, ae.New(ae.CodeNotFound,
+			fmt.Sprintf("dateTrigger with id [%s] not found in task with id [%s]",
+				dateTriggerId,
+				taskId))
 	}
 
 	return dateTrigger, nil
@@ -85,12 +90,6 @@ func (a *App) ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]t
 }
 
 func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
-	// check namespace coherency
-	task, err := a.GetTask(assetId, taskId)
-	if err != nil {
-		return tp.DateTrigger{}, errors.Wrapf(err, "UpdateDateTrigger - error checking task exists")
-	}
-
 	dateTriggerUuid, err := uuid.Parse(dateTriggerId)
 	if err != nil {
 		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
@@ -100,6 +99,12 @@ func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId str
 		return tp.DateTrigger{}, ae.New(ae.CodeInvalid, fmt.Sprintf("dateTrigger id mismatch between [%s] and [%s]", dateTriggerId, dateTrigger.Id))
 	}
 	dateTrigger.Id = dateTriggerUuid
+
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.DateTrigger{}, errors.Wrapf(err, "UpdateDateTrigger - error checking task exists")
+	}
 
 	if dateTrigger.TaskId != uuid.Nil && dateTrigger.TaskId != task.Id {
 		return tp.DateTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("dateTrigger with id [%s] not found in task with id [%s]", dateTrigger.Id, task.Id))
