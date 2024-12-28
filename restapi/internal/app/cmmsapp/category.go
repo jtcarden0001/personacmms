@@ -1,9 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) CreateCategory(cat tp.Category) (tp.Category, error) {
@@ -36,9 +39,29 @@ func (a *App) ListCategoriesByAsset(assetId string) ([]tp.Category, error) {
 }
 
 func (a *App) validateCategory(cat tp.Category) error {
-	return ae.New(ae.CodeNotImplemented, "validateCategory not implemented")
+	if cat.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "category id is required")
+	}
+
+	if len(cat.Title) < tp.MinEntityTitleLength || len(cat.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid,
+			fmt.Sprintf("category title length must be between [%d] and [%d] characters",
+				tp.MinEntityTitleLength,
+				tp.MaxEntityTitleLength))
+	}
+
+	return nil
 }
 
 func (a *App) categoryExists(id uuid.UUID) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "categoryExists not implemented")
+	_, err := a.db.GetCategory(id)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return true, nil
 }

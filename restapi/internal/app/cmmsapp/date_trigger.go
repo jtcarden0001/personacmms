@@ -1,9 +1,13 @@
 package cmmsapp
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error) {
@@ -32,9 +36,34 @@ func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId str
 }
 
 func (a *App) validateDateTrigger(dateTrigger tp.DateTrigger) error {
-	return ae.New(ae.CodeNotImplemented, "validateDateTrigger not implemented")
+	if dateTrigger.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "dateTrigger id is required")
+	}
+
+	if dateTrigger.ScheduledDate.Before(time.Now()) {
+		return ae.New(ae.CodeInvalid, "scheduled date must be in the future")
+	}
+
+	te, err := a.taskExists(dateTrigger.TaskId)
+	if err != nil {
+		return errors.Wrapf(err, "validateDateTrigger - unexpected error validating task exists")
+	}
+
+	if !te {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("parent task with id [%s] not found", dateTrigger.TaskId.String()))
+	}
+
+	return nil
 }
 
 func (a *App) dateTriggerExists(dtId uuid.UUID) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "dateTriggerExists not implemented")
+	_, err := a.db.GetDateTrigger(dtId)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }

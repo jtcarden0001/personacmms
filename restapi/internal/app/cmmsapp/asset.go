@@ -1,9 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error) {
@@ -19,8 +22,12 @@ func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
 		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
 	}
 	asset.Id = uuid.New()
+	err := a.validateAsset(asset)
+	if err != nil {
+		return tp.Asset{}, errors.Wrapf(err, "CreateAsset validation failed")
+	}
 
-	return tp.Asset{}, ae.New(ae.CodeNotImplemented, "CreateAsset not implemented")
+	return a.db.CreateAsset(asset)
 }
 
 func (a *App) DeleteAsset(assetId string) error {
@@ -60,9 +67,31 @@ func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
 }
 
 func (a *App) validateAsset(asset tp.Asset) error {
-	return ae.New(ae.CodeNotImplemented, "validateAsset not implemented")
+	if asset.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "asset id must not be nil")
+	}
+
+	// 255 is an arbitrary number subject to change, cannot be empty though
+	if len(asset.Title) < tp.MinEntityTitleLength || len(asset.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid,
+			fmt.Sprintf("asset title length must be between %d and %d characters",
+				tp.MinEntityTitleLength,
+				tp.MaxEntityTitleLength))
+	}
+
+	return nil
 }
 
 func (a *App) assetExists(assetId uuid.UUID) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "assetExists not implemented")
+	_, err := a.db.GetAsset(assetId)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+
+		return false, errors.Wrapf(err, "assetExists failed")
+	}
+
+	return true, nil
 }

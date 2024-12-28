@@ -1,6 +1,10 @@
 package types
 
-import "github.com/google/uuid"
+import (
+	"strings"
+
+	"github.com/google/uuid"
+)
 
 // A usage trigger is an even that is triggered after a specific usage threshold has been reached
 // since the last time a task was completed.  Like a generator being used for 30 hours, etc.
@@ -27,4 +31,12 @@ var ValidUsageTriggerUnits = map[string]bool{
 	UsageTriggerUnitHours: true,
 	UsageTriggerUnitDays:  true,
 	UsageTriggerUnitMiles: true,
+}
+
+func PrintValidUsageTriggerUnits() string {
+	units := []string{}
+	for unit := range ValidUsageTriggerUnits {
+		units = append(units, unit)
+	}
+	return strings.Join(units, ", ")
 }

@@ -1,9 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string) (tp.Consumable, error) {
@@ -48,9 +51,29 @@ func (a *App) UpdateConsumable(consumableId string, consumable tp.Consumable) (t
 }
 
 func (a *App) validateConsumable(consumable tp.Consumable) error {
-	return ae.New(ae.CodeNotImplemented, "validateConsumable not implemented")
+	if consumable.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "consumable id is required")
+	}
+
+	if len(consumable.Title) < tp.MinEntityTitleLength || len(consumable.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid,
+			fmt.Sprintf("consumable title length must be between [%d] and [%d] characters",
+				tp.MinEntityTitleLength,
+				tp.MaxEntityTitleLength))
+	}
+
+	return nil
 }
 
-func (a *App) consumableExists(consumableId string) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "consumableExists not implemented")
+func (a *App) consumableExists(consumableId uuid.UUID) (bool, error) {
+	_, err := a.db.GetConsumable(consumableId)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return true, nil
 }

@@ -1,9 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) CreateTask(assetId string, task tp.Task) (tp.Task, error) {
@@ -36,9 +39,27 @@ func (a *App) UpdateTask(assetId string, taskId string, task tp.Task) (tp.Task, 
 }
 
 func (a *App) validateTask(task tp.Task) error {
-	return ae.New(ae.CodeNotImplemented, "validateTask not implemented")
+	if task.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "task id is required")
+	}
+
+	if len(task.Title) < tp.MinEntityTitleLength || len(task.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("task title length must be between [%d] and [%d] characters",
+			tp.MinEntityTitleLength,
+			tp.MaxEntityTitleLength))
+	}
+
+	return nil
 }
 
 func (a *App) taskExists(id uuid.UUID) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "taskExists not implemented")
+	_, err := a.db.GetTask(id)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }

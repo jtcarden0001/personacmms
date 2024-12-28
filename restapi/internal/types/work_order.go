@@ -1,6 +1,7 @@
 package types
 
 import (
+	"strings"
 	tm "time"
 
 	"github.com/google/uuid"
@@ -36,6 +37,10 @@ var ValidWorkOrderStatuses = map[string]bool{
 	WorkOrderStatusCancelled:  true,
 }
 
-func IsValidWorkOrderStatus(ws string) bool {
-	return ValidWorkOrderStatuses[ws]
+func PrintValidWorkOrderStatuses() string {
+	statuses := []string{}
+	for status := range ValidWorkOrderStatuses {
+		statuses = append(statuses, status)
+	}
+	return strings.Join(statuses, ", ")
 }

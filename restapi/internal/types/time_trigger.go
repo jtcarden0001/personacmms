@@ -1,6 +1,10 @@
 package types
 
-import "github.com/google/uuid"
+import (
+	"strings"
+
+	"github.com/google/uuid"
+)
 
 // a time trigger is an event that is triggered after a specific time has elapsed since the last time a
 // work order was completed for a task.
@@ -17,3 +21,18 @@ const (
 	TimeTriggerUnitMonths = "month"
 	TimeTriggerUnitYears  = "year"
 )
+
+var ValidTimeTriggerUnits = map[string]bool{
+	TimeTriggerUnitDays:   true,
+	TimeTriggerUnitWeeks:  true,
+	TimeTriggerUnitMonths: true,
+	TimeTriggerUnitYears:  true,
+}
+
+func PrintValidTimeTriggerUnits() string {
+	units := []string{}
+	for unit := range ValidTimeTriggerUnits {
+		units = append(units, unit)
+	}
+	return strings.Join(units, ", ")
+}

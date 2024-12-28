@@ -1,9 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
 func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string) (tp.Tool, error) {
@@ -48,9 +51,28 @@ func (a *App) UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error) {
 }
 
 func (a *App) validateTool(tool tp.Tool) error {
-	return ae.New(ae.CodeNotImplemented, "validateTool not implemented")
+	if tool.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "tool id is required")
+	}
+
+	if len(tool.Title) < tp.MinEntityTitleLength || len(tool.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid,
+			fmt.Sprintf("tool title must be between [%d] and [%d] characters",
+				tp.MinEntityTitleLength,
+				tp.MaxEntityTitleLength))
+	}
+
+	return nil
 }
 
 func (a *App) toolExists(id uuid.UUID) (bool, error) {
-	return false, ae.New(ae.CodeNotImplemented, "toolExists not implemented")
+	_, err := a.db.GetTool(id)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
