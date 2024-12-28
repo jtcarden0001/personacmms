@@ -7,4 +7,5 @@ type Task struct {
 	Id           uuid.UUID `json:"id" swaggerignore:"true"` // will be handled by service
 	Title        string    `json:"title" binding:"required"`
 	Instructions *string   `json:"instructions"`
+	AssetId      uuid.UUID `json:"assetId" swaggerignore:"true"`
 }

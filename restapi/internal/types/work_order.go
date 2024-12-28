@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// a worker order is either a record of work done and a record of work to be done depending on the
-// status of the work order
+// a worker order is either a record of work done and a record of work to be done on an asset depending
+// on the status of the work order
 type WorkOrder struct {
 	Id              uuid.UUID `json:"id" swaggerignore:"true"`
 	Title           string    `json:"title" binding:"required"`
@@ -18,6 +18,7 @@ type WorkOrder struct {
 	Notes           *string   `json:"notes"`
 	CumulativeMiles *int      `json:"cumulativeMiles"`
 	CumulativeHours *int      `json:"cumulativeHours"`
+	AssetId         uuid.UUID `json:"assetId" swaggerignore:"true"`
 	Status          string    `json:"status" binding:"required"`
 }
 
