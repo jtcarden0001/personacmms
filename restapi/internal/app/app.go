@@ -93,13 +93,13 @@ type App interface {
 
 	// work order
 	AssociateWorkOrderWithTask(string, string, string) (tp.WorkOrder, error)
-	CreateWorkOrder(string, string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteWorkOrder(string, string, string) error
+	CreateWorkOrder(string, tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(string, string) error
 	DisassociateWorkOrderWithTask(string, string, string) error
-	GetWorkOrder(string, string, string) (tp.WorkOrder, error)
-	ListWorkOrders(string, string) ([]tp.WorkOrder, error)
+	GetWorkOrder(string, string) (tp.WorkOrder, error)
+	ListWorkOrders(string) ([]tp.WorkOrder, error)
 	ListWorkOrderStatus() ([]string, error)
-	UpdateWorkOrder(string, string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	UpdateWorkOrder(string, string, tp.WorkOrder) (tp.WorkOrder, error)
 }
 
 type AppTest interface {

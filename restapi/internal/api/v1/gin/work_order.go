@@ -70,7 +70,7 @@ func (h *Api) associateWorkOrderWithTask(c *gin.Context) {
 //	@Failure		400			{object}	map[string]any
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
-//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders [post]
+//	@Router			/assets/{assetId}/work-orders [post]
 func (h *Api) createWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
 	if err := c.BindJSON(&workOrder); err != nil {
@@ -78,7 +78,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 		return
 	}
 
-	workOrder, err := h.app.CreateWorkOrder(c.Param(assetId), c.Param(taskId), workOrder)
+	workOrder, err := h.app.CreateWorkOrder(c.Param(assetId), workOrder)
 	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, workOrder))
 }
 
@@ -94,9 +94,9 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
-//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [delete]
+//	@Router			/assets/{assetId}/work-orders/{workOrderId} [delete]
 func (h *Api) deleteWorkOrder(c *gin.Context) {
-	err := h.app.DeleteWorkOrder(c.Param(assetId), c.Param(taskId), c.Param(workOrderId))
+	err := h.app.DeleteWorkOrder(c.Param(assetId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 
@@ -111,7 +111,7 @@ func (h *Api) deleteWorkOrder(c *gin.Context) {
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
-//	@Router			/assets/{assetId}/work-orders/{workOrderId}/tasks [delete]
+//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [delete]
 func (h *Api) disassociateWorkOrderWithTask(c *gin.Context) {
 	err := h.app.DisassociateWorkOrderWithTask(c.Param(assetId), c.Param(workOrderId), c.Param(taskId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
@@ -130,9 +130,9 @@ func (h *Api) disassociateWorkOrderWithTask(c *gin.Context) {
 //	@Failure		400			{object}	map[string]any
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
-//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [get]
+//	@Router			/assets/{assetId}/work-orders/{workOrderId} [get]
 func (h *Api) getWorkOrder(c *gin.Context) {
-	workOrder, err := h.app.GetWorkOrder(c.Param(assetId), c.Param(taskId), c.Param(workOrderId))
+	workOrder, err := h.app.GetWorkOrder(c.Param(assetId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }
 
@@ -148,9 +148,9 @@ func (h *Api) getWorkOrder(c *gin.Context) {
 //	@Failure		400		{object}	map[string]any
 //	@Failure		404		{object}	map[string]any
 //	@Failure		500		{object}	map[string]any
-//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders [get]
+//	@Router			/assets/{assetId}/work-orders [get]
 func (h *Api) listWorkOrders(c *gin.Context) {
-	workOrders, err := h.app.ListWorkOrders(c.Param(assetId), c.Param(taskId))
+	workOrders, err := h.app.ListWorkOrders(c.Param(assetId))
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrders))
 }
 
@@ -169,7 +169,7 @@ func (h *Api) listWorkOrders(c *gin.Context) {
 //	@Failure		400			{object}	map[string]any
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
-//	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [put]
+//	@Router			/assets/{assetId}/work-orders/{workOrderId} [put]
 func (h *Api) updateWorkOrder(c *gin.Context) {
 	var workOrder tp.WorkOrder
 	if err := c.BindJSON(&workOrder); err != nil {
@@ -177,6 +177,6 @@ func (h *Api) updateWorkOrder(c *gin.Context) {
 		return
 	}
 
-	workOrder, err := h.app.UpdateWorkOrder(c.Param(assetId), c.Param(taskId), c.Param(workOrderId), workOrder)
+	workOrder, err := h.app.UpdateWorkOrder(c.Param(assetId), c.Param(workOrderId), workOrder)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
 }

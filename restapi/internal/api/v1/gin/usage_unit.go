@@ -22,7 +22,7 @@ func (h *Api) registerUsageUnitRoutes() {
 //	@Description	List all usage units tht can be used with usage triggers
 //	@Tags			usage-units
 //	@Produce		json
-//	@Success		200	{object}	[]types.UsageUnit
+//	@Success		200	{object}	[]string
 //	@Failure		500	{object}	map[string]any
 //	@Router			/usage-units [get]
 func (h *Api) listUsageUnits(c *gin.Context) {

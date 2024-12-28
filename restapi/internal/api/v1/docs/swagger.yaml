@@ -2,11 +2,11 @@ basePath: /api/v1
 definitions:
   types.Asset:
     properties:
-      categoryTitle:
-        type: string
       description:
         type: string
       make:
+        type: string
+      manufacturer:
         type: string
       modelNumber:
         type: string
@@ -37,7 +37,7 @@ definitions:
     type: object
   types.DateTrigger:
     properties:
-      date:
+      scheduled_date:
         type: string
     type: object
   types.Group:
@@ -51,20 +51,7 @@ definitions:
     properties:
       instructions:
         type: string
-      taskTemplateId:
-        type: string
       title:
-        type: string
-      type:
-        type: string
-    type: object
-  types.TaskTemplate:
-    properties:
-      description:
-        type: string
-      title:
-        type: string
-      type:
         type: string
     required:
     - title
@@ -79,21 +66,11 @@ definitions:
     - quantity
     - time_unit
     type: object
-  types.TimeUnit:
-    properties:
-      title:
-        type: string
-    required:
-    - title
-    type: object
   types.Tool:
     properties:
-      size:
-        type: string
       title:
         type: string
     required:
-    - size
     - title
     type: object
   types.UsageTrigger:
@@ -106,16 +83,6 @@ definitions:
     - quantity
     - usage_unit
     type: object
-  types.UsageUnit:
-    properties:
-      title:
-        type: string
-      type:
-        type: string
-    required:
-    - title
-    - type
-    type: object
   types.WorkOrder:
     properties:
       completedDate:
@@ -124,18 +91,16 @@ definitions:
         type: integer
       cumulativeMiles:
         type: integer
+      instructions:
+        type: string
       notes:
         type: string
-      statusId:
+      status:
         type: string
-    required:
-    - statusId
-    type: object
-  types.WorkOrderStatus:
-    properties:
       title:
         type: string
     required:
+    - status
     - title
     type: object
 externalDocs:
@@ -1424,7 +1389,85 @@ paths:
       summary: Update a usage trigger
       tags:
       - usage-triggers
-  /assets/{assetId}/tasks/{taskId}/work-orders:
+  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}:
+    delete:
+      description: Disassociate a work order with a task
+      parameters:
+      - description: Asset Id
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Work Order Id
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disassociate a work order with a task
+      tags:
+      - work-orders
+    put:
+      description: Associate a work order with a task
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      - description: Work Order ID
+        in: path
+        name: workOrderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.WorkOrder'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Associate a work order with a task
+      tags:
+      - work-orders
+  /assets/{assetId}/work-orders:
     get:
       description: List all asset task work orders
       parameters:
@@ -1511,7 +1554,7 @@ paths:
       summary: Create a work order
       tags:
       - work-orders
-  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}:
+  /assets/{assetId}/work-orders/{workOrderId}:
     delete:
       description: Delete an asset task work order
       parameters:
@@ -1730,7 +1773,7 @@ paths:
       - consumables
   /assets/{assetId}/work-orders/{workOrderId}/tasks:
     delete:
-      description: Disassociate a work order with a task
+      description: Disassociate a task with a work order
       parameters:
       - description: Asset Id
         in: path
@@ -1760,9 +1803,9 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      summary: Disassociate a work order with a task
+      summary: Disassociate a task with a work order
       tags:
-      - work-orders
+      - tasks
   /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}:
     delete:
       description: Disassociate a tool with a work order
@@ -2600,159 +2643,6 @@ paths:
       summary: Associate an asset with a group
       tags:
       - assets
-  /task-templates:
-    get:
-      description: List all task templates
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/types.TaskTemplate'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List task templates
-      tags:
-      - task-templates
-    post:
-      consumes:
-      - application/json
-      description: Create a task template
-      parameters:
-      - description: TaskTemplate object
-        in: body
-        name: taskTemplate
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskTemplate'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/types.TaskTemplate'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create a task template
-      tags:
-      - task-templates
-  /task-templates/{taskTemplateId}:
-    delete:
-      description: Delete a task template
-      parameters:
-      - description: TaskTemplate Id
-        in: path
-        name: taskTemplateId
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Delete a task template
-      tags:
-      - task-templates
-    get:
-      description: Get a task template
-      parameters:
-      - description: TaskTemplate Id
-        in: path
-        name: taskTemplateId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TaskTemplate'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get a task template
-      tags:
-      - task-templates
-    put:
-      consumes:
-      - application/json
-      description: Update a task template
-      parameters:
-      - description: TaskTemplate Id
-        in: path
-        name: taskTemplateId
-        required: true
-        type: string
-      - description: TaskTemplate object
-        in: body
-        name: taskTemplate
-        required: true
-        schema:
-          $ref: '#/definitions/types.TaskTemplate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.TaskTemplate'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Update a task template
   /time-units:
     get:
       description: List all time units that can be used with time-triggers and usage-triggers
@@ -2763,7 +2653,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.TimeUnit'
+              type: string
             type: array
         "500":
           description: Internal Server Error
@@ -2953,7 +2843,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.UsageUnit'
+              type: string
             type: array
         "500":
           description: Internal Server Error
@@ -2973,7 +2863,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.WorkOrderStatus'
+              type: string
             type: array
         "500":
           description: Internal Server Error

@@ -22,7 +22,7 @@ func (h *Api) registerWorkOrderStatusRoutes() {
 //	@Description	List all work order statuses that can be used with work orders
 //	@Tags			work-order-statuses
 //	@Produce		json
-//	@Success		200	{object}	[]types.WorkOrderStatus
+//	@Success		200	{object}	[]string
 //	@Failure		500	{object}	map[string]any
 //	@Router			/work-order-statuses [get]
 func (h *Api) listWorkOrderStatus(c *gin.Context) {

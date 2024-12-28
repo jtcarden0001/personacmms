@@ -1871,7 +1871,120 @@ const docTemplate = `{
                 }
             }
         },
-        "/assets/{assetId}/tasks/{taskId}/work-orders": {
+        "/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}": {
+            "put": {
+                "description": "Associate a work order with a task",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "work-orders"
+                ],
+                "summary": "Associate a work order with a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Asset ID",
+                        "name": "assetId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Work Order ID",
+                        "name": "workOrderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.WorkOrder"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Disassociate a work order with a task",
+                "tags": [
+                    "work-orders"
+                ],
+                "summary": "Disassociate a work order with a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Asset Id",
+                        "name": "assetId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Work Order Id",
+                        "name": "workOrderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/{assetId}/work-orders": {
             "get": {
                 "description": "List all asset task work orders",
                 "produces": [
@@ -1998,7 +2111,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}": {
+        "/assets/{assetId}/work-orders/{workOrderId}": {
             "get": {
                 "description": "Get an asset task work order",
                 "produces": [
@@ -2314,11 +2427,11 @@ const docTemplate = `{
         },
         "/assets/{assetId}/work-orders/{workOrderId}/tasks": {
             "delete": {
-                "description": "Disassociate a work order with a task",
+                "description": "Disassociate a task with a work order",
                 "tags": [
-                    "work-orders"
+                    "tasks"
                 ],
-                "summary": "Disassociate a work order with a task",
+                "summary": "Disassociate a task with a work order",
                 "parameters": [
                     {
                         "type": "string",
@@ -3588,231 +3701,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/task-templates": {
-            "get": {
-                "description": "List all task templates",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "task-templates"
-                ],
-                "summary": "List task templates",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/types.TaskTemplate"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a task template",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "task-templates"
-                ],
-                "summary": "Create a task template",
-                "parameters": [
-                    {
-                        "description": "TaskTemplate object",
-                        "name": "taskTemplate",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.TaskTemplate"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/types.TaskTemplate"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/task-templates/{taskTemplateId}": {
-            "get": {
-                "description": "Get a task template",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "task-templates"
-                ],
-                "summary": "Get a task template",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "TaskTemplate Id",
-                        "name": "taskTemplateId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.TaskTemplate"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update a task template",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a task template",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "TaskTemplate Id",
-                        "name": "taskTemplateId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "TaskTemplate object",
-                        "name": "taskTemplate",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.TaskTemplate"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.TaskTemplate"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a task template",
-                "tags": [
-                    "task-templates"
-                ],
-                "summary": "Delete a task template",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "TaskTemplate Id",
-                        "name": "taskTemplateId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
         "/time-units": {
             "get": {
                 "description": "List all time units that can be used with time-triggers and usage-triggers",
@@ -3829,7 +3717,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.TimeUnit"
+                                "type": "string"
                             }
                         }
                     },
@@ -4108,7 +3996,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.UsageUnit"
+                                "type": "string"
                             }
                         }
                     },
@@ -4138,7 +4026,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.WorkOrderStatus"
+                                "type": "string"
                             }
                         }
                     },
@@ -4160,13 +4048,13 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
-                "categoryTitle": {
-                    "type": "string"
-                },
                 "description": {
                     "type": "string"
                 },
                 "make": {
+                    "type": "string"
+                },
+                "manufacturer": {
                     "type": "string"
                 },
                 "modelNumber": {
@@ -4211,7 +4099,7 @@ const docTemplate = `{
         "types.DateTrigger": {
             "type": "object",
             "properties": {
-                "date": {
+                "scheduled_date": {
                     "type": "string"
                 }
             }
@@ -4229,34 +4117,14 @@ const docTemplate = `{
         },
         "types.Task": {
             "type": "object",
-            "properties": {
-                "instructions": {
-                    "type": "string"
-                },
-                "taskTemplateId": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.TaskTemplate": {
-            "type": "object",
             "required": [
                 "title"
             ],
             "properties": {
-                "description": {
+                "instructions": {
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "type": {
                     "type": "string"
                 }
             }
@@ -4276,27 +4144,12 @@ const docTemplate = `{
                 }
             }
         },
-        "types.TimeUnit": {
-            "type": "object",
-            "required": [
-                "title"
-            ],
-            "properties": {
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
         "types.Tool": {
             "type": "object",
             "required": [
-                "size",
                 "title"
             ],
             "properties": {
-                "size": {
-                    "type": "string"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -4317,25 +4170,11 @@ const docTemplate = `{
                 }
             }
         },
-        "types.UsageUnit": {
-            "type": "object",
-            "required": [
-                "title",
-                "type"
-            ],
-            "properties": {
-                "title": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
         "types.WorkOrder": {
             "type": "object",
             "required": [
-                "statusId"
+                "status",
+                "title"
             ],
             "properties": {
                 "completedDate": {
@@ -4347,20 +4186,15 @@ const docTemplate = `{
                 "cumulativeMiles": {
                     "type": "integer"
                 },
+                "instructions": {
+                    "type": "string"
+                },
                 "notes": {
                     "type": "string"
                 },
-                "statusId": {
+                "status": {
                     "type": "string"
-                }
-            }
-        },
-        "types.WorkOrderStatus": {
-            "type": "object",
-            "required": [
-                "title"
-            ],
-            "properties": {
+                },
                 "title": {
                     "type": "string"
                 }

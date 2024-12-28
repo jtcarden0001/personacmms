@@ -22,7 +22,7 @@ func (h *Api) registerTimeUnitRoutes() {
 //	@Description	List all time units that can be used with time-triggers and usage-triggers
 //	@Tags			time-units
 //	@Produce		json
-//	@Success		200	{object}	[]types.TimeUnit
+//	@Success		200	{object}	[]string
 //	@Failure		500	{object}	map[string]any
 //	@Router			/time-units [get]
 func (h *Api) listTimeUnits(c *gin.Context) {

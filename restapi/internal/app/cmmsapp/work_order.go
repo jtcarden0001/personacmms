@@ -10,7 +10,7 @@ func (a *App) AssociateWorkOrderWithTask(assetId string, taskId string, workOrde
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "AssociateWorkOrderWithTask not implemented")
 }
 
-func (a *App) CreateWorkOrder(assetId string, taskId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (a *App) CreateWorkOrder(assetId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	if wo.Id != uuid.Nil {
 		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "work order id must be nil on create, we will create an id for you")
 	}
@@ -19,7 +19,7 @@ func (a *App) CreateWorkOrder(assetId string, taskId string, wo tp.WorkOrder) (t
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "CreateWorkOrder not implemented")
 }
 
-func (a *App) DeleteWorkOrder(assetId string, tId string, woId string) error {
+func (a *App) DeleteWorkOrder(assetId string, woId string) error {
 	return ae.New(ae.CodeNotImplemented, "DeleteWorkOrder not implemented")
 }
 
@@ -27,11 +27,11 @@ func (a *App) DisassociateWorkOrderWithTask(assetId string, taskId string, workO
 	return ae.New(ae.CodeNotImplemented, "DisassociateWorkOrderWithTask not implemented")
 }
 
-func (a *App) GetWorkOrder(assetId string, atId string, woId string) (tp.WorkOrder, error) {
+func (a *App) GetWorkOrder(assetId string, woId string) (tp.WorkOrder, error) {
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "GetWorkOrder not implemented")
 }
 
-func (a *App) ListWorkOrders(assetId string, atId string) ([]tp.WorkOrder, error) {
+func (a *App) ListWorkOrders(assetId string) ([]tp.WorkOrder, error) {
 	return nil, ae.New(ae.CodeNotImplemented, "ListWorkOrders not implemented")
 }
 
@@ -39,7 +39,7 @@ func (a *App) ListWorkOrderStatus() ([]string, error) {
 	return nil, ae.New(ae.CodeNotImplemented, "ListWorkOrderStatus not implemented")
 }
 
-func (a *App) UpdateWorkOrder(assetId string, tId string, woId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (a *App) UpdateWorkOrder(assetId string, woId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
 	return tp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "UpdateWorkOrder not implemented")
 }
 
