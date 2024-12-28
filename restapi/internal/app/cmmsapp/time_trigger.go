@@ -91,6 +91,7 @@ func (a *App) ListTimeTriggerUnits() ([]string, error) {
 	for key := range tp.ValidTimeTriggerUnits {
 		keys = append(keys, key)
 	}
+
 	return keys, nil
 }
 
