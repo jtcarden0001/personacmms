@@ -31,8 +31,8 @@ type App interface {
 	UpdateCategory(string, tp.Category) (tp.Category, error)
 
 	// consumable
-	AssociateConsumableWithTask(string, string, string) (tp.Consumable, error)
-	AssociateConsumableWithWorkOrder(string, string, string) (tp.Consumable, error)
+	AssociateConsumableWithTask(string, string, string, tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
+	AssociateConsumableWithWorkOrder(string, string, string, tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
 	CreateConsumable(tp.Consumable) (tp.Consumable, error)
 	DeleteConsumable(string) error
 	DisassociateConsumableWithTask(string, string, string) error
@@ -73,8 +73,8 @@ type App interface {
 	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// tool
-	AssociateToolWithTask(string, string, string) (tp.Tool, error)
-	AssociateToolWithWorkOrder(string, string, string) (tp.Tool, error)
+	AssociateToolWithTask(string, string, string, tp.ToolSize) (tp.ToolSize, error)
+	AssociateToolWithWorkOrder(string, string, string, tp.ToolSize) (tp.ToolSize, error)
 	CreateTool(tp.Tool) (tp.Tool, error)
 	DeleteTool(string) error
 	DisassociateToolWithTask(string, string, string) error

@@ -79,16 +79,16 @@ type Store interface {
 	UpdateTimeTrigger(tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// tool
-	AssociateToolWithTask(uuid.UUID, uuid.UUID, string) (tp.ToolSize, error)      //TODO
-	AssociateToolWithWorkOrder(uuid.UUID, uuid.UUID, string) (tp.ToolSize, error) //TODO
+	AssociateToolWithTask(uuid.UUID, uuid.UUID, string) (tp.ToolSize, error)
+	AssociateToolWithWorkOrder(uuid.UUID, uuid.UUID, string) (tp.ToolSize, error)
 	CreateTool(tp.Tool) (tp.Tool, error)
 	DeleteTool(uuid.UUID) error
-	DisassociateToolWithTask(uuid.UUID, uuid.UUID) error      //TODO
-	DisassociateToolWithWorkOrder(uuid.UUID, uuid.UUID) error //TODO
+	DisassociateToolWithTask(uuid.UUID, uuid.UUID) error
+	DisassociateToolWithWorkOrder(uuid.UUID, uuid.UUID) error
 	GetTool(uuid.UUID) (tp.Tool, error)
 	ListTools() ([]tp.Tool, error)
-	ListToolsByTask(uuid.UUID) ([]tp.ToolSize, error)      //TODO
-	ListToolsByWorkOrder(uuid.UUID) ([]tp.ToolSize, error) //TODO
+	ListToolsByTask(uuid.UUID) ([]tp.ToolSize, error)
+	ListToolsByWorkOrder(uuid.UUID) ([]tp.ToolSize, error)
 	UpdateTool(tp.Tool) (tp.Tool, error)
 
 	// usage trigger
@@ -101,14 +101,14 @@ type Store interface {
 	UpdateUsageTrigger(tp.UsageTrigger) (tp.UsageTrigger, error)
 
 	// work order
-	AssociateWorkOrderWithTask(uuid.UUID, uuid.UUID) (tp.WorkOrder, error) // TODO
+	AssociateWorkOrderWithTask(uuid.UUID, uuid.UUID) (tp.WorkOrder, error)
 	CreateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
 	DeleteWorkOrder(uuid.UUID) error
-	DeleteWorkOrderFromAsset(uuid.UUID, uuid.UUID) error      // TODO
-	DisassociateWorkOrderWithTask(uuid.UUID, uuid.UUID) error // TODO
+	DeleteWorkOrderFromAsset(uuid.UUID, uuid.UUID) error
+	DisassociateWorkOrderWithTask(uuid.UUID, uuid.UUID) error
 	GetWorkOrder(uuid.UUID) (tp.WorkOrder, error)
 	ListWorkOrders() ([]tp.WorkOrder, error)
-	ListWorkOrdersByAsset(uuid.UUID) ([]tp.WorkOrder, error) // TODO
+	ListWorkOrdersByAsset(uuid.UUID) ([]tp.WorkOrder, error)
 	UpdateWorkOrder(tp.WorkOrder) (tp.WorkOrder, error)
 
 	// utilities

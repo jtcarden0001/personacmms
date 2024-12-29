@@ -12,7 +12,7 @@ type Tool struct {
 }
 
 type ToolSize struct {
-	Id   uuid.UUID `json:"id" swaggerignore:"true"`
-	Tool Tool      `json:"tool" swaggerignore:"true"`
-	Size *string   `json:"size"`
+	Id    uuid.UUID `json:"id" swaggerignore:"true"`
+	Title string    `json:"tool" swaggerignore:"true"`
+	Size  *string   `json:"size"`
 }

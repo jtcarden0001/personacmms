@@ -46,17 +46,25 @@ func (h *Api) registerToolRoutes() {
 //	@Summary		Associate a tool with a task
 //	@Description	Associate a tool with a task
 //	@Tags			tools
+//	@Accept			json
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset ID"
-//	@Param			taskId	path		string	true	"Task ID"
-//	@Param			toolId	path		string	true	"Tool ID"
+//	@Param			assetId	path		string		true	"Asset ID"
+//	@Param			taskId	path		string		true	"Task ID"
+//	@Param			toolId	path		string		true	"Tool ID"
+//	@Param			tool	body		tp.ToolSize	true	"Tool object"
 //	@Success		200		{object}	tp.Tool
 //	@Failure		400		{object}	map[string]any
 //	@Failure		404		{object}	map[string]any
 //	@Failure		500		{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/tools/{toolId} [put]
 func (h *Api) associateToolWithTask(c *gin.Context) {
-	tool, err := h.app.AssociateToolWithTask(c.Param(assetId), c.Param(taskId), c.Param(toolId))
+	var tool tp.ToolSize
+	if err := c.BindJSON(&tool); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
+		return
+	}
+
+	tool, err := h.app.AssociateToolWithTask(c.Param(assetId), c.Param(taskId), c.Param(toolId), tool)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }
 
@@ -65,17 +73,25 @@ func (h *Api) associateToolWithTask(c *gin.Context) {
 //	@Summary		Associate a tool with a work order
 //	@Description	Associate a tool with a work order
 //	@Tags			tools
+//	@Accept			json
 //	@Produce		json
-//	@Param			assetId		path		string	true	"Asset ID"
-//	@Param			workOrderId	path		string	true	"Work Order ID"
-//	@Param			toolId		path		string	true	"Tool ID"
+//	@Param			assetId		path		string		true	"Asset ID"
+//	@Param			workOrderId	path		string		true	"Work Order ID"
+//	@Param			toolId		path		string		true	"Tool ID"
+//	@Param			tool		body		tp.ToolSize	true	"Tool object"
 //	@Success		200			{object}	tp.Tool
 //	@Failure		400			{object}	map[string]any
 //	@Failure		404			{object}	map[string]any
 //	@Failure		500			{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId}/tools/{toolId} [put]
 func (h *Api) associateToolWithWorkOrder(c *gin.Context) {
-	tool, err := h.app.AssociateToolWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(toolId))
+	var tool tp.ToolSize
+	if err := c.BindJSON(&tool); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
+		return
+	}
+
+	tool, err := h.app.AssociateToolWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(toolId), tool)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
 }
 

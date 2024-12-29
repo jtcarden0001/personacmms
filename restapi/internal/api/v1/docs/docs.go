@@ -671,6 +671,9 @@ const docTemplate = `{
         "/assets/{assetId}/tasks/{taskId}/consumables/{consumableId}": {
             "put": {
                 "description": "Associate a consumable with a task",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -699,6 +702,15 @@ const docTemplate = `{
                         "name": "consumableId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Consumable object",
+                        "name": "consumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ConsumableQuantity"
+                        }
                     }
                 ],
                 "responses": {
@@ -1433,6 +1445,9 @@ const docTemplate = `{
         "/assets/{assetId}/tasks/{taskId}/tools/{toolId}": {
             "put": {
                 "description": "Associate a tool with a task",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1461,6 +1476,15 @@ const docTemplate = `{
                         "name": "toolId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Tool object",
+                        "name": "tool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ToolSize"
+                        }
                     }
                 ],
                 "responses": {
@@ -2308,6 +2332,9 @@ const docTemplate = `{
         "/assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}": {
             "put": {
                 "description": "Associate a consumable with a work order",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2336,6 +2363,15 @@ const docTemplate = `{
                         "name": "consumableId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Consumable object",
+                        "name": "consumable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ConsumableQuantity"
+                        }
                     }
                 ],
                 "responses": {
@@ -2479,6 +2515,9 @@ const docTemplate = `{
         "/assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}": {
             "put": {
                 "description": "Associate a tool with a work order",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2507,6 +2546,15 @@ const docTemplate = `{
                         "name": "toolId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Tool object",
+                        "name": "tool",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ToolSize"
+                        }
                     }
                 ],
                 "responses": {
@@ -4096,6 +4144,17 @@ const docTemplate = `{
                 }
             }
         },
+        "types.ConsumableQuantity": {
+            "type": "object",
+            "required": [
+                "quantity"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "string"
+                }
+            }
+        },
         "types.DateTrigger": {
             "type": "object",
             "properties": {
@@ -4151,6 +4210,14 @@ const docTemplate = `{
             ],
             "properties": {
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.ToolSize": {
+            "type": "object",
+            "properties": {
+                "size": {
                     "type": "string"
                 }
             }

@@ -46,17 +46,25 @@ func (h *Api) registerConsumableRoutes() {
 //	@Summary		Associate a consumable with a task
 //	@Description	Associate a consumable with a task
 //	@Tags			consumables
+//	@Accept			json
 //	@Produce		json
-//	@Param			assetId			path		string	true	"Asset ID"
-//	@Param			taskId			path		string	true	"Task ID"
-//	@Param			consumableId	path		string	true	"Consumable ID"
+//	@Param			assetId			path		string					true	"Asset ID"
+//	@Param			taskId			path		string					true	"Task ID"
+//	@Param			consumableId	path		string					true	"Consumable ID"
+//	@Param			consumable		body		tp.ConsumableQuantity	true	"Consumable object"
 //	@Success		200				{object}	tp.Consumable
 //	@Failure		400				{object}	map[string]any
 //	@Failure		404				{object}	map[string]any
 //	@Failure		500				{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/consumables/{consumableId} [put]
 func (h *Api) associateConsumableWithTask(c *gin.Context) {
-	consumable, err := h.app.AssociateConsumableWithTask(c.Param(assetId), c.Param(taskId), c.Param(consumableId))
+	var consumable tp.ConsumableQuantity
+	if err := c.BindJSON(&consumable); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
+		return
+	}
+
+	consumable, err := h.app.AssociateConsumableWithTask(c.Param(assetId), c.Param(taskId), c.Param(consumableId), consumable)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
 }
 
@@ -65,17 +73,25 @@ func (h *Api) associateConsumableWithTask(c *gin.Context) {
 //	@Summary		Associate a consumable with a work order
 //	@Description	Associate a consumable with a work order
 //	@Tags			consumables
+//	@Accept			json
 //	@Produce		json
-//	@Param			assetId			path		string	true	"Asset Id"
-//	@Param			workOrderId		path		string	true	"Work Order Id"
-//	@Param			consumableId	path		string	true	"Consumable Id"
+//	@Param			assetId			path		string					true	"Asset Id"
+//	@Param			workOrderId		path		string					true	"Work Order Id"
+//	@Param			consumableId	path		string					true	"Consumable Id"
+//	@Param			consumable		body		tp.ConsumableQuantity	true	"Consumable object"
 //	@Success		200				{object}	tp.Consumable
 //	@Failure		400				{object}	map[string]any
 //	@Failure		404				{object}	map[string]any
 //	@Failure		500				{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId} [put]
 func (h *Api) associateConsumableWithWorkOrder(c *gin.Context) {
-	consumable, err := h.app.AssociateConsumableWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(consumableId))
+	var consumable tp.ConsumableQuantity
+	if err := c.BindJSON(&consumable); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
+		return
+	}
+
+	consumable, err := h.app.AssociateConsumableWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(consumableId), consumable)
 	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
 }
 

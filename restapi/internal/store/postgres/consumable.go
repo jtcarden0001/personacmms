@@ -14,7 +14,7 @@ var consumableTableName = "consumable"
 var tConsumableTableName = "task_consumable"
 var woConsumableTableName = "workorder_consumable"
 
-func (pg *PostgresStore) AssociateConsumableWithTask(taskId uuid.UUID, consumableId uuid.UUID, qNote string) (tp.Consumable, error) {
+func (pg *PostgresStore) AssociateConsumableWithTask(taskId uuid.UUID, consumableId uuid.UUID, qNote string) (tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			INSERT INTO %s (task_id, consumable_id, quantity_note) 
 			VALUES ($1, $2, $3)`,
@@ -22,13 +22,13 @@ func (pg *PostgresStore) AssociateConsumableWithTask(taskId uuid.UUID, consumabl
 
 	_, err := pg.db.Exec(query, consumableId, taskId, qNote)
 	if err != nil {
-		return tp.Consumable{}, handleDbError(err, "consumable")
+		return tp.ConsumableQuantity{}, handleDbError(err, "consumable")
 	}
 
-	return pg.GetConsumable(consumableId)
+	return pg.GetTaskConsumableQuantity(taskId, consumableId)
 }
 
-func (pg *PostgresStore) AssociateConsumableWithWorkOrder(workOrderId uuid.UUID, consumableId uuid.UUID, qNote string) (tp.Consumable, error) {
+func (pg *PostgresStore) AssociateConsumableWithWorkOrder(workOrderId uuid.UUID, consumableId uuid.UUID, qNote string) (tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			INSERT INTO %s (work_order_id, consumable_id, quantity_note) 
 			VALUES ($1, $2, $3)`,
@@ -36,10 +36,10 @@ func (pg *PostgresStore) AssociateConsumableWithWorkOrder(workOrderId uuid.UUID,
 
 	_, err := pg.db.Exec(query, workOrderId, consumableId, qNote)
 	if err != nil {
-		return tp.Consumable{}, handleDbError(err, "consumable")
+		return tp.ConsumableQuantity{}, handleDbError(err, "consumable")
 	}
 
-	return pg.GetConsumable(consumableId)
+	return pg.GetWorkOrderConsumableQuantity(workOrderId, consumableId)
 }
 
 func (pg *PostgresStore) CreateConsumable(c tp.Consumable) (tp.Consumable, error) {
@@ -133,6 +133,38 @@ func (pg *PostgresStore) GetConsumable(id uid.UUID) (tp.Consumable, error) {
 	err := pg.db.QueryRow(query, id).Scan(&c.Id, &c.Title)
 	if err != nil {
 		return tp.Consumable{}, handleDbError(err, "consumable")
+	}
+
+	return c, nil
+}
+
+func (pg *PostgresStore) GetTaskConsumableQuantity(taskId uid.UUID, consumableId uid.UUID) (tp.ConsumableQuantity, error) {
+	query := fmt.Sprintf(`
+			SELECT c.id, c.title, tc.quantity_note 
+			FROM %s c JOIN %s tc ON c.id = tc.consumable_id 
+			WHERE tc.task_id = $1 AND tc.consumable_id = $2`,
+		consumableTableName, tConsumableTableName)
+
+	var c tp.ConsumableQuantity
+	err := pg.db.QueryRow(query, taskId, consumableId).Scan(&c.Id, &c.Title, &c.Quantity)
+	if err != nil {
+		return tp.ConsumableQuantity{}, handleDbError(err, "consumable")
+	}
+
+	return c, nil
+}
+
+func (pg *PostgresStore) GetWorkOrderConsumableQuantity(woId uid.UUID, consumableId uid.UUID) (tp.ConsumableQuantity, error) {
+	query := fmt.Sprintf(`
+			SELECT c.id, c.title, tc.quantity_note 
+			FROM %s c JOIN %s tc ON c.id = tc.consumable_id 
+			WHERE tc.workorder_id = $1 AND tc.consumable_id = $2`,
+		consumableTableName, woConsumableTableName)
+
+	var c tp.ConsumableQuantity
+	err := pg.db.QueryRow(query, woId, consumableId).Scan(&c.Id, &c.Title, &c.Quantity)
+	if err != nil {
+		return tp.ConsumableQuantity{}, handleDbError(err, "consumable")
 	}
 
 	return c, nil

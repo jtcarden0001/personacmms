@@ -35,6 +35,13 @@ definitions:
     required:
     - title
     type: object
+  types.ConsumableQuantity:
+    properties:
+      quantity:
+        type: string
+    required:
+    - quantity
+    type: object
   types.DateTrigger:
     properties:
       scheduled_date:
@@ -72,6 +79,11 @@ definitions:
         type: string
     required:
     - title
+    type: object
+  types.ToolSize:
+    properties:
+      size:
+        type: string
     type: object
   types.UsageTrigger:
     properties:
@@ -601,6 +613,8 @@ paths:
       tags:
       - consumables
     put:
+      consumes:
+      - application/json
       description: Associate a consumable with a task
       parameters:
       - description: Asset ID
@@ -618,6 +632,12 @@ paths:
         name: consumableId
         required: true
         type: string
+      - description: Consumable object
+        in: body
+        name: consumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.ConsumableQuantity'
       produces:
       - application/json
       responses:
@@ -1126,6 +1146,8 @@ paths:
       tags:
       - tools
     put:
+      consumes:
+      - application/json
       description: Associate a tool with a task
       parameters:
       - description: Asset ID
@@ -1143,6 +1165,12 @@ paths:
         name: toolId
         required: true
         type: string
+      - description: Tool object
+        in: body
+        name: tool
+        required: true
+        schema:
+          $ref: '#/definitions/types.ToolSize'
       produces:
       - application/json
       responses:
@@ -1729,6 +1757,8 @@ paths:
       tags:
       - consumables
     put:
+      consumes:
+      - application/json
       description: Associate a consumable with a work order
       parameters:
       - description: Asset Id
@@ -1746,6 +1776,12 @@ paths:
         name: consumableId
         required: true
         type: string
+      - description: Consumable object
+        in: body
+        name: consumable
+        required: true
+        schema:
+          $ref: '#/definitions/types.ConsumableQuantity'
       produces:
       - application/json
       responses:
@@ -1847,6 +1883,8 @@ paths:
       tags:
       - tools
     put:
+      consumes:
+      - application/json
       description: Associate a tool with a work order
       parameters:
       - description: Asset ID
@@ -1864,6 +1902,12 @@ paths:
         name: toolId
         required: true
         type: string
+      - description: Tool object
+        in: body
+        name: tool
+        required: true
+        schema:
+          $ref: '#/definitions/types.ToolSize'
       produces:
       - application/json
       responses:

@@ -47,7 +47,7 @@ func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId strin
 		return tp.ConsumableQuantity{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
 	}
 
-	return a.db.AssociateConsumableWithWorkOrder(workOrder.Id, cUid)
+	return a.db.AssociateConsumableWithWorkOrder(workOrder.Id, cUid, cq.Quantity)
 }
 
 func (a *App) CreateConsumable(consumable tp.Consumable) (tp.Consumable, error) {
