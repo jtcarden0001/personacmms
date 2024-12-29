@@ -2,7 +2,6 @@ package store
 
 import (
 	"github.com/google/uuid"
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/store/postgres"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 )
@@ -10,8 +9,8 @@ import (
 // Store layer implements persistence for the application.
 type Store interface {
 	// asset
-	AssociateAssetWithCategory(uuid.UUID, uuid.UUID) (tp.Asset, error) //TODO
-	AssociateAssetWithGroup(uuid.UUID, uuid.UUID) (tp.Asset, error)    //TODO
+	AssociateAssetWithCategory(uuid.UUID, uuid.UUID) (tp.Asset, error) //TODO done mock
+	AssociateAssetWithGroup(uuid.UUID, uuid.UUID) (tp.Asset, error)    //TODO done mock
 	CreateAsset(tp.Asset) (tp.Asset, error)
 	DeleteAsset(uuid.UUID) error
 	DisassociateAssetWithCategory(uuid.UUID, uuid.UUID) error //TODO
@@ -124,8 +123,4 @@ func New() Store {
 // used for testing
 func NewWithDb(dbName string) Store {
 	return imp.NewWithDb(dbName)
-}
-
-func NewMock() Store {
-	return mock.New()
 }
