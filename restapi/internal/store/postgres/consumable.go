@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	uid "github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
@@ -76,7 +75,7 @@ func (pg *PostgresStore) DeleteConsumable(id uuid.UUID) error {
 	return nil
 }
 
-func (pg *PostgresStore) DisassociateConsumableWithTask(taskId uid.UUID, consumableId uid.UUID) error {
+func (pg *PostgresStore) DisassociateConsumableWithTask(taskId uuid.UUID, consumableId uuid.UUID) error {
 	query := fmt.Sprintf(`
 			DELETE FROM %s 
 			WHERE task_id = $1 AND consumable_id = $2`,
@@ -99,7 +98,7 @@ func (pg *PostgresStore) DisassociateConsumableWithTask(taskId uid.UUID, consuma
 	return nil
 }
 
-func (pg *PostgresStore) DisassociateConsumableWithWorkOrder(workOrderId uid.UUID, consumableId uid.UUID) error {
+func (pg *PostgresStore) DisassociateConsumableWithWorkOrder(workOrderId uuid.UUID, consumableId uuid.UUID) error {
 	query := fmt.Sprintf(`
 			DELETE FROM %s 
 			WHERE work_order_id = $1 AND consumable_id = $2`,
@@ -122,7 +121,7 @@ func (pg *PostgresStore) DisassociateConsumableWithWorkOrder(workOrderId uid.UUI
 	return nil
 }
 
-func (pg *PostgresStore) GetConsumable(id uid.UUID) (tp.Consumable, error) {
+func (pg *PostgresStore) GetConsumable(id uuid.UUID) (tp.Consumable, error) {
 	query := fmt.Sprintf(`
 			SELECT id, title 
 			FROM %s 
@@ -138,7 +137,7 @@ func (pg *PostgresStore) GetConsumable(id uid.UUID) (tp.Consumable, error) {
 	return c, nil
 }
 
-func (pg *PostgresStore) GetTaskConsumableQuantity(taskId uid.UUID, consumableId uid.UUID) (tp.ConsumableQuantity, error) {
+func (pg *PostgresStore) GetTaskConsumableQuantity(taskId uuid.UUID, consumableId uuid.UUID) (tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			SELECT c.id, c.title, tc.quantity_note 
 			FROM %s c JOIN %s tc ON c.id = tc.consumable_id 
@@ -154,7 +153,7 @@ func (pg *PostgresStore) GetTaskConsumableQuantity(taskId uid.UUID, consumableId
 	return c, nil
 }
 
-func (pg *PostgresStore) GetWorkOrderConsumableQuantity(woId uid.UUID, consumableId uid.UUID) (tp.ConsumableQuantity, error) {
+func (pg *PostgresStore) GetWorkOrderConsumableQuantity(woId uuid.UUID, consumableId uuid.UUID) (tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			SELECT c.id, c.title, tc.quantity_note 
 			FROM %s c JOIN %s tc ON c.id = tc.consumable_id 
@@ -195,7 +194,7 @@ func (pg *PostgresStore) ListConsumables() ([]tp.Consumable, error) {
 	return consumables, nil
 }
 
-func (pg *PostgresStore) ListConsumablesByTask(taskId uid.UUID) ([]tp.ConsumableQuantity, error) {
+func (pg *PostgresStore) ListConsumablesByTask(taskId uuid.UUID) ([]tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			SELECT c.id, c.title, tc.quantity_note 
 			FROM %s c JOIN %s tc ON c.id = tc.consumable_id 
@@ -221,7 +220,7 @@ func (pg *PostgresStore) ListConsumablesByTask(taskId uid.UUID) ([]tp.Consumable
 	return consumables, nil
 }
 
-func (pg *PostgresStore) ListConsumablesByWorkOrder(workOrderId uid.UUID) ([]tp.ConsumableQuantity, error) {
+func (pg *PostgresStore) ListConsumablesByWorkOrder(workOrderId uuid.UUID) ([]tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
 			SELECT c.id, c.title, wc.quantity_note
 			FROM %s c JOIN %s wc ON c.id = wc.consumable_id

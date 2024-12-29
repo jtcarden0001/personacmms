@@ -134,7 +134,7 @@ func (pg *PostgresStore) DisassociateWorkOrderWithTask(taskId uuid.UUID, workOrd
 	}
 
 	if rowsAffected == 0 {
-		return errors.Wrapf(ae.ErrNotFound, "work-order [%s] not found associated with task [%s]", workOrderId)
+		return errors.Wrapf(ae.ErrNotFound, "work-order [%s] not found associated with task [%s]", workOrderId, taskId)
 	}
 
 	return nil
