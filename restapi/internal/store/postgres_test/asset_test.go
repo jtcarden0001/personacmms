@@ -6,6 +6,33 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+func TestAssetAssociateWithCategory(t *testing.T) {
+	t.Parallel()
+
+	// setup
+	dbname := "testassetassociatewithcategory"
+	store := utest.InitializeStore(dbname)
+	defer utest.CloseStore(store, dbname)
+
+	a := utest.SetupAsset(1, true)
+	createdAsset, err := store.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssetAssociateWithCategory: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	c := utest.SetupCategory(1, true)
+	createdCategory, err := store.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestAssetAssociateWithCategory: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	// test
+	_, err = store.AssociateAssetWithCategory(createdAsset.Id, createdCategory.Id)
+	if err != nil {
+		t.Errorf("AssociateAssetWithCategory() failed: %v", err)
+	}
+}
+
 func TestAssetCreate(t *testing.T) {
 	t.Parallel()
 

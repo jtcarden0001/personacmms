@@ -9,6 +9,8 @@ import (
 
 // a worker order is either a record of work done and a record of work to be done on an asset depending
 // on the status of the work order
+
+// TODO: add references to tasks, workers, and consumables
 type WorkOrder struct {
 	Id              uuid.UUID `json:"id" swaggerignore:"true"`
 	Title           string    `json:"title" binding:"required"`

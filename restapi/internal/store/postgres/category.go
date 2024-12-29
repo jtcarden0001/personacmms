@@ -12,7 +12,11 @@ import (
 var categoryTableName = "category"
 
 func (pg *PostgresStore) CreateCategory(c tp.Category) (tp.Category, error) {
-	query := fmt.Sprintf(`INSERT INTO %s (id, title, description) VALUES ($1, $2, $3)`, categoryTableName)
+	query := fmt.Sprintf(`
+			INSERT INTO %s (id, title, description) 
+			VALUES ($1, $2, $3)`,
+		categoryTableName)
+
 	_, err := pg.db.Exec(query, c.Id, c.Title, c.Description)
 	if err != nil {
 		return tp.Category{}, handleDbError(err, "category")
@@ -22,7 +26,11 @@ func (pg *PostgresStore) CreateCategory(c tp.Category) (tp.Category, error) {
 }
 
 func (pg *PostgresStore) DeleteCategory(id uuid.UUID) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, categoryTableName)
+	query := fmt.Sprintf(`
+			DELETE FROM %s 
+			WHERE id = $1`,
+		categoryTableName)
+
 	result, err := pg.db.Exec(query, id)
 	if err != nil {
 		return handleDbError(err, "category")
@@ -38,7 +46,12 @@ func (pg *PostgresStore) DeleteCategory(id uuid.UUID) error {
 }
 
 func (pg *PostgresStore) GetCategory(id uuid.UUID) (tp.Category, error) {
-	query := fmt.Sprintf(`SELECT id, title, description FROM %s WHERE id = $1`, categoryTableName)
+	query := fmt.Sprintf(`
+			SELECT id, title, description 
+			FROM %s 
+			WHERE id = $1`,
+		categoryTableName)
+
 	row := pg.db.QueryRow(query, id)
 
 	var category tp.Category
@@ -51,7 +64,11 @@ func (pg *PostgresStore) GetCategory(id uuid.UUID) (tp.Category, error) {
 }
 
 func (pg *PostgresStore) ListCategories() ([]tp.Category, error) {
-	query := fmt.Sprintf(`SELECT id, title, description FROM %s`, categoryTableName)
+	query := fmt.Sprintf(`
+			SELECT id, title, description 
+			FROM %s`,
+		categoryTableName)
+
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, handleDbError(err, "category")
@@ -72,8 +89,40 @@ func (pg *PostgresStore) ListCategories() ([]tp.Category, error) {
 	return categories, nil
 }
 
+func (pg *PostgresStore) ListCategoriesByAsset(assetId uuid.UUID) ([]tp.Category, error) {
+	query := fmt.Sprintf(`
+			SELECT c.id, c.title, c.description
+			FROM %s c JOIN asset_category ac ON c.id = ac.category_id
+			WHERE ac.asset_id = $1`,
+		categoryTableName)
+
+	rows, err := pg.db.Query(query, assetId)
+	if err != nil {
+		return nil, handleDbError(err, "category")
+	}
+	defer rows.Close()
+
+	var categories = []tp.Category{}
+	for rows.Next() {
+		var category tp.Category
+		err = rows.Scan(&category.Id, &category.Title, &category.Description)
+		if err != nil {
+			return nil, handleDbError(err, "category")
+		}
+
+		categories = append(categories, category)
+	}
+
+	return categories, nil
+}
+
 func (pg *PostgresStore) UpdateCategory(c tp.Category) (tp.Category, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, description = $2 WHERE id = $3`, categoryTableName)
+	query := fmt.Sprintf(`
+			UPDATE %s 
+			SET title = $1, description = $2 
+			WHERE id = $3`,
+		categoryTableName)
+
 	result, err := pg.db.Exec(query, c.Title, c.Description, c.Id)
 	if err != nil {
 		return tp.Category{}, handleDbError(err, "category")

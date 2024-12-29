@@ -9,42 +9,56 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string) (tp.Tool, error) {
+func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string, ts tp.ToolSize) (tp.ToolSize, error) {
 	// check asset and task exists and task is associated with asset
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.Tool{}, err
+		return tp.ToolSize{}, err
 	}
 
 	tUid, tFound, err := a.toolExists(toolId)
 	if err != nil {
-		return tp.Tool{}, errors.Wrapf(err, "error checking tool exists")
+		return tp.ToolSize{}, errors.Wrapf(err, "error checking tool exists")
 	}
 
 	if !tFound {
-		return tp.Tool{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+		return tp.ToolSize{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
 	}
 
-	return a.db.AssociateToolWithTask(task.Id, tUid)
+	// TODO check that ts doesnt conflict with path params
+
+	s := ""
+	if ts.Size != nil {
+		s = *ts.Size
+	}
+
+	return a.db.AssociateToolWithTask(task.Id, tUid, s)
 }
 
-func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) (tp.Tool, error) {
+func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, ts tp.ToolSize) (tp.ToolSize, error) {
 	// check asset and work order exists and work order is associated with asset
 	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
 	if err != nil {
-		return tp.Tool{}, err
+		return tp.ToolSize{}, err
 	}
 
 	tUid, tFound, err := a.toolExists(toolId)
 	if err != nil {
-		return tp.Tool{}, errors.Wrapf(err, "error checking tool exists")
+		return tp.ToolSize{}, errors.Wrapf(err, "error checking tool exists")
 	}
 
 	if !tFound {
-		return tp.Tool{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+		return tp.ToolSize{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
 	}
 
-	return a.db.AssociateToolWithWorkOrder(workOrder.Id, tUid)
+	// TODO check that ts doesnt conflict with path params
+
+	s := ""
+	if ts.Size != nil {
+		s = *ts.Size
+	}
+
+	return a.db.AssociateToolWithWorkOrder(workOrder.Id, tUid, s)
 }
 
 func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {

@@ -9,40 +9,42 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string) (tp.Consumable, error) {
+func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string, cq tp.ConsumableQuantity) (tp.ConsumableQuantity, error) {
 	// check asset and task exists and task is associated with asset
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.Consumable{}, err
+		return tp.ConsumableQuantity{}, err
 	}
 
 	cUid, cFound, err := a.consumableExists(consumableId)
 	if err != nil {
-		return tp.Consumable{}, errors.Wrapf(err, "error checking consumable exists")
+		return tp.ConsumableQuantity{}, errors.Wrapf(err, "error checking consumable exists")
 	}
 
 	if !cFound {
-		return tp.Consumable{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+		return tp.ConsumableQuantity{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
 	}
 
-	return a.db.AssociateConsumableWithTask(task.Id, cUid)
+	// TODO check that cq doesnt conflict with path params
+
+	return a.db.AssociateConsumableWithTask(task.Id, cUid, cq.Quantity)
 
 }
 
-func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) (tp.Consumable, error) {
+func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, cq tp.ConsumableQuantity) (tp.ConsumableQuantity, error) {
 	// check asset and work order exists and work order is associated with asset
 	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
 	if err != nil {
-		return tp.Consumable{}, err
+		return tp.ConsumableQuantity{}, err
 	}
 
 	cUid, cFound, err := a.consumableExists(consumableId)
 	if err != nil {
-		return tp.Consumable{}, errors.Wrapf(err, "error checking consumable exists")
+		return tp.ConsumableQuantity{}, errors.Wrapf(err, "error checking consumable exists")
 	}
 
 	if !cFound {
-		return tp.Consumable{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+		return tp.ConsumableQuantity{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
 	}
 
 	return a.db.AssociateConsumableWithWorkOrder(workOrder.Id, cUid)
