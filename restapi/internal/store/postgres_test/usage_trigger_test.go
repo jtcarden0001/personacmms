@@ -47,6 +47,8 @@ func TestUsageTriggerDelete(t *testing.T) {
 	}
 }
 
+// TODO: TestUsageTriggerDeleteFromTask
+
 func TestUsageTriggerGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testusagetriggerget"
@@ -101,6 +103,8 @@ func TestUsageTriggerList(t *testing.T) {
 		t.Errorf("ListUsageTriggers() returned %d usage triggers, expected 3", len(uts))
 	}
 }
+
+// TODO: TestUsageTriggerListByTask
 
 func TestUsageTriggerUpdate(t *testing.T) {
 	t.Parallel()

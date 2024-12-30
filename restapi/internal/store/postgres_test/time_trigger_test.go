@@ -46,6 +46,8 @@ func TestTimeTriggerDelete(t *testing.T) {
 	}
 }
 
+// TODO: TestTimeTriggerDeleteFromTask
+
 func TestTimeTriggerGet(t *testing.T) {
 	t.Parallel()
 	dbName := "testtimetriggerget"
@@ -99,6 +101,8 @@ func TestTimeTriggerList(t *testing.T) {
 		t.Errorf("ListTimeTriggers() returned %d time triggers, expected 3", len(tts))
 	}
 }
+
+// TODO: TestTimeTriggerListByTask
 
 func TestTimeTriggerUpdate(t *testing.T) {
 	t.Parallel()

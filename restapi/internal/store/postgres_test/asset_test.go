@@ -33,6 +33,8 @@ func TestAssetAssociateWithCategory(t *testing.T) {
 	}
 }
 
+// TODO: TestAssetAssociateWithGroup
+
 func TestAssetCreate(t *testing.T) {
 	t.Parallel()
 
@@ -77,6 +79,10 @@ func TestAssetDelete(t *testing.T) {
 		t.Errorf("TestAssetDelete: GetAsset() returned nil error after deletion")
 	}
 }
+
+// TODO: TestAssetDisassociateWithCategory
+
+// TODO: TestAssetDisassociateWithGroup
 
 func TestAssetGet(t *testing.T) {
 	t.Parallel()
@@ -136,6 +142,12 @@ func TestAssetList(t *testing.T) {
 		t.Errorf("ListAssets() returned %d assets, expected 3", len(assets))
 	}
 }
+
+// TODO: TestAssetListByCategory
+
+// TODO: TestAssetListByCategoryAndGroup
+
+// TODO: TestAssetListByGroup
 
 func TestAssetUpdate(t *testing.T) {
 	t.Parallel()

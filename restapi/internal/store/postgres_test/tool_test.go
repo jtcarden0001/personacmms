@@ -7,6 +7,10 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+// TODO: TestToolAssociateWithTask
+
+// TODO: TestToolAssociateWithOrder
+
 func TestToolCreate(t *testing.T) {
 	t.Parallel()
 
@@ -51,6 +55,10 @@ func TestToolDelete(t *testing.T) {
 		t.Errorf("TestToolDelete: GetTool() returned nil error after deletion")
 	}
 }
+
+// TODO: TestToolDisassociateWithTask
+
+// TODO: TestToolDisassociateWithOrder
 
 func TestToolGet(t *testing.T) {
 	t.Parallel()
@@ -124,6 +132,10 @@ func TestToolList(t *testing.T) {
 		utest.CompEntities(t, expectedTool, tool)
 	}
 }
+
+// TODO: TestToolListByTask
+
+// TODO: TestToolListByWorkOrder
 
 func TestToolUpdate(t *testing.T) {
 	t.Parallel()

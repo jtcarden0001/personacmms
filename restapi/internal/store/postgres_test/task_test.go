@@ -54,6 +54,8 @@ func TestTaskDelete(t *testing.T) {
 	}
 }
 
+// TODO: TestTaskDeleteFromAsset
+
 func TestTaskGet(t *testing.T) {
 	t.Parallel()
 
@@ -126,6 +128,8 @@ func TestTaskList(t *testing.T) {
 		utest.CompEntities(t, expectedTask, task)
 	}
 }
+
+// TODO: TestTaskListByAsset
 
 func TestTaskUpdate(t *testing.T) {
 	t.Parallel()

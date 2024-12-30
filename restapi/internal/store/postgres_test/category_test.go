@@ -110,6 +110,8 @@ func TestCategoryList(t *testing.T) {
 	}
 }
 
+// TODO: TestCategoryListByAsset
+
 func TestCategoryUpdate(t *testing.T) {
 	t.Parallel()
 

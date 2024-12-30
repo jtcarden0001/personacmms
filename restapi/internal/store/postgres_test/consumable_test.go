@@ -6,6 +6,10 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+// TODO: TestConsumableAssociateWithTask
+
+// TODO: TestConsumableAssociateWithWorkOrder
+
 func TestConsumableCreate(t *testing.T) {
 	t.Parallel()
 
@@ -50,6 +54,10 @@ func TestConsumableDelete(t *testing.T) {
 		t.Errorf("TestConsumableDelete: GetConsumable() returned nil error after deletion")
 	}
 }
+
+// TODO: TestConsumableDisassociateWithTask
+
+// TODO: TestConsumableDisassociateWithWorkOrder
 
 func TestConsumableGet(t *testing.T) {
 	t.Parallel()
@@ -109,6 +117,10 @@ func TestConsumableList(t *testing.T) {
 		t.Errorf("ListConsumables() returned %d consumables, expected 3", len(consumables))
 	}
 }
+
+// TODO: TestConsumableListByTask
+
+// TODO: TestConsumableListByWorkOrder
 
 func TestConsumableUpdate(t *testing.T) {
 	t.Parallel()

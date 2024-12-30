@@ -8,6 +8,8 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+// TODO: TestWorkOrderAssociateWithTask
+
 func TestWorkOrderCreate(t *testing.T) {
 	t.Parallel()
 
@@ -52,6 +54,10 @@ func TestWorkOrderDelete(t *testing.T) {
 		t.Errorf("GetWorkOrder() returned nil error after deletion")
 	}
 }
+
+// TODO: TestWorkOrderDeleteFromAsset
+
+// TODO: TestWorkOrderDisassociateWithTask
 
 func TestWorkOrderGet(t *testing.T) {
 	t.Parallel()
@@ -125,6 +131,8 @@ func TestWorkOrderList(t *testing.T) {
 		utest.CompEntities(t, expectedWorkOrder, workOrder)
 	}
 }
+
+// TODO: TestWorkOrderListByAsset
 
 func TestWorkOrderUpdate(t *testing.T) {
 	t.Parallel()
