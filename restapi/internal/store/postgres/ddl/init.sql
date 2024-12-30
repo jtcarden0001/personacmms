@@ -30,9 +30,9 @@ CREATE TABLE category_asset (
 );
 
 CREATE TABLE agroup_asset (
-  agroup_id uuid REFERENCES agroup(id),
+  group_id uuid REFERENCES agroup(id),
   asset_id uuid REFERENCES asset(id),
-  PRIMARY KEY (agroup_id, asset_id)
+  PRIMARY KEY (group_id, asset_id)
 );
 
 CREATE TABLE task (

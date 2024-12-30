@@ -66,12 +66,12 @@ func (a *App) DeleteAsset(assetId string) error {
 func (a *App) DisassociateAssetWithCategory(assetId string, categoryId string) error {
 	aUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return ae.New(ae.CodeInvalid, "asset id must be a valid, non-nil uuid")
 	}
 
 	cUuid, err := uuid.Parse(categoryId)
 	if err != nil {
-		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+		return ae.New(ae.CodeInvalid, "category id must be a valid, non-nil uuid")
 	}
 
 	return a.db.DisassociateAssetWithCategory(aUuid, cUuid)
@@ -105,9 +105,13 @@ func (a *App) ListAssets() ([]tp.Asset, error) {
 }
 
 func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
-	cUuid, err := uuid.Parse(categoryId)
+	cUuid, cFound, err := a.categoryExists(categoryId)
 	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+		return nil, errors.Wrapf(err, "ListAssetsByCategory - categoryExists failed")
+	}
+
+	if !cFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("category with id [%s] not found", categoryId))
 	}
 
 	return a.db.ListAssetsByCategory(cUuid)

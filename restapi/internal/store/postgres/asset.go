@@ -65,13 +65,13 @@ func (pg *PostgresStore) DeleteAsset(id uuid.UUID) error {
 	if err != nil {
 		return handleDbError(err, "asset")
 	}
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
+
+	if rowsAffected, err := result.RowsAffected(); err != nil {
 		return handleDbError(err, "asset")
-	}
-	if rowsAffected == 0 {
+	} else if rowsAffected == 0 {
 		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found", id.String())
 	}
+
 	return nil
 }
 
@@ -81,9 +81,15 @@ func (pg *PostgresStore) DisassociateAssetWithCategory(assetId, categoryId uuid.
 			WHERE asset_id = $1 AND category_id = $2`,
 		catAssetTableName)
 
-	_, err := pg.db.Exec(query, assetId, categoryId)
+	result, err := pg.db.Exec(query, assetId, categoryId)
 	if err != nil {
 		return handleDbError(err, "asset")
+	}
+
+	if rowsAffected, err := result.RowsAffected(); err != nil {
+		return handleDbError(err, "asset")
+	} else if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found in category %s", assetId, categoryId)
 	}
 
 	return nil
@@ -95,9 +101,15 @@ func (pg *PostgresStore) DisassociateAssetWithGroup(assetId, groupId uuid.UUID) 
 			WHERE asset_id = $1 AND group_id = $2`,
 		gpAssetTableName)
 
-	_, err := pg.db.Exec(query, assetId, groupId)
+	result, err := pg.db.Exec(query, assetId, groupId)
 	if err != nil {
 		return handleDbError(err, "asset")
+	}
+
+	if rowsAffected, err := result.RowsAffected(); err != nil {
+		return handleDbError(err, "asset")
+	} else if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found in group %s", assetId, groupId)
 	}
 
 	return nil
@@ -155,9 +167,9 @@ func (pg *PostgresStore) ListAssets() ([]tp.Asset, error) {
 func (pg *PostgresStore) ListAssetsByCategory(categoryId uuid.UUID) ([]tp.Asset, error) {
 	query := fmt.Sprintf(`
 			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
-			FROM %s a JOIN asset_category ac ON a.id = ac.asset_id
+			FROM %s a JOIN %s ac ON a.id = ac.asset_id
 			WHERE ac.category_id = $1`,
-		assetTableName)
+		assetTableName, catAssetTableName)
 
 	rows, err := pg.db.Query(query, categoryId)
 	if err != nil {
@@ -181,10 +193,10 @@ func (pg *PostgresStore) ListAssetsByCategoryAndGroup(categoryId, groupId uuid.U
 	query := fmt.Sprintf(`
 			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
 			FROM %s a
-			JOIN asset_category ac ON a.id = ac.asset_id
-			JOIN asset_group ag ON a.id = ag.asset_id
+			JOIN %s ac ON a.id = ac.asset_id
+			JOIN %s ag ON a.id = ag.asset_id
 			WHERE ac.category_id = $1 AND ag.group_id = $2`,
-		assetTableName)
+		assetTableName, catAssetTableName, gpAssetTableName)
 
 	rows, err := pg.db.Query(query, categoryId, groupId)
 	if err != nil {
