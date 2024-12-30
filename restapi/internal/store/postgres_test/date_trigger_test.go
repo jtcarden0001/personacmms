@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/jtcarden0001/personacmms/restapi/internal/store"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -14,14 +16,9 @@ func TestDateTriggerCreate(t *testing.T) {
 	dbname := "testdatetriggercreate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	dt := utest.SetupDateTrigger(1, tk.Id, true)
+	dt := utest.SetupDateTrigger(1, tkId, true)
 
 	// test
 	createdDateTrigger, err := store.CreateDateTrigger(dt)
@@ -39,14 +36,9 @@ func TestDateTriggerDelete(t *testing.T) {
 	dbname := "testdatetriggerdelete"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	dt := utest.SetupDateTrigger(1, tk.Id, true)
+	dt := utest.SetupDateTrigger(1, tkId, true)
 	createdDateTrigger, err := store.CreateDateTrigger(dt)
 	if err != nil {
 		t.Errorf("TestDateTriggerDelete: failed during setup. CreateDateTrigger() failed: %v", err)
@@ -71,14 +63,9 @@ func TestDateTriggerGet(t *testing.T) {
 	dbname := "testdatetriggerget"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	dt := utest.SetupDateTrigger(1, tk.Id, true)
+	dt := utest.SetupDateTrigger(1, tkId, true)
 	createDateTrigger, err := store.CreateDateTrigger(dt)
 	if err != nil {
 		t.Errorf("TestDateTriggerGet: failed during setup. CreateDateTrigger() failed: %v", err)
@@ -100,18 +87,13 @@ func TestDateTriggerList(t *testing.T) {
 	dbname := "testdatetriggerlist"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
+	dt1 := utest.SetupDateTrigger(1, tkId, true)
+	dt2 := utest.SetupDateTrigger(2, tkId, true)
+	dt3 := utest.SetupDateTrigger(3, tkId, true)
 
-	dt1 := utest.SetupDateTrigger(1, tk.Id, true)
-	dt2 := utest.SetupDateTrigger(2, tk.Id, true)
-	dt3 := utest.SetupDateTrigger(3, tk.Id, true)
-
-	_, err = store.CreateDateTrigger(dt1)
+	_, err := store.CreateDateTrigger(dt1)
 	if err != nil {
 		t.Errorf("TestDateTriggerList: failed during setup. CreateDateTrigger() failed: %v", err)
 	}
@@ -142,14 +124,10 @@ func TestDateTriggerUpdate(t *testing.T) {
 	dbname := "testdatetriggerupdate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	dt := utest.SetupDateTrigger(1, tk.Id, true)
+	// test
+	dt := utest.SetupDateTrigger(1, tkId, true)
 	createdDateTrigger, err := store.CreateDateTrigger(dt)
 	if err != nil {
 		t.Errorf("TestDateTriggerUpdate: failed during setup. CreateDateTrigger() failed: %v", err)
@@ -164,4 +142,15 @@ func TestDateTriggerUpdate(t *testing.T) {
 
 	differentFields := utest.ConvertStrArrToSet([]string{"ScheduledDate"})
 	utest.CompEntitiesFieldsShouldBeDifferent(t, createdDateTrigger, updatedDateTrigger, differentFields)
+}
+
+func setupTriggerDependencies(t *testing.T, store store.Store) (taskId uuid.UUID) {
+	aId := setupAssetInStore(t, store)
+	tk := utest.SetupTask(1, aId, true)
+	_, err := store.CreateTask(tk)
+	if err != nil {
+		t.Fatalf("TestDateTriggerCreate: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	return tk.Id
 }

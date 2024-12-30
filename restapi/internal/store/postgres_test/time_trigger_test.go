@@ -12,14 +12,8 @@ func TestTimeTriggerCreate(t *testing.T) {
 	dbName := "testtimetriggercreate"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
-
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestTimeTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	tt := utest.SetupTimeTrigger(1, tk.Id, true)
+	tkId := setupTriggerDependencies(t, store)
+	tt := utest.SetupTimeTrigger(1, tkId, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("CreateTimeTrigger() failed: %v", err)
@@ -33,14 +27,9 @@ func TestTimeTriggerDelete(t *testing.T) {
 	dbName := "testtimetriggerdelete"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	tt := utest.SetupTimeTrigger(1, tk.Id, true)
+	tt := utest.SetupTimeTrigger(1, tkId, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerDelete: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -62,14 +51,8 @@ func TestTimeTriggerGet(t *testing.T) {
 	dbName := "testtimetriggerget"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
-
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	tt := utest.SetupTimeTrigger(1, tk.Id, true)
+	tkId := setupTriggerDependencies(t, store)
+	tt := utest.SetupTimeTrigger(1, tkId, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerGet: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -88,18 +71,13 @@ func TestTimeTriggerList(t *testing.T) {
 	dbName := "testtimetriggerlist"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestTimeTriggerList: failed during setup. CreateTask() failed: %v", err)
-	}
+	tt1 := utest.SetupTimeTrigger(1, tkId, true)
+	tt2 := utest.SetupTimeTrigger(2, tkId, true)
+	tt3 := utest.SetupTimeTrigger(3, tkId, true)
 
-	tt1 := utest.SetupTimeTrigger(1, tk.Id, true)
-	tt2 := utest.SetupTimeTrigger(2, tk.Id, true)
-	tt3 := utest.SetupTimeTrigger(3, tk.Id, true)
-
-	_, err = store.CreateTimeTrigger(tt1)
+	_, err := store.CreateTimeTrigger(tt1)
 	if err != nil {
 		t.Errorf("TestTimeTriggerList: failed during setup. CreateTimeTrigger() failed: %v", err)
 	}
@@ -127,14 +105,9 @@ func TestTimeTriggerUpdate(t *testing.T) {
 	dbName := "testtimetriggerupdate"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	tt := utest.SetupTimeTrigger(1, tk.Id, true)
+	tt := utest.SetupTimeTrigger(1, tkId, true)
 	createdTt, err := store.CreateTimeTrigger(tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerUpdate: failed during setup. CreateTimeTrigger() failed: %v", err)

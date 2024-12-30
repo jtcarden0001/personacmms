@@ -15,8 +15,8 @@ func TestWorkOrderCreate(t *testing.T) {
 	dbname := "testworkordercreate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	wo := utest.SetupWorkOrder(1, true)
+	aId := setupAssetInStore(t, store)
+	wo := utest.SetupWorkOrder(1, aId, true)
 
 	// test
 	createdWorkOrder, err := store.CreateWorkOrder(wo)
@@ -34,8 +34,8 @@ func TestWorkOrderDelete(t *testing.T) {
 	dbname := "testworkorderdelete"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	wo := utest.SetupWorkOrder(1, true)
+	aId := setupAssetInStore(t, store)
+	wo := utest.SetupWorkOrder(1, aId, true)
 	createdWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderDelete: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -60,8 +60,8 @@ func TestWorkOrderGet(t *testing.T) {
 	dbname := "testworkorderget"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	wo := utest.SetupWorkOrder(1, true)
+	aId := setupAssetInStore(t, store)
+	wo := utest.SetupWorkOrder(1, aId, true)
 	createWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderGet: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -83,10 +83,10 @@ func TestWorkOrderList(t *testing.T) {
 	dbname := "testworkorderlist"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	wo1 := utest.SetupWorkOrder(1, true)
-	wo2 := utest.SetupWorkOrder(2, true)
-	wo3 := utest.SetupWorkOrder(3, true)
+	aId := setupAssetInStore(t, store)
+	wo1 := utest.SetupWorkOrder(1, aId, true)
+	wo2 := utest.SetupWorkOrder(2, aId, true)
+	wo3 := utest.SetupWorkOrder(3, aId, true)
 
 	_, err := store.CreateWorkOrder(wo1)
 	if err != nil {
@@ -133,8 +133,8 @@ func TestWorkOrderUpdate(t *testing.T) {
 	dbname := "testworkorderupdate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	wo := utest.SetupWorkOrder(1, true)
+	aId := setupAssetInStore(t, store)
+	wo := utest.SetupWorkOrder(1, aId, true)
 	createWorkOrder, err := store.CreateWorkOrder(wo)
 	if err != nil {
 		t.Errorf("TestWorkOrderUpdate: failed during setup. CreateWorkOrder() failed: %v", err)

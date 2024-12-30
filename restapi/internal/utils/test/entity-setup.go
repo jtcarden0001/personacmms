@@ -23,6 +23,12 @@ func SetupAsset(identifier int, generateId bool) tp.Asset {
 	}
 }
 
+func SetupAssetAndTask(identifier int, generateId bool) (tp.Asset, tp.Task) {
+	asset := SetupAsset(identifier, generateId)
+	task := SetupTask(identifier, asset.Id, generateId)
+	return asset, task
+}
+
 func SetupCategory(identifier int, generateId bool) tp.Category {
 	return tp.Category{
 		Id:          getTestEntityId(generateId),
@@ -35,6 +41,14 @@ func SetupConsumable(identifier int, generateId bool) tp.Consumable {
 	return tp.Consumable{
 		Id:    getTestEntityId(generateId),
 		Title: fmt.Sprintf("Consumable %d", identifier),
+	}
+}
+
+func SetupConsumableQuantity(identifier int, consumableId uuid.UUID, taskId uuid.UUID, generateId bool) tp.ConsumableQuantity {
+	return tp.ConsumableQuantity{
+		Id:       getTestEntityId(generateId),
+		Title:    fmt.Sprintf("Consumable Quantity %d", identifier),
+		Quantity: fmt.Sprintf("%d", identifier),
 	}
 }
 
@@ -53,11 +67,12 @@ func SetupGroup(identifier int, generateId bool) tp.Group {
 	}
 }
 
-func SetupTask(identifier int, generateId bool) tp.Task {
+func SetupTask(identifier int, assetId uuid.UUID, generateId bool) tp.Task {
 	return tp.Task{
 		Id:           getTestEntityId(generateId),
 		Title:        fmt.Sprintf("Task %d", identifier),
 		Instructions: ToPtr(fmt.Sprintf("Task %d instructions", identifier)),
+		AssetId:      assetId,
 	}
 }
 
@@ -77,6 +92,14 @@ func SetupTool(identifier int, generateId bool) tp.Tool {
 	}
 }
 
+func SetupToolSize(identifier int, toolId uuid.UUID, generateId bool) tp.ToolSize {
+	return tp.ToolSize{
+		Id:    getTestEntityId(generateId),
+		Title: "Tool Size " + strconv.Itoa(identifier),
+		Size:  ToPtr("Size " + strconv.Itoa(identifier)),
+	}
+}
+
 func SetupUsageTrigger(identifier int, taskId uuid.UUID, generateId bool) tp.UsageTrigger {
 	return tp.UsageTrigger{
 		Id:        getTestEntityId(generateId),
@@ -86,7 +109,7 @@ func SetupUsageTrigger(identifier int, taskId uuid.UUID, generateId bool) tp.Usa
 	}
 }
 
-func SetupWorkOrder(identifier int, generateId bool) tp.WorkOrder {
+func SetupWorkOrder(identifier int, assetId uuid.UUID, generateId bool) tp.WorkOrder {
 	return tp.WorkOrder{
 		Id:              getTestEntityId(generateId),
 		Title:           "Work Order " + strconv.Itoa(identifier),
@@ -96,6 +119,7 @@ func SetupWorkOrder(identifier int, generateId bool) tp.WorkOrder {
 		Notes:           ToPtr("Notes " + strconv.Itoa(identifier)),
 		CumulativeMiles: ToPtr(identifier * 100),
 		CumulativeHours: ToPtr(identifier * 10),
+		AssetId:         assetId,
 		Status:          tp.WorkOrderStatusComplete,
 	}
 }

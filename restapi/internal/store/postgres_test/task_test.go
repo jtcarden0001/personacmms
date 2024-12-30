@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/jtcarden0001/personacmms/restapi/internal/store"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
@@ -15,8 +16,8 @@ func TestTaskCreate(t *testing.T) {
 	dbname := "testtaskcreate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	tk := utest.SetupTask(1, true)
+	aId := setupAssetInStore(t, store)
+	tk := utest.SetupTask(1, aId, true)
 
 	// test
 	createdTask, err := store.CreateTask(tk)
@@ -34,8 +35,8 @@ func TestTaskDelete(t *testing.T) {
 	dbname := "testtaskdelete"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	tk := utest.SetupTask(1, true)
+	aId := setupAssetInStore(t, store)
+	tk := utest.SetupTask(1, aId, true)
 	createdTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskDelete: failed during setup. CreateTask() failed: %v", err)
@@ -60,8 +61,8 @@ func TestTaskGet(t *testing.T) {
 	dbname := "testtaskget"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	tk := utest.SetupTask(1, true)
+	aId := setupAssetInStore(t, store)
+	tk := utest.SetupTask(1, aId, true)
 	createTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskGet: failed during setup. CreateTask() failed: %v", err)
@@ -83,10 +84,10 @@ func TestTaskList(t *testing.T) {
 	dbname := "testtasklist"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	tk1 := utest.SetupTask(1, true)
-	tk2 := utest.SetupTask(2, true)
-	tk3 := utest.SetupTask(3, true)
+	aId := setupAssetInStore(t, store)
+	tk1 := utest.SetupTask(1, aId, true)
+	tk2 := utest.SetupTask(2, aId, true)
+	tk3 := utest.SetupTask(3, aId, true)
 
 	_, err := store.CreateTask(tk1)
 	if err != nil {
@@ -133,8 +134,8 @@ func TestTaskUpdate(t *testing.T) {
 	dbname := "testtaskupdate"
 	store := utest.InitializeStore(dbname)
 	defer utest.CloseStore(store, dbname)
-
-	tk := utest.SetupTask(1, true)
+	aId := setupAssetInStore(t, store)
+	tk := utest.SetupTask(1, aId, true)
 	createTask, err := store.CreateTask(tk)
 	if err != nil {
 		t.Errorf("TestTaskUpdate: failed during setup. CreateTask() failed: %v", err)
@@ -151,4 +152,14 @@ func TestTaskUpdate(t *testing.T) {
 
 	differentFields := utest.ConvertStrArrToSet([]string{"Title", "Instructions"})
 	utest.CompEntitiesFieldsShouldBeDifferent(t, createTask, updatedTask, differentFields)
+}
+
+func setupAssetInStore(t *testing.T, st store.Store) (assetId uuid.UUID) {
+	a := utest.SetupAsset(1, true)
+	_, err := st.CreateAsset(a)
+	if err != nil {
+		t.Fatalf("TestTaskUpdate: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	return a.Id
 }

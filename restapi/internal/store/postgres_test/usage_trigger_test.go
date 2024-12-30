@@ -12,14 +12,9 @@ func TestUsageTriggerCreate(t *testing.T) {
 	dbName := "testusagetriggercreate"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestUsageTriggerCreate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	ut := utest.SetupUsageTrigger(1, tk.Id, true)
+	ut := utest.SetupUsageTrigger(1, tkId, true)
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
 		t.Errorf("CreateUsageTrigger() failed: %v", err)
@@ -33,14 +28,9 @@ func TestUsageTriggerDelete(t *testing.T) {
 	dbName := "testusagetriggerdelete"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestUsageTriggerDelete: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	ut := utest.SetupUsageTrigger(1, tk.Id, true)
+	ut := utest.SetupUsageTrigger(1, tkId, true)
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
 		t.Errorf("TestUsageTriggerDelete: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -62,14 +52,9 @@ func TestUsageTriggerGet(t *testing.T) {
 	dbName := "testusagetriggerget"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestUsageTriggerGet: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	ut := utest.SetupUsageTrigger(1, tk.Id, true)
+	ut := utest.SetupUsageTrigger(1, tkId, true)
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
 		t.Errorf("TestUsageTriggerGet: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -88,18 +73,13 @@ func TestUsageTriggerList(t *testing.T) {
 	dbName := "testusagetriggerlist"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestUsageTriggerList: failed during setup. CreateTask() failed: %v", err)
-	}
+	ut1 := utest.SetupUsageTrigger(1, tkId, true)
+	ut2 := utest.SetupUsageTrigger(2, tkId, true)
+	ut3 := utest.SetupUsageTrigger(3, tkId, true)
 
-	ut1 := utest.SetupUsageTrigger(1, tk.Id, true)
-	ut2 := utest.SetupUsageTrigger(2, tk.Id, true)
-	ut3 := utest.SetupUsageTrigger(3, tk.Id, true)
-
-	_, err = store.CreateUsageTrigger(ut1)
+	_, err := store.CreateUsageTrigger(ut1)
 	if err != nil {
 		t.Errorf("TestUsageTriggerList: failed during setup. CreateUsageTrigger() failed: %v", err)
 	}
@@ -127,14 +107,9 @@ func TestUsageTriggerUpdate(t *testing.T) {
 	dbName := "testusagetriggerupdate"
 	store := utest.InitializeStore(dbName)
 	defer utest.CloseStore(store, dbName)
+	tkId := setupTriggerDependencies(t, store)
 
-	tk := utest.SetupTask(1, true)
-	_, err := store.CreateTask(tk)
-	if err != nil {
-		t.Errorf("TestUsageTriggerUpdate: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	ut := utest.SetupUsageTrigger(1, tk.Id, true)
+	ut := utest.SetupUsageTrigger(1, tkId, true)
 	createdUt, err := store.CreateUsageTrigger(ut)
 	if err != nil {
 		t.Errorf("TestUsageTriggerUpdate: failed during setup. CreateUsageTrigger() failed: %v", err)

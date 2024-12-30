@@ -11,7 +11,7 @@ import (
 
 var workOrderTable = "workorder"
 
-// TODO: implement some kind of guard rail to protect from easily overwriting associations, done from app layer
+// TODO: implement some kind of guard rail to protect from easily overwriting associations, do it from the app layer
 func (pg *PostgresStore) AssociateWorkOrderWithTask(taskId uuid.UUID, workOrderId uuid.UUID) (tp.WorkOrder, error) {
 	query := fmt.Sprintf(`
 			UPDATE %s 
