@@ -219,9 +219,9 @@ func (pg *PostgresStore) ListAssetsByCategoryAndGroup(categoryId, groupId uuid.U
 func (pg *PostgresStore) ListAssetsByGroup(groupId uuid.UUID) ([]tp.Asset, error) {
 	query := fmt.Sprintf(`
 			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
-			FROM %s a JOIN asset_group ag ON a.id = ag.asset_id
+			FROM %s a JOIN %s ag ON a.id = ag.asset_id
 			WHERE ag.group_id = $1`,
-		assetTableName)
+		assetTableName, gpAssetTableName)
 
 	rows, err := pg.db.Query(query, groupId)
 	if err != nil {

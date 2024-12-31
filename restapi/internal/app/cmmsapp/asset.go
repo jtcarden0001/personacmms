@@ -118,23 +118,35 @@ func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
 }
 
 func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error) {
-	cUuid, err := uuid.Parse(categoryId)
+	cUuid, cFound, err := a.categoryExists(categoryId)
 	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup - categoryExists failed")
 	}
 
-	gUuid, err := uuid.Parse(groupId)
+	if !cFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("category with id [%s] not found", categoryId))
+	}
+
+	gUuid, gFound, err := a.groupExists(groupId)
 	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup - groupExists failed")
+	}
+
+	if !gFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
 	}
 
 	return a.db.ListAssetsByCategoryAndGroup(cUuid, gUuid)
 }
 
 func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
-	gUuid, err := uuid.Parse(groupId)
+	gUuid, gFound, err := a.groupExists(groupId)
 	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+		return nil, errors.Wrapf(err, "ListAssetsByGroup - groupExists failed")
+	}
+
+	if !gFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
 	}
 
 	return a.db.ListAssetsByGroup(gUuid)
@@ -166,7 +178,6 @@ func (a *App) validateAsset(asset tp.Asset) error {
 		return ae.New(ae.CodeInvalid, "asset id must not be nil")
 	}
 
-	// 255 is an arbitrary number subject to change, cannot be empty though
 	if len(asset.Title) < tp.MinEntityTitleLength || len(asset.Title) > tp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("asset title length must be between [%d] and [%d] characters",
@@ -179,8 +190,8 @@ func (a *App) validateAsset(asset tp.Asset) error {
 
 func (a *App) assetExists(assetId string) (uuid.UUID, bool, error) {
 	assetUuid, err := uuid.Parse(assetId)
-	if err != nil {
-		return uuid.Nil, false, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	if err != nil || assetUuid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "asset id must be a valid and not nil uuid")
 	}
 
 	_, err = a.db.GetAsset(assetUuid)

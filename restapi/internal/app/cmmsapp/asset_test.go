@@ -1,6 +1,7 @@
 package cmmsapp
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -466,6 +467,305 @@ func TestListAssetByCategory(t *testing.T) {
 
 			if !tc.shouldSucceed && err == nil {
 				t.Errorf("ListAssetsByCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestListAssetByCategoryAndGroup(t *testing.T) {
+	app, cleanup, err := initializeAppTest(t, "TestListAssetByCategoryAndGroup")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	aCount := 5
+	associatedAcCount := 4
+	associatedAgCount := 3 // limiting factor
+	var createdAssets []tp.Asset
+	for i := 0; i < aCount; i++ {
+		a := utest.SetupAsset(i, false)
+		createdAsset, err := app.CreateAsset(a)
+		if err != nil {
+			t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateAsset() failed: %v", err)
+		}
+		createdAssets = append(createdAssets, createdAsset)
+	}
+
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	for i := 0; i < associatedAcCount; i++ {
+		_, err := app.AssociateAssetWithCategory(createdAssets[i].Id.String(), createdCategory.Id.String())
+		if err != nil {
+			t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. AssociateAssetWithCategory() failed: %v", err)
+		}
+	}
+
+	g := utest.SetupGroup(1, false)
+	createdGroup, err := app.CreateGroup(g)
+	if err != nil {
+		t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateGroup() failed: %v", err)
+	}
+
+	for i := 0; i < associatedAgCount; i++ {
+		_, err := app.AssociateAssetWithGroup(createdAssets[i].Id.String(), createdGroup.Id.String())
+		if err != nil {
+			t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. AssociateAssetWithGroup() failed: %v", err)
+		}
+	}
+
+	testCases := []struct {
+		name          string
+		categoryID    string
+		groupID       string
+		count         int
+		shouldSucceed bool
+	}{
+		{"valid list", createdCategory.Id.String(), createdGroup.Id.String(), associatedAgCount, true},
+		{"invalid category ID", "invalid", createdGroup.Id.String(), 0, false},
+		{"invalid group ID", createdCategory.Id.String(), "invalid", 0, false},
+		{"invalid category and group ID", "invalid", "invalid", 0, false},
+		{"nil category ID", uuid.Nil.String(), createdGroup.Id.String(), 0, false},
+		{"nil group ID", createdCategory.Id.String(), uuid.Nil.String(), 0, false},
+		{"nil category and group ID", uuid.Nil.String(), uuid.Nil.String(), 0, false},
+		{"empty category ID", "", createdGroup.Id.String(), 0, false},
+		{"empty group ID", createdCategory.Id.String(), "", 0, false},
+		{"empty category and group ID", "", "", 0, false},
+		{"non-existent category", uuid.New().String(), createdGroup.Id.String(), 0, false},
+		{"non-existent group", createdCategory.Id.String(), uuid.New().String(), 0, false},
+		{"non-existent category and group", uuid.New().String(), uuid.New().String(), 0, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			as, err := app.ListAssetsByCategoryAndGroup(tc.categoryID, tc.groupID)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("ListAssetsByCategoryAndGroup() failed: %v", err)
+				} else {
+					if len(as) != tc.count {
+						t.Errorf("ListAssetsByCategoryAndGroup() failed: expected %d assets, got %d", tc.count, len(as))
+					}
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("ListAssetsByCategoryAndGroup() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestListAssetsByGroup(t *testing.T) {
+	app, cleanup, err := initializeAppTest(t, "TestListAssetsByGroup")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	aCount := 5
+	associatedACount := 3
+	var createdAssets []tp.Asset
+	for i := 0; i < aCount; i++ {
+		a := utest.SetupAsset(i, false)
+		createdAsset, err := app.CreateAsset(a)
+		if err != nil {
+			t.Errorf("TestListAssetsByGroup: failed during setup. CreateAsset() failed: %v", err)
+		}
+		createdAssets = append(createdAssets, createdAsset)
+	}
+
+	g := utest.SetupGroup(1, false)
+	createdGroup, err := app.CreateGroup(g)
+	if err != nil {
+		t.Errorf("TestListAssetsByGroup: failed during setup. CreateGroup() failed: %v", err)
+	}
+
+	for i := 0; i < associatedACount; i++ {
+		_, err := app.AssociateAssetWithGroup(createdAssets[i].Id.String(), createdGroup.Id.String())
+		if err != nil {
+			t.Errorf("TestListAssetsByGroup: failed during setup. AssociateAssetWithGroup() failed: %v", err)
+		}
+	}
+
+	testCases := []struct {
+		name          string
+		groupID       string
+		count         int
+		shouldSucceed bool
+	}{
+		{"valid list", createdGroup.Id.String(), associatedACount, true},
+		{"invalid group ID", "invalid", 0, false},
+		{"nil group ID", uuid.Nil.String(), 0, false},
+		{"empty group ID", "", 0, false},
+		{"non-existent group", uuid.New().String(), 0, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			as, err := app.ListAssetsByGroup(tc.groupID)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("ListAssetsByGroup() failed: %v", err)
+				} else {
+					if len(as) != tc.count {
+						t.Errorf("ListAssetsByGroup() failed: expected %d assets, got %d", tc.count, len(as))
+					}
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("ListAssetsByGroup() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestUpdateAsset(t *testing.T) {
+	app, cleanup, err := initializeAppTest(t, "TestUpdateAsset")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	assetCount := 5
+	var ids []string
+	assets := make(map[string]tp.Asset)
+	nilIdAssets := make(map[string]tp.Asset)
+	for i := 0; i < assetCount; i++ {
+		a := utest.SetupAsset(i, false)
+		ca, err := app.CreateAsset(a)
+		if err != nil {
+			t.Errorf("TestUpdateAsset: failed during setup. CreateAsset() failed: %v", err)
+		}
+
+		ids = append(ids, ca.Id.String())
+		assets[ca.Id.String()] = ca
+		nilIdAssets[ca.Id.String()] = a
+	}
+
+	testCases := []struct {
+		name          string
+		assetId       string
+		asset         tp.Asset
+		title         string
+		shouldSucceed bool
+	}{
+		{"valid asset with matching IDs", ids[0], assets[ids[0]], "valid title1", true},
+		{"valid asset with Asset.Id nil", ids[1], nilIdAssets[ids[1]], "valid title2", true},
+		{"mismatching asset ID and Asset.iD", ids[2], assets[ids[3]], "valid title3", false},
+		{"non-existent asset", uuid.New().String(), tp.Asset{}, "valid title3", false},
+
+		{"invalid asset ID", "invalid", tp.Asset{}, "valid title3", false},
+		{"nil asset ID", uuid.Nil.String(), tp.Asset{}, "valid title3", false},
+		{"empty asset ID", "", tp.Asset{}, "valid title3", false},
+		{"conflicting id", ids[4], assets[ids[3]], "valid title3", false},
+
+		{"empty title", ids[1], assets[ids[1]], "", false},
+		{"minimum length title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"conflicting title", ids[2], assets[ids[2]], assets[ids[3]].Title, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.asset.Title = tc.title
+			_, err := app.UpdateAsset(tc.assetId, tc.asset)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("UpdateAsset() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("UpdateAsset() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestValidateAsset(t *testing.T) {
+	app, cleanup, err := initializeAppTest(t, "TestValidateAsset")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	testCases := []struct {
+		name          string
+		asset         tp.Asset
+		id            uuid.UUID
+		title         string
+		shouldSucceed bool
+	}{
+		{"valid asset", utest.SetupAsset(1, false), uuid.New(), "valid title", true},
+		{"nil id", utest.SetupAsset(2, false), uuid.Nil, "valid title", false},
+
+		{"empty title", utest.SetupAsset(3, false), uuid.New(), "", false},
+		{"minimum length title", utest.SetupAsset(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", utest.SetupAsset(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", utest.SetupAsset(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.asset.Id = tc.id
+			tc.asset.Title = tc.title
+			err := app.validateAsset(tc.asset)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("validateAsset() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("validateAsset() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestAssetExists(t *testing.T) {
+	app, cleanup, err := initializeAppTest(t, "TestAssetExists")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssetExists: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		assetID       string
+		shouldExist   bool
+		shouldSucceed bool
+	}{
+		{"valid asset", createdAsset.Id.String(), true, true},
+		{"non-existent asset", uuid.New().String(), false, true},
+
+		{"invalid asset ID", "invalid", false, false},
+		{"nil asset ID", uuid.Nil.String(), false, false},
+		{"empty asset ID", "", false, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, exists, err := app.assetExists(tc.assetID)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("assetExists() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("assetExists() should have failed with %s", tc.name)
+			}
+
+			if exists != tc.shouldExist {
+				t.Errorf("assetExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
 	}
