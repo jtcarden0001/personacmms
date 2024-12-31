@@ -26,7 +26,6 @@ func TestMain(m *testing.M) {
 }
 
 func initializeAppTest(t *testing.T, testName string) (*App, func(), error) {
-	t.Parallel()
 	store := utest.InitializeStore(strings.ToLower(testName))
 	app := New(store)
 	cleanup := func() {

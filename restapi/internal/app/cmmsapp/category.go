@@ -99,7 +99,7 @@ func (a *App) validateCategory(cat tp.Category) error {
 
 func (a *App) categoryExists(id string) (uuid.UUID, bool, error) {
 	cUuid, err := uuid.Parse(id)
-	if err != nil {
+	if err != nil || cUuid == uuid.Nil {
 		return uuid.Nil, false, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 

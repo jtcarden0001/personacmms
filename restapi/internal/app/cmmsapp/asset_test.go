@@ -10,6 +10,7 @@ import (
 )
 
 func TestAssociateAssetWithCategory(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestAssociateAssetWithCategory")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -60,6 +61,7 @@ func TestAssociateAssetWithCategory(t *testing.T) {
 }
 
 func TestAssociateAssetWithGroup(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestAssociateAssetWithGroup")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -111,6 +113,7 @@ func TestAssociateAssetWithGroup(t *testing.T) {
 }
 
 func TestCreateAsset(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestCreateAsset")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -152,6 +155,7 @@ func TestCreateAsset(t *testing.T) {
 }
 
 func TestDeleteAsset(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestDeleteAsset")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -190,6 +194,7 @@ func TestDeleteAsset(t *testing.T) {
 }
 
 func TestDisassociateAssetWithCategory(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestDisassociateAssetWithCategory")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -256,6 +261,7 @@ func TestDisassociateAssetWithCategory(t *testing.T) {
 }
 
 func TestDisassociateAssetWithGroup(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestDisassociateAssetWithGroup")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -322,6 +328,7 @@ func TestDisassociateAssetWithGroup(t *testing.T) {
 }
 
 func TestGetAsset(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestGetAsset")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -361,6 +368,7 @@ func TestGetAsset(t *testing.T) {
 }
 
 func TestListAssets(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestListAssets")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -408,6 +416,7 @@ func TestListAssets(t *testing.T) {
 }
 
 func TestListAssetByCategory(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestListAssetByCategory")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -473,6 +482,7 @@ func TestListAssetByCategory(t *testing.T) {
 }
 
 func TestListAssetByCategoryAndGroup(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestListAssetByCategoryAndGroup")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -561,6 +571,7 @@ func TestListAssetByCategoryAndGroup(t *testing.T) {
 }
 
 func TestListAssetsByGroup(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestListAssetsByGroup")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -626,6 +637,7 @@ func TestListAssetsByGroup(t *testing.T) {
 }
 
 func TestUpdateAsset(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestUpdateAsset")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -688,6 +700,7 @@ func TestUpdateAsset(t *testing.T) {
 }
 
 func TestValidateAsset(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestValidateAsset")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
@@ -727,6 +740,7 @@ func TestValidateAsset(t *testing.T) {
 }
 
 func TestAssetExists(t *testing.T) {
+	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestAssetExists")
 	if err != nil {
 		t.Fatalf("Could not initialize app: %s", err)
