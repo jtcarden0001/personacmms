@@ -91,8 +91,8 @@ func (a *App) validateGroup(grp tp.Group) error {
 
 func (a *App) groupExists(grpId string) (uuid.UUID, bool, error) {
 	grpUuid, err := uuid.Parse(grpId)
-	if err != nil {
-		return uuid.Nil, false, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+	if err != nil || grpUuid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "group id must be a valid, non-nil uuid")
 	}
 
 	_, err = a.db.GetGroup(grpUuid)

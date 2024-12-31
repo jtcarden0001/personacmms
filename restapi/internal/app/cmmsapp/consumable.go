@@ -162,7 +162,7 @@ func (a *App) validateConsumable(consumable tp.Consumable) error {
 
 func (a *App) consumableExists(consumableId string) (uuid.UUID, bool, error) {
 	consumableUuid, err := uuid.Parse(consumableId)
-	if err != nil {
+	if err != nil || consumableUuid == uuid.Nil {
 		return uuid.Nil, false, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
 	}
 

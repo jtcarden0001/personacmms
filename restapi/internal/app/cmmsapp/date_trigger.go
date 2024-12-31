@@ -142,8 +142,8 @@ func (a *App) validateDateTrigger(dateTrigger tp.DateTrigger) error {
 
 func (a *App) dateTriggerExists(dtId string) (uuid.UUID, bool, error) {
 	uid, err := uuid.Parse(dtId)
-	if err != nil {
-		return uuid.Nil, false, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid uuid")
+	if err != nil || uid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "dateTrigger id must be a valid, non nil uuid")
 	}
 
 	_, err = a.db.GetDateTrigger(uid)
