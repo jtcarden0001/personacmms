@@ -157,8 +157,8 @@ func (a *App) validateTimeTrigger(timeTrigger tp.TimeTrigger) error {
 
 func (a *App) timeTriggerExists(id string) (uuid.UUID, bool, error) {
 	uid, err := uuid.Parse(id)
-	if err != nil {
-		return uuid.Nil, false, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
+	if err != nil || uid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid, non-nil uuid")
 	}
 
 	_, err = a.db.GetTimeTrigger(uid)
