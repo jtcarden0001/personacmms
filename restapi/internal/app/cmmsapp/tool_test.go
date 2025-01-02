@@ -9,6 +9,158 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+func TestAssociateToolWithTask(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestAssociateToolWithTask")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	tk := utest.SetupTask(1, createdAsset.Id, false)
+	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	tl := utest.SetupTool(1, false)
+	createdTool, err := app.CreateTool(tl)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTool() failed: %v", err)
+	}
+
+	ts := tp.ToolSize{
+		Size: nil,
+	}
+
+	testCases := []struct {
+		name          string
+		assetID       string
+		taskID        string
+		toolID        string
+		toolSize      tp.ToolSize
+		shouldSucceed bool
+	}{
+		{"valid association", createdAsset.Id.String(), createdTask.Id.String(), createdTool.Id.String(), ts, true},
+		{"invalid tool ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", ts, false},
+		{"invalid task ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), ts, false},
+		{"invalid asset ID", "invalid", createdTask.Id.String(), createdTool.Id.String(), ts, false},
+		{"invalid asset and task ID", "invalid", "invalid", createdTool.Id.String(), ts, false},
+		{"invalid asset and tool ID", "invalid", createdTask.Id.String(), "invalid", ts, false},
+		{"invalid task and tool ID", createdAsset.Id.String(), "invalid", "invalid", ts, false},
+		{"invalid asset, task and tool ID", "invalid", "invalid", "invalid", ts, false},
+		{"nil asset ID", uuid.Nil.String(), createdTask.Id.String(), createdTool.Id.String(), ts, false},
+		{"nil task ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
+		{"nil tool ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), ts, false},
+		{"nil asset and task ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
+		{"nil asset and tool ID", uuid.Nil.String(), createdTask.Id.String(), uuid.Nil.String(), ts, false},
+		{"nil task and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
+		{"nil asset, task and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
+		{"empty asset ID", "", createdTask.Id.String(), createdTool.Id.String(), ts, false},
+		{"empty task ID", createdAsset.Id.String(), "", createdTool.Id.String(), ts, false},
+		{"empty tool ID", createdAsset.Id.String(), createdTask.Id.String(), "", ts, false},
+		{"empty asset and task ID", "", "", createdTool.Id.String(), ts, false},
+		{"empty asset and tool ID", "", createdTask.Id.String(), "", ts, false},
+		{"empty task and tool ID", createdAsset.Id.String(), "", "", ts, false},
+		{"empty asset, task and tool ID", "", "", "", ts, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := app.AssociateToolWithTask(tc.assetID, tc.taskID, tc.toolID, tc.toolSize)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("AssociateToolWithTask() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("AssociateToolWithTask() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestAssociateToolWithWorkOrder(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestAssociateToolWithWorkOrder")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	wo := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+
+	tl := utest.SetupTool(1, false)
+	createdTool, err := app.CreateTool(tl)
+	if err != nil {
+		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateTool() failed: %v", err)
+	}
+
+	ts := tp.ToolSize{
+		Size: nil,
+	}
+
+	testCases := []struct {
+		name          string
+		assetID       string
+		workOrderID   string
+		toolID        string
+		toolSize      tp.ToolSize
+		shouldSucceed bool
+	}{
+		{"valid association", createdAsset.Id.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts, true},
+		{"invalid tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "invalid", ts, false},
+		{"invalid work order ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), ts, false},
+		{"invalid asset ID", "invalid", createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
+		{"invalid asset and work order ID", "invalid", "invalid", createdTool.Id.String(), ts, false},
+		{"invalid asset and tool ID", "invalid", createdWorkOrder.Id.String(), "invalid", ts, false},
+		{"invalid work order and tool ID", createdAsset.Id.String(), "invalid", "invalid", ts, false},
+		{"invalid asset, work order and tool ID", "invalid", "invalid", "invalid", ts, false},
+		{"nil asset ID", uuid.Nil.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
+		{"nil work order ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
+		{"nil tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), ts, false},
+		{"nil asset and work order ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
+		{"nil asset and tool ID", uuid.Nil.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), ts, false},
+		{"nil work order and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
+		{"nil asset, work order and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
+		{"empty asset ID", "", createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
+		{"empty work order ID", createdAsset.Id.String(), "", createdTool.Id.String(), ts, false},
+		{"empty tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "", ts, false},
+		{"empty asset and work order ID", "", "", createdTool.Id.String(), ts, false},
+		{"empty asset and tool ID", "", createdWorkOrder.Id.String(), "", ts, false},
+		{"empty work order and tool ID", createdAsset.Id.String(), "", "", ts, false},
+		{"empty asset, work order and tool ID", "", "", "", ts, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := app.AssociateToolWithWorkOrder(tc.assetID, tc.workOrderID, tc.toolID, tc.toolSize)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("AssociateToolWithWorkOrder() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("AssociateToolWithWorkOrder() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
 func TestCreateTool(t *testing.T) {
 	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestCreateTool")
@@ -85,6 +237,166 @@ func TestDeleteTool(t *testing.T) {
 
 			if !tc.shouldSucceed && err == nil {
 				t.Errorf("DeleteTool() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestDisassociateToolWithTask(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestDisassociateToolWithTask")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	tk := utest.SetupTask(1, createdAsset.Id, false)
+	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	tl := utest.SetupTool(1, false)
+	createdTool, err := app.CreateTool(tl)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateTool() failed: %v", err)
+	}
+
+	ts := tp.ToolSize{
+		Size: nil,
+	}
+
+	_, err = app.AssociateToolWithTask(createdAsset.Id.String(), createdTask.Id.String(), createdTool.Id.String(), ts)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithTask: failed during setup. AssociateToolWithTask() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		assetID       string
+		taskID        string
+		toolID        string
+		shouldSucceed bool
+	}{
+		{"valid disassociation", createdAsset.Id.String(), createdTask.Id.String(), createdTool.Id.String(), true},
+		{"invalid tool ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", false},
+		{"invalid task ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), false},
+		{"invalid asset ID", "invalid", createdTask.Id.String(), createdTool.Id.String(), false},
+		{"invalid asset and task ID", "invalid", "invalid", createdTool.Id.String(), false},
+		{"invalid asset and tool ID", "invalid", createdTask.Id.String(), "invalid", false},
+		{"invalid task and tool ID", createdAsset.Id.String(), "invalid", "invalid", false},
+		{"invalid asset, task and tool ID", "invalid", "invalid", "invalid", false},
+		{"nil asset ID", uuid.Nil.String(), createdTask.Id.String(), createdTool.Id.String(), false},
+		{"nil task ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), false},
+		{"nil tool ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), false},
+		{"nil asset and task ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), false},
+		{"nil asset and tool ID", uuid.Nil.String(), createdTask.Id.String(), uuid.Nil.String(), false},
+		{"nil task and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), false},
+		{"nil asset, task and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), false},
+		{"empty asset ID", "", createdTask.Id.String(), createdTool.Id.String(), false},
+		{"empty task ID", createdAsset.Id.String(), "", createdTool.Id.String(), false},
+		{"empty tool ID", createdAsset.Id.String(), createdTask.Id.String(), "", false},
+		{"empty asset and task ID", "", "", createdTool.Id.String(), false},
+		{"empty asset and tool ID", "", createdTask.Id.String(), "", false},
+		{"empty task and tool ID", createdAsset.Id.String(), "", "", false},
+		{"empty asset, task and tool ID", "", "", "", false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := app.DisassociateToolWithTask(tc.assetID, tc.taskID, tc.toolID)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("DisassociateToolWithTask() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("DisassociateToolWithTask() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestDisassociateToolWithWorkOrder(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestDisassociateToolWithWorkOrder")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	wo := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+
+	tl := utest.SetupTool(1, false)
+	createdTool, err := app.CreateTool(tl)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateTool() failed: %v", err)
+	}
+
+	ts := tp.ToolSize{
+		Size: nil,
+	}
+
+	_, err = app.AssociateToolWithWorkOrder(createdAsset.Id.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts)
+	if err != nil {
+		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. AssociateToolWithWorkOrder() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		assetID       string
+		workOrderID   string
+		toolID        string
+		shouldSucceed bool
+	}{
+		{"valid disassociation", createdAsset.Id.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), true},
+		{"invalid tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "invalid", false},
+		{"invalid work order ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), false},
+		{"invalid asset ID", "invalid", createdWorkOrder.Id.String(), createdTool.Id.String(), false},
+		{"invalid asset and work order ID", "invalid", "invalid", createdTool.Id.String(), false},
+		{"invalid asset and tool ID", "invalid", createdWorkOrder.Id.String(), "invalid", false},
+		{"invalid work order and tool ID", createdAsset.Id.String(), "invalid", "invalid", false},
+		{"invalid asset, work order and tool ID", "invalid", "invalid", "invalid", false},
+		{"nil asset ID", uuid.Nil.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), false},
+		{"nil work order ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), false},
+		{"nil tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), false},
+		{"nil asset and work order ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), false},
+		{"nil asset and tool ID", uuid.Nil.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), false},
+		{"nil work order and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), false},
+		{"nil asset, work order and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), false},
+		{"empty asset ID", "", createdWorkOrder.Id.String(), createdTool.Id.String(), false},
+		{"empty work order ID", createdAsset.Id.String(), "", createdTool.Id.String(), false},
+		{"empty tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "", false},
+		{"empty asset and work order ID", "", "", createdTool.Id.String(), false},
+		{"empty asset and tool ID", "", createdWorkOrder.Id.String(), "", false},
+		{"empty work order and tool ID", createdAsset.Id.String(), "", "", false},
+		{"empty asset, work order and tool ID", "", "", "", false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := app.DisassociateToolWithWorkOrder(tc.assetID, tc.workOrderID, tc.toolID)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("DisassociateToolWithWorkOrder() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("DisassociateToolWithWorkOrder() should have failed with %s", tc.name)
 			}
 		})
 	}
@@ -322,158 +634,6 @@ func TestToolExists(t *testing.T) {
 
 			if exists != tc.shouldExist {
 				t.Errorf("toolExists() failed: expected %t, got %t", tc.shouldExist, exists)
-			}
-		})
-	}
-}
-
-func TestAssociateToolWithTask(t *testing.T) {
-	t.Parallel()
-	app, cleanup, err := initializeAppTest(t, "TestAssociateToolWithTask")
-	if err != nil {
-		t.Fatalf("Could not initialize app: %s", err)
-	}
-	defer cleanup()
-
-	a := utest.SetupAsset(1, false)
-	createdAsset, err := app.CreateAsset(a)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateAsset() failed: %v", err)
-	}
-
-	tk := utest.SetupTask(1, createdAsset.Id, false)
-	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTask() failed: %v", err)
-	}
-
-	tl := utest.SetupTool(1, false)
-	createdTool, err := app.CreateTool(tl)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTool() failed: %v", err)
-	}
-
-	ts := tp.ToolSize{
-		Size: nil,
-	}
-
-	testCases := []struct {
-		name          string
-		assetID       string
-		taskID        string
-		toolID        string
-		toolSize      tp.ToolSize
-		shouldSucceed bool
-	}{
-		{"valid association", createdAsset.Id.String(), createdTask.Id.String(), createdTool.Id.String(), ts, true},
-		{"invalid tool ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", ts, false},
-		{"invalid task ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), ts, false},
-		{"invalid asset ID", "invalid", createdTask.Id.String(), createdTool.Id.String(), ts, false},
-		{"invalid asset and task ID", "invalid", "invalid", createdTool.Id.String(), ts, false},
-		{"invalid asset and tool ID", "invalid", createdTask.Id.String(), "invalid", ts, false},
-		{"invalid task and tool ID", createdAsset.Id.String(), "invalid", "invalid", ts, false},
-		{"invalid asset, task and tool ID", "invalid", "invalid", "invalid", ts, false},
-		{"nil asset ID", uuid.Nil.String(), createdTask.Id.String(), createdTool.Id.String(), ts, false},
-		{"nil task ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
-		{"nil tool ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), ts, false},
-		{"nil asset and task ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
-		{"nil asset and tool ID", uuid.Nil.String(), createdTask.Id.String(), uuid.Nil.String(), ts, false},
-		{"nil task and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
-		{"nil asset, task and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
-		{"empty asset ID", "", createdTask.Id.String(), createdTool.Id.String(), ts, false},
-		{"empty task ID", createdAsset.Id.String(), "", createdTool.Id.String(), ts, false},
-		{"empty tool ID", createdAsset.Id.String(), createdTask.Id.String(), "", ts, false},
-		{"empty asset and task ID", "", "", createdTool.Id.String(), ts, false},
-		{"empty asset and tool ID", "", createdTask.Id.String(), "", ts, false},
-		{"empty task and tool ID", createdAsset.Id.String(), "", "", ts, false},
-		{"empty asset, task and tool ID", "", "", "", ts, false},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			_, err := app.AssociateToolWithTask(tc.assetID, tc.taskID, tc.toolID, tc.toolSize)
-			if tc.shouldSucceed && err != nil {
-				t.Errorf("AssociateToolWithTask() failed: %v", err)
-			}
-
-			if !tc.shouldSucceed && err == nil {
-				t.Errorf("AssociateToolWithTask() should have failed with %s", tc.name)
-			}
-		})
-	}
-}
-
-func TestAssociateToolWithWorkOrder(t *testing.T) {
-	t.Parallel()
-	app, cleanup, err := initializeAppTest(t, "TestAssociateToolWithWorkOrder")
-	if err != nil {
-		t.Fatalf("Could not initialize app: %s", err)
-	}
-	defer cleanup()
-
-	a := utest.SetupAsset(1, false)
-	createdAsset, err := app.CreateAsset(a)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
-	}
-
-	wo := utest.SetupWorkOrder(1, createdAsset.Id, false)
-	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
-	}
-
-	tl := utest.SetupTool(1, false)
-	createdTool, err := app.CreateTool(tl)
-	if err != nil {
-		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateTool() failed: %v", err)
-	}
-
-	ts := tp.ToolSize{
-		Size: nil,
-	}
-
-	testCases := []struct {
-		name          string
-		assetID       string
-		workOrderID   string
-		toolID        string
-		toolSize      tp.ToolSize
-		shouldSucceed bool
-	}{
-		{"valid association", createdAsset.Id.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts, true},
-		{"invalid tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "invalid", ts, false},
-		{"invalid work order ID", createdAsset.Id.String(), "invalid", createdTool.Id.String(), ts, false},
-		{"invalid asset ID", "invalid", createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
-		{"invalid asset and work order ID", "invalid", "invalid", createdTool.Id.String(), ts, false},
-		{"invalid asset and tool ID", "invalid", createdWorkOrder.Id.String(), "invalid", ts, false},
-		{"invalid work order and tool ID", createdAsset.Id.String(), "invalid", "invalid", ts, false},
-		{"invalid asset, work order and tool ID", "invalid", "invalid", "invalid", ts, false},
-		{"nil asset ID", uuid.Nil.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
-		{"nil work order ID", createdAsset.Id.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
-		{"nil tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), ts, false},
-		{"nil asset and work order ID", uuid.Nil.String(), uuid.Nil.String(), createdTool.Id.String(), ts, false},
-		{"nil asset and tool ID", uuid.Nil.String(), createdWorkOrder.Id.String(), uuid.Nil.String(), ts, false},
-		{"nil work order and tool ID", createdAsset.Id.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
-		{"nil asset, work order and tool ID", uuid.Nil.String(), uuid.Nil.String(), uuid.Nil.String(), ts, false},
-		{"empty asset ID", "", createdWorkOrder.Id.String(), createdTool.Id.String(), ts, false},
-		{"empty work order ID", createdAsset.Id.String(), "", createdTool.Id.String(), ts, false},
-		{"empty tool ID", createdAsset.Id.String(), createdWorkOrder.Id.String(), "", ts, false},
-		{"empty asset and work order ID", "", "", createdTool.Id.String(), ts, false},
-		{"empty asset and tool ID", "", createdWorkOrder.Id.String(), "", ts, false},
-		{"empty work order and tool ID", createdAsset.Id.String(), "", "", ts, false},
-		{"empty asset, work order and tool ID", "", "", "", ts, false},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			_, err := app.AssociateToolWithWorkOrder(tc.assetID, tc.workOrderID, tc.toolID, tc.toolSize)
-			if tc.shouldSucceed && err != nil {
-				t.Errorf("AssociateToolWithWorkOrder() failed: %v", err)
-			}
-
-			if !tc.shouldSucceed && err == nil {
-				t.Errorf("AssociateToolWithWorkOrder() should have failed with %s", tc.name)
 			}
 		})
 	}

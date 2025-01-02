@@ -19,7 +19,7 @@ func (pg *PostgresStore) AssociateConsumableWithTask(taskId uuid.UUID, consumabl
 			VALUES ($1, $2, $3)`,
 		tConsumableTableName)
 
-	_, err := pg.db.Exec(query, consumableId, taskId, qNote)
+	_, err := pg.db.Exec(query, taskId, consumableId, qNote)
 	if err != nil {
 		return tp.ConsumableQuantity{}, handleDbError(err, "consumable")
 	}
@@ -29,7 +29,7 @@ func (pg *PostgresStore) AssociateConsumableWithTask(taskId uuid.UUID, consumabl
 
 func (pg *PostgresStore) AssociateConsumableWithWorkOrder(workOrderId uuid.UUID, consumableId uuid.UUID, qNote string) (tp.ConsumableQuantity, error) {
 	query := fmt.Sprintf(`
-			INSERT INTO %s (work_order_id, consumable_id, quantity_note) 
+			INSERT INTO %s (workorder_id, consumable_id, quantity_note) 
 			VALUES ($1, $2, $3)`,
 		woConsumableTableName)
 
@@ -101,7 +101,7 @@ func (pg *PostgresStore) DisassociateConsumableWithTask(taskId uuid.UUID, consum
 func (pg *PostgresStore) DisassociateConsumableWithWorkOrder(workOrderId uuid.UUID, consumableId uuid.UUID) error {
 	query := fmt.Sprintf(`
 			DELETE FROM %s 
-			WHERE work_order_id = $1 AND consumable_id = $2`,
+			WHERE workorder_id = $1 AND consumable_id = $2`,
 		woConsumableTableName)
 
 	result, err := pg.db.Exec(query, workOrderId, consumableId)

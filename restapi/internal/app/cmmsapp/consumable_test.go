@@ -9,6 +9,129 @@ import (
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
+func TestAssociateConsumableWithTask(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestAssociateConsumableWithTask")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupConsumable(1, false)
+	createdConsumable, err := app.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithTask: failed during setup. CreateConsumable() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithTask: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	t1 := utest.SetupTask(1, createdAsset.Id, false)
+	createdTask, err := app.CreateTask(createdAsset.Id.String(), t1)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithTask: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		taskId        string
+		consumableId  string
+		cq            tp.ConsumableQuantity
+		shouldSucceed bool
+	}{
+		{"valid consumable association", createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, true},
+		{"invalid task ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"invalid consumable ID", createdTask.Id.String(), "invalid", tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cq, err := app.AssociateConsumableWithTask(createdAsset.Id.String(), tc.taskId, tc.consumableId, tc.cq)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("AssociateConsumableWithTask() failed: %v", err)
+					return
+				}
+
+				if cq.Quantity != tc.cq.Quantity {
+					t.Errorf("AssociateConsumableWithTask() failed: expected %s, got %s", tc.cq.Quantity, cq.Quantity)
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("AssociateConsumableWithTask() should have failed with %s", tc.name)
+				return
+			}
+		})
+	}
+}
+
+func TestAssociateConsumableWithWorkOrder(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestAssociateConsumableWithWorkOrder")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupConsumable(1, false)
+	createdConsumable, err := app.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateConsumable() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	wo1 := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo1)
+	if err != nil {
+		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		workOrderId   string
+		consumableId  string
+		cq            tp.ConsumableQuantity
+		shouldSucceed bool
+	}{
+		{"valid consumable association", createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, true},
+		{"invalid work order ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cq, err := app.AssociateConsumableWithWorkOrder(createdAsset.Id.String(), tc.workOrderId, tc.consumableId, tc.cq)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("AssociateConsumableWithWorkOrder() failed: %v", err)
+					return
+				}
+
+				if cq.Quantity != tc.cq.Quantity {
+
+					t.Errorf("AssociateConsumableWithWorkOrder() failed: expected %s, got %s", tc.cq.Quantity, cq.Quantity)
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("AssociateConsumableWithWorkOrder() should have failed with %s", tc.name)
+				return
+			}
+		})
+	}
+}
+
 func TestCreateConsumable(t *testing.T) {
 	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestCreateConsumable")
@@ -85,6 +208,119 @@ func TestDeleteConsumable(t *testing.T) {
 
 			if !tc.shouldSucceed && err == nil {
 				t.Errorf("DeleteConsumable() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestDisassociateConsumableWithTask(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestDisassociateConsumableWithTask")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupConsumable(1, false)
+	createdConsumable, err := app.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateConsumable() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	t1 := utest.SetupTask(1, createdAsset.Id, false)
+	createdTask, err := app.CreateTask(createdAsset.Id.String(), t1)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateTask() failed: %v", err)
+	}
+
+	cq, err := app.AssociateConsumableWithTask(createdAsset.Id.String(), createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"})
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. AssociateConsumableWithTask() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		taskId        string
+		consumableId  string
+		cq            tp.ConsumableQuantity
+		shouldSucceed bool
+	}{
+		{"valid consumable disassociation", createdTask.Id.String(), createdConsumable.Id.String(), cq, true},
+		{"invalid task ID", "invalid", createdConsumable.Id.String(), cq, false},
+		{"invalid consumable ID", createdTask.Id.String(), "invalid", cq, false},
+		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), cq, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := app.DisassociateConsumableWithTask(createdAsset.Id.String(), tc.taskId, tc.consumableId)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("DisassociateConsumableWithTask() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("DisassociateConsumableWithTask() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestDisassociateConsumableWithWorkOrder(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestDisassociateConsumableWithWorkOrder")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupConsumable(1, false)
+	createdConsumable, err := app.CreateConsumable(c)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateConsumable() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	wo1 := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo1)
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
+	}
+
+	cq, err := app.AssociateConsumableWithWorkOrder(createdAsset.Id.String(), createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"})
+	if err != nil {
+		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. AssociateConsumableWithWorkOrder() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		workOrderId   string
+		consumableId  string
+		cq            tp.ConsumableQuantity
+		shouldSucceed bool
+	}{
+		{"valid consumable disassociation", createdWorkOrder.Id.String(), createdConsumable.Id.String(), cq, true},
+		{"invalid work order ID", "invalid", createdConsumable.Id.String(), cq, false},
+		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", cq, false},
+		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), cq, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := app.DisassociateConsumableWithWorkOrder(createdAsset.Id.String(), tc.workOrderId, tc.consumableId)
+			if tc.shouldSucceed && err != nil {
+
+				t.Errorf("DisassociateConsumableWithWorkOrder() failed: %v", err)
 			}
 		})
 	}

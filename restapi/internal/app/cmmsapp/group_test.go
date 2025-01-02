@@ -178,6 +178,66 @@ func TestListGroups(t *testing.T) {
 	}
 }
 
+func TestListGroupsByAsset(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestListGroupsByAsset")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	testCases := []struct {
+		name                 string
+		groupCount           int
+		associatedGroupCount int
+		shouldSucceed        bool
+	}{
+		{"list 2 associated groups out of 3 total", 3, 2, true},
+	}
+
+	for _, tc := range testCases {
+		asset := utest.SetupAsset(1, false)
+		ca, err := app.CreateAsset(asset)
+		if err != nil {
+			t.Errorf("TestListGroupsByAsset: failed during setup. CreateAsset() failed: %v", err)
+		}
+
+		createdGroupIds := []uuid.UUID{}
+		for i := 0; i < tc.groupCount; i++ {
+			g := utest.SetupGroup(i, false)
+			cg, err := app.CreateGroup(g)
+			if err != nil {
+				t.Errorf("TestListGroupsByAsset: failed during setup. CreateGroup() failed: %v", err)
+			}
+
+			if i < tc.associatedGroupCount {
+				_, err = app.AssociateAssetWithGroup(ca.Id.String(), cg.Id.String())
+				if err != nil {
+					t.Errorf("TestListGroupsByAsset: failed during setup. AssociateGroupToAsset() failed: %v", err)
+				}
+			}
+
+			createdGroupIds = append(createdGroupIds, cg.Id)
+		}
+
+		gps, err := app.ListGroupsByAsset(ca.Id.String())
+		if tc.shouldSucceed {
+
+			if err != nil {
+				t.Errorf("ListGroupsByAsset() failed: %v", err)
+			} else {
+				if len(gps) != tc.associatedGroupCount {
+					t.Errorf("ListGroupsByAsset() failed: expected %d groups, got %d", tc.associatedGroupCount, len(gps))
+				}
+			}
+		}
+
+		if !tc.shouldSucceed && err == nil {
+			t.Errorf("ListGroupsByAsset() should have failed with %s", tc.name)
+		}
+	}
+}
+
 func TestUpdateGroup(t *testing.T) {
 	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestUpdateGroup")

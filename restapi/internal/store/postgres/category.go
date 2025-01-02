@@ -10,6 +10,7 @@ import (
 )
 
 var categoryTableName = "category"
+var categoryAssetTableName = "category_asset"
 
 func (pg *PostgresStore) CreateCategory(c tp.Category) (tp.Category, error) {
 	query := fmt.Sprintf(`
@@ -92,9 +93,9 @@ func (pg *PostgresStore) ListCategories() ([]tp.Category, error) {
 func (pg *PostgresStore) ListCategoriesByAsset(assetId uuid.UUID) ([]tp.Category, error) {
 	query := fmt.Sprintf(`
 			SELECT c.id, c.title, c.description
-			FROM %s c JOIN asset_category ac ON c.id = ac.category_id
+			FROM %s c JOIN %s ac ON c.id = ac.category_id
 			WHERE ac.asset_id = $1`,
-		categoryTableName)
+		categoryTableName, categoryAssetTableName)
 
 	rows, err := pg.db.Query(query, assetId)
 	if err != nil {

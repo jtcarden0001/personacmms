@@ -153,8 +153,8 @@ func (a *App) validateUsageTrigger(usageTrigger tp.UsageTrigger) error {
 
 func (a *App) usageTriggerExists(id string) (uuid.UUID, bool, error) {
 	uid, err := uuid.Parse(id)
-	if err != nil {
-		return uuid.Nil, false, ae.New(ae.CodeInvalid, "usageTrigger id must be a valid uuid")
+	if err != nil || uid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "usageTrigger id must be a valid, non-nil uuid")
 	}
 
 	_, err = a.db.GetUsageTrigger(uid)

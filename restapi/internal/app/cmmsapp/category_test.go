@@ -178,6 +178,64 @@ func TestListCategories(t *testing.T) {
 	}
 }
 
+func TestListCategoriesByAsset(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestListCategoriesByAsset")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	_, err = app.AssociateAssetWithCategory(createdAsset.Id.String(), createdCategory.Id.String())
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. AddCategoryToAsset() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		assetId       string
+		count         int
+		shouldSucceed bool
+	}{
+		{"valid category", createdAsset.Id.String(), 1, true},
+		{"invalid asset ID", "invalid", 0, false},
+		{"nil asset ID", uuid.Nil.String(), 0, false},
+		{"empty asset ID", "", 0, false},
+		{"non-existent asset", uuid.New().String(), 0, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cs, err := app.ListCategoriesByAsset(tc.assetId)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("ListCategoriesByAsset() failed: %v", err)
+				} else {
+					if len(cs) != tc.count {
+						t.Errorf("ListCategoriesByAsset() failed: expected %d categories, got %d", tc.count, len(cs))
+					}
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("ListCategoriesByAsset() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
 func TestUpdateCategory(t *testing.T) {
 	t.Parallel()
 	app, cleanup, err := initializeAppTest(t, "TestUpdateCategory")
