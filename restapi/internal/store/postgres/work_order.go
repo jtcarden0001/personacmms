@@ -10,14 +10,17 @@ import (
 )
 
 var workOrderTable = "workorder"
+var taskWorkOrderTable = "task_workorder"
 
 // TODO: implement some kind of guard rail to protect from easily overwriting associations, do it from the app layer
 func (pg *PostgresStore) AssociateWorkOrderWithTask(taskId uuid.UUID, workOrderId uuid.UUID) (tp.WorkOrder, error) {
 	query := fmt.Sprintf(`
-			UPDATE %s 
-			SET task_id = $1
-			WHERE id = $2`,
-		workOrderTable)
+			INSERT INTO %s (
+				task_id, workorder_id
+			) VALUES (
+				$1, $2
+			)`,
+		taskWorkOrderTable)
 
 	result, err := pg.db.Exec(query, taskId, workOrderId)
 	if err != nil {
@@ -118,12 +121,11 @@ func (pg *PostgresStore) DeleteWorkOrderFromAsset(assetId uuid.UUID, workOrderId
 
 func (pg *PostgresStore) DisassociateWorkOrderWithTask(taskId uuid.UUID, workOrderId uuid.UUID) error {
 	query := fmt.Sprintf(`
-			UPDATE %s
-			SET task_id = NULL
-			WHERE id = $1 AND task_id = $2`,
-		workOrderTable)
+			DELETE FROM %s
+			WHERE task_id = $1 AND workorder_id = $2`,
+		taskWorkOrderTable)
 
-	result, err := pg.db.Exec(query, workOrderId, taskId)
+	result, err := pg.db.Exec(query, taskId, workOrderId)
 	if err != nil {
 		return handleDbError(err, "work-order")
 	}

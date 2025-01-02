@@ -159,7 +159,7 @@ func (a *App) validateTask(task tp.Task) error {
 
 func (a *App) taskExists(id string) (uuid.UUID, bool, error) {
 	uid, err := uuid.Parse(id)
-	if err != nil {
+	if err != nil || uid == uuid.Nil {
 		return uuid.Nil, false, ae.New(ae.CodeInvalid, "task id must be a valid uuid")
 	}
 	_, err = a.db.GetTask(uid)

@@ -24,7 +24,7 @@ func (pg *PostgresStore) AssociateToolWithTask(taskId uuid.UUID, toolId uuid.UUI
 		return tp.ToolSize{}, handleDbError(err, "tool")
 	}
 
-	return pg.getToolSize(taskId, toolId)
+	return pg.getTaskToolSize(taskId, toolId)
 }
 
 func (pg *PostgresStore) AssociateToolWithWorkOrder(workOrderId uuid.UUID, toolId uuid.UUID, ts string) (tp.ToolSize, error) {
@@ -38,7 +38,7 @@ func (pg *PostgresStore) AssociateToolWithWorkOrder(workOrderId uuid.UUID, toolI
 		return tp.ToolSize{}, handleDbError(err, "tool")
 	}
 
-	return pg.getToolSize(workOrderId, toolId)
+	return pg.getWorkOrderToolSize(workOrderId, toolId)
 }
 
 func (pg *PostgresStore) CreateTool(t tp.Tool) (tp.Tool, error) {
@@ -142,14 +142,32 @@ func (pg *PostgresStore) GetTool(id uuid.UUID) (tp.Tool, error) {
 	return t, nil
 }
 
-func (pg *PostgresStore) getToolSize(taskId uuid.UUID, toolId uuid.UUID) (tp.ToolSize, error) {
+func (pg *PostgresStore) getTaskToolSize(taskId uuid.UUID, toolId uuid.UUID) (tp.ToolSize, error) {
 	query := fmt.Sprintf(`
 			SELECT t.Id, t.Title, tt.size_note
-			FROM %s t JOIN %s ts ON t.id = tt.tool_id
-			WHERE ts.task_id = $1 AND ts.tool_id = $2`,
+			FROM %s t JOIN %s tt ON t.id = tt.tool_id
+			WHERE tt.task_id = $1 AND tt.tool_id = $2`,
 		toolTableName, tToolTableName)
 
 	row := pg.db.QueryRow(query, taskId, toolId)
+
+	var ts tp.ToolSize
+	err := row.Scan(&ts.Id, &ts.Title, &ts.Size)
+	if err != nil {
+		return tp.ToolSize{}, handleDbError(err, "tool")
+	}
+
+	return ts, nil
+}
+
+func (pg *PostgresStore) getWorkOrderToolSize(workOrderId uuid.UUID, toolId uuid.UUID) (tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			SELECT t.Id, t.Title, wot.size_note
+			FROM %s t JOIN %s wot ON t.id = wot.tool_id
+			WHERE wot.workorder_id = $1 AND wot.tool_id = $2`,
+		toolTableName, woToolTableName)
+
+	row := pg.db.QueryRow(query, workOrderId, toolId)
 
 	var ts tp.ToolSize
 	err := row.Scan(&ts.Id, &ts.Title, &ts.Size)

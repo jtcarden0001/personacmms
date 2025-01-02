@@ -174,7 +174,7 @@ func (a *App) validateTool(tool tp.Tool) error {
 
 func (a *App) toolExists(id string) (uuid.UUID, bool, error) {
 	uid, err := uuid.Parse(id)
-	if err != nil {
+	if err != nil || uid == uuid.Nil {
 		return uuid.Nil, false, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
 	}
 
