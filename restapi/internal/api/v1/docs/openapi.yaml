@@ -1,0 +1,3394 @@
+openapi: 3.0.0
+info:
+  description: This is the Personal Computer Maintenance Management System REST API.
+  title: PersonaCMMS API
+  termsOfService: "TODO:"
+  contact:
+    name: "TODO:"
+    url: "TODO:"
+    email: "TODO:"
+  license:
+    name: "TODO:"
+    url: "TODO:"
+  version: "1.0"
+paths:
+  /assets:
+    get:
+      description: List all assets
+      tags:
+        - assets
+      summary: List assets
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create an asset
+      tags:
+        - assets
+      summary: Create an asset
+      requestBody:
+        $ref: "#/components/requestBodies/types.Asset"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}":
+    get:
+      description: Get an asset
+      tags:
+        - assets
+      summary: Get an asset
+      parameters:
+        - description: Asset Title
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update an asset
+      tags:
+        - assets
+      summary: Update an asset
+      parameters:
+        - description: Asset Title
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Asset"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete an asset
+      tags:
+        - assets
+      summary: Delete an asset
+      parameters:
+        - description: Asset Title
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/categories":
+    get:
+      description: List asset categories
+      tags:
+        - categories
+      summary: List asset categories
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/groups":
+    get:
+      description: List groups by asset
+      tags:
+        - groups
+      summary: List groups by asset
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Group"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks":
+    get:
+      description: List tasks by asset
+      tags:
+        - tasks
+      summary: List tasks by asset
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Task"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a task for an asset
+      tags:
+        - tasks
+      summary: Create a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Task"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Task"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}":
+    get:
+      description: Get a task
+      tags:
+        - tasks
+      summary: Get a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Task"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a task
+      tags:
+        - tasks
+      summary: Update a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Task"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Task"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a task
+      tags:
+        - tasks
+      summary: Delete a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/consumables/{consumableId}":
+    put:
+      description: Associate a consumable with a task
+      tags:
+        - consumables
+      summary: Associate a consumable with a task
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task ID
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Consumable ID
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.ConsumableQuantity"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate a consumable with a task
+      tags:
+        - consumables
+      summary: Disassociate a consumable with a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/date-triggers":
+    get:
+      description: List date triggers for a task
+      tags:
+        - date-triggers
+      summary: List date triggers
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.DateTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a date trigger
+      tags:
+        - date-triggers
+      summary: Create a date trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.DateTrigger"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.DateTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/date-triggers/{dateTriggerId}":
+    get:
+      description: Get a date trigger
+      tags:
+        - date-triggers
+      summary: Get a date trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Date Trigger Id
+          name: dateTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.DateTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a date trigger
+      tags:
+        - date-triggers
+      summary: Update a date trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Date Trigger Id
+          name: dateTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.DateTrigger"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.DateTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a date trigger
+      tags:
+        - date-triggers
+      summary: Delete a date trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Date Trigger Id
+          name: dateTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/time-triggers":
+    get:
+      description: List all time triggers for a task
+      tags:
+        - time-triggers
+      summary: List time triggers
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.TimeTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a time trigger
+      tags:
+        - time-triggers
+      summary: Create a time trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.TimeTrigger"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.TimeTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/time-triggers/{timeTriggerId}":
+    get:
+      description: Get a time trigger
+      tags:
+        - time-triggers
+      summary: Get a time trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Time Trigger Id
+          name: timeTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.TimeTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a time trigger
+      tags:
+        - time-triggers
+      summary: Update a time trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Time Trigger Id
+          name: timeTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.TimeTrigger"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.TimeTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a time trigger
+      tags:
+        - time-triggers
+      summary: Delete a time trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Time Trigger Id
+          name: timeTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/tools/{toolId}":
+    put:
+      description: Associate a tool with a task
+      tags:
+        - tools
+      summary: Associate a tool with a task
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task ID
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Tool ID
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.ToolSize"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate a tool with a task
+      tags:
+        - tools
+      summary: Disassociate a tool with a task
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task ID
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Tool ID
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/usage-triggers":
+    get:
+      description: List usage triggers for a task
+      tags:
+        - usage-triggers
+      summary: List usage triggers
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.UsageTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a usage trigger for a task
+      tags:
+        - usage-triggers
+      summary: Create a usage trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.UsageTrigger"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.UsageTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTriggerId}":
+    get:
+      description: Get a usage trigger
+      tags:
+        - usage-triggers
+      summary: Get a usage trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Usage Trigger Id
+          name: usageTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.UsageTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a usage trigger
+      tags:
+        - usage-triggers
+      summary: Update a usage trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Usage Trigger Id
+          name: usageTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.UsageTrigger"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.UsageTrigger"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a usage trigger
+      tags:
+        - usage-triggers
+      summary: Delete a usage trigger
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Usage Trigger Id
+          name: usageTriggerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}":
+    put:
+      description: Associate a work order with a task
+      tags:
+        - work-orders
+      summary: Associate a work order with a task
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Task ID
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order ID
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.WorkOrder"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate a work order with a task
+      tags:
+        - work-orders
+      summary: Disassociate a work order with a task
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/work-orders":
+    get:
+      description: List all asset task work orders
+      tags:
+        - work-orders
+      summary: List asset task work orders
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.WorkOrder"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a work order
+      tags:
+        - work-orders
+      summary: Create a work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.WorkOrder"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.WorkOrder"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/work-orders/{workOrderId}":
+    get:
+      description: Get an asset task work order
+      tags:
+        - work-orders
+      summary: Get an asset task work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.WorkOrder"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update an asset task work order
+      tags:
+        - work-orders
+      summary: Update an asset task work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.WorkOrder"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.WorkOrder"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete an asset task work order
+      tags:
+        - work-orders
+      summary: Delete an asset task work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Task Id
+          name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}":
+    put:
+      description: Associate a consumable with a work order
+      tags:
+        - consumables
+      summary: Associate a consumable with a work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.ConsumableQuantity"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate a consumable with a work order
+      tags:
+        - consumables
+      summary: Disassociate a consumable with a work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/work-orders/{workOrderId}/tasks":
+    delete:
+      description: Disassociate a task with a work order
+      tags:
+        - tasks
+      summary: Disassociate a task with a work order
+      parameters:
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order Id
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}":
+    put:
+      description: Associate a tool with a work order
+      tags:
+        - tools
+      summary: Associate a tool with a work order
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order ID
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Tool ID
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.ToolSize"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate a tool with a work order
+      tags:
+        - tools
+      summary: Disassociate a tool with a work order
+      parameters:
+        - description: Asset ID
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Work Order ID
+          name: workOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Tool ID
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  /categories:
+    get:
+      description: List asset categories
+      tags:
+        - categories
+      summary: List asset categories
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Category"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create an asset category
+      tags:
+        - categories
+      summary: Create an asset category
+      requestBody:
+        $ref: "#/components/requestBodies/types.Category"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/categories/{categoryId}":
+    get:
+      description: Get a category
+      tags:
+        - categories
+      summary: Get an asset category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update an asset category
+      tags:
+        - categories
+      summary: Update an asset category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Category"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete an asset category
+      tags:
+        - categories
+      summary: Delete an asset category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/categories/{categoryId}/assets":
+    get:
+      description: List all assets by category
+      tags:
+        - assets
+      summary: List assets by category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/categories/{categoryId}/assets/{assetId}":
+    put:
+      description: Associate an asset with a category
+      tags:
+        - assets
+      summary: Associate an asset with a category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate an asset with a category
+      tags:
+        - assets
+      summary: Disassociate an asset with a category
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/categories/{categoryId}/groups/{groupId}/assets":
+    get:
+      description: List all assets by category and group
+      tags:
+        - assets
+      summary: List assets by category and group
+      parameters:
+        - description: Category Id
+          name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /consumables:
+    get:
+      description: List all consumables
+      tags:
+        - consumables
+      summary: List consumables
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a consumable
+      tags:
+        - consumables
+      summary: Create a consumable
+      requestBody:
+        $ref: "#/components/requestBodies/types.Consumable"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/consumables/{consumableId}":
+    get:
+      description: Get a consumable
+      tags:
+        - consumables
+      summary: Get a consumable
+      parameters:
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a consumable
+      tags:
+        - consumables
+      summary: Delete a consumable
+      parameters:
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/consumables/{consumableTitle}":
+    put:
+      description: Update a consumable
+      tags:
+        - consumables
+      summary: Update a consumable
+      parameters:
+        - description: Consumable Id
+          name: consumableId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Consumable"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Consumable"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /groups:
+    get:
+      description: List all groups
+      tags:
+        - groups
+      summary: List all groups
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Group"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a group
+      tags:
+        - groups
+      summary: Create a group
+      requestBody:
+        $ref: "#/components/requestBodies/types.Group"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Group"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/groups/{groupId}":
+    get:
+      description: Get a group
+      tags:
+        - groups
+      summary: Get a group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Group"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a group
+      tags:
+        - groups
+      summary: Update a group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Group"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Group"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a group
+      tags:
+        - groups
+      summary: Delete a group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  "/groups/{groupId}/assets":
+    get:
+      description: List all assets by group
+      tags:
+        - assets
+      summary: List assets by group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/groups/{groupId}/assets/{assetId}":
+    put:
+      description: Associate an asset with a group
+      tags:
+        - assets
+      summary: Associate an asset with a group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Asset"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Disassociate an asset with a group
+      tags:
+        - assets
+      summary: Disassociate an asset with a group
+      parameters:
+        - description: Group Id
+          name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Asset Id
+          name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  /time-units:
+    get:
+      description: List all time units that can be used with time-triggers and
+        usage-triggers
+      tags:
+        - time-units
+      summary: List time units
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /tools:
+    get:
+      description: List all tools
+      tags:
+        - tools
+      summary: List tools
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      description: Create a tool
+      tags:
+        - tools
+      summary: Create a tool
+      requestBody:
+        $ref: "#/components/requestBodies/types.Tool"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  "/tools/{toolId}":
+    get:
+      description: Get a tool
+      tags:
+        - tools
+      summary: Get a tool
+      parameters:
+        - description: Tool Title
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    put:
+      description: Update a tool
+      tags:
+        - tools
+      summary: Update a tool
+      parameters:
+        - description: Tool Title
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/types.Tool"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/types.Tool"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    delete:
+      description: Delete a tool
+      tags:
+        - tools
+      summary: Delete a tool
+      parameters:
+        - description: Tool Title
+          name: toolId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties: true
+  /usage-units:
+    get:
+      description: List all usage units tht can be used with usage triggers
+      tags:
+        - usage-units
+      summary: List usage units
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /work-order-statuses:
+    get:
+      description: List all work order statuses that can be used with work orders
+      tags:
+        - work-order-statuses
+      summary: List work order statuses
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+externalDocs:
+  description: "TODO:"
+  url: "TODO:"
+servers:
+  - url: //127.0.0.1:8080/api/v1
+components:
+  requestBodies:
+    types.Asset:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Asset"
+      description: Asset object
+      required: true
+    types.Category:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Category"
+      description: Category object
+      required: true
+    types.Group:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Group"
+      description: Group object
+      required: true
+    types.Task:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Task"
+      description: Task object
+      required: true
+    types.ConsumableQuantity:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.ConsumableQuantity"
+      description: Consumable object
+      required: true
+    types.DateTrigger:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.DateTrigger"
+      description: Date Trigger object
+      required: true
+    types.TimeTrigger:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.TimeTrigger"
+      description: Time Trigger object
+      required: true
+    types.ToolSize:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.ToolSize"
+      description: Tool object
+      required: true
+    types.UsageTrigger:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.UsageTrigger"
+      description: Usage Trigger object
+      required: true
+    types.WorkOrder:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.WorkOrder"
+      description: Work Order object
+      required: true
+    types.Consumable:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Consumable"
+      description: Consumable object
+      required: true
+    types.Tool:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/types.Tool"
+      description: Tool object
+      required: true
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    types.Asset:
+      type: object
+      required:
+        - title
+      properties:
+        description:
+          type: string
+        make:
+          type: string
+        manufacturer:
+          type: string
+        modelNumber:
+          type: string
+        serialNumber:
+          type: string
+        title:
+          type: string
+        year:
+          type: integer
+    types.Category:
+      type: object
+      required:
+        - title
+      properties:
+        description:
+          type: string
+        title:
+          type: string
+    types.Consumable:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+    types.ConsumableQuantity:
+      type: object
+      required:
+        - quantity
+      properties:
+        quantity:
+          type: string
+    types.DateTrigger:
+      type: object
+      properties:
+        scheduled_date:
+          type: string
+    types.Group:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+    types.Task:
+      type: object
+      required:
+        - title
+      properties:
+        instructions:
+          type: string
+        title:
+          type: string
+    types.TimeTrigger:
+      type: object
+      required:
+        - quantity
+        - time_unit
+      properties:
+        quantity:
+          type: integer
+        time_unit:
+          type: string
+    types.Tool:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+    types.ToolSize:
+      type: object
+      properties:
+        size:
+          type: string
+    types.UsageTrigger:
+      type: object
+      required:
+        - quantity
+        - usage_unit
+      properties:
+        quantity:
+          type: integer
+        usage_unit:
+          type: string
+    types.WorkOrder:
+      type: object
+      required:
+        - status
+        - title
+      properties:
+        completedDate:
+          type: string
+        cumulativeHours:
+          type: integer
+        cumulativeMiles:
+          type: integer
+        instructions:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+        title:
+          type: string
