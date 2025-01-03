@@ -217,7 +217,7 @@ func (h *Api) listConsumables(c *gin.Context) {
 //	@Failure		400				{object}	map[string]any
 //	@Failure		404				{object}	map[string]any
 //	@Failure		500				{object}	map[string]any
-//	@Router			/consumables/{consumableTitle} [put]
+//	@Router			/consumables/{consumableId} [put]
 func (h *Api) updateConsumable(c *gin.Context) {
 	var consumable tp.Consumable
 	if err := c.BindJSON(&consumable); err != nil {

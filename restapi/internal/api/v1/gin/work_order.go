@@ -106,6 +106,7 @@ func (h *Api) deleteWorkOrder(c *gin.Context) {
 //	@Description	Disassociate a work order with a task
 //	@Tags			work-orders
 //	@Param			assetId		path	string	true	"Asset Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
@@ -113,7 +114,7 @@ func (h *Api) deleteWorkOrder(c *gin.Context) {
 //	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [delete]
 func (h *Api) disassociateWorkOrderWithTask(c *gin.Context) {
-	err := h.app.DisassociateWorkOrderWithTask(c.Param(assetId), c.Param(workOrderId), c.Param(taskId))
+	err := h.app.DisassociateWorkOrderWithTask(c.Param(assetId), c.Param(taskId), c.Param(workOrderId))
 	c.JSON(getStatus(err, http.StatusNoContent), getResponse(err, nil))
 }
 

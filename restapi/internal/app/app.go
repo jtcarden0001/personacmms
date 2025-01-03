@@ -9,97 +9,97 @@ import (
 // App layer hosts the business logic and forwards simple requests to the Store layer.
 type App interface {
 	// asset
-	AssociateAssetWithCategory(string, string) (tp.Asset, error)
-	AssociateAssetWithGroup(string, string) (tp.Asset, error)
-	CreateAsset(tp.Asset) (tp.Asset, error)
-	DeleteAsset(string) error
-	DisassociateAssetWithCategory(string, string) error
-	DisassociateAssetWithGroup(string, string) error
-	GetAsset(string) (tp.Asset, error)
+	AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error)
+	AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error)
+	CreateAsset(asset tp.Asset) (tp.Asset, error)
+	DeleteAsset(assetId string) error
+	DisassociateAssetWithCategory(assetId string, categoryId string) error
+	DisassociateAssetWithGroup(assetId string, groupId string) error
+	GetAsset(assetId string) (tp.Asset, error)
 	ListAssets() ([]tp.Asset, error)
-	ListAssetsByCategory(string) ([]tp.Asset, error)
-	ListAssetsByCategoryAndGroup(string, string) ([]tp.Asset, error)
-	ListAssetsByGroup(string) ([]tp.Asset, error)
-	UpdateAsset(string, tp.Asset) (tp.Asset, error)
+	ListAssetsByCategory(categoryId string) ([]tp.Asset, error)
+	ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error)
+	ListAssetsByGroup(groupId string) ([]tp.Asset, error)
+	UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error)
 
 	// category
-	CreateCategory(tp.Category) (tp.Category, error)
-	DeleteCategory(string) error
-	GetCategory(string) (tp.Category, error)
+	CreateCategory(category tp.Category) (tp.Category, error)
+	DeleteCategory(categoryId string) error
+	GetCategory(categoryId string) (tp.Category, error)
 	ListCategories() ([]tp.Category, error)
-	ListCategoriesByAsset(string) ([]tp.Category, error)
-	UpdateCategory(string, tp.Category) (tp.Category, error)
+	ListCategoriesByAsset(assetId string) ([]tp.Category, error)
+	UpdateCategory(categoryId string, category tp.Category) (tp.Category, error)
 
 	// consumable
-	AssociateConsumableWithTask(string, string, string, tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
-	AssociateConsumableWithWorkOrder(string, string, string, tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
-	CreateConsumable(tp.Consumable) (tp.Consumable, error)
-	DeleteConsumable(string) error
-	DisassociateConsumableWithTask(string, string, string) error
-	DisassociateConsumableWithWorkOrder(string, string, string) error
-	GetConsumable(string) (tp.Consumable, error)
+	AssociateConsumableWithTask(assetId string, taskId string, consumableId string, consumableQuantity tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
+	AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, consumableQuantity tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
+	CreateConsumable(consumable tp.Consumable) (tp.Consumable, error)
+	DeleteConsumable(consumableId string) error
+	DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error
+	DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error
+	GetConsumable(consumableId string) (tp.Consumable, error)
 	ListConsumables() ([]tp.Consumable, error)
-	UpdateConsumable(string, tp.Consumable) (tp.Consumable, error)
+	UpdateConsumable(consumableId string, consumable tp.Consumable) (tp.Consumable, error)
 
 	// date trigger
-	CreateDateTrigger(string, string, tp.DateTrigger) (tp.DateTrigger, error)
-	DeleteDateTrigger(string, string, string) error
-	GetDateTrigger(string, string, string) (tp.DateTrigger, error)
-	ListDateTriggersByAssetAndTask(string, string) ([]tp.DateTrigger, error)
-	UpdateDateTrigger(string, string, string, tp.DateTrigger) (tp.DateTrigger, error)
+	CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error)
+	DeleteDateTrigger(assetId string, taskId string, dateTriggerId string) error
+	GetDateTrigger(assetId string, taskId string, dateTriggerId string) (tp.DateTrigger, error)
+	ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]tp.DateTrigger, error)
+	UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error)
 
 	// group
-	CreateGroup(tp.Group) (tp.Group, error)
-	DeleteGroup(string) error
-	GetGroup(string) (tp.Group, error)
+	CreateGroup(group tp.Group) (tp.Group, error)
+	DeleteGroup(groupId string) error
+	GetGroup(groupId string) (tp.Group, error)
 	ListGroups() ([]tp.Group, error)
-	ListGroupsByAsset(string) ([]tp.Group, error)
-	UpdateGroup(string, tp.Group) (tp.Group, error)
+	ListGroupsByAsset(assetId string) ([]tp.Group, error)
+	UpdateGroup(groupId string, group tp.Group) (tp.Group, error)
 
 	// task
-	CreateTask(string, tp.Task) (tp.Task, error)
-	DeleteTask(string, string) error
-	DisassociateTaskWithWorkOrder(string, string, string) error
-	GetTask(string, string) (tp.Task, error)
-	ListTasksByAsset(string) ([]tp.Task, error)
-	UpdateTask(string, string, tp.Task) (tp.Task, error)
+	CreateTask(assetId string, task tp.Task) (tp.Task, error)
+	DeleteTask(assetId string, taskId string) error
+	DisassociateTaskWithWorkOrder(assetId string, taskId string, workOrderId string) error
+	GetTask(assetId string, taskId string) (tp.Task, error)
+	ListTasksByAsset(assetId string) ([]tp.Task, error)
+	UpdateTask(assetId string, taskId string, task tp.Task) (tp.Task, error)
 
 	// time trigger
-	CreateTimeTrigger(string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
-	DeleteTimeTrigger(string, string, string) error
-	GetTimeTrigger(string, string, string) (tp.TimeTrigger, error)
-	ListTimeTriggersByAssetAndTask(string, string) ([]tp.TimeTrigger, error)
+	CreateTimeTrigger(assetId string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error)
+	DeleteTimeTrigger(assetId string, taskId string, timeTriggerId string) error
+	GetTimeTrigger(assetId string, taskId string, timeTriggerId string) (tp.TimeTrigger, error)
+	ListTimeTriggersByAssetAndTask(assetId string, taskId string) ([]tp.TimeTrigger, error)
 	ListTimeTriggerUnits() ([]string, error)
-	UpdateTimeTrigger(string, string, string, tp.TimeTrigger) (tp.TimeTrigger, error)
+	UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error)
 
 	// tool
-	AssociateToolWithTask(string, string, string, tp.ToolSize) (tp.ToolSize, error)
-	AssociateToolWithWorkOrder(string, string, string, tp.ToolSize) (tp.ToolSize, error)
-	CreateTool(tp.Tool) (tp.Tool, error)
-	DeleteTool(string) error
-	DisassociateToolWithTask(string, string, string) error
-	DisassociateToolWithWorkOrder(string, string, string) error
-	GetTool(string) (tp.Tool, error)
+	AssociateToolWithTask(assetId string, taskId string, toolId string, toolSize tp.ToolSize) (tp.ToolSize, error)
+	AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, toolSize tp.ToolSize) (tp.ToolSize, error)
+	CreateTool(tool tp.Tool) (tp.Tool, error)
+	DeleteTool(toolId string) error
+	DisassociateToolWithTask(assetId string, taskId string, toolId string) error
+	DisassociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) error
+	GetTool(toolId string) (tp.Tool, error)
 	ListTools() ([]tp.Tool, error)
-	UpdateTool(string, tp.Tool) (tp.Tool, error)
+	UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error)
 
 	// usage trigger
-	CreateUsageTrigger(string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
-	DeleteUsageTrigger(string, string, string) error
-	GetUsageTrigger(string, string, string) (tp.UsageTrigger, error)
-	ListUsageTriggersByAssetAndTask(string, string) ([]tp.UsageTrigger, error)
+	CreateUsageTrigger(assetId string, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error)
+	DeleteUsageTrigger(assetId string, taskId string, usageTriggerId string) error
+	GetUsageTrigger(assetId string, taskId string, usageTriggerId string) (tp.UsageTrigger, error)
+	ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]tp.UsageTrigger, error)
 	ListUsageTriggerUnits() ([]string, error)
-	UpdateUsageTrigger(string, string, string, tp.UsageTrigger) (tp.UsageTrigger, error)
+	UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error)
 
 	// work order
-	AssociateWorkOrderWithTask(string, string, string) (tp.WorkOrder, error)
-	CreateWorkOrder(string, tp.WorkOrder) (tp.WorkOrder, error)
-	DeleteWorkOrder(string, string) error
-	DisassociateWorkOrderWithTask(string, string, string) error
-	GetWorkOrder(string, string) (tp.WorkOrder, error)
-	ListWorkOrdersByAsset(string) ([]tp.WorkOrder, error)
+	AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (tp.WorkOrder, error)
+	CreateWorkOrder(assetId string, workOrder tp.WorkOrder) (tp.WorkOrder, error)
+	DeleteWorkOrder(assetId string, workOrderId string) error
+	DisassociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) error
+	GetWorkOrder(assetId string, workOrderId string) (tp.WorkOrder, error)
+	ListWorkOrdersByAsset(assetId string) ([]tp.WorkOrder, error)
 	ListWorkOrderStatus() ([]string, error)
-	UpdateWorkOrder(string, string, tp.WorkOrder) (tp.WorkOrder, error)
+	UpdateWorkOrder(assetId string, workOrderId string, workOrder tp.WorkOrder) (tp.WorkOrder, error)
 }
 
 type AppTest interface {
