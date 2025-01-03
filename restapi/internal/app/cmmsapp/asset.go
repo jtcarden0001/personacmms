@@ -1,73 +1,208 @@
 package cmmsapp
 
 import (
+	"fmt"
+
+	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
-// Create an Asset
-func (a *App) CreateAsset(groupTitle string, asset tp.Asset) (tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return tp.Asset{}, err
+// TODO: ensure the returned Asset hsa a list of references for the associated entities (categories and groups)
+
+func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error) {
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	if asset.GroupTitle != groupTitle {
-		return tp.Asset{}, ae.ErrGroupTitleMismatch
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
-	if asset.Title == "" {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset title is required")
+	return a.db.AssociateAssetWithCategory(aUuid, cUuid)
+}
+
+func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error) {
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+	}
+
+	return a.db.AssociateAssetWithGroup(aUuid, gUuid)
+}
+
+func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
+	if asset.Id != uuid.Nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
+	}
+	asset.Id = uuid.New()
+	err := a.validateAsset(asset)
+	if err != nil {
+		return tp.Asset{}, errors.Wrapf(err, "CreateAsset validation failed")
 	}
 
 	return a.db.CreateAsset(asset)
 }
 
-// Delete an Asset
-func (a *App) DeleteAsset(groupTitle string, assetTitle string) error {
-	// Get Asset will validate the group as well, Get before delete so we can return a not found error.
-	if _, err := a.GetAsset(groupTitle, assetTitle); err != nil {
-		return err
-	}
-
-	return a.db.DeleteAsset(groupTitle, assetTitle)
-}
-
-// List all Assets in a Group
-func (a *App) ListAssets(groupTitle string) ([]tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return []tp.Asset{}, err
-	}
-
-	assets, err := a.db.ListAssetsByGroup(groupTitle)
+func (a *App) DeleteAsset(assetId string) error {
+	assetUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return []tp.Asset{}, err
+		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	return assets, nil
+	// TODO: ensure cascading deletes to delete relationships with groups/categories, tasks, work orders,
+	// tool and consumable relationships, and triggers for the tasks
+	return a.db.DeleteAsset(assetUuid)
 }
 
-// Get an Asset
-func (a *App) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
-	if _, err := a.GetGroup(groupTitle); err != nil {
-		return tp.Asset{}, err
+func (a *App) DisassociateAssetWithCategory(assetId string, categoryId string) error {
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "asset id must be a valid, non-nil uuid")
 	}
 
-	return a.db.GetAsset(groupTitle, assetTitle)
+	cUuid, err := uuid.Parse(categoryId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "category id must be a valid, non-nil uuid")
+	}
+
+	return a.db.DisassociateAssetWithCategory(aUuid, cUuid)
 }
 
-// Update an Asset
-func (a *App) UpdateAsset(oldGroupTitle string, oldAssetTitle string, asset tp.Asset) (tp.Asset, error) {
-	if _, err := a.GetGroup(oldGroupTitle); err != nil {
-		return tp.Asset{}, err
+func (a *App) DisassociateAssetWithGroup(assetId string, groupId string) error {
+	aUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	if asset.GroupTitle == "" {
-		asset.GroupTitle = oldGroupTitle
+	gUuid, err := uuid.Parse(groupId)
+	if err != nil {
+		return ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
-	if asset.Title == "" {
-		asset.Title = oldAssetTitle
+	return a.db.DisassociateAssetWithGroup(aUuid, gUuid)
+}
+
+func (a *App) GetAsset(assetId string) (tp.Asset, error) {
+	assetUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	return a.db.UpdateAsset(oldGroupTitle, oldAssetTitle, asset)
+	return a.db.GetAsset(assetUuid)
+}
+
+func (a *App) ListAssets() ([]tp.Asset, error) {
+	return a.db.ListAssets()
+}
+
+func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
+	cUuid, cFound, err := a.categoryExists(categoryId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByCategory - categoryExists failed")
+	}
+
+	if !cFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("category with id [%s] not found", categoryId))
+	}
+
+	return a.db.ListAssetsByCategory(cUuid)
+}
+
+func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error) {
+	cUuid, cFound, err := a.categoryExists(categoryId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup - categoryExists failed")
+	}
+
+	if !cFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("category with id [%s] not found", categoryId))
+	}
+
+	gUuid, gFound, err := a.groupExists(groupId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup - groupExists failed")
+	}
+
+	if !gFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
+	}
+
+	return a.db.ListAssetsByCategoryAndGroup(cUuid, gUuid)
+}
+
+func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
+	gUuid, gFound, err := a.groupExists(groupId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByGroup - groupExists failed")
+	}
+
+	if !gFound {
+		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
+	}
+
+	return a.db.ListAssetsByGroup(gUuid)
+}
+
+func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
+	assetUuid, err := uuid.Parse(assetId)
+	if err != nil {
+		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+	}
+
+	if asset.Id != uuid.Nil && asset.Id != assetUuid {
+		return tp.Asset{}, ae.New(ae.CodeInvalid,
+			fmt.Sprintf("asset id mismatch between [%s] and [%s]",
+				asset.Id.String(), assetUuid.String()))
+	}
+
+	asset.Id = assetUuid
+	err = a.validateAsset(asset)
+	if err != nil {
+		return tp.Asset{}, errors.Wrapf(err, "UpdateAsset - asset validation failed")
+	}
+
+	return a.db.UpdateAsset(asset)
+}
+
+func (a *App) validateAsset(asset tp.Asset) error {
+	if asset.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "asset id must not be nil")
+	}
+
+	if len(asset.Title) < tp.MinEntityTitleLength || len(asset.Title) > tp.MaxEntityTitleLength {
+		return ae.New(ae.CodeInvalid,
+			fmt.Sprintf("asset title length must be between [%d] and [%d] characters",
+				tp.MinEntityTitleLength,
+				tp.MaxEntityTitleLength))
+	}
+
+	return nil
+}
+
+func (a *App) assetExists(assetId string) (uuid.UUID, bool, error) {
+	assetUuid, err := uuid.Parse(assetId)
+	if err != nil || assetUuid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "asset id must be a valid and not nil uuid")
+	}
+
+	_, err = a.db.GetAsset(assetUuid)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return assetUuid, false, nil
+		}
+
+		return assetUuid, false, errors.Wrapf(err, "assetExists failed")
+	}
+
+	return assetUuid, true, nil
 }

@@ -8,6 +8,8 @@ import (
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 )
 
+var errorKey = "error"
+
 func getStatus(err error, successCode int) int {
 	if err == nil {
 		return successCode
@@ -31,7 +33,7 @@ func getStatus(err error, successCode int) int {
 
 func getResponse(err error, data interface{}) interface{} {
 	if err != nil {
-		return gin.H{"error": err.Error()}
+		return gin.H{errorKey: err.Error()}
 	}
 	return data
 }

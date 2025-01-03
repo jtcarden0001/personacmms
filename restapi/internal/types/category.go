@@ -1,8 +1,12 @@
 package types
 
+import "github.com/google/uuid"
+
 // A Category is a logical grouping of asset types
+
+// TODO: add references to assets
 type Category struct {
-	Title       string  `json:"title" binding:"required"`
-	Id          UUID    `json:"id" swaggerignore:"true"`
-	Description *string `json:"description"`
+	Id          uuid.UUID `json:"id" swaggerignore:"true"`
+	Title       string    `json:"title" binding:"required"`
+	Description *string   `json:"description"`
 }

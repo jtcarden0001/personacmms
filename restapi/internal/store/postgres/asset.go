@@ -10,103 +10,128 @@ import (
 )
 
 var assetTableName = "asset"
+var catAssetTableName = "category_asset"
+var gpAssetTableName = "agroup_asset"
 
-func (pg *PostgresStore) CreateAsset(asset tp.Asset) (tp.Asset, error) {
-	asset.Id = uuid.New()
-	// TODO: make this line length more tenable
+func (pg *PostgresStore) AssociateAssetWithCategory(assetId, categoryId uuid.UUID) (tp.Asset, error) {
 	query := fmt.Sprintf(`
-		INSERT INTO %s (
-			id, title, group_title, year, make, model_number, serial_number, description, category_title
-		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9
-		)`, assetTableName)
+			INSERT INTO %s (asset_id, category_id) 
+			VALUES ($1, $2)`,
+		catAssetTableName)
 
-	_, err := pg.db.Exec(query, asset.Id, asset.Title, asset.GroupTitle, asset.Year, asset.Make, asset.ModelNumber, asset.SerialNumber, asset.Description, asset.CategoryTitle)
+	_, err := pg.db.Exec(query, assetId, categoryId)
 	if err != nil {
 		return tp.Asset{}, handleDbError(err, "asset")
 	}
 
-	return asset, nil
+	return pg.GetAsset(assetId)
 }
 
-func (pg *PostgresStore) DeleteAsset(groupTitle string, assetTitle string) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1 AND group_title = $2`, assetTableName)
-	result, err := pg.db.Exec(query, assetTitle, groupTitle)
+func (pg *PostgresStore) AssociateAssetWithGroup(assetId, groupId uuid.UUID) (tp.Asset, error) {
+	query := fmt.Sprintf(`
+			INSERT INTO %s (asset_id, group_id) 
+			VALUES ($1, $2)`,
+		gpAssetTableName)
+
+	_, err := pg.db.Exec(query, assetId, groupId)
+	if err != nil {
+		return tp.Asset{}, handleDbError(err, "asset")
+	}
+
+	return pg.GetAsset(assetId)
+}
+
+func (pg *PostgresStore) CreateAsset(a tp.Asset) (tp.Asset, error) {
+	query := fmt.Sprintf(`
+			INSERT INTO %s (id, title, year, manufacturer, make, model_number, serial_number, description) 
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+		assetTableName)
+
+	_, err := pg.db.Exec(query, a.Id, a.Title, a.Year, a.Manufacturer, a.Make, a.ModelNumber, a.SerialNumber, a.Description)
+	if err != nil {
+		return tp.Asset{}, handleDbError(err, "asset")
+	}
+
+	return a, nil
+}
+
+func (pg *PostgresStore) DeleteAsset(id uuid.UUID) error {
+	query := fmt.Sprintf(`
+			DELETE FROM %s 
+			WHERE id = $1`,
+		assetTableName)
+
+	result, err := pg.db.Exec(query, id)
 	if err != nil {
 		return handleDbError(err, "asset")
 	}
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
+
+	if rowsAffected, err := result.RowsAffected(); err != nil {
 		return handleDbError(err, "asset")
+	} else if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found", id.String())
 	}
-	if rowsAffected == 0 {
-		return errors.Wrapf(ae.ErrNotFound, "asset with title %s and group title %s not found", assetTitle, groupTitle)
-	}
+
 	return nil
 }
 
-func (pg *PostgresStore) ListAssets() ([]tp.Asset, error) {
+func (pg *PostgresStore) DisassociateAssetWithCategory(assetId, categoryId uuid.UUID) error {
 	query := fmt.Sprintf(`
-		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
-		FROM %s`, assetTableName)
-	rows, err := pg.db.Query(query)
+			DELETE FROM %s 
+			WHERE asset_id = $1 AND category_id = $2`,
+		catAssetTableName)
+
+	result, err := pg.db.Exec(query, assetId, categoryId)
 	if err != nil {
-		return nil, handleDbError(err, "asset")
+		return handleDbError(err, "asset")
 	}
 
-	assets := []tp.Asset{}
-	for rows.Next() {
-		var asset tp.Asset
-		err = rows.Scan(&asset.GroupTitle, &asset.Title, &asset.Id, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description, &asset.CategoryTitle)
-		if err != nil {
-			return nil, handleDbError(err, "asset")
-		}
-		assets = append(assets, asset)
+	if rowsAffected, err := result.RowsAffected(); err != nil {
+		return handleDbError(err, "asset")
+	} else if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found in category %s", assetId, categoryId)
 	}
 
-	return assets, nil
+	return nil
 }
 
-func (pg *PostgresStore) ListAssetsByGroup(groupTitle string) ([]tp.Asset, error) {
+func (pg *PostgresStore) DisassociateAssetWithGroup(assetId, groupId uuid.UUID) error {
 	query := fmt.Sprintf(`
-		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
-		FROM %s 
-		WHERE group_title = $1`, assetTableName)
-	rows, err := pg.db.Query(query, groupTitle)
+			DELETE FROM %s 
+			WHERE asset_id = $1 AND group_id = $2`,
+		gpAssetTableName)
+
+	result, err := pg.db.Exec(query, assetId, groupId)
 	if err != nil {
-		return nil, handleDbError(err, "asset")
+		return handleDbError(err, "asset")
 	}
 
-	assets := []tp.Asset{}
-	for rows.Next() {
-		var asset tp.Asset
-		err = rows.Scan(&asset.GroupTitle, &asset.Title, &asset.Id, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description, &asset.CategoryTitle)
-		if err != nil {
-			return nil, handleDbError(err, "asset")
-		}
-		assets = append(assets, asset)
+	if rowsAffected, err := result.RowsAffected(); err != nil {
+		return handleDbError(err, "asset")
+	} else if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "asset with id %s not found in group %s", assetId, groupId)
 	}
 
-	return assets, nil
+	return nil
 }
 
-func (pg *PostgresStore) GetAsset(groupTitle string, assetTitle string) (tp.Asset, error) {
+func (pg *PostgresStore) GetAsset(id uuid.UUID) (tp.Asset, error) {
 	var asset tp.Asset
 	query := fmt.Sprintf(`
-		SELECT group_title, title, id, year, make, model_number, serial_number, description, category_title 
-		FROM %s 
-		WHERE title = $1 AND group_title = $2`, assetTableName)
+			SELECT id, title, year, manufacturer, make, model_number, serial_number, description
+			FROM %s 
+			WHERE id = $1`,
+		assetTableName)
 
-	err := pg.db.QueryRow(query, assetTitle, groupTitle).Scan(
-		&asset.GroupTitle,
-		&asset.Title,
+	err := pg.db.QueryRow(query, id).Scan(
 		&asset.Id,
+		&asset.Title,
 		&asset.Year,
+		&asset.Manufacturer,
 		&asset.Make,
 		&asset.ModelNumber,
 		&asset.SerialNumber,
 		&asset.Description,
-		&asset.CategoryTitle,
 	)
 	if err != nil {
 		return tp.Asset{}, handleDbError(err, "asset")
@@ -115,35 +140,138 @@ func (pg *PostgresStore) GetAsset(groupTitle string, assetTitle string) (tp.Asse
 	return asset, nil
 }
 
-func (pg *PostgresStore) UpdateAsset(groupTitle string, assetTitle string, asset tp.Asset) (tp.Asset, error) {
+func (pg *PostgresStore) ListAssets() ([]tp.Asset, error) {
 	query := fmt.Sprintf(`
-		UPDATE %s 
-		SET year = $1, 
-		make = $2, 
-		model_number = $3, 
-		serial_number = $4, 
-		description = $5, 
-		category_title = $6, 
-		title = $7 
-		WHERE title = $8 AND group_title = $9 
-		returning id`,
+			SELECT id, title, year, make, model_number, serial_number, description
+			FROM %s`,
 		assetTableName)
 
-	err := pg.db.QueryRow(
+	rows, err := pg.db.Query(query)
+	if err != nil {
+		return nil, handleDbError(err, "asset")
+	}
+
+	assets := []tp.Asset{}
+	for rows.Next() {
+		var asset tp.Asset
+		err = rows.Scan(&asset.Id, &asset.Title, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description)
+		if err != nil {
+			return nil, handleDbError(err, "asset")
+		}
+		assets = append(assets, asset)
+	}
+
+	return assets, nil
+}
+
+func (pg *PostgresStore) ListAssetsByCategory(categoryId uuid.UUID) ([]tp.Asset, error) {
+	query := fmt.Sprintf(`
+			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
+			FROM %s a JOIN %s ac ON a.id = ac.asset_id
+			WHERE ac.category_id = $1`,
+		assetTableName, catAssetTableName)
+
+	rows, err := pg.db.Query(query, categoryId)
+	if err != nil {
+		return nil, handleDbError(err, "asset")
+	}
+
+	assets := []tp.Asset{}
+	for rows.Next() {
+		var asset tp.Asset
+		err = rows.Scan(&asset.Id, &asset.Title, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description)
+		if err != nil {
+			return nil, handleDbError(err, "asset")
+		}
+		assets = append(assets, asset)
+	}
+
+	return assets, nil
+}
+
+func (pg *PostgresStore) ListAssetsByCategoryAndGroup(categoryId, groupId uuid.UUID) ([]tp.Asset, error) {
+	query := fmt.Sprintf(`
+			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
+			FROM %s a
+			JOIN %s ac ON a.id = ac.asset_id
+			JOIN %s ag ON a.id = ag.asset_id
+			WHERE ac.category_id = $1 AND ag.group_id = $2`,
+		assetTableName, catAssetTableName, gpAssetTableName)
+
+	rows, err := pg.db.Query(query, categoryId, groupId)
+	if err != nil {
+		return nil, handleDbError(err, "asset")
+	}
+
+	assets := []tp.Asset{}
+	for rows.Next() {
+		var asset tp.Asset
+		err = rows.Scan(&asset.Id, &asset.Title, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description)
+		if err != nil {
+			return nil, handleDbError(err, "asset")
+		}
+		assets = append(assets, asset)
+	}
+
+	return assets, nil
+}
+
+func (pg *PostgresStore) ListAssetsByGroup(groupId uuid.UUID) ([]tp.Asset, error) {
+	query := fmt.Sprintf(`
+			SELECT a.id, a.title, a.year, a.make, a.model_number, a.serial_number, a.description
+			FROM %s a JOIN %s ag ON a.id = ag.asset_id
+			WHERE ag.group_id = $1`,
+		assetTableName, gpAssetTableName)
+
+	rows, err := pg.db.Query(query, groupId)
+	if err != nil {
+		return []tp.Asset{}, handleDbError(err, "asset")
+	}
+
+	assets := []tp.Asset{}
+	for rows.Next() {
+		var asset tp.Asset
+		err = rows.Scan(&asset.Id, &asset.Title, &asset.Year, &asset.Make, &asset.ModelNumber, &asset.SerialNumber, &asset.Description)
+		if err != nil {
+			return []tp.Asset{}, handleDbError(err, "asset")
+		}
+		assets = append(assets, asset)
+	}
+
+	return assets, nil
+}
+
+func (pg *PostgresStore) UpdateAsset(a tp.Asset) (tp.Asset, error) {
+	query := fmt.Sprintf(`
+			UPDATE %s 
+			SET title = $1, year = $2, manufacturer = $3, make = $4, model_number = $5, serial_number = $6, description = $7
+			WHERE id = $8`,
+		assetTableName)
+
+	result, err := pg.db.Exec(
 		query,
-		asset.Year,
-		asset.Make,
-		asset.ModelNumber,
-		asset.SerialNumber,
-		asset.Description,
-		asset.CategoryTitle,
-		asset.Title,
-		assetTitle,
-		groupTitle,
-	).Scan(&asset.Id)
+		a.Title,
+		a.Year,
+		a.Manufacturer,
+		a.Make,
+		a.ModelNumber,
+		a.SerialNumber,
+		a.Description,
+		a.Id,
+	)
+
 	if err != nil {
 		return tp.Asset{}, handleDbError(err, "asset")
 	}
 
-	return asset, nil
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.Asset{}, handleDbError(err, "asset")
+	}
+
+	if rowsAffected == 0 {
+		return tp.Asset{}, errors.Wrapf(ae.ErrNotFound, "asset with id %s not found", a.Id)
+	}
+
+	return a, nil
 }

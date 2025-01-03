@@ -1,0 +1,193 @@
+# Business Entities
+- category
+- group
+- asset
+- task template
+- task
+- date trigger
+- time trigger
+- usage trigger
+- work order
+- tool
+- consumable
+
+# User Stories
+## In Scope
+- I can use an asset to digitally represent a real world object
+    - I can CRUD an asset
+- I can optionally logically categorize assets (all assets of category vehicle) assets are not limited to a single category
+    - I can CRUD a category
+    - I can list assets of a given category across grouped and ungrouped assets
+    - I can list assets of a given category in a particular group
+    - I can assign an asset to a category
+    - I can remove an asset from a category
+    - I can see the categories that an asset is assigned
+- I can optionally logically group assets (all assets in a particular location)
+    - I can CRUD a group
+    - I can list assets of a given group
+    - I can assign an asset to a group
+    - I can remove an asset from a group
+    - I can see the groups that an asset is assigned
+- I can use tasks to digitally represent work for an asset that does not represent a need to do the work
+    - I can CRUD tasks
+- I can use work orders to represent work that needs to be done or work that has been done, a work order has to be associated to an asset. Treat a work order as a sub resource of a asset
+    - I can CRUD work orders
+    - I can create a work order for an asset based on an asset's task
+    - Not a common operation, but in case of accident, I should be able to disassociate a work-order from a task
+    - I can create an ad-hoc work order for an asset not based on a task
+    - I can enumerate the work order history for an asset including complete, open, and cancelled work orders
+- I can use triggers to create work orders based off a task at specified intervals
+    - I can list all the triggers for a task
+    - I can CRUD triggers based on a calendar date
+    - I can CRUD triggers based on time elapsed
+        - I can chain time elapsed based triggers (ex. task A,B,C. loop through tasks with 7 day interval) (future feature)
+    - I can CRUD triggers based on reported resource usage
+- I can use tools as requirements to complete a work order or task
+    - I can CRUD tools
+    - I can associate and disassociate tools to a task that are required for that tasks completion
+    - I can associate tools to a work order that are required for that work orders completion
+- I can CRUD consumables
+    - I can associate consumables to a task that are required for that task completion
+    - I can associate and disassociate consumables to a task that are required for the tasks completion
+    - I can associate and disassociate consumables to a work order that are required for that work order completion
+
+## out of scope
+- I can create a work order not associated with a particular asset.
+- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
+    - I can CRUD task templates
+    - I can create a task for an asset using an existing task template as a starting point
+- we don't need to persist a link between a task template and a task, the task template is just there for convenience.
+- 
+
+# User Stories With Supporting Routes
+## In Scope
+- I can use an asset to digitally represent a real world object
+    - I can CRUD an asset
+        - POST /assets (JSON)
+        - GET  /assets/{assetId}
+        - GET  /assets
+        - PUT  /assets/{assetId} (JSON)
+        - DEL  /assets/{assetId}
+- I can optionally logically categorize assets (all assets of category vehicle) assets are not limited to a single category
+    - I can CRUD a category
+        - POST /categories (JSON)
+        - GET  /categories/{categoryId}
+        - GET  /categories
+        - PUT  /categories/{categoryId} (JSON)
+        - DEL  /categories/{categoryId}
+    - I can list assets of a given category in a group or across grouped and ungrouped assets
+        - GET  /categories/{categoryId}/assets
+    - I can list assets of a given category in a particular group
+        - GET  /categories/{categoryId}/groups/{groupId}/assets
+    - I can assign an asset to a category
+        - PUT  /categories/{categoryId}/assets/{assetId} (JSON)
+    - I can remove an asset from a category
+        - DEL  /categories/{categoryId}/assets/{assetId}
+    - I can see the categories that an asset is assigned
+        - GET /assets/{assetId}/categories
+- I can optionally logically group assets (all assets in a particular location)
+    - I can CRUD a group. 
+        - POST /groups (JSON)
+        - GET  /groups/{groupId}
+        - GET  /groups
+        - PUT  /groups/{groupdId}
+        - DEL  /groups/{groupId}
+    - I can list assets of a given group
+        - GET  /groups/{groupId}/assets
+    - I can assign an asset to a group
+        - PUT  /groups/{groupId}/assets/{assetId} (JSON) 
+    - I can remove an asset from a group
+        - DEL  /groups/{groupId}/assets/{assetId} -> No, seems like it would delete the asset
+    - I can see the groups that an asset is assigned
+        - GET  /assets/{assetId}/groups
+- I can use tasks to digitally represent work for an asset that does not represent a need to do the work
+    - I can CRUD tasks
+        - POST /assets/{assetId}/tasks (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}
+        - GET  /assets/{assetId}/tasks
+        - PUT  /assets/{assetId}/tasks/{taskId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}
+- I can use work orders to represent work that needs to be done or work that has been done, a work order has to be associated to an asset. Treat a work order as a sub resource of a asset
+    - I can CRUD work orders
+        - POST /assets/{assetId}/work-orders (JSON)
+        - GET  /assets/{assetId}/work-orders/{workOrderId}
+        - GET  /assets/{assetId}/work-orders
+        - PUT  /assets/{assetId}/work-orders/{workOrderId} (JSON)
+        - DEL  /assets/{assetId}/work-orders/{workOrderId}
+    - I can create a work order for an asset based on an asset's task - this can be done by GET the task and using that as a basis to prefill the work order fields.  Since it is a loosely coupled 1:many relationship we can just do this by associating a work order to a task
+        - PUT  /assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId}
+    - Not a common operation, but in case of accident, I should be able to disassociate a work-order from a task
+        - DEL  /assets/{assetId}/work-orders/{workOrderId}/tasks
+    - I can create an ad-hoc work order for an asset not based on a task
+        - covered by work order CRUD
+    - I can enumerate the work order history for an asset including complete, open, and cancelled work orders
+        - covered by work order CRUD
+- I can use triggers to create work orders based off a task at specified intervals
+    - I can CRUD triggers based on a calendar date
+        - POST /assets/{assetId}/tasks/{taskId}/date-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/date-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/date-triggers/{dateTiggerId}
+    - I can CRUD triggers based on time elapsed
+        - POST /assets/{assetId}/tasks/{taskId}/time-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/time-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/time-triggers/{timeTiggerId}
+        - I can chain time elapsed based triggers (ex. task A,B,C. loop through tasks with 7 day interval) (future feature)
+    - I can CRUD triggers based on reported resource usage
+        - POST /assets/{assetId}/tasks/{taskId}/usage-triggers (JSON)
+        - GET  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usagedTiggerId}
+        - GET  /assets/{assetId}/tasks/{taskId}/usage-triggers
+        - PUT  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTiggerId} (JSON)
+        - DEL  /assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTiggerId}
+    - I can list all the triggers for a task
+        - GET  /assets/{assetId}/tasks/{taskId}/triggers
+- I can use tools as requirements to complete a work order or task
+    - I can CRUD tools
+        - POST /tools (JSON)
+        - GET  /tools/{toolId}
+        - GET  /tools
+        - PUT  /tools/{toolId} (JSON)
+        - DEL  /tools/{toolId}
+    - I can associate and disassociate tools to a task that are required for that tasks completion
+        - PUT  /assets/{assetId}/tasks/{taskId}/tools/{toolId}
+        - DEL  /assets/{assetId}/tasks/{taskId}/tools/{toolId}
+    - I can associate tools to a work order that are required for that work orders completion
+        - PUT  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
+        - DEL  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
+- I can CRUD consumables
+    - I can associate consumables to a task that are required for that task completion
+        - POST /consumables (JSON)
+        - GET  /consumables/{consumableId}
+        - GET  /consumables
+        - PUT  /consumables/{consumableId} (JSON)
+        - DEL  /consumables/{consumableId}
+    - I can associate and disassociate consumables to a task that are required for the tasks completion
+        - PUT  /assets/{assetId}/tasks/{taskId}/consumables/{consumableId}
+        - DEL  /assets/{assetId}/tasks/{taskId}/consumables/{consumableId}
+    - I can associate and disassociate consumables to a work order that are required for that work order completion
+        - PUT  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
+        - DEL  /assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId}
+
+## Future work
+- I can use task templates as a starting point for common tasks for categorized assets (example: oil change on a vehicle)
+    - I can CRUD task templates
+        - POST /task-templates (JSON)
+        - GET  /task-templates/{taskTemplateId}
+        - GET  /task-templates
+        - PUT  /task-templates/{taskTemplateId} (JSON)
+        - DEL  /task-templates/{taskTemplateId}
+    - I can create a task for an asset using an existing task template as a starting point
+        - I don't think we need a path for this, we can list or get a task template and load that into a template that will be used as a partially complete task that can then be posted.
+
+# Architecture
+## Layering
+- api layer: strictly responsible for handling http requests and passing them along
+- app layer: responsible for all business logic
+- store layer: strictly responsible for persisting and retrieving entities from the database
+
+## Principles
+- api layer will remain the same
+- all logic will start in app layer and incrementally be pushed to store layer if it makes sense (like reducing db calls by having a query list assets in a particular group vs app layer filtering)

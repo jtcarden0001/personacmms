@@ -1,110 +1,386 @@
 package cmmsapp
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/jtcarden0001/personacmms/restapi/internal/store/mock"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	"github.com/stretchr/testify/assert"
+	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestCreateCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestCreateCategory")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	category := tp.Category{Id: uuid.New(), Title: "category1"}
-	createdCategory, err := app.CreateCategory(category)
-	assert.NoError(t, err)
-	assert.Equal(t, category.Title, createdCategory.Title)
+	conflictingCategory := utest.SetupCategory(1, false)
+	_, err = app.CreateCategory(conflictingCategory)
+	if err != nil {
+		t.Errorf("TestCreateCategory: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	emptyTitleCategory := utest.SetupCategory(2, false)
+	emptyTitleCategory.Title = ""
+
+	testCases := []struct {
+		name          string
+		category      tp.Category
+		shouldSucceed bool
+	}{
+		{"valid category", utest.SetupCategory(3, false), true},
+		{"non nil id", utest.SetupCategory(4, true), false},
+		{"empty title", emptyTitleCategory, false},
+		{"conflicting title", conflictingCategory, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := app.CreateCategory(tc.category)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("CreateCategory() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("CreateCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
 }
 
 func TestDeleteCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestDeleteCategory")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	category := tp.Category{Title: "category1"}
-	db.CreateCategory(category)
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestDeleteCategory: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-	err := app.DeleteCategory("category1")
-	assert.NoError(t, err)
+	testCases := []struct {
+		name          string
+		categoryId    string
+		shouldSucceed bool
+	}{
+		{"valid category deletion", createdCategory.Id.String(), true},
+		{"invalid category ID", "invalid", false},
+		{"nil category ID", uuid.Nil.String(), false},
+		{"empty category ID", "", false},
+	}
 
-	_, err = app.GetCategory("category1")
-	assert.Error(t, err)
-}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := app.DeleteCategory(tc.categoryId)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("DeleteCategory() failed: %v", err)
+			}
 
-func TestListCategories(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
-
-	category1 := tp.Category{Id: uuid.New(), Title: "category1"}
-	category2 := tp.Category{Id: uuid.New(), Title: "category2"}
-	db.CreateCategory(category1)
-	db.CreateCategory(category2)
-
-	categories, err := app.ListCategories()
-	assert.NoError(t, err)
-	assert.Len(t, categories, 2)
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("DeleteCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
 }
 
 func TestGetCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestGetCategory")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	category := tp.Category{Id: uuid.New(), Title: "category1"}
-	db.CreateCategory(category)
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestGetCategory: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-	retrievedCategory, err := app.GetCategory("category1")
-	assert.NoError(t, err)
-	assert.Equal(t, category.Title, retrievedCategory.Title)
+	testCases := []struct {
+		name          string
+		categoryId    string
+		shouldSucceed bool
+	}{
+		{"valid category", createdCategory.Id.String(), true},
+		{"invalid category ID", "invalid", false},
+		{"nil category ID", uuid.Nil.String(), false},
+		{"empty category ID", "", false},
+		{"non-existent category", uuid.New().String(), false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := app.GetCategory(tc.categoryId)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("GetCategory() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("GetCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestListCategories(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestListCategories")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupCategory(1, false)
+	_, err = app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestListCategories: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	c = utest.SetupCategory(2, false)
+	_, err = app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestListCategories: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		count         int
+		shouldSucceed bool
+	}{
+		{"valid list", 2, true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cs, err := app.ListCategories()
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("ListCategories() failed: %v", err)
+				} else {
+					if len(cs) != tc.count {
+						t.Errorf("ListCategories() failed: expected %d categories, got %d", tc.count, len(cs))
+					}
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("ListCategories() should have failed with %s", tc.name)
+			}
+		})
+	}
+}
+
+func TestListCategoriesByAsset(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestListCategoriesByAsset")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
+
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateCategory() failed: %v", err)
+	}
+
+	a := utest.SetupAsset(1, false)
+	createdAsset, err := app.CreateAsset(a)
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateAsset() failed: %v", err)
+	}
+
+	_, err = app.AssociateAssetWithCategory(createdAsset.Id.String(), createdCategory.Id.String())
+	if err != nil {
+		t.Errorf("TestListCategoriesByAsset: failed during setup. AddCategoryToAsset() failed: %v", err)
+	}
+
+	testCases := []struct {
+		name          string
+		assetId       string
+		count         int
+		shouldSucceed bool
+	}{
+		{"valid category", createdAsset.Id.String(), 1, true},
+		{"invalid asset ID", "invalid", 0, false},
+		{"nil asset ID", uuid.Nil.String(), 0, false},
+		{"empty asset ID", "", 0, false},
+		{"non-existent asset", uuid.New().String(), 0, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cs, err := app.ListCategoriesByAsset(tc.assetId)
+			if tc.shouldSucceed {
+				if err != nil {
+					t.Errorf("ListCategoriesByAsset() failed: %v", err)
+				} else {
+					if len(cs) != tc.count {
+						t.Errorf("ListCategoriesByAsset() failed: expected %d categories, got %d", tc.count, len(cs))
+					}
+				}
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("ListCategoriesByAsset() should have failed with %s", tc.name)
+			}
+		})
+	}
 }
 
 func TestUpdateCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestUpdateCategory")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	category := tp.Category{Id: uuid.New(), Title: "category1"}
-	db.CreateCategory(category)
+	categoryCount := 5
+	var ids []string
+	categories := make(map[string]tp.Category)
+	nilIdCategories := make(map[string]tp.Category)
+	for i := 0; i < categoryCount; i++ {
+		c := utest.SetupCategory(i, false)
+		cc, err := app.CreateCategory(c)
+		if err != nil {
+			t.Errorf("TestUpdateCategory: failed during setup. CreateCategory() failed: %v", err)
+		}
 
-	updatedCategory := tp.Category{Title: "category1_updated"}
-	_, err := app.UpdateCategory("category1", updatedCategory)
-	assert.NoError(t, err)
+		ids = append(ids, cc.Id.String())
+		categories[cc.Id.String()] = cc
+		nilIdCategories[cc.Id.String()] = c
+	}
 
-	retrievedCategory, err := app.GetCategory("category1_updated")
-	assert.NoError(t, err)
-	assert.Equal(t, updatedCategory.Title, retrievedCategory.Title)
+	testCases := []struct {
+		name          string
+		categoryId    string
+		category      tp.Category
+		title         string
+		shouldSucceed bool
+	}{
+		{"valid category with matching IDs", ids[0], categories[ids[0]], "valid title1", true},
+		{"valid category with Category.Id nil", ids[1], nilIdCategories[ids[1]], "valid title2", true},
+		{"mismatching category ID and Category.Id", ids[2], categories[ids[3]], "valid title3", false},
+		{"non-existent category", uuid.New().String(), tp.Category{}, "valid title3", false},
+
+		{"invalid category ID", "invalid", tp.Category{}, "valid title3", false},
+		{"nil category ID", uuid.Nil.String(), tp.Category{}, "valid title3", false},
+		{"empty category ID", "", tp.Category{}, "valid title3", false},
+		{"conflicting id", ids[4], categories[ids[3]], "valid title3", false},
+
+		{"empty title", ids[1], categories[ids[1]], "", false},
+		{"minimum length title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"conflicting title", ids[2], categories[ids[2]], categories[ids[3]].Title, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.category.Title = tc.title
+			_, err := app.UpdateCategory(tc.categoryId, tc.category)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("UpdateCategory() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("UpdateCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
 }
 
-func TestCreateCategoryWithEmptyTitle(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+func TestValidateCategory(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestValidateCategory")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	category := tp.Category{Id: uuid.New(), Title: ""}
-	_, err := app.CreateCategory(category)
-	assert.Error(t, err)
+	testCases := []struct {
+		name          string
+		category      tp.Category
+		id            uuid.UUID
+		title         string
+		shouldSucceed bool
+	}{
+		{"valid category", utest.SetupCategory(1, false), uuid.New(), "valid title", true},
+		{"nil id", utest.SetupCategory(2, false), uuid.Nil, "valid title", false},
+
+		{"empty title", utest.SetupCategory(3, false), uuid.New(), "", false},
+		{"minimum length title", utest.SetupCategory(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", utest.SetupCategory(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", utest.SetupCategory(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.category.Id = tc.id
+			tc.category.Title = tc.title
+			err := app.validateCategory(tc.category)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("validateCategory() failed: %v", err)
+			}
+
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("validateCategory() should have failed with %s", tc.name)
+			}
+		})
+	}
 }
 
-func TestDeleteNonExistentCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+func TestCategoryExists(t *testing.T) {
+	t.Parallel()
+	app, cleanup, err := initializeAppTest(t, "TestCategoryExists")
+	if err != nil {
+		t.Fatalf("Could not initialize app: %s", err)
+	}
+	defer cleanup()
 
-	err := app.DeleteCategory("nonexistentcategory")
-	assert.Error(t, err)
-}
+	c := utest.SetupCategory(1, false)
+	createdCategory, err := app.CreateCategory(c)
+	if err != nil {
+		t.Errorf("TestCategoryExists: failed during setup. CreateCategory() failed: %v", err)
+	}
 
-func TestGetNonExistentCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	testCases := []struct {
+		name          string
+		categoryId    string
+		shouldExist   bool
+		shouldSucceed bool
+	}{
+		{"valid category", createdCategory.Id.String(), true, true},
+		{"non-existent category", uuid.New().String(), false, true},
 
-	_, err := app.GetCategory("nonexistentcategory")
-	assert.Error(t, err)
-}
+		{"invalid category ID", "invalid", false, false},
+		{"nil category ID", uuid.Nil.String(), false, false},
+		{"empty category ID", "", false, false},
+	}
 
-func TestUpdateNonExistentCategory(t *testing.T) {
-	db := mock.New()
-	app := &App{db: db}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, exists, err := app.categoryExists(tc.categoryId)
+			if tc.shouldSucceed && err != nil {
+				t.Errorf("categoryExists() failed: %v", err)
+			}
 
-	updatedCategory := tp.Category{Title: "category1_updated"}
-	_, err := app.UpdateCategory("nonexistentcategory", updatedCategory)
-	assert.Error(t, err)
+			if !tc.shouldSucceed && err == nil {
+				t.Errorf("categoryExists() should have failed with %s", tc.name)
+			}
+
+			if exists != tc.shouldExist {
+				t.Errorf("categoryExists() failed: expected %t, got %t", tc.shouldExist, exists)
+			}
+		})
+	}
 }

@@ -1,89 +1,173 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
-// create a time trigger
-func (a *App) CreateTimeTrigger(groupTitle string, assetTitle string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
-	if err := a.validateAndInterpolateTimeTrigger(groupTitle, assetTitle, taskId, &timeTrigger); err != nil {
-		return tp.TimeTrigger{}, err
+func (a *App) CreateTimeTrigger(assetId string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
+	if timeTrigger.Id != uuid.Nil {
+		return tp.TimeTrigger{}, ae.New(ae.CodeInvalid, "timeTrigger id must be nil on create, we will create an id for you")
+	}
+	timeTrigger.Id = uuid.New()
+
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.TimeTrigger{}, errors.Wrapf(err, "CreateTimeTrigger - error checking task exists")
+	}
+
+	if timeTrigger.TaskId != uuid.Nil && timeTrigger.TaskId != task.Id {
+		return tp.TimeTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("task id mismatch [%s] does not match [%s]", timeTrigger.TaskId, task.Id))
+	}
+
+	timeTrigger.TaskId = task.Id
+	err = a.validateTimeTrigger(timeTrigger)
+	if err != nil {
+		return tp.TimeTrigger{}, errors.Wrapf(err, "CreateTimeTrigger validation failed")
 	}
 
 	return a.db.CreateTimeTrigger(timeTrigger)
 }
 
-// delete a time trigger
-func (a *App) DeleteTimeTrigger(groupTitle string, assetTitle string, taskId string, timeTriggerId string) error {
-	tt, err := a.GetTimeTrigger(groupTitle, assetTitle, taskId, timeTriggerId)
+func (a *App) DeleteTimeTrigger(assetId string, taskId string, timeTriggerId string) error {
+	ttUid, err := uuid.Parse(timeTriggerId)
 	if err != nil {
-		return err
+		return ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
 	}
 
-	return a.db.DeleteTimeTrigger(tt.Id)
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return errors.Wrapf(err, "DeleteTimeTrigger - error checking task exists")
+	}
+
+	return a.db.DeleteTimeTriggerFromTask(task.Id, ttUid)
 }
 
-// list all time triggers for a particular task
-func (a *App) ListTimeTriggers(groupTitle string, assetTitle string, taskId string) ([]tp.TimeTrigger, error) {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
+func (a *App) GetTimeTrigger(assetId string, taskId string, timeTriggerId string) (tp.TimeTrigger, error) {
+	ttUid, err := uuid.Parse(timeTriggerId)
 	if err != nil {
-		return []tp.TimeTrigger{}, err
+		return tp.TimeTrigger{}, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
 	}
 
-	return a.db.ListTimeTriggersByTaskId(tid)
-}
-
-// get a time trigger
-func (a *App) GetTimeTrigger(groupTitle string, assetTitle string, taskId string, timeTriggerId string) (tp.TimeTrigger, error) {
-	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
-		return tp.TimeTrigger{}, err
-	}
-
-	parsedTtId, err := uuid.Parse(timeTriggerId)
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.TimeTrigger{}, err
+		return tp.TimeTrigger{}, errors.Wrapf(err, "GetTimeTrigger - error checking task exists")
 	}
 
-	return a.db.GetTimeTrigger(parsedTtId)
-}
-
-// update a time trigger
-func (a *App) UpdateTimeTrigger(groupTitle string, assetTitle string, taskId string, timeTriggerId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
-	tt, err := a.GetTimeTrigger(groupTitle, assetTitle, taskId, timeTriggerId)
+	tt, err := a.db.GetTimeTrigger(ttUid)
 	if err != nil {
 		return tp.TimeTrigger{}, err
 	}
 
-	if timeTrigger.Id != uuid.Nil && timeTrigger.Id != tt.Id {
-		return tp.TimeTrigger{}, ae.ErrIdMismatch
+	if tt.TaskId != task.Id {
+		return tp.TimeTrigger{}, ae.New(ae.CodeNotFound,
+			fmt.Sprintf("timeTrigger with id [%s] not found in task with id [%s]",
+				tt.Id,
+				task.Id))
 	}
 
-	if timeTrigger.TaskId == uuid.Nil {
-		timeTrigger.TaskId = tt.TaskId
-	}
+	return tt, nil
 
-	return a.db.UpdateTimeTrigger(tt.Id, timeTrigger)
 }
 
-func (a *App) validateAndInterpolateTimeTrigger(groupTitle string, assetTitle string, taskId string, dateTrigger *tp.TimeTrigger) error {
-	// essentially validate namespace exists
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
+func (a *App) ListTimeTriggersByAssetAndTask(assetId string, taskId string) ([]tp.TimeTrigger, error) {
+	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return err
-	}
-	dateTrigger.TaskId = tid
-
-	// validate TimeUnit
-	if _, err := a.GetTimeUnit(dateTrigger.TimeUnit); err != nil {
-		return err
+		return nil, errors.Wrapf(err, "ListTimeTriggersByAssetAndTask - error checking task exists")
 	}
 
-	// validate Quantity
-	if dateTrigger.Quantity <= 0 {
-		return ae.ErrQuantityMustBePositive
+	return a.db.ListTimeTriggersByTask(task.Id)
+}
+
+func (a *App) ListTimeTriggerUnits() ([]string, error) {
+	keys := make([]string, 0, len(tp.ValidTimeTriggerUnits))
+	for key := range tp.ValidTimeTriggerUnits {
+		keys = append(keys, key)
+	}
+
+	return keys, nil
+}
+
+func (a *App) UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error) {
+	ttUid, err := uuid.Parse(timeTriggerId)
+	if err != nil {
+		return tp.TimeTrigger{}, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
+	}
+
+	if timeTrigger.Id != uuid.Nil && timeTrigger.Id != ttUid {
+		return tp.TimeTrigger{}, ae.New(ae.CodeInvalid,
+			fmt.Sprintf("timeTrigger id mismatch between [%s] and [%s]",
+				timeTriggerId, timeTrigger.Id))
+	}
+	timeTrigger.Id = ttUid
+
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.TimeTrigger{}, errors.Wrapf(err, "UpdateTimeTrigger - error checking task exists")
+	}
+
+	if timeTrigger.TaskId != uuid.Nil && timeTrigger.TaskId != task.Id {
+		return tp.TimeTrigger{}, ae.New(ae.CodeNotFound,
+			fmt.Sprintf("task id mismatch [%s] does not match [%s]",
+				timeTrigger.TaskId, task.Id))
+	}
+
+	timeTrigger.TaskId = task.Id
+	err = a.validateTimeTrigger(timeTrigger)
+	if err != nil {
+		return tp.TimeTrigger{}, errors.Wrapf(err, "UpdateTimeTrigger validation failed")
+	}
+
+	return a.db.UpdateTimeTrigger(timeTrigger)
+}
+
+func (a *App) validateTimeTrigger(timeTrigger tp.TimeTrigger) error {
+	if timeTrigger.Id == uuid.Nil {
+		return ae.New(ae.CodeInvalid, "timeTrigger id is required")
+	}
+
+	minTimeTriggerQuantity := 1
+	if timeTrigger.Quantity < minTimeTriggerQuantity {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("timeTrigger quantity must be greater or equal to [%d]", minTimeTriggerQuantity))
+	}
+
+	if !tp.ValidTimeTriggerUnits[timeTrigger.TimeUnit] {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("timeTrigger unit must be one of [%s]", tp.PrintValidTimeTriggerUnits()))
+	}
+
+	_, te, err := a.taskExists(timeTrigger.TaskId.String())
+	if err != nil {
+		return errors.Wrapf(err, "validateTimeTrigger - unexpected error validating task exists")
+	}
+
+	if !te {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("parent task with id [%s] not found", timeTrigger.TaskId.String()))
 	}
 
 	return nil
+}
+
+func (a *App) timeTriggerExists(id string) (uuid.UUID, bool, error) {
+	uid, err := uuid.Parse(id)
+	if err != nil || uid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid, non-nil uuid")
+	}
+
+	_, err = a.db.GetTimeTrigger(uid)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return uid, false, nil
+		}
+		return uid, false, err
+	}
+	return uid, true, nil
 }

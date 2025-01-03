@@ -23,12 +23,16 @@ func New(code string, message string) AppError {
 	return AppError{Code: code, Message: message}
 }
 
-// Already Exists Errors
+// Error codes
 var CodeAlreadyExists = "ALREADY_EXISTS"
+var CodeInvalid = "INVALID"
+var CodeNotFound = "NOT_FOUND"
+var CodeNotImplemented = "NOT_IMPLEMENTED"
+
+// Already Exists Errors
 var ErrAlreadyExists = AppError{Code: CodeAlreadyExists, Message: "already exists"}
 
 // Invalid Errors
-var CodeInvalid = "INVALID"
 
 var ErrCategoryTitleRequired = AppError{Code: CodeInvalid, Message: "category title mismatch"}
 
@@ -45,24 +49,13 @@ var ErrUsageUnitTypeInvalid = AppError{Code: CodeInvalid, Message: createInvalid
 var ErrWorkOrderStatusTitleRequired = AppError{Code: CodeInvalid, Message: "work order status title required"}
 
 // Not Found Errors
-var CodeNotFound = "NOT_FOUND"
 var ErrNotFound = AppError{Code: CodeNotFound, Message: "not found"}
 
 // dynamic error message generation functions
 func createInvalidUsageUnitTypeMessage() string {
 	prefix := "invalid usage unit type, must be one of:"
-	keys := make([]string, 0, len(tp.ValidUsageUnitTypes))
-	for key := range tp.ValidUsageUnitTypes {
-		keys = append(keys, key)
-	}
-	commaDelimitedString := strings.Join(keys, ", ")
-	return fmt.Sprintf("%s %s", prefix, commaDelimitedString)
-}
-
-func CreateInvalidTaskTypeMessage() string {
-	prefix := "invalid task type, must be one of:"
-	keys := make([]string, 0, len(tp.ValidTaskTypes))
-	for key := range tp.ValidTaskTypes {
+	keys := make([]string, 0, len(tp.ValidUsageTriggerUnits))
+	for key := range tp.ValidUsageTriggerUnits {
 		keys = append(keys, key)
 	}
 	commaDelimitedString := strings.Join(keys, ", ")

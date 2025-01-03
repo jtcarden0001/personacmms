@@ -10,36 +10,180 @@ import (
 )
 
 var toolTableName = "tool"
+var tToolTableName = "task_tool"
+var woToolTableName = "workorder_tool"
 
-func (pg *PostgresStore) CreateTool(tool tp.Tool) (tp.Tool, error) {
-	tool.Id = uuid.New()
-	query := fmt.Sprintf(`INSERT INTO %s (id, title, size) VALUES ($1, $2, $3)`, toolTableName)
-	_, err := pg.db.Exec(query, tool.Id, tool.Title, tool.Size)
+func (pg *PostgresStore) AssociateToolWithTask(taskId uuid.UUID, toolId uuid.UUID, ts string) (tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			INSERT INTO %s (task_id, tool_id, size_note) 
+			VALUES ($1, $2, $3)`,
+		tToolTableName)
+
+	_, err := pg.db.Exec(query, taskId, toolId, ts)
+	if err != nil {
+		return tp.ToolSize{}, handleDbError(err, "tool")
+	}
+
+	return pg.getTaskToolSize(taskId, toolId)
+}
+
+func (pg *PostgresStore) AssociateToolWithWorkOrder(workOrderId uuid.UUID, toolId uuid.UUID, ts string) (tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			INSERT INTO %s (workorder_id, tool_id, size_note) 
+			VALUES ($1, $2, $3)`,
+		woToolTableName)
+
+	_, err := pg.db.Exec(query, workOrderId, toolId, ts)
+	if err != nil {
+		return tp.ToolSize{}, handleDbError(err, "tool")
+	}
+
+	return pg.getWorkOrderToolSize(workOrderId, toolId)
+}
+
+func (pg *PostgresStore) CreateTool(t tp.Tool) (tp.Tool, error) {
+	query := fmt.Sprintf(`
+			INSERT INTO %s (id, title) 
+			VALUES ($1, $2)`,
+		toolTableName)
+
+	_, err := pg.db.Exec(query, t.Id, t.Title)
 	if err != nil {
 		return tp.Tool{}, handleDbError(err, "tool")
 	}
 
-	return tool, nil
+	return t, nil
 }
 
-func (pg *PostgresStore) DeleteTool(title string) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE title = $1`, toolTableName)
-	result, err := pg.db.Exec(query, title)
+func (pg *PostgresStore) DeleteTool(id uuid.UUID) error {
+	query := fmt.Sprintf(`
+			DELETE FROM %s 
+			WHERE id = $1`,
+		toolTableName)
+
+	result, err := pg.db.Exec(query, id)
 	if err != nil {
 		return handleDbError(err, "tool")
 	}
+
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		return handleDbError(err, "tool")
 	}
+
 	if rowsAffected == 0 {
-		return errors.Wrapf(ae.ErrNotFound, "tool with title '%s' not found", title)
+		return errors.Wrapf(ae.ErrNotFound, "tool with id '%s' not found", id)
 	}
+
 	return nil
 }
 
+func (pg *PostgresStore) DisassociateToolWithTask(taskId uuid.UUID, toolId uuid.UUID) error {
+	query := fmt.Sprintf(`
+			DELETE FROM %s 
+			WHERE task_id = $1 AND tool_id = $2`,
+		tToolTableName)
+
+	result, err := pg.db.Exec(query, taskId, toolId)
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "tool with id '%s' not found for task with id '%s'", toolId, taskId)
+	}
+
+	return nil
+}
+
+func (pg *PostgresStore) DisassociateToolWithWorkOrder(workOrderId uuid.UUID, toolId uuid.UUID) error {
+	query := fmt.Sprintf(`
+			DELETE FROM %s
+			WHERE workorder_id = $1 AND tool_id = $2`,
+		woToolTableName)
+
+	result, err := pg.db.Exec(query, workOrderId, toolId)
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return handleDbError(err, "tool")
+	}
+
+	if rowsAffected == 0 {
+		return errors.Wrapf(ae.ErrNotFound, "tool with id '%s' not found for work order with id '%s'", toolId, workOrderId)
+	}
+
+	return nil
+}
+
+func (pg *PostgresStore) GetTool(id uuid.UUID) (tp.Tool, error) {
+	query := fmt.Sprintf(`
+			SELECT id, title 
+			FROM %s 
+			WHERE id = $1`,
+		toolTableName)
+
+	row := pg.db.QueryRow(query, id)
+
+	var t tp.Tool
+	err := row.Scan(&t.Id, &t.Title)
+	if err != nil {
+		return tp.Tool{}, handleDbError(err, "tool")
+	}
+
+	return t, nil
+}
+
+func (pg *PostgresStore) getTaskToolSize(taskId uuid.UUID, toolId uuid.UUID) (tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			SELECT t.Id, t.Title, tt.size_note
+			FROM %s t JOIN %s tt ON t.id = tt.tool_id
+			WHERE tt.task_id = $1 AND tt.tool_id = $2`,
+		toolTableName, tToolTableName)
+
+	row := pg.db.QueryRow(query, taskId, toolId)
+
+	var ts tp.ToolSize
+	err := row.Scan(&ts.Id, &ts.Title, &ts.Size)
+	if err != nil {
+		return tp.ToolSize{}, handleDbError(err, "tool")
+	}
+
+	return ts, nil
+}
+
+func (pg *PostgresStore) getWorkOrderToolSize(workOrderId uuid.UUID, toolId uuid.UUID) (tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			SELECT t.Id, t.Title, wot.size_note
+			FROM %s t JOIN %s wot ON t.id = wot.tool_id
+			WHERE wot.workorder_id = $1 AND wot.tool_id = $2`,
+		toolTableName, woToolTableName)
+
+	row := pg.db.QueryRow(query, workOrderId, toolId)
+
+	var ts tp.ToolSize
+	err := row.Scan(&ts.Id, &ts.Title, &ts.Size)
+	if err != nil {
+		return tp.ToolSize{}, handleDbError(err, "tool")
+	}
+
+	return ts, nil
+}
+
 func (pg *PostgresStore) ListTools() ([]tp.Tool, error) {
-	query := fmt.Sprintf(`SELECT id, title, size FROM %s`, toolTableName)
+	query := fmt.Sprintf(`
+			SELECT id, title 
+			FROM %s`,
+		toolTableName)
+
 	rows, err := pg.db.Query(query)
 	if err != nil {
 		return nil, handleDbError(err, "tool")
@@ -48,50 +192,86 @@ func (pg *PostgresStore) ListTools() ([]tp.Tool, error) {
 
 	var tools = []tp.Tool{}
 	for rows.Next() {
-		var tool tp.Tool
-		err = rows.Scan(&tool.Id, &tool.Title, &tool.Size)
+		var t tp.Tool
+		err = rows.Scan(&t.Id, &t.Title)
 		if err != nil {
 			return nil, handleDbError(err, "tool")
 		}
-		tools = append(tools, tool)
+		tools = append(tools, t)
 	}
 
 	return tools, nil
 }
 
-func (pg *PostgresStore) GetTool(title string) (tp.Tool, error) {
-	query := fmt.Sprintf(`SELECT id, title, size FROM %s WHERE title = $1`, toolTableName)
-	row := pg.db.QueryRow(query, title)
+func (pg *PostgresStore) ListToolsByTask(taskId uuid.UUID) ([]tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			SELECT t.id, t.title, tt.size_note
+			FROM %s t JOIN %s tt ON t.id = tt.tool_id
+			WHERE tt.task_id = $1`,
+		toolTableName, tToolTableName)
 
-	var tool tp.Tool
-	err := row.Scan(&tool.Id, &tool.Title, &tool.Size)
+	rows, err := pg.db.Query(query, taskId)
 	if err != nil {
-		return tp.Tool{}, handleDbError(err, "tool")
+		return nil, handleDbError(err, "tool")
 	}
 
-	return tool, nil
+	var tools = []tp.ToolSize{}
+	for rows.Next() {
+		var ts tp.ToolSize
+		err = rows.Scan(&ts.Id, &ts.Title, &ts.Size)
+		if err != nil {
+			return nil, handleDbError(err, "tool")
+		}
+		tools = append(tools, ts)
+	}
+
+	return tools, nil
 }
 
-// TODO: add testing for this.
-func (pg *PostgresStore) GetToolById(id uuid.UUID) (tp.Tool, error) {
-	query := fmt.Sprintf(`SELECT id, title, size FROM %s WHERE id = $1`, toolTableName)
-	row := pg.db.QueryRow(query, id)
+func (pg *PostgresStore) ListToolsByWorkOrder(workOrderId uuid.UUID) ([]tp.ToolSize, error) {
+	query := fmt.Sprintf(`
+			SELECT t.id, t.title, wt.size_note
+			FROM %s t JOIN %s wt ON t.id = wt.tool_id
+			WHERE wt.workorder_id = $1`,
+		toolTableName, woToolTableName)
 
-	var tool tp.Tool
-	err := row.Scan(&tool.Id, &tool.Title, &tool.Size)
+	rows, err := pg.db.Query(query, workOrderId)
 	if err != nil {
-		return tp.Tool{}, handleDbError(err, "tool")
+		return nil, handleDbError(err, "tool")
 	}
 
-	return tool, nil
+	var tools = []tp.ToolSize{}
+	for rows.Next() {
+		var ts tp.ToolSize
+		err = rows.Scan(&ts.Id, &ts.Title, &ts.Size)
+		if err != nil {
+			return nil, handleDbError(err, "tool")
+		}
+		tools = append(tools, ts)
+	}
+
+	return tools, nil
 }
 
-func (pg *PostgresStore) UpdateTool(title string, tool tp.Tool) (tp.Tool, error) {
-	query := fmt.Sprintf(`UPDATE %s SET title = $1, size = $2 WHERE title = $3 returning id`, toolTableName)
-	err := pg.db.QueryRow(query, tool.Title, tool.Size, title).Scan(&tool.Id)
+func (pg *PostgresStore) UpdateTool(t tp.Tool) (tp.Tool, error) {
+	query := fmt.Sprintf(`
+			UPDATE %s 
+			SET title = $1
+			WHERE id = $2`,
+		toolTableName)
+	result, err := pg.db.Exec(query, t.Title, t.Id)
 	if err != nil {
 		return tp.Tool{}, handleDbError(err, "tool")
 	}
 
-	return tool, nil
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return tp.Tool{}, handleDbError(err, "tool")
+	}
+
+	if rowsAffected == 0 {
+		return tp.Tool{}, errors.Wrapf(ae.ErrNotFound, "tool with id %s not found", t.Id)
+	}
+
+	return t, nil
 }

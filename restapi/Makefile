@@ -19,7 +19,7 @@ OUTLINDEBUG=bin/personacmms-debug
 #
 PKG := 
 
-all: clean tidy format swag build test
+all: clean tidy format swag openapi build test
 
 clean:
 	go clean
@@ -38,6 +38,10 @@ swag:
 	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types,internal/api/v1/gin
 	swag fmt
 
+
+openapi:
+	docker run --rm -v /workspaces/personacmms/restapi/internal/api/v1/docs:/usr/src/app mermade/swagger2openapi swagger2openapi --yaml --outfile openapi.yaml swagger.json
+
 # build
 build: build-windows build-linux
 
@@ -54,16 +58,12 @@ build-linux-debug:
 	GOOS=linux $(GOBUILD) -gcflags "all=-N -l" -ldflags $(LDFLAGS) -o $(OUTLINDEBUG) github.com/jtcarden0001/personacmms/restapi/cmd/main
 
 # test
-test: integration-test unit-test
+test: store-test app-test
 
-integration-test: store-integration-test
+store-test:
+	$(GOTEST) ./internal/store/postgres/...
 
-store-integration-test:
-	$(GOTEST) ./internal/store/test/integration/...
-
-unit-test: app-unit-test
-
-app-unit-test:
+app-test:
 	$(GOTEST) ./internal/app/cmmsapp/...
 
 # run

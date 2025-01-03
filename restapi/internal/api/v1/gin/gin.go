@@ -63,9 +63,7 @@ func (h *Api) registerRoutes() {
 	h.registerDateTriggerRoutes()
 	h.registerGroupRoutes()
 	h.registerTaskRoutes()
-	h.registerTaskConsumableRoutes()
-	h.registerTaskTemplateRoutes()
-	h.registerTaskToolRoutes()
+	// h.registerTaskTemplateRoutes() // cut out of MVP scope
 	h.registerTimeTriggerRoutes()
 	h.registerTimeUnitRoutes()
 	h.registerToolRoutes()

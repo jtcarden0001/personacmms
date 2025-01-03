@@ -1,142 +1,166 @@
 CREATE TABLE category (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
+  id uuid,
+  title varchar NOT NULL UNIQUE,
   description varchar,
-  PRIMARY KEY (title)
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE assetgroup (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  PRIMARY KEY (title)
+CREATE TABLE agroup (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE asset (
-  group_title varchar REFERENCES assetgroup(title),
-  title varchar,
-  id uuid NOT NULL UNIQUE,
+  id uuid,
+  title varchar NOT NULL UNIQUE,
   year int,
+  manufacturer varchar,
   make varchar,
   model_number varchar,
   serial_number varchar,
   description varchar,
-  category_title varchar REFERENCES category(title),
-  PRIMARY KEY (group_title, title)
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE tasktemplate (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  description varchar,
-  type varchar,
-  PRIMARY KEY (title)
+CREATE TABLE category_asset (
+  category_id uuid REFERENCES category(id),
+  asset_id uuid REFERENCES asset(id),
+  PRIMARY KEY (category_id, asset_id)
+);
+
+CREATE TABLE agroup_asset (
+  group_id uuid REFERENCES agroup(id),
+  asset_id uuid REFERENCES asset(id),
+  PRIMARY KEY (group_id, asset_id)
 );
 
 CREATE TABLE task (
   id uuid,
-  title varchar,
-  unique_instructions varchar,
+  title varchar NOT NULL,
+  instructions varchar,
   asset_id uuid NOT NULL REFERENCES asset(id),
-  tasktemplate_id uuid REFERENCES tasktemplate(id), 
   PRIMARY KEY (id)
 );
 
-CREATE TABLE tool (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  size varchar,
-  PRIMARY KEY (title)
+CREATE TABLE workorderstatus (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE task_tool (
-  task_id uuid NOT NULL REFERENCES task(id),
-  tool_id uuid NOT NULL REFERENCES tool(id),
-  PRIMARY KEY (task_id, tool_id)
+CREATE TABLE workorder (
+  id uuid,
+  title varchar NOT NULL,
+  created_date timestamptz NOT NULL,
+  completed_date timestamptz,
+  instructions varchar,
+  notes varchar,
+  cumulative_miles int, 
+  cumulative_hours int,
+  asset_id uuid NOT NULL REFERENCES asset(id),
+  status_id uuid NOT NULL REFERENCES workorderstatus(id),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE task_workorder (
+  workorder_id uuid REFERENCES workorder(id),
+  task_id uuid REFERENCES task(id),
+  PRIMARY KEY (workorder_id)
+);
+
+CREATE TABLE tool (
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE consumable (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  PRIMARY KEY (title)
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE task_tool (
+  task_id uuid REFERENCES task(id),
+  tool_id uuid REFERENCES tool(id),
+  size_note varchar,
+  PRIMARY KEY (task_id, tool_id, size_note)
 );
 
 CREATE TABLE task_consumable (
-  task_id uuid NOT NULL REFERENCES task(id),
-  consumable_id uuid NOT NULL REFERENCES consumable(id),
+  task_id uuid REFERENCES task(id),
+  consumable_id uuid REFERENCES consumable(id),
   quantity_note varchar NOT NULL,
   PRIMARY KEY (task_id, consumable_id)
 );
 
+CREATE TABLE workorder_tool (
+  workorder_id uuid REFERENCES workorder(id),
+  tool_id uuid REFERENCES tool(id),
+  size_note varchar,
+  PRIMARY KEY (workorder_id, tool_id, size_note)
+);
+
+CREATE TABLE workorder_consumable (
+  workorder_id uuid REFERENCES workorder(id),
+  consumable_id uuid REFERENCES consumable(id),
+  quantity_note varchar NOT NULL,
+  PRIMARY KEY (workorder_id, consumable_id)
+);
+
 CREATE TABLE timeunit (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  PRIMARY KEY (title)
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE timetrigger (
   id uuid,
   quantity int NOT NULL,
-  timeunit_title varchar NOT NULL REFERENCES timeunit(title),
+  timeunit_id uuid NOT NULL REFERENCES timeunit(id), -- managed by application
   task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
 CREATE TABLE usageunit (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  PRIMARY KEY (title)
+  id uuid,
+  title varchar NOT NULL UNIQUE,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE usagetrigger (
   id uuid,
   quantity int NOT NULL,
-  usageunit_title varchar NOT NULL REFERENCES usageunit(title),
+  usageunit_id uuid NOT NULL REFERENCES usageunit(id), -- managed by application
   task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
 CREATE TABLE datetrigger (
   id uuid,
-  date timestamptz NOT NULL,
+  scheduled_date timestamptz NOT NULL,
   task_id uuid NOT NULL REFERENCES task(id),
   PRIMARY KEY (id)
 );
 
-CREATE TABLE workorderstatus (
-  title varchar,
-  id uuid NOT NULL UNIQUE,
-  PRIMARY KEY (title)
-);
+------ seed data
 
-CREATE TABLE workorder (
-  id uuid,
-  created_date timestamptz NOT NULL,
-  completed_date timestamptz,
-  notes varchar,
-  cumulative_miles int, 
-  cumulative_hours int,
-  task_id uuid NOT NULL REFERENCES task(id),
-  status_title varchar NOT NULL REFERENCES workorderstatus(title),
-  PRIMARY KEY (id)
-);
+-- timeunit
+INSERT INTO timeunit (id, title) VALUES ('AA199071-058D-4942-A8CD-77103F88332B', 'day');
+INSERT INTO timeunit (id, title) VALUES ('BA199071-058D-4942-A8CD-77103F88332B', 'week');
+INSERT INTO timeunit (id, title) VALUES ('CA199071-058D-4942-A8CD-77103F88332B', 'month');
+INSERT INTO timeunit (id, title) VALUES ('DA199071-058D-4942-A8CD-77103F88332B', 'year');
 
-/* static data not modified by app */
+-- usageunit
+INSERT INTO usageunit (id, title) VALUES ('AACD1682-1FA4-4C75-A870-CF953B8859B9', 'hour');
+INSERT INTO usageunit (id, title) VALUES ('BACD1682-1FA4-4C75-A870-CF953B8859B9', 'day');
+INSERT INTO usageunit (id, title) VALUES ('CACD1682-1FA4-4C75-A870-CF953B8859B9', 'mile');
 
-/*related enum is located in types/time_unit.go */
-INSERT INTO timeunit (id, title) VALUES ('4137d18f-d548-4d75-b84b-5a92d36acbc7', 'day');
-INSERT INTO timeunit (id, title) VALUES ('8deb9996-d0a2-4c3d-b551-de07f9d4b91b','week');
-INSERT INTO timeunit (id, title) VALUES ('e85451ba-f3e2-41a2-85e3-97aa782e76b8','month');
-INSERT INTO timeunit (id, title) VALUES ('f14475db-e969-4fb6-af55-341110e29df6','year');
-
-/*related enum is located in types/usage_unit.go */
-INSERT Into usageunit (id, title) VALUES ('77f78abc-20ff-441a-8277-af6ba879554d','mile');
-INSERT Into usageunit (id, title) VALUES ('ed88dee2-126a-4aa6-9c8a-f25104639b67','hour');
-INSERT Into usageunit (id, title) VALUES ('106fe1cd-f04e-461e-b2b5-86e8ff355704','day');
-
-/*related enum is located in types/work_order_status.go */
-INSERT INTO workorderstatus (id, title) VALUES ('a0f7f76f-9b1b-4758-83d9-bc42da07fbe7','new');
-INSERT INTO workorderstatus (id, title) VALUES ('ff0ff8df-05fc-48b1-a5cf-d7af8b41cde4','in progress');
-INSERT INTO workorderstatus (id, title) VALUES ('72d51235-c1c5-4387-a94f-efebd40d9eed','complete');
-INSERT INTO workorderstatus (id, title) VALUES ('15883902-5149-4014-8a17-869eb5c0ebfd','closed');
+-- workorderstatus
+INSERT INTO workorderstatus (id, title) VALUES ('AB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'new');
+INSERT INTO workorderstatus (id, title) VALUES ('BB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'in progress');
+INSERT INTO workorderstatus (id, title) VALUES ('CB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'complete');
+INSERT INTO workorderstatus (id, title) VALUES ('DB046BAE-A286-4A4E-ABB5-216C756BF7F9', 'cancelled');
 
 

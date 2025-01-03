@@ -2,6 +2,7 @@ package test
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -23,14 +24,25 @@ func CompEntitiesExcludeFields(t *testing.T, expected interface{}, actual interf
 			continue
 		}
 
-		expectedField := expectedValue.Field(i).Interface()
-		actualField := actualValue.Field(i).Interface()
-
-		isPtr := reflect.TypeOf(expectedField).Kind() == reflect.Ptr
-		if isPtr {
-			comparePointers(t, expectedField, actualField, field)
+		if strings.Contains(field.Name, "Date") {
+			isPtr := reflect.TypeOf(expectedValue.Field(i).Interface()).Kind() == reflect.Ptr
+			if isPtr {
+				compareTimePointers(t, expectedValue.Field(i).Interface(), actualValue.Field(i).Interface(), field)
+			} else {
+				if !expectedValue.Field(i).Interface().(time.Time).Round(time.Second).Equal(actualValue.Field(i).Interface().(time.Time).Round(time.Second)) {
+					t.Errorf("Compare failed: expected %v for field %s, got %v", expectedValue.Field(i).Interface(), field.Name, actualValue.Field(i).Interface())
+				}
+			}
 		} else {
-			compareValues(t, expectedField, actualField, field)
+			expectedField := expectedValue.Field(i).Interface()
+			actualField := actualValue.Field(i).Interface()
+
+			isPtr := reflect.TypeOf(expectedField).Kind() == reflect.Ptr
+			if isPtr {
+				comparePointers(t, expectedField, actualField, field)
+			} else {
+				compareValues(t, expectedField, actualField, field)
+			}
 		}
 	}
 }
@@ -43,6 +55,20 @@ func comparePointers(t *testing.T, expectedField interface{}, actualField interf
 	} else if expectedField != nil && actualField != nil {
 		if !reflect.DeepEqual(expectedField, actualField) {
 			t.Errorf("Compare failed: expected %v for field %s, got %v", expectedField, field.Name, actualField)
+		}
+	}
+}
+
+func compareTimePointers(t *testing.T, expectedField interface{}, actualField interface{}, field reflect.StructField) {
+	expectedTime := expectedField.(*time.Time)
+	actualTime := actualField.(*time.Time)
+	if expectedTime == nil && actualTime != nil {
+		t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
+	} else if expectedTime != nil && actualTime == nil {
+		t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
+	} else if expectedTime != nil && actualTime != nil {
+		if !expectedTime.Truncate(time.Second).Equal(actualTime.Truncate(time.Second)) {
+			t.Errorf("Compare failed: expected %v for field %s, got %v", expectedTime, field.Name, actualTime)
 		}
 	}
 }
@@ -75,7 +101,10 @@ func CompEntitiesFieldsShouldBeDifferent(t *testing.T, inital interface{}, updat
 		updatedField := updatedValue.Field(i).Interface()
 		// Time based comparisons have drift that causes DeepEqual to fail for some reason
 		if field.Name == "Date" {
-			if !initalField.(time.Time).Equal(updatedField.(time.Time)) {
+			dateSame := initalField.(time.Time).Equal(updatedField.(time.Time))
+			if different && dateSame {
+				t.Errorf("Compare failed: expected %v for field %s to be different, got %v", initalField, field.Name, updatedField)
+			} else if !different && !dateSame {
 				t.Errorf("Compare failed: expected %v for field %s to be the same, got %v", initalField, field.Name, updatedField)
 			}
 		} else {

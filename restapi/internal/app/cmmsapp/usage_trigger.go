@@ -1,92 +1,169 @@
 package cmmsapp
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
+	"github.com/pkg/errors"
 )
 
-// Create a UsageTrigger
-func (a *App) CreateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
-	if err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger); err != nil {
-		return tp.UsageTrigger{}, err
+func (a *App) CreateUsageTrigger(assetId string, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
+	if usageTrigger.Id != uuid.Nil {
+		return tp.UsageTrigger{}, ae.New(ae.CodeInvalid, "usageTrigger id must be nil on create, we will create an id for you")
+	}
+	usageTrigger.Id = uuid.New()
+
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.UsageTrigger{}, errors.Wrapf(err, "CreateUsageTrigger - error checking task exists")
+	}
+
+	if usageTrigger.TaskId != uuid.Nil && usageTrigger.TaskId != task.Id {
+		return tp.UsageTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("task id mismatch [%s] does not match [%s]", usageTrigger.TaskId, task.Id))
+	}
+
+	usageTrigger.TaskId = task.Id
+	err = a.validateUsageTrigger(usageTrigger)
+	if err != nil {
+		return tp.UsageTrigger{}, errors.Wrapf(err, "CreateUsageTrigger validation failed")
 	}
 
 	return a.db.CreateUsageTrigger(usageTrigger)
 }
 
-// Delete a UsageTrigger
-func (a *App) DeleteUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) error {
-	// Get before delete to provide opportunity to return not found error
-	ut, err := a.GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId)
+func (a *App) DeleteUsageTrigger(assetId string, taskId string, usageTriggerId string) error {
+	utUid, err := uuid.Parse(usageTriggerId)
 	if err != nil {
-		return err
+		return ae.New(ae.CodeInvalid, "usageTrigger id must be a valid uuid")
 	}
 
-	return a.db.DeleteUsageTrigger(ut.Id)
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return errors.Wrapf(err, "DeleteUsageTrigger - error checking task exists")
+	}
+
+	return a.db.DeleteUsageTriggerFromTask(task.Id, utUid)
 }
 
-// Get a usage trigger that is essentially namespaced under the task specificed
-func (a *App) GetUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string) (tp.UsageTrigger, error) {
-	if _, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId); err != nil {
-		return tp.UsageTrigger{}, err
+func (a *App) GetUsageTrigger(assetId string, taskId string, usageTriggerId string) (tp.UsageTrigger, error) {
+	utUid, err := uuid.Parse(usageTriggerId)
+	if err != nil {
+		return tp.UsageTrigger{}, ae.New(ae.CodeInvalid, "usageTrigger id must be a valid uuid")
 	}
 
-	parsedutId, err := uuid.Parse(usageTriggerId)
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.UsageTrigger{}, errors.Wrapf(err, "GetUsageTrigger - error checking task exists")
+	}
+
+	ut, err := a.db.GetUsageTrigger(utUid)
 	if err != nil {
 		return tp.UsageTrigger{}, err
 	}
 
-	return a.db.GetUsageTrigger(parsedutId)
+	if ut.TaskId != task.Id {
+		return tp.UsageTrigger{}, ae.New(ae.CodeNotFound,
+			fmt.Sprintf("no usageTrigger with id [%s] found for task with id [%s]",
+				usageTriggerId,
+				taskId))
+	}
+
+	return ut, nil
 }
 
-// List all usage triggers for a particular task
-func (a *App) ListUsageTriggers(groupTitle, assetTitle, taskId string) ([]tp.UsageTrigger, error) {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
+func (a *App) ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]tp.UsageTrigger, error) {
+	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return []tp.UsageTrigger{}, err
+		return nil, err
 	}
 
-	return a.db.ListUsageTriggersByTaskId(tid)
+	return a.db.ListUsageTriggersByTask(task.Id)
 }
 
-// Update a usage trigger
-func (a *App) UpdateUsageTrigger(groupTitle, assetTitle, taskId, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
-	err := a.validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId, &usageTrigger)
-	if err != nil {
-		return tp.UsageTrigger{}, err
+func (a *App) ListUsageTriggerUnits() ([]string, error) {
+	keys := make([]string, 0, len(tp.ValidUsageTriggerUnits))
+	for k := range tp.ValidUsageTriggerUnits {
+		keys = append(keys, k)
 	}
 
-	utId, err := uuid.Parse(usageTriggerId)
+	return keys, nil
+}
+
+func (a *App) UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error) {
+	utUid, err := uuid.Parse(usageTriggerId)
 	if err != nil {
-		return tp.UsageTrigger{}, err
+		return tp.UsageTrigger{}, ae.New(ae.CodeInvalid, "usageTrigger id must be a valid uuid")
 	}
 
+	if usageTrigger.Id != uuid.Nil && usageTrigger.Id != utUid {
+		return tp.UsageTrigger{}, ae.New(ae.CodeInvalid, fmt.Sprintf("usageTrigger id mismatch between [%s] and [%s]", usageTriggerId, usageTrigger.Id))
+	}
+	usageTrigger.Id = utUid
+
+	// check namespace coherency
+	task, err := a.GetTask(assetId, taskId)
+	if err != nil {
+		return tp.UsageTrigger{}, errors.Wrapf(err, "UpdateUsageTrigger - error checking task exists")
+	}
+
+	if usageTrigger.TaskId != uuid.Nil && usageTrigger.TaskId != task.Id {
+		return tp.UsageTrigger{}, ae.New(ae.CodeNotFound, fmt.Sprintf("usageTrigger with id [%s] not found in task with id [%s]", usageTrigger.Id, task.Id))
+	}
+
+	usageTrigger.TaskId = task.Id
+	err = a.validateUsageTrigger(usageTrigger)
+	if err != nil {
+		return tp.UsageTrigger{}, errors.Wrapf(err, "UpdateUsageTrigger validation failed")
+	}
+
+	return a.db.UpdateUsageTrigger(usageTrigger)
+}
+
+func (a *App) validateUsageTrigger(usageTrigger tp.UsageTrigger) error {
 	if usageTrigger.Id == uuid.Nil {
-		usageTrigger.Id = utId
-	} else if usageTrigger.Id != utId {
-		return tp.UsageTrigger{}, ae.ErrIdMismatch
+		return ae.New(ae.CodeInvalid, "usageTrigger id is required")
 	}
 
-	return a.db.UpdateUsageTrigger(utId, usageTrigger)
-}
+	minUsageTriggerQuantity := 1
+	if usageTrigger.Quantity < minUsageTriggerQuantity {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("usageTrigger quantity must be greater than [%d]", minUsageTriggerQuantity))
+	}
 
-func (a *App) validateAndInterpolateUsageTrigger(groupTitle, assetTitle, taskId string, usageTrigger *tp.UsageTrigger) error {
-	tid, err := a.validateTriggerDependencies(groupTitle, assetTitle, taskId)
+	if !tp.ValidUsageTriggerUnits[usageTrigger.UsageUnit] {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("usageTrigger unit must be one of [%s]", tp.PrintValidUsageTriggerUnits()))
+	}
+
+	_, te, err := a.taskExists(usageTrigger.TaskId.String())
 	if err != nil {
-		return err
-	}
-	usageTrigger.TaskId = tid
-
-	// validate usageunit
-	if _, err := a.db.GetUsageUnit(usageTrigger.UsageUnit); err != nil {
-		return err
+		return errors.Wrapf(err, "validateUsageTrigger - unexpected error validating task exists")
 	}
 
-	// validate quantity
-	if usageTrigger.Quantity <= 0 {
-		return ae.ErrQuantityMustBePositive
+	if !te {
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("validateUsageTrigger - task with id [%s] not found", usageTrigger.TaskId.String()))
 	}
 
 	return nil
+
+}
+
+func (a *App) usageTriggerExists(id string) (uuid.UUID, bool, error) {
+	uid, err := uuid.Parse(id)
+	if err != nil || uid == uuid.Nil {
+		return uuid.Nil, false, ae.New(ae.CodeInvalid, "usageTrigger id must be a valid, non-nil uuid")
+	}
+
+	_, err = a.db.GetUsageTrigger(uid)
+	if err != nil {
+		var appErr ae.AppError
+		if errors.As(err, &appErr); appErr.Code == ae.CodeNotFound {
+			return uid, false, nil
+		}
+		return uid, false, err
+	}
+	return uid, true, nil
 }
