@@ -9,7 +9,7 @@ import (
 // App layer hosts the business logic and forwards simple requests to the Store layer.
 type App interface {
 	// asset
-	AssociateAssetWithCategory(string, string) (tp.Asset, error)
+	AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error)
 	AssociateAssetWithGroup(string, string) (tp.Asset, error)
 	CreateAsset(tp.Asset) (tp.Asset, error)
 	DeleteAsset(string) error
