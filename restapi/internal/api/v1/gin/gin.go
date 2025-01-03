@@ -16,22 +16,16 @@ import (
 //	@title			PersonaCMMS API
 //	@version		1.0
 //	@description	This is the Personal Computer Maintenance Management System REST API.
-//	@termsOfService	TODO:
 
-//	@contact.name	TODO:
-//	@contact.url	TODO:
-//	@contact.email	TODO:
+//	@contact.email	greenrivercodelabs@gmail.com
 
-//	@license.name	TODO:
-//	@license.url	TODO:
+//	@license.name	GNU Affero General Public License v3.0
+//	@license.url	https://spdx.org/licenses/AGPL-3.0-or-later.html
 
 //	@host		127.0.0.1:8080
 //	@BasePath	/api/v1
 
 //	@securityDefinitions.basic	BasicAuth
-
-//	@externalDocs.description	TODO:
-//	@externalDocs.url			TODO:
 
 type Api struct {
 	app    a.App

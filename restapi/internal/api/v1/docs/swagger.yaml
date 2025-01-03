@@ -115,20 +115,14 @@ definitions:
     - status
     - title
     type: object
-externalDocs:
-  description: 'TODO:'
-  url: 'TODO:'
 host: 127.0.0.1:8080
 info:
   contact:
-    email: 'TODO:'
-    name: 'TODO:'
-    url: 'TODO:'
+    email: greenrivercodelabs@gmail.com
   description: This is the Personal Computer Maintenance Management System REST API.
   license:
-    name: 'TODO:'
-    url: 'TODO:'
-  termsOfService: 'TODO:'
+    name: GNU Affero General Public License v3.0
+    url: https://spdx.org/licenses/AGPL-3.0-or-later.html
   title: PersonaCMMS API
   version: "1.0"
 paths:
@@ -1426,6 +1420,11 @@ paths:
         name: assetId
         required: true
         type: string
+      - description: Asset Task Id
+        in: path
+        name: taskId
+        required: true
+        type: string
       - description: Work Order Id
         in: path
         name: workOrderId
@@ -2376,7 +2375,6 @@ paths:
       summary: Get a consumable
       tags:
       - consumables
-  /consumables/{consumableTitle}:
     put:
       consumes:
       - application/json

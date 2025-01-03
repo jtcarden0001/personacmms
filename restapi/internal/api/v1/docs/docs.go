@@ -9,15 +9,12 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "TODO:",
         "contact": {
-            "name": "TODO:",
-            "url": "TODO:",
-            "email": "TODO:"
+            "email": "greenrivercodelabs@gmail.com"
         },
         "license": {
-            "name": "TODO:",
-            "url": "TODO:"
+            "name": "GNU Affero General Public License v3.0",
+            "url": "https://spdx.org/licenses/AGPL-3.0-or-later.html"
         },
         "version": "{{.Version}}"
     },
@@ -1974,6 +1971,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Asset Task Id",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Work Order Id",
                         "name": "workOrderId",
                         "in": "path",
@@ -3250,50 +3254,6 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "description": "Delete a consumable",
-                "tags": [
-                    "consumables"
-                ],
-                "summary": "Delete a consumable",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Consumable Id",
-                        "name": "consumableId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/consumables/{consumableTitle}": {
             "put": {
                 "description": "Update a consumable",
                 "consumes": [
@@ -3330,6 +3290,48 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.Consumable"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a consumable",
+                "tags": [
+                    "consumables"
+                ],
+                "summary": "Delete a consumable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Consumable Id",
+                        "name": "consumableId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -4272,10 +4274,6 @@ const docTemplate = `{
         "BasicAuth": {
             "type": "basic"
         }
-    },
-    "externalDocs": {
-        "description": "TODO:",
-        "url": "TODO:"
     }
 }`
 
