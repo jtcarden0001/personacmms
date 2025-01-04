@@ -9,7 +9,7 @@ info:
   title: PersonaCMMS API
   version: "1.0"
 servers:
-- url: //127.0.0.1:8080/api/v1
+- url: http://127.0.0.1:8080/api/v1
 paths:
   /assets:
     get:
