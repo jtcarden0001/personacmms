@@ -46,14 +46,14 @@ openapi:
 go-sdk: 
 	echo "see makefile for how to generate the go sdk from openapi.yaml, automated generation is not implemented as the generated sdk requires manual intervention to work properly"
 	echo "generating the sdk will overwrite the current modified implementation"
-	# rm -rf /workspaces/personacmms/sdk/v1/go
+	# rm -rf /workspaces/personacmms/sdk/go/v1/openapi
 	# docker run --rm -v "/workspaces/personacmms:/local" openapitools/openapi-generator-cli generate \
     # -i /local/restapi/internal/api/v1/docs/openapi.yaml \
     # -g go \
-	# --git-repo-id personacmms/sdk/v1/go \
+	# --git-repo-id personacmms/sdk/go/v1/openapi \
 	# --git-user-id jtcarden0001 \
-    # -o /local/sdk/v1/go
-	# cd /workspaces/personacmms/sdk/v1/go; go get github.com/stretchr/testify/assert; go get golang.org/x/net/context; go test ./...
+    # -o /local/sdk/go/v1/openapi
+	# cd /workspaces/personacmms/sdk/go/v1/openapi; go get github.com/stretchr/testify/assert; go get golang.org/x/net/context; go test ./...
 	
 
 # build
