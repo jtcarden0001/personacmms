@@ -562,13 +562,15 @@ Update a group
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param groupId Group Id
+ @param newGroup Group object
  @return ApiGroupsGroupIdPutRequest
 */
-func (a *GroupsAPIService) GroupsGroupIdPut(ctx context.Context, groupId string) ApiGroupsGroupIdPutRequest {
+func (a *GroupsAPIService) GroupsGroupIdPut(ctx context.Context, groupId string, newGroup *TypesGroup) ApiGroupsGroupIdPutRequest {
 	return ApiGroupsGroupIdPutRequest{
 		ApiService: a,
 		ctx: ctx,
 		groupId: groupId,
+		typesGroup: newGroup,
 	}
 }
 
@@ -709,10 +711,11 @@ Create a group
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiGroupsPostRequest
 */
-func (a *GroupsAPIService) GroupsPost(ctx context.Context) ApiGroupsPostRequest {
+func (a *GroupsAPIService) GroupsPost(ctx context.Context, group *TypesGroup) ApiGroupsPostRequest {
 	return ApiGroupsPostRequest{
 		ApiService: a,
 		ctx: ctx,
+		typesGroup: group,
 	}
 }
 

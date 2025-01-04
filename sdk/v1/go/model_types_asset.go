@@ -12,9 +12,11 @@ Contact: greenrivercodelabs@gmail.com
 package openapi
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 // checks if the TypesAsset type satisfies the MappedNullable interface at compile time
@@ -22,6 +24,7 @@ var _ MappedNullable = &TypesAsset{}
 
 // TypesAsset struct for TypesAsset
 type TypesAsset struct {
+	Id uuid.UUID `json:"id,omitempty"`
 	Description *string `json:"description,omitempty"`
 	Make *string `json:"make,omitempty"`
 	Manufacturer *string `json:"manufacturer,omitempty"`

@@ -585,10 +585,11 @@ Create an asset
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiAssetsPostRequest
 */
-func (a *AssetsAPIService) AssetsPost(ctx context.Context) ApiAssetsPostRequest {
+func (a *AssetsAPIService) AssetsPost(ctx context.Context, asset *TypesAsset) ApiAssetsPostRequest {
 	return ApiAssetsPostRequest{
 		ApiService: a,
 		ctx: ctx,
+		typesAsset: asset,
 	}
 }
 

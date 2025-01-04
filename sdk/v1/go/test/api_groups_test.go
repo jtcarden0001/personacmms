@@ -11,6 +11,7 @@ package openapi
 
 import (
 	"context"
+	"strconv"
 	"testing"
 
 	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
@@ -24,10 +25,10 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test GroupsAPIService AssetsAssetIdGroupsGet", func(t *testing.T) {
-
-		// t.Skip("skip test")  // remove to run test
-
-		var assetId string
+		// setup
+		assetId := createAssetAndGetId(t, 1)
+		// best effort to clean up after test
+		defer apiClient.AssetsAPI.AssetsAssetIdDelete(context.Background(), assetId).Execute()
 
 		resp, httpRes, err := apiClient.GroupsAPI.AssetsAssetIdGroupsGet(context.Background(), assetId).Execute()
 
@@ -38,36 +39,44 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 	})
 
 	t.Run("Test GroupsAPIService GroupsGet", func(t *testing.T) {
+		// setup
+		groupId1 := createGroupAndGetId(t, 1)
+		// best effort to clean up after test
+		defer apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), groupId1).Execute()
 
-		// t.Skip("skip test")  // remove to run test
+		groupId2 := createGroupAndGetId(t, 2)
+		// best effort to clean up after test
+		defer apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), groupId2).Execute()
 
+		// test
 		resp, httpRes, err := apiClient.GroupsAPI.GroupsGet(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
+		assert.Equal(t, 2, len(resp))
 
 	})
 
 	t.Run("Test GroupsAPIService GroupsGroupIdDelete", func(t *testing.T) {
+		// setup
+		groupId := createGroupAndGetId(t, 1)
 
-		// t.Skip("skip test")  // remove to run test
-
-		var groupId string
-
+		// test
 		httpRes, err := apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), groupId).Execute()
 
 		require.Nil(t, err)
-		assert.Equal(t, 200, httpRes.StatusCode)
+		assert.Equal(t, 204, httpRes.StatusCode)
 
 	})
 
 	t.Run("Test GroupsAPIService GroupsGroupIdGet", func(t *testing.T) {
+		// setup
+		groupId := createGroupAndGetId(t, 1)
+		// best effort to clean up after test
+		defer apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), groupId).Execute()
 
-		// t.Skip("skip test")  // remove to run test
-
-		var groupId string
-
+		// test
 		resp, httpRes, err := apiClient.GroupsAPI.GroupsGroupIdGet(context.Background(), groupId).Execute()
 
 		require.Nil(t, err)
@@ -77,29 +86,59 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 	})
 
 	t.Run("Test GroupsAPIService GroupsGroupIdPut", func(t *testing.T) {
+		// setup
+		groupId := createGroupAndGetId(t, 1)
+		// best effort to clean up after test
+		defer apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), groupId).Execute()
 
-		// t.Skip("skip test")  // remove to run test
+		newGroup := openapiclient.TypesGroup{
+			Title: "test-group-" + strconv.Itoa(2),
+		}
 
-		var groupId string
-
-		resp, httpRes, err := apiClient.GroupsAPI.GroupsGroupIdPut(context.Background(), groupId).Execute()
+		// test
+		resp, httpRes, err := apiClient.GroupsAPI.GroupsGroupIdPut(context.Background(), groupId, &newGroup).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
+		assert.Equal(t, "test-group-2", resp.Title)
 
 	})
 
 	t.Run("Test GroupsAPIService GroupsPost", func(t *testing.T) {
+		// setup
+		gp := openapiclient.TypesGroup{
+			Title: "test-group-" + strconv.Itoa(1),
+		}
 
-		// t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.GroupsAPI.GroupsPost(context.Background()).Execute()
+		// test
+		resp, httpRes, err := apiClient.GroupsAPI.GroupsPost(context.Background(), &gp).Execute()
+		if err == nil {
+			// best effort to clean up after test
+			defer apiClient.GroupsAPI.GroupsGroupIdDelete(context.Background(), resp.Id.String()).Execute()
+		}
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
+		assert.Equal(t, 201, httpRes.StatusCode)
 
 	})
 
+}
+
+func createGroupAndGetId(t *testing.T, identifier int) string {
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+
+	gp := openapiclient.TypesGroup{
+		Title: "test-group-" + strconv.Itoa(identifier),
+	}
+
+	resp, _, err := apiClient.GroupsAPI.GroupsPost(context.Background(), &gp).Execute()
+	if err != nil {
+		t.Fatalf("error during test setup - error creating group: %v", err)
+		return ""
+	}
+
+	return resp.Id.String()
 }

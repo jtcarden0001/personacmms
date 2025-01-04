@@ -12,9 +12,11 @@ Contact: greenrivercodelabs@gmail.com
 package openapi
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 // checks if the TypesGroup type satisfies the MappedNullable interface at compile time
@@ -22,6 +24,7 @@ var _ MappedNullable = &TypesGroup{}
 
 // TypesGroup struct for TypesGroup
 type TypesGroup struct {
+	Id uuid.UUID `json:"id,omitempty"`
 	Title string `json:"title"`
 }
 

@@ -11,6 +11,7 @@ package openapi
 
 import (
 	"context"
+	"strconv"
 	"testing"
 
 	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
@@ -80,7 +81,7 @@ func Test_openapi_AssetsAPIService(t *testing.T) {
 
 		// t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.AssetsAPI.AssetsPost(context.Background()).Execute()
+		resp, httpRes, err := apiClient.AssetsAPI.AssetsPost(context.Background(), nil).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -189,4 +190,20 @@ func Test_openapi_AssetsAPIService(t *testing.T) {
 
 	})
 
+}
+
+func createAssetAndGetId(t *testing.T, i int) string {
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+
+	asset := openapiclient.TypesAsset{
+		Title:       "test-asset-" + strconv.Itoa(i),
+		Description: openapiclient.PtrString("test-asset-description-" + strconv.Itoa(i)),
+	}
+
+	resp, _, err := apiClient.AssetsAPI.AssetsPost(context.Background(), &asset).Execute()
+	if err != nil {
+		t.Fatalf("error during test setup - error creating asset: %v", err)
+	}
+	return resp.Id.String()
 }
