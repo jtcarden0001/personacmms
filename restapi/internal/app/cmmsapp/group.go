@@ -41,7 +41,7 @@ func (a *App) ListGroups() ([]tp.Group, error) {
 func (a *App) ListGroupsByAsset(assetId string) ([]tp.Group, error) {
 	assetUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return nil, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return nil, ae.New(ae.CodeInvalid, printInvalidUuidErrorMessage("asset", assetId))
 	}
 
 	return a.db.ListGroupsByAsset(assetUuid)
@@ -104,4 +104,8 @@ func (a *App) groupExists(grpId string) (uuid.UUID, bool, error) {
 		return grpUuid, false, err
 	}
 	return grpUuid, true, nil
+}
+
+func printInvalidUuidErrorMessage(resource, id string) string {
+	return fmt.Sprintf("%s id '%s' is not a valid uuid.  Uuid must follow the format '%s'", resource, id, uuid.Nil)
 }
