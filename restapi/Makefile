@@ -19,7 +19,7 @@ OUTLINDEBUG=bin/personacmms-debug
 #
 PKG := 
 
-all: clean tidy format swag openapi go-sdk build test
+build-test: clean tidy format swag build test
 
 clean:
 	go clean
@@ -41,16 +41,19 @@ swag:
 
 openapi:
 	docker run --rm -v /workspaces/personacmms/restapi/internal/api/v1/docs:/usr/src/app mermade/swagger2openapi swagger2openapi --yaml --outfile openapi.yaml swagger.json
+	echo "ensure to prefix "http(s):"" to the servers[0].url field before doing sdk generation based on it. TODO: fix it so manual intervention is not needed""
 
 go-sdk: 
-	rm -rf /workspaces/personacmms/sdk/v1/go
-	docker run --rm -v "/workspaces/personacmms:/local" openapitools/openapi-generator-cli generate \
-    -i /local/restapi/internal/api/v1/docs/openapi.yaml \
-    -g go \
-	--git-repo-id personacmms/sdk/v1/go \
-	--git-user-id jtcarden0001 \
-    -o /local/sdk/v1/go
-	cd /workspaces/personacmms/sdk/v1/go; go get github.com/stretchr/testify/assert; go get golang.org/x/net/context; go test ./...
+	echo "see makefile for how to generate the go sdk from openapi.yaml, automated generation is not implemented as the generated sdk requires manual intervention to work properly"
+	echo "generating the sdk will overwrite the current modified implementation"
+	# rm -rf /workspaces/personacmms/sdk/v1/go
+	# docker run --rm -v "/workspaces/personacmms:/local" openapitools/openapi-generator-cli generate \
+    # -i /local/restapi/internal/api/v1/docs/openapi.yaml \
+    # -g go \
+	# --git-repo-id personacmms/sdk/v1/go \
+	# --git-user-id jtcarden0001 \
+    # -o /local/sdk/v1/go
+	# cd /workspaces/personacmms/sdk/v1/go; go get github.com/stretchr/testify/assert; go get golang.org/x/net/context; go test ./...
 	
 
 # build
