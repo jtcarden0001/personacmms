@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /groups (JSON) done
@@ -41,14 +41,14 @@ func (h *Api) registerGroupRoutes() {
 //	@Description	Create a group
 //	@Tags			groups
 //	@Accept			json
+//	@Param			group	body	apitp.GroupRequest	true	"Group object"
 //	@Produce		json
-//	@Param			group	body		tp.Group	true	"Group object"
-//	@Success		201		{object}	tp.Group
-//	@Failure		400		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		201	{object}	apitp.GroupResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups [post]
 func (h *Api) createGroup(c *gin.Context) {
-	var group tp.Group
+	var group apitp.GroupRequest
 	if err := c.BindJSON(&group); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -64,6 +64,7 @@ func (h *Api) createGroup(c *gin.Context) {
 //	@Description	Delete a group
 //	@Tags			groups
 //	@Param			groupId	path	string	true	"Group Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -79,12 +80,12 @@ func (h *Api) deleteGroup(c *gin.Context) {
 //	@Summary		Get a group
 //	@Description	Get a group
 //	@Tags			groups
+//	@Param			groupId	path	string	true	"Group Id"
 //	@Produce		json
-//	@Param			groupId	path		string	true	"Group Id"
-//	@Success		200		{object}	tp.Group
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.GroupResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupId} [get]
 func (h *Api) getGroup(c *gin.Context) {
 	group, err := h.app.GetGroup(c.Param(groupId))
@@ -97,7 +98,7 @@ func (h *Api) getGroup(c *gin.Context) {
 //	@Description	List all groups
 //	@Tags			groups
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Group
+//	@Success		200	{object}	[]apitp.GroupResponse
 //	@Failure		400	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
 //	@Router			/groups [get]
@@ -111,12 +112,12 @@ func (h *Api) listGroups(c *gin.Context) {
 //	@Summary		List groups by asset
 //	@Description	List groups by asset
 //	@Tags			groups
+//	@Param			assetId	path	string	true	"Asset Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Success		200		{object}	[]tp.Group
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.GroupResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/groups [get]
 func (h *Api) listGroupsByAsset(c *gin.Context) {
 	groups, err := h.app.ListGroupsByAsset(c.Param(assetId))
@@ -129,16 +130,16 @@ func (h *Api) listGroupsByAsset(c *gin.Context) {
 //	@Description	Update a group
 //	@Tags			groups
 //	@Accept			json
+//	@Param			groupId	path	string				true	"Group Id"
+//	@Param			group	body	apitp.GroupRequest	true	"Group object"
 //	@Produce		json
-//	@Param			groupId	path		string		true	"Group Id"
-//	@Param			group	body		tp.Group	true	"Group object"
-//	@Success		200		{object}	tp.Group
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.GroupResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupId} [put]
 func (h *Api) updateGroup(c *gin.Context) {
-	var group tp.Group
+	var group apitp.GroupRequest
 	if err := c.BindJSON(&group); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

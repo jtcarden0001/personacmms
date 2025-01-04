@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /assets/{assetId}/tasks/{taskId}/usage-triggers (JSON) done
@@ -35,17 +35,17 @@ func (h *Api) registerUsageTriggerRoutes() {
 //	@Description	Create a usage trigger for a task
 //	@Tags			usage-triggers
 //	@Accept			json
+//	@Param			assetId			path	string						true	"Asset Id"
+//	@Param			taskId			path	string						true	"Asset Task Id"
+//	@Param			usageTrigger	body	apitp.UsageTriggerRequest	true	"Usage Trigger object"
 //	@Produce		json
-//	@Param			assetId			path		string			true	"Asset Id"
-//	@Param			taskId			path		string			true	"Asset Task Id"
-//	@Param			usageTrigger	body		tp.UsageTrigger	true	"Usage Trigger object"
-//	@Success		201				{object}	tp.UsageTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		201	{object}	apitp.UsageTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/usage-triggers [post]
 func (h *Api) createUsageTrigger(c *gin.Context) {
-	var usageTrigger tp.UsageTrigger
+	var usageTrigger apitp.UsageTriggerRequest
 	if err := c.BindJSON(&usageTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -63,6 +63,7 @@ func (h *Api) createUsageTrigger(c *gin.Context) {
 //	@Param			assetId			path	string	true	"Asset Id"
 //	@Param			taskId			path	string	true	"Asset Task Id"
 //	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -78,14 +79,14 @@ func (h *Api) deleteUsageTrigger(c *gin.Context) {
 //	@Summary		Get a usage trigger
 //	@Description	Get a usage trigger
 //	@Tags			usage-triggers
+//	@Param			assetId			path	string	true	"Asset Id"
+//	@Param			taskId			path	string	true	"Asset Task Id"
+//	@Param			usageTriggerId	path	string	true	"Usage Trigger Id"
 //	@Produce		json
-//	@Param			assetId			path		string	true	"Asset Id"
-//	@Param			taskId			path		string	true	"Asset Task Id"
-//	@Param			usageTriggerId	path		string	true	"Usage Trigger Id"
-//	@Success		200				{object}	tp.UsageTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.UsageTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTriggerId} [get]
 func (h *Api) getUsageTrigger(c *gin.Context) {
 	usageTrigger, err := h.app.GetUsageTrigger(c.Param(assetId), c.Param(taskId), c.Param(usageTriggerId))
@@ -97,13 +98,13 @@ func (h *Api) getUsageTrigger(c *gin.Context) {
 //	@Summary		List usage triggers
 //	@Description	List usage triggers for a task
 //	@Tags			usage-triggers
+//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Param			taskId	path		string	true	"Asset Task Id"
-//	@Success		200		{object}	[]tp.UsageTrigger
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.UsageTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/usage-triggers [get]
 func (h *Api) listUsageTriggersByAssetAndTask(c *gin.Context) {
 	usageTriggers, err := h.app.ListUsageTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
@@ -116,18 +117,18 @@ func (h *Api) listUsageTriggersByAssetAndTask(c *gin.Context) {
 //	@Description	Update a usage trigger
 //	@Tags			usage-triggers
 //	@Accept			json
+//	@Param			assetId			path	string						true	"Asset Id"
+//	@Param			taskId			path	string						true	"Asset Task Id"
+//	@Param			usageTriggerId	path	string						true	"Usage Trigger Id"
+//	@Param			usageTrigger	body	apitp.UsageTriggerRequest	true	"Usage Trigger object"
 //	@Produce		json
-//	@Param			assetId			path		string			true	"Asset Id"
-//	@Param			taskId			path		string			true	"Asset Task Id"
-//	@Param			usageTriggerId	path		string			true	"Usage Trigger Id"
-//	@Param			usageTrigger	body		tp.UsageTrigger	true	"Usage Trigger object"
-//	@Success		200				{object}	tp.UsageTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.UsageTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/usage-triggers/{usageTriggerId} [put]
 func (h *Api) updateUsageTrigger(c *gin.Context) {
-	var usageTrigger tp.UsageTrigger
+	var usageTrigger apitp.UsageTriggerRequest
 	if err := c.BindJSON(&usageTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

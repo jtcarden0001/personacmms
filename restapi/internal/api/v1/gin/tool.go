@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /tools (JSON)
@@ -47,18 +47,18 @@ func (h *Api) registerToolRoutes() {
 //	@Description	Associate a tool with a task
 //	@Tags			tools
 //	@Accept			json
+//	@Param			assetId	path	string					true	"Asset ID"
+//	@Param			taskId	path	string					true	"Task ID"
+//	@Param			toolId	path	string					true	"Tool ID"
+//	@Param			tool	body	apitp.ToolSizeRequest	true	"Tool object"
 //	@Produce		json
-//	@Param			assetId	path		string		true	"Asset ID"
-//	@Param			taskId	path		string		true	"Task ID"
-//	@Param			toolId	path		string		true	"Tool ID"
-//	@Param			tool	body		tp.ToolSize	true	"Tool object"
-//	@Success		200		{object}	tp.Tool
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.ToolSizeResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/tools/{toolId} [put]
 func (h *Api) associateToolWithTask(c *gin.Context) {
-	var tool tp.ToolSize
+	var tool apitp.ToolSizeRequest
 	if err := c.BindJSON(&tool); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -74,18 +74,18 @@ func (h *Api) associateToolWithTask(c *gin.Context) {
 //	@Description	Associate a tool with a work order
 //	@Tags			tools
 //	@Accept			json
+//	@Param			assetId		path	string					true	"Asset ID"
+//	@Param			workOrderId	path	string					true	"Work Order ID"
+//	@Param			toolId		path	string					true	"Tool ID"
+//	@Param			tool		body	apitp.ToolSizeRequest	true	"Tool object"
 //	@Produce		json
-//	@Param			assetId		path		string		true	"Asset ID"
-//	@Param			workOrderId	path		string		true	"Work Order ID"
-//	@Param			toolId		path		string		true	"Tool ID"
-//	@Param			tool		body		tp.ToolSize	true	"Tool object"
-//	@Success		200			{object}	tp.Tool
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.ToolSizeResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId}/tools/{toolId} [put]
 func (h *Api) associateToolWithWorkOrder(c *gin.Context) {
-	var tool tp.ToolSize
+	var tool apitp.ToolSizeRequest
 	if err := c.BindJSON(&tool); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -101,15 +101,15 @@ func (h *Api) associateToolWithWorkOrder(c *gin.Context) {
 //	@Description	Create a tool
 //	@Tags			tools
 //	@Accept			json
+//	@Param			tool	body	apitp.ToolRequest	true	"Tool object"
 //	@Produce		json
-//	@Param			tool	body		tp.Tool	true	"Tool object"
-//	@Success		201		{object}	tp.Tool
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		201	{object}	apitp.ToolResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/tools [post]
 func (h *Api) createTool(c *gin.Context) {
-	var tool tp.Tool
+	var tool apitp.ToolRequest
 	if err := c.BindJSON(&tool); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -125,6 +125,7 @@ func (h *Api) createTool(c *gin.Context) {
 //	@Description	Delete a tool
 //	@Tags			tools
 //	@Param			toolId	path	string	true	"Tool Title"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -143,6 +144,7 @@ func (h *Api) deleteTool(c *gin.Context) {
 //	@Param			assetId	path	string	true	"Asset ID"
 //	@Param			taskId	path	string	true	"Task ID"
 //	@Param			toolId	path	string	true	"Tool ID"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -161,6 +163,7 @@ func (h *Api) disassociateToolWithTask(c *gin.Context) {
 //	@Param			assetId		path	string	true	"Asset ID"
 //	@Param			workOrderId	path	string	true	"Work Order ID"
 //	@Param			toolId		path	string	true	"Tool ID"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -178,7 +181,7 @@ func (h *Api) disassociateToolWithWorkOrder(c *gin.Context) {
 //	@Tags			tools
 //	@Param			toolId	path	string	true	"Tool Title"
 //	@Produce		json
-//	@Success		200	{object}	tp.Tool
+//	@Success		200	{object}	apitp.ToolResponse
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
@@ -194,7 +197,7 @@ func (h *Api) getTool(c *gin.Context) {
 //	@Description	List all tools
 //	@Tags			tools
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Tool
+//	@Success		200	{object}	[]apitp.ToolResponse
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
@@ -210,16 +213,16 @@ func (h *Api) listTools(c *gin.Context) {
 //	@Description	Update a tool
 //	@Tags			tools
 //	@Accept			json
+//	@Param			toolId	path	string				true	"Tool Title"
+//	@Param			tool	body	apitp.ToolRequest	true	"Tool object"
 //	@Produce		json
-//	@Param			toolId	path		string	true	"Tool Title"
-//	@Param			tool	body		tp.Tool	true	"Tool object"
-//	@Success		200		{object}	tp.Tool
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.ToolResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/tools/{toolId} [put]
 func (h *Api) updateTool(c *gin.Context) {
-	var tool tp.Tool
+	var tool apitp.ToolRequest
 	if err := c.BindJSON(&tool); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

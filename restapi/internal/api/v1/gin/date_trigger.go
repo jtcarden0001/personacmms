@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /assets/{assetId}/tasks/{taskId}/date-triggers (JSON) done
@@ -38,17 +38,17 @@ func (h *Api) registerDateTriggerRoutes() {
 //	@Description	Create a date trigger
 //	@Tags			date-triggers
 //	@Accept			json
+//	@Param			assetId		path	string						true	"Asset Id"
+//	@Param			taskId		path	string						true	"Task Id"
+//	@Param			dateTrigger	body	apitp.DateTriggerRequest	true	"Date Trigger object"
 //	@Produce		json
-//	@Param			assetId		path		string			true	"Asset Id"
-//	@Param			taskId		path		string			true	"Task Id"
-//	@Param			dateTrigger	body		tp.DateTrigger	true	"Date Trigger object"
-//	@Success		201			{object}	tp.DateTrigger
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201	{object}	apitp.DateTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers [post]
 func (h *Api) createDateTrigger(c *gin.Context) {
-	var dateTrigger tp.DateTrigger
+	var dateTrigger apitp.DateTriggerRequest
 	if err := c.BindJSON(&dateTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -66,6 +66,7 @@ func (h *Api) createDateTrigger(c *gin.Context) {
 //	@Param			assetId			path	string	true	"Asset Id"
 //	@Param			taskId			path	string	true	"Task Id"
 //	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -81,14 +82,14 @@ func (h *Api) deleteDateTrigger(c *gin.Context) {
 //	@Summary		Get a date trigger
 //	@Description	Get a date trigger
 //	@Tags			date-triggers
+//	@Param			assetId			path	string	true	"Asset Id"
+//	@Param			taskId			path	string	true	"Task Id"
+//	@Param			dateTriggerId	path	string	true	"Date Trigger Id"
 //	@Produce		json
-//	@Param			assetId			path		string	true	"Asset Id"
-//	@Param			taskId			path		string	true	"Task Id"
-//	@Param			dateTriggerId	path		string	true	"Date Trigger Id"
-//	@Success		200				{object}	tp.DateTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.DateTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers/{dateTriggerId} [get]
 func (h *Api) getDateTrigger(c *gin.Context) {
 	dateTrigger, err := h.app.GetDateTrigger(c.Param(assetId), c.Param(taskId), c.Param(dateTriggerId))
@@ -100,13 +101,13 @@ func (h *Api) getDateTrigger(c *gin.Context) {
 //	@Summary		List date triggers
 //	@Description	List date triggers for a task
 //	@Tags			date-triggers
+//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			taskId	path	string	true	"Task Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Param			taskId	path		string	true	"Task Id"
-//	@Success		200		{object}	[]tp.DateTrigger
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.DateTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers [get]
 func (h *Api) listDateTriggersByAssetAndTask(c *gin.Context) {
 	dateTriggers, err := h.app.ListDateTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
@@ -119,18 +120,18 @@ func (h *Api) listDateTriggersByAssetAndTask(c *gin.Context) {
 //	@Description	Update a date trigger
 //	@Tags			date-triggers
 //	@Accept			json
+//	@Param			assetId			path	string						true	"Asset Id"
+//	@Param			taskId			path	string						true	"Task Id"
+//	@Param			dateTriggerId	path	string						true	"Date Trigger Id"
+//	@Param			dateTrigger		body	apitp.DateTriggerRequest	true	"Date Trigger object"
 //	@Produce		json
-//	@Param			assetId			path		string			true	"Asset Id"
-//	@Param			taskId			path		string			true	"Task Id"
-//	@Param			dateTriggerId	path		string			true	"Date Trigger Id"
-//	@Param			dateTrigger		body		tp.DateTrigger	true	"Date Trigger object"
-//	@Success		200				{object}	tp.DateTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.DateTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/date-triggers/{dateTriggerId} [put]
 func (h *Api) updateDateTrigger(c *gin.Context) {
-	var dateTrigger tp.DateTrigger
+	var dateTrigger apitp.DateTriggerRequest
 	if err := c.BindJSON(&dateTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

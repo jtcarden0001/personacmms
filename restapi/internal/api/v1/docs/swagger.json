@@ -31,7 +31,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -77,7 +77,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetRequest"
                         }
                     }
                 ],
@@ -85,7 +85,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -125,7 +125,7 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Asset Title",
+                        "description": "Asset Id",
                         "name": "assetId",
                         "in": "path",
                         "required": true
@@ -135,7 +135,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -176,7 +176,7 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Asset Title",
+                        "description": "Asset Id",
                         "name": "assetId",
                         "in": "path",
                         "required": true
@@ -187,7 +187,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetRequest"
                         }
                     }
                 ],
@@ -195,7 +195,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -223,7 +223,7 @@
             },
             "delete": {
                 "description": "Delete an asset",
-                "consumes": [
+                "produces": [
                     "application/json"
                 ],
                 "tags": [
@@ -292,7 +292,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Category"
+                                "$ref": "#/definitions/api.CategoryResponse"
                             }
                         }
                     },
@@ -345,7 +345,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Group"
+                                "$ref": "#/definitions/api.GroupResponse"
                             }
                         }
                     },
@@ -398,7 +398,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Task"
+                                "$ref": "#/definitions/api.TaskResponse"
                             }
                         }
                     },
@@ -451,7 +451,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskRequest"
                         }
                     }
                 ],
@@ -459,7 +459,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -516,7 +516,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -575,7 +575,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskRequest"
                         }
                     }
                 ],
@@ -583,7 +583,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -611,6 +611,9 @@
             },
             "delete": {
                 "description": "Delete a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tasks"
                 ],
@@ -700,7 +703,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ConsumableQuantity"
+                            "$ref": "#/definitions/api.ConsumableQuantityRequest"
                         }
                     }
                 ],
@@ -708,7 +711,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableQuantityResponse"
                         }
                     },
                     "400": {
@@ -736,6 +739,9 @@
             },
             "delete": {
                 "description": "Disassociate a consumable with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -823,7 +829,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.DateTrigger"
+                                "$ref": "#/definitions/api.DateTriggerResponse"
                             }
                         }
                     },
@@ -883,7 +889,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerRequest"
                         }
                     }
                 ],
@@ -891,7 +897,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -955,7 +961,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -1021,7 +1027,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerRequest"
                         }
                     }
                 ],
@@ -1029,7 +1035,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -1057,6 +1063,9 @@
             },
             "delete": {
                 "description": "Delete a date trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "date-triggers"
                 ],
@@ -1144,7 +1153,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.TimeTrigger"
+                                "$ref": "#/definitions/api.TimeTriggerResponse"
                             }
                         }
                     },
@@ -1204,7 +1213,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerRequest"
                         }
                     }
                 ],
@@ -1212,7 +1221,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1276,7 +1285,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1342,7 +1351,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerRequest"
                         }
                     }
                 ],
@@ -1350,7 +1359,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1378,6 +1387,9 @@
             },
             "delete": {
                 "description": "Delete a time trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "time-triggers"
                 ],
@@ -1474,7 +1486,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ToolSize"
+                            "$ref": "#/definitions/api.ToolSizeRequest"
                         }
                     }
                 ],
@@ -1482,7 +1494,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolSizeResponse"
                         }
                     },
                     "400": {
@@ -1510,6 +1522,9 @@
             },
             "delete": {
                 "description": "Disassociate a tool with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -1597,7 +1612,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.UsageTrigger"
+                                "$ref": "#/definitions/api.UsageTriggerResponse"
                             }
                         }
                     },
@@ -1657,7 +1672,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerRequest"
                         }
                     }
                 ],
@@ -1665,7 +1680,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1729,7 +1744,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1795,7 +1810,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerRequest"
                         }
                     }
                 ],
@@ -1803,7 +1818,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1831,6 +1846,9 @@
             },
             "delete": {
                 "description": "Delete a usage trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "usage-triggers"
                 ],
@@ -1923,7 +1941,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -1951,6 +1969,9 @@
             },
             "delete": {
                 "description": "Disassociate a work order with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "work-orders"
                 ],
@@ -2038,7 +2059,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.WorkOrder"
+                                "$ref": "#/definitions/api.WorkOrderResponse"
                             }
                         }
                     },
@@ -2098,7 +2119,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderRequest"
                         }
                     }
                 ],
@@ -2106,7 +2127,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2170,7 +2191,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2236,7 +2257,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderRequest"
                         }
                     }
                 ],
@@ -2244,7 +2265,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2272,6 +2293,9 @@
             },
             "delete": {
                 "description": "Delete an asset task work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "work-orders"
                 ],
@@ -2368,7 +2392,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ConsumableQuantity"
+                            "$ref": "#/definitions/api.ConsumableQuantityRequest"
                         }
                     }
                 ],
@@ -2376,7 +2400,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableQuantityResponse"
                         }
                     },
                     "400": {
@@ -2404,6 +2428,9 @@
             },
             "delete": {
                 "description": "Disassociate a consumable with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -2462,6 +2489,9 @@
         "/assets/{assetId}/work-orders/{workOrderId}/tasks": {
             "delete": {
                 "description": "Disassociate a task with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tasks"
                 ],
@@ -2551,7 +2581,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ToolSize"
+                            "$ref": "#/definitions/api.ToolSizeRequest"
                         }
                     }
                 ],
@@ -2559,7 +2589,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolSizeResponse"
                         }
                     },
                     "400": {
@@ -2587,6 +2617,9 @@
             },
             "delete": {
                 "description": "Disassociate a tool with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -2658,7 +2691,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Category"
+                                "$ref": "#/definitions/api.CategoryResponse"
                             }
                         }
                     },
@@ -2690,7 +2723,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryRequest"
                         }
                     }
                 ],
@@ -2698,7 +2731,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2748,7 +2781,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2800,7 +2833,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryRequest"
                         }
                     }
                 ],
@@ -2808,7 +2841,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2836,9 +2869,6 @@
             },
             "delete": {
                 "description": "Delete an asset category",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2908,7 +2938,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -2966,7 +2996,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -2994,6 +3024,9 @@
             },
             "delete": {
                 "description": "Disassociate an asset with a category",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "assets"
                 ],
@@ -3074,7 +3107,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -3118,7 +3151,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Consumable"
+                                "$ref": "#/definitions/api.ConsumableResponse"
                             }
                         }
                     },
@@ -3164,7 +3197,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableRequest"
                         }
                     }
                 ],
@@ -3172,7 +3205,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3222,7 +3255,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3274,7 +3307,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableRequest"
                         }
                     }
                 ],
@@ -3282,7 +3315,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3310,6 +3343,9 @@
             },
             "delete": {
                 "description": "Delete a consumable",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -3367,7 +3403,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Group"
+                                "$ref": "#/definitions/api.GroupResponse"
                             }
                         }
                     },
@@ -3406,7 +3442,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupRequest"
                         }
                     }
                 ],
@@ -3414,7 +3450,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3457,7 +3493,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3509,7 +3545,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupRequest"
                         }
                     }
                 ],
@@ -3517,7 +3553,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3545,6 +3581,9 @@
             },
             "delete": {
                 "description": "Delete a group",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "groups"
                 ],
@@ -3611,7 +3650,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -3669,7 +3708,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -3697,6 +3736,9 @@
             },
             "delete": {
                 "description": "Disassociate an asset with a group",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "assets"
                 ],
@@ -3791,7 +3833,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Tool"
+                                "$ref": "#/definitions/api.ToolResponse"
                             }
                         }
                     },
@@ -3837,7 +3879,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolRequest"
                         }
                     }
                 ],
@@ -3845,7 +3887,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3895,7 +3937,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3947,7 +3989,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolRequest"
                         }
                     }
                 ],
@@ -3955,7 +3997,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3983,6 +4025,9 @@
             },
             "delete": {
                 "description": "Delete a tool",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -4086,7 +4131,7 @@
         }
     },
     "definitions": {
-        "types.Asset": {
+        "api.AssetRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4115,7 +4160,36 @@
                 }
             }
         },
-        "types.Category": {
+        "api.AssetResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "make": {
+                    "type": "string"
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "modelNumber": {
+                    "type": "string"
+                },
+                "serialNumber": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.CategoryRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4129,18 +4203,21 @@
                 }
             }
         },
-        "types.Consumable": {
+        "api.CategoryResponse": {
             "type": "object",
             "required": [
                 "title"
             ],
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }
             }
         },
-        "types.ConsumableQuantity": {
+        "api.ConsumableQuantityRequest": {
             "type": "object",
             "required": [
                 "quantity"
@@ -4151,15 +4228,18 @@
                 }
             }
         },
-        "types.DateTrigger": {
+        "api.ConsumableQuantityResponse": {
             "type": "object",
+            "required": [
+                "quantity"
+            ],
             "properties": {
-                "scheduled_date": {
+                "quantity": {
                     "type": "string"
                 }
             }
         },
-        "types.Group": {
+        "api.ConsumableRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4170,7 +4250,56 @@
                 }
             }
         },
-        "types.Task": {
+        "api.ConsumableResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.DateTriggerRequest": {
+            "type": "object",
+            "properties": {
+                "scheduled_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.DateTriggerResponse": {
+            "type": "object",
+            "properties": {
+                "scheduled_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.GroupRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.GroupResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TaskRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4184,7 +4313,21 @@
                 }
             }
         },
-        "types.TimeTrigger": {
+        "api.TaskResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "instructions": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TimeTriggerRequest": {
             "type": "object",
             "required": [
                 "quantity",
@@ -4199,7 +4342,22 @@
                 }
             }
         },
-        "types.Tool": {
+        "api.TimeTriggerResponse": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "time_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "time_unit": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ToolRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4210,7 +4368,18 @@
                 }
             }
         },
-        "types.ToolSize": {
+        "api.ToolResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ToolSizeRequest": {
             "type": "object",
             "properties": {
                 "size": {
@@ -4218,7 +4387,15 @@
                 }
             }
         },
-        "types.UsageTrigger": {
+        "api.ToolSizeResponse": {
+            "type": "object",
+            "properties": {
+                "size": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UsageTriggerRequest": {
             "type": "object",
             "required": [
                 "quantity",
@@ -4233,7 +4410,52 @@
                 }
             }
         },
-        "types.WorkOrder": {
+        "api.UsageTriggerResponse": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "usage_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "usage_unit": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.WorkOrderRequest": {
+            "type": "object",
+            "required": [
+                "status",
+                "title"
+            ],
+            "properties": {
+                "completedDate": {
+                    "type": "string"
+                },
+                "cumulativeHours": {
+                    "type": "integer"
+                },
+                "cumulativeMiles": {
+                    "type": "integer"
+                },
+                "instructions": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.WorkOrderResponse": {
             "type": "object",
             "required": [
                 "status",

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /assets (JSON) done
@@ -53,13 +53,13 @@ func (h *Api) registerAssetRoutes() {
 //	@Summary		Associate an asset with a category
 //	@Description	Associate an asset with a category
 //	@Tags			assets
+//	@Param			categoryId	path	string	true	"Category Id"
+//	@Param			assetId		path	string	true	"Asset Id"
 //	@Produce		json
-//	@Param			categoryId	path		string	true	"Category Id"
-//	@Param			assetId		path		string	true	"Asset Id"
-//	@Success		200			{object}	tp.Asset
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories/{categoryId}/assets/{assetId} [put]
 func (h *Api) associateAssetWithCategory(c *gin.Context) {
 	asset, err := h.app.AssociateAssetWithCategory(c.Param(categoryId), c.Param(assetId))
@@ -71,13 +71,13 @@ func (h *Api) associateAssetWithCategory(c *gin.Context) {
 //	@Summary		Associate an asset with a group
 //	@Description	Associate an asset with a group
 //	@Tags			assets
+//	@Param			groupId	path	string	true	"Group Id"
+//	@Param			assetId	path	string	true	"Asset Id"
 //	@Produce		json
-//	@Param			groupId	path		string	true	"Group Id"
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Success		200		{object}	tp.Asset
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupId}/assets/{assetId} [put]
 func (h *Api) associateAssetWithGroup(c *gin.Context) {
 	asset, err := h.app.AssociateAssetWithGroup(c.Param(groupId), c.Param(assetId))
@@ -90,15 +90,15 @@ func (h *Api) associateAssetWithGroup(c *gin.Context) {
 //	@Description	Create an asset
 //	@Tags			assets
 //	@Accept			json
+//	@Param			asset	body	apitp.AssetRequest	true	"Asset object"
 //	@Produce		json
-//	@Param			asset	body		tp.Asset	true	"Asset object"
-//	@Success		201		{object}	tp.Asset
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		201	{object}	apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets [post]
 func (h *Api) createAsset(c *gin.Context) {
-	var a tp.Asset
+	var a apitp.AssetRequest
 	if err := c.BindJSON(&a); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -113,8 +113,8 @@ func (h *Api) createAsset(c *gin.Context) {
 //	@Summary		Delete an asset
 //	@Description	Delete an asset
 //	@Tags			assets
-//	@Accept			json
 //	@Param			assetId	path	string	true	"Asset Title"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -132,6 +132,7 @@ func (h *Api) deleteAsset(c *gin.Context) {
 //	@Tags			assets
 //	@Param			categoryId	path	string	true	"Category Id"
 //	@Param			assetId		path	string	true	"Asset Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -149,6 +150,7 @@ func (h *Api) disassociateAssetWithCategory(c *gin.Context) {
 //	@Tags			assets
 //	@Param			groupId	path	string	true	"Group Id"
 //	@Param			assetId	path	string	true	"Asset Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -164,12 +166,12 @@ func (h *Api) disassociateAssetWithGroup(c *gin.Context) {
 //	@Summary		Get an asset
 //	@Description	Get an asset
 //	@Tags			assets
+//	@Param			assetId	path	string	true	"Asset Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Title"
-//	@Success		200		{object}	tp.Asset
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId} [get]
 func (h *Api) getAsset(c *gin.Context) {
 	asset, err := h.app.GetAsset(c.Param(assetId))
@@ -182,7 +184,7 @@ func (h *Api) getAsset(c *gin.Context) {
 //	@Description	List all assets
 //	@Tags			assets
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Asset
+//	@Success		200	{object}	[]apitp.AssetResponse
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
@@ -197,12 +199,12 @@ func (h *Api) listAssets(c *gin.Context) {
 //	@Summary		List assets by category
 //	@Description	List all assets by category
 //	@Tags			assets
+//	@Param			categoryId	path	string	true	"Category Id"
 //	@Produce		json
-//	@Param			categoryId	path		string	true	"Category Id"
-//	@Success		200			{object}	[]tp.Asset
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	[]apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories/{categoryId}/assets [get]
 func (h *Api) listAssetsByCategory(c *gin.Context) {
 	assets, err := h.app.ListAssetsByCategory(c.Param(categoryId))
@@ -214,13 +216,13 @@ func (h *Api) listAssetsByCategory(c *gin.Context) {
 //	@Summary		List assets by category and group
 //	@Description	List all assets by category and group
 //	@Tags			assets
+//	@Param			categoryId	path	string	true	"Category Id"
+//	@Param			groupId		path	string	true	"Group Id"
 //	@Produce		json
-//	@Param			categoryId	path		string	true	"Category Id"
-//	@Param			groupId		path		string	true	"Group Id"
-//	@Success		200			{object}	[]tp.Asset
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	[]apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories/{categoryId}/groups/{groupId}/assets [get]
 func (h *Api) listAssetsByCategoryAndGroup(c *gin.Context) {
 	assets, err := h.app.ListAssetsByCategoryAndGroup(c.Param(categoryId), c.Param(groupId))
@@ -232,12 +234,12 @@ func (h *Api) listAssetsByCategoryAndGroup(c *gin.Context) {
 //	@Summary		List assets by group
 //	@Description	List all assets by group
 //	@Tags			assets
+//	@Param			groupId	path	string	true	"Group Id"
 //	@Produce		json
-//	@Param			groupId	path		string	true	"Group Id"
-//	@Success		200		{object}	[]tp.Asset
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/groups/{groupId}/assets [get]
 func (h *Api) listAssetsByGroup(c *gin.Context) {
 	assets, err := h.app.ListAssetsByGroup(c.Param(groupId))
@@ -250,16 +252,16 @@ func (h *Api) listAssetsByGroup(c *gin.Context) {
 //	@Description	Update an asset
 //	@Tags			assets
 //	@Accept			json
+//	@Param			assetId	path	string				true	"Asset Id"
+//	@Param			asset	body	apitp.AssetRequest	true	"Asset object"
 //	@Produce		json
-//	@Param			assetId	path		string		true	"Asset Title"
-//	@Param			asset	body		tp.Asset	true	"Asset object"
-//	@Success		200		{object}	tp.Asset
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	apitp.AssetResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId} [put]
 func (h *Api) updateAsset(c *gin.Context) {
-	var a tp.Asset
+	var a apitp.AssetRequest
 	if err := c.BindJSON(&a); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

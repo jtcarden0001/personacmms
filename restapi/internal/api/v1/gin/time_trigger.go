@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /assets/{assetId}/tasks/{taskId}/time-triggers (JSON) done
@@ -38,17 +38,17 @@ func (h *Api) registerTimeTriggerRoutes() {
 //	@Description	Create a time trigger
 //	@Tags			time-triggers
 //	@Accept			json
+//	@Param			assetId		path	string						true	"Asset Id"
+//	@Param			taskId		path	string						true	"Asset Task Id"
+//	@Param			timeTrigger	body	apitp.TimeTriggerRequest	true	"Time Trigger object"
 //	@Produce		json
-//	@Param			assetId		path		string			true	"Asset Id"
-//	@Param			taskId		path		string			true	"Asset Task Id"
-//	@Param			timeTrigger	body		tp.TimeTrigger	true	"Time Trigger object"
-//	@Success		201			{object}	tp.TimeTrigger
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201	{object}	apitp.TimeTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers [post]
 func (h *Api) createTimeTrigger(c *gin.Context) {
-	var timeTrigger tp.TimeTrigger
+	var timeTrigger apitp.TimeTriggerRequest
 	if err := c.BindJSON(&timeTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -66,6 +66,7 @@ func (h *Api) createTimeTrigger(c *gin.Context) {
 //	@Param			assetId			path	string	true	"Asset Id"
 //	@Param			taskId			path	string	true	"Asset Task Id"
 //	@Param			timeTriggerId	path	string	true	"Time Trigger Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -81,14 +82,14 @@ func (h *Api) deleteTimeTrigger(c *gin.Context) {
 //	@Summary		Get a time trigger
 //	@Description	Get a time trigger
 //	@Tags			time-triggers
+//	@Param			assetId			path	string	true	"Asset Id"
+//	@Param			taskId			path	string	true	"Asset Task Id"
+//	@Param			timeTriggerId	path	string	true	"Time Trigger Id"
 //	@Produce		json
-//	@Param			assetId			path		string	true	"Asset Id"
-//	@Param			taskId			path		string	true	"Asset Task Id"
-//	@Param			timeTriggerId	path		string	true	"Time Trigger Id"
-//	@Success		200				{object}	tp.TimeTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.TimeTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers/{timeTriggerId} [get]
 func (h *Api) getTimeTrigger(c *gin.Context) {
 	timeTrigger, err := h.app.GetTimeTrigger(c.Param(assetId), c.Param(taskId), c.Param(timeTriggerId))
@@ -100,13 +101,13 @@ func (h *Api) getTimeTrigger(c *gin.Context) {
 //	@Summary		List time triggers
 //	@Description	List all time triggers for a task
 //	@Tags			time-triggers
+//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Param			taskId	path		string	true	"Asset Task Id"
-//	@Success		200		{object}	[]tp.TimeTrigger
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.TimeTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers [get]
 func (h *Api) listTimeTriggersByAssetAndTask(c *gin.Context) {
 	timeTriggers, err := h.app.ListTimeTriggersByAssetAndTask(c.Param(assetId), c.Param(taskId))
@@ -119,18 +120,18 @@ func (h *Api) listTimeTriggersByAssetAndTask(c *gin.Context) {
 //	@Description	Update a time trigger
 //	@Tags			time-triggers
 //	@Accept			json
+//	@Param			assetId			path	string						true	"Asset Id"
+//	@Param			taskId			path	string						true	"Task Id"
+//	@Param			timeTriggerId	path	string						true	"Time Trigger Id"
+//	@Param			timeTrigger		body	apitp.TimeTriggerRequest	true	"Time Trigger object"
 //	@Produce		json
-//	@Param			assetId			path		string			true	"Asset Id"
-//	@Param			taskId			path		string			true	"Task Id"
-//	@Param			timeTriggerId	path		string			true	"Time Trigger Id"
-//	@Param			timeTrigger		body		tp.TimeTrigger	true	"Time Trigger object"
-//	@Success		200				{object}	tp.TimeTrigger
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.TimeTriggerResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/time-triggers/{timeTriggerId} [put]
 func (h *Api) updateTimeTrigger(c *gin.Context) {
-	var timeTrigger tp.TimeTrigger
+	var timeTrigger apitp.TimeTriggerRequest
 	if err := c.BindJSON(&timeTrigger); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

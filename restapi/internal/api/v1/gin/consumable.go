@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /consumables (JSON) done
@@ -47,18 +47,18 @@ func (h *Api) registerConsumableRoutes() {
 //	@Description	Associate a consumable with a task
 //	@Tags			consumables
 //	@Accept			json
+//	@Param			assetId			path	string							true	"Asset ID"
+//	@Param			taskId			path	string							true	"Task ID"
+//	@Param			consumableId	path	string							true	"Consumable ID"
+//	@Param			consumable		body	apitp.ConsumableQuantityRequest	true	"Consumable object"
 //	@Produce		json
-//	@Param			assetId			path		string					true	"Asset ID"
-//	@Param			taskId			path		string					true	"Task ID"
-//	@Param			consumableId	path		string					true	"Consumable ID"
-//	@Param			consumable		body		tp.ConsumableQuantity	true	"Consumable object"
-//	@Success		200				{object}	tp.Consumable
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.ConsumableQuantityResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/consumables/{consumableId} [put]
 func (h *Api) associateConsumableWithTask(c *gin.Context) {
-	var consumable tp.ConsumableQuantity
+	var consumable apitp.ConsumableQuantityRequest
 	if err := c.BindJSON(&consumable); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -74,18 +74,18 @@ func (h *Api) associateConsumableWithTask(c *gin.Context) {
 //	@Description	Associate a consumable with a work order
 //	@Tags			consumables
 //	@Accept			json
+//	@Param			assetId			path	string							true	"Asset Id"
+//	@Param			workOrderId		path	string							true	"Work Order Id"
+//	@Param			consumableId	path	string							true	"Consumable Id"
+//	@Param			consumable		body	apitp.ConsumableQuantityRequest	true	"Consumable object"
 //	@Produce		json
-//	@Param			assetId			path		string					true	"Asset Id"
-//	@Param			workOrderId		path		string					true	"Work Order Id"
-//	@Param			consumableId	path		string					true	"Consumable Id"
-//	@Param			consumable		body		tp.ConsumableQuantity	true	"Consumable object"
-//	@Success		200				{object}	tp.Consumable
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.ConsumableQuantityResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId}/consumables/{consumableId} [put]
 func (h *Api) associateConsumableWithWorkOrder(c *gin.Context) {
-	var consumable tp.ConsumableQuantity
+	var consumable apitp.ConsumableQuantityRequest
 	if err := c.BindJSON(&consumable); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -101,15 +101,15 @@ func (h *Api) associateConsumableWithWorkOrder(c *gin.Context) {
 //	@Description	Create a consumable
 //	@Tags			consumables
 //	@Accept			json
+//	@Param			consumable	body	apitp.ConsumableRequest	true	"Consumable object"
 //	@Produce		json
-//	@Param			consumable	body		tp.Consumable	true	"Consumable object"
-//	@Success		201			{object}	tp.Consumable
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201	{object}	apitp.ConsumableResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/consumables [post]
 func (h *Api) createConsumable(c *gin.Context) {
-	var consumable tp.Consumable
+	var consumable apitp.ConsumableRequest
 	if err := c.BindJSON(&consumable); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -125,6 +125,7 @@ func (h *Api) createConsumable(c *gin.Context) {
 //	@Description	Delete a consumable
 //	@Tags			consumables
 //	@Param			consumableId	path	string	true	"Consumable Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -143,6 +144,7 @@ func (h *Api) deleteConsumable(c *gin.Context) {
 //	@Param			assetId			path	string	true	"Asset Id"
 //	@Param			taskId			path	string	true	"Task Id"
 //	@Param			consumableId	path	string	true	"Consumable Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -161,6 +163,7 @@ func (h *Api) disassociateConsumableWithTask(c *gin.Context) {
 //	@Param			assetId			path	string	true	"Asset Id"
 //	@Param			workOrderId		path	string	true	"Work Order Id"
 //	@Param			consumableId	path	string	true	"Consumable Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -178,7 +181,7 @@ func (h *Api) disassociateConsumableWithWorkOrder(c *gin.Context) {
 //	@Tags			consumables
 //	@Produce		json
 //	@Param			consumableId	path		string	true	"Consumable Id"
-//	@Success		200				{object}	tp.Consumable
+//	@Success		200				{object}	apitp.ConsumableResponse
 //	@Failure		400				{object}	map[string]any
 //	@Failure		404				{object}	map[string]any
 //	@Failure		500				{object}	map[string]any
@@ -194,7 +197,7 @@ func (h *Api) getConsumable(c *gin.Context) {
 //	@Description	List all consumables
 //	@Tags			consumables
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Consumable
+//	@Success		200	{object}	[]apitp.ConsumableResponse
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
 //	@Failure		500	{object}	map[string]any
@@ -210,16 +213,16 @@ func (h *Api) listConsumables(c *gin.Context) {
 //	@Description	Update a consumable
 //	@Tags			consumables
 //	@Accept			json
+//	@Param			consumableId	path	string					true	"Consumable Id"
+//	@Param			consumable		body	apitp.ConsumableRequest	true	"Consumable object"
 //	@Produce		json
-//	@Param			consumableId	path		string			true	"Consumable Id"
-//	@Param			consumable		body		tp.Consumable	true	"Consumable object"
-//	@Success		200				{object}	tp.Consumable
-//	@Failure		400				{object}	map[string]any
-//	@Failure		404				{object}	map[string]any
-//	@Failure		500				{object}	map[string]any
+//	@Success		200	{object}	apitp.ConsumableResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/consumables/{consumableId} [put]
 func (h *Api) updateConsumable(c *gin.Context) {
-	var consumable tp.Consumable
+	var consumable apitp.ConsumableRequest
 	if err := c.BindJSON(&consumable); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

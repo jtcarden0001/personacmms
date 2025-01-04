@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  types.Asset:
+  api.AssetRequest:
     properties:
       description:
         type: string
@@ -19,7 +19,26 @@ definitions:
     required:
     - title
     type: object
-  types.Category:
+  api.AssetResponse:
+    properties:
+      description:
+        type: string
+      make:
+        type: string
+      manufacturer:
+        type: string
+      modelNumber:
+        type: string
+      serialNumber:
+        type: string
+      title:
+        type: string
+      year:
+        type: integer
+    required:
+    - title
+    type: object
+  api.CategoryRequest:
     properties:
       description:
         type: string
@@ -28,33 +47,68 @@ definitions:
     required:
     - title
     type: object
-  types.Consumable:
+  api.CategoryResponse:
     properties:
+      description:
+        type: string
       title:
         type: string
     required:
     - title
     type: object
-  types.ConsumableQuantity:
+  api.ConsumableQuantityRequest:
     properties:
       quantity:
         type: string
     required:
     - quantity
     type: object
-  types.DateTrigger:
+  api.ConsumableQuantityResponse:
     properties:
-      scheduled_date:
+      quantity:
         type: string
+    required:
+    - quantity
     type: object
-  types.Group:
+  api.ConsumableRequest:
     properties:
       title:
         type: string
     required:
     - title
     type: object
-  types.Task:
+  api.ConsumableResponse:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  api.DateTriggerRequest:
+    properties:
+      scheduled_date:
+        type: string
+    type: object
+  api.DateTriggerResponse:
+    properties:
+      scheduled_date:
+        type: string
+    type: object
+  api.GroupRequest:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  api.GroupResponse:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  api.TaskRequest:
     properties:
       instructions:
         type: string
@@ -63,7 +117,16 @@ definitions:
     required:
     - title
     type: object
-  types.TimeTrigger:
+  api.TaskResponse:
+    properties:
+      instructions:
+        type: string
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  api.TimeTriggerRequest:
     properties:
       quantity:
         type: integer
@@ -73,19 +136,41 @@ definitions:
     - quantity
     - time_unit
     type: object
-  types.Tool:
+  api.TimeTriggerResponse:
+    properties:
+      quantity:
+        type: integer
+      time_unit:
+        type: string
+    required:
+    - quantity
+    - time_unit
+    type: object
+  api.ToolRequest:
     properties:
       title:
         type: string
     required:
     - title
     type: object
-  types.ToolSize:
+  api.ToolResponse:
+    properties:
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  api.ToolSizeRequest:
     properties:
       size:
         type: string
     type: object
-  types.UsageTrigger:
+  api.ToolSizeResponse:
+    properties:
+      size:
+        type: string
+    type: object
+  api.UsageTriggerRequest:
     properties:
       quantity:
         type: integer
@@ -95,7 +180,37 @@ definitions:
     - quantity
     - usage_unit
     type: object
-  types.WorkOrder:
+  api.UsageTriggerResponse:
+    properties:
+      quantity:
+        type: integer
+      usage_unit:
+        type: string
+    required:
+    - quantity
+    - usage_unit
+    type: object
+  api.WorkOrderRequest:
+    properties:
+      completedDate:
+        type: string
+      cumulativeHours:
+        type: integer
+      cumulativeMiles:
+        type: integer
+      instructions:
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    required:
+    - status
+    - title
+    type: object
+  api.WorkOrderResponse:
     properties:
       completedDate:
         type: string
@@ -136,7 +251,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Asset'
+              $ref: '#/definitions/api.AssetResponse'
             type: array
         "400":
           description: Bad Request
@@ -166,14 +281,14 @@ paths:
         name: asset
         required: true
         schema:
-          $ref: '#/definitions/types.Asset'
+          $ref: '#/definitions/api.AssetRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Asset'
+            $ref: '#/definitions/api.AssetResponse'
         "400":
           description: Bad Request
           schema:
@@ -194,8 +309,6 @@ paths:
       - assets
   /assets/{assetId}:
     delete:
-      consumes:
-      - application/json
       description: Delete an asset
       parameters:
       - description: Asset Title
@@ -203,6 +316,8 @@ paths:
         name: assetId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -227,7 +342,7 @@ paths:
     get:
       description: Get an asset
       parameters:
-      - description: Asset Title
+      - description: Asset Id
         in: path
         name: assetId
         required: true
@@ -238,7 +353,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Asset'
+            $ref: '#/definitions/api.AssetResponse'
         "400":
           description: Bad Request
           schema:
@@ -262,7 +377,7 @@ paths:
       - application/json
       description: Update an asset
       parameters:
-      - description: Asset Title
+      - description: Asset Id
         in: path
         name: assetId
         required: true
@@ -272,14 +387,14 @@ paths:
         name: asset
         required: true
         schema:
-          $ref: '#/definitions/types.Asset'
+          $ref: '#/definitions/api.AssetRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Asset'
+            $ref: '#/definitions/api.AssetResponse'
         "400":
           description: Bad Request
           schema:
@@ -314,7 +429,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Category'
+              $ref: '#/definitions/api.CategoryResponse'
             type: array
         "400":
           description: Bad Request
@@ -350,7 +465,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Group'
+              $ref: '#/definitions/api.GroupResponse'
             type: array
         "400":
           description: Bad Request
@@ -386,7 +501,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Task'
+              $ref: '#/definitions/api.TaskResponse'
             type: array
         "400":
           description: Bad Request
@@ -421,14 +536,14 @@ paths:
         name: task
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/api.TaskRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Task'
+            $ref: '#/definitions/api.TaskResponse'
         "400":
           description: Bad Request
           schema:
@@ -461,6 +576,8 @@ paths:
         name: taskId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -501,7 +618,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Task'
+            $ref: '#/definitions/api.TaskResponse'
         "400":
           description: Bad Request
           schema:
@@ -540,14 +657,14 @@ paths:
         name: task
         required: true
         schema:
-          $ref: '#/definitions/types.Task'
+          $ref: '#/definitions/api.TaskRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Task'
+            $ref: '#/definitions/api.TaskResponse'
         "400":
           description: Bad Request
           schema:
@@ -585,6 +702,8 @@ paths:
         name: consumableId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -631,14 +750,14 @@ paths:
         name: consumable
         required: true
         schema:
-          $ref: '#/definitions/types.ConsumableQuantity'
+          $ref: '#/definitions/api.ConsumableQuantityRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Consumable'
+            $ref: '#/definitions/api.ConsumableQuantityResponse'
         "400":
           description: Bad Request
           schema:
@@ -678,7 +797,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.DateTrigger'
+              $ref: '#/definitions/api.DateTriggerResponse'
             type: array
         "400":
           description: Bad Request
@@ -718,14 +837,14 @@ paths:
         name: dateTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.DateTrigger'
+          $ref: '#/definitions/api.DateTriggerRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.DateTrigger'
+            $ref: '#/definitions/api.DateTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -763,6 +882,8 @@ paths:
         name: dateTriggerId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -808,7 +929,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.DateTrigger'
+            $ref: '#/definitions/api.DateTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -852,14 +973,14 @@ paths:
         name: dateTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.DateTrigger'
+          $ref: '#/definitions/api.DateTriggerRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.DateTrigger'
+            $ref: '#/definitions/api.DateTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -899,7 +1020,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.TimeTrigger'
+              $ref: '#/definitions/api.TimeTriggerResponse'
             type: array
         "400":
           description: Bad Request
@@ -939,14 +1060,14 @@ paths:
         name: timeTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.TimeTrigger'
+          $ref: '#/definitions/api.TimeTriggerRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.TimeTrigger'
+            $ref: '#/definitions/api.TimeTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -984,6 +1105,8 @@ paths:
         name: timeTriggerId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1029,7 +1152,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.TimeTrigger'
+            $ref: '#/definitions/api.TimeTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1073,14 +1196,14 @@ paths:
         name: timeTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.TimeTrigger'
+          $ref: '#/definitions/api.TimeTriggerRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.TimeTrigger'
+            $ref: '#/definitions/api.TimeTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1118,6 +1241,8 @@ paths:
         name: toolId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1164,14 +1289,14 @@ paths:
         name: tool
         required: true
         schema:
-          $ref: '#/definitions/types.ToolSize'
+          $ref: '#/definitions/api.ToolSizeRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Tool'
+            $ref: '#/definitions/api.ToolSizeResponse'
         "400":
           description: Bad Request
           schema:
@@ -1211,7 +1336,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.UsageTrigger'
+              $ref: '#/definitions/api.UsageTriggerResponse'
             type: array
         "400":
           description: Bad Request
@@ -1251,14 +1376,14 @@ paths:
         name: usageTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.UsageTrigger'
+          $ref: '#/definitions/api.UsageTriggerRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.UsageTrigger'
+            $ref: '#/definitions/api.UsageTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1296,6 +1421,8 @@ paths:
         name: usageTriggerId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1341,7 +1468,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.UsageTrigger'
+            $ref: '#/definitions/api.UsageTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1385,14 +1512,14 @@ paths:
         name: usageTrigger
         required: true
         schema:
-          $ref: '#/definitions/types.UsageTrigger'
+          $ref: '#/definitions/api.UsageTriggerRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.UsageTrigger'
+            $ref: '#/definitions/api.UsageTriggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1430,6 +1557,8 @@ paths:
         name: workOrderId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1475,7 +1604,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.WorkOrder'
+            $ref: '#/definitions/api.WorkOrderResponse'
         "400":
           description: Bad Request
           schema:
@@ -1515,7 +1644,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.WorkOrder'
+              $ref: '#/definitions/api.WorkOrderResponse'
             type: array
         "400":
           description: Bad Request
@@ -1555,14 +1684,14 @@ paths:
         name: workOrder
         required: true
         schema:
-          $ref: '#/definitions/types.WorkOrder'
+          $ref: '#/definitions/api.WorkOrderRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.WorkOrder'
+            $ref: '#/definitions/api.WorkOrderResponse'
         "400":
           description: Bad Request
           schema:
@@ -1600,6 +1729,8 @@ paths:
         name: workOrderId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1645,7 +1776,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.WorkOrder'
+            $ref: '#/definitions/api.WorkOrderResponse'
         "400":
           description: Bad Request
           schema:
@@ -1689,14 +1820,14 @@ paths:
         name: workOrder
         required: true
         schema:
-          $ref: '#/definitions/types.WorkOrder'
+          $ref: '#/definitions/api.WorkOrderRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.WorkOrder'
+            $ref: '#/definitions/api.WorkOrderResponse'
         "400":
           description: Bad Request
           schema:
@@ -1734,6 +1865,8 @@ paths:
         name: consumableId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1780,14 +1913,14 @@ paths:
         name: consumable
         required: true
         schema:
-          $ref: '#/definitions/types.ConsumableQuantity'
+          $ref: '#/definitions/api.ConsumableQuantityRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Consumable'
+            $ref: '#/definitions/api.ConsumableQuantityResponse'
         "400":
           description: Bad Request
           schema:
@@ -1820,6 +1953,8 @@ paths:
         name: workOrderId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1860,6 +1995,8 @@ paths:
         name: toolId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -1906,14 +2043,14 @@ paths:
         name: tool
         required: true
         schema:
-          $ref: '#/definitions/types.ToolSize'
+          $ref: '#/definitions/api.ToolSizeRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Tool'
+            $ref: '#/definitions/api.ToolSizeResponse'
         "400":
           description: Bad Request
           schema:
@@ -1942,7 +2079,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Category'
+              $ref: '#/definitions/api.CategoryResponse'
             type: array
         "500":
           description: Internal Server Error
@@ -1962,14 +2099,14 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/types.Category'
+          $ref: '#/definitions/api.CategoryRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Category'
+            $ref: '#/definitions/api.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -1990,8 +2127,6 @@ paths:
       - categories
   /categories/{categoryId}:
     delete:
-      consumes:
-      - application/json
       description: Delete an asset category
       parameters:
       - description: Category Id
@@ -2036,7 +2171,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Category'
+            $ref: '#/definitions/api.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -2070,14 +2205,14 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/types.Category'
+          $ref: '#/definitions/api.CategoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Category'
+            $ref: '#/definitions/api.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -2112,7 +2247,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Asset'
+              $ref: '#/definitions/api.AssetResponse'
             type: array
         "400":
           description: Bad Request
@@ -2146,6 +2281,8 @@ paths:
         name: assetId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -2186,7 +2323,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Asset'
+            $ref: '#/definitions/api.AssetResponse'
         "400":
           description: Bad Request
           schema:
@@ -2226,7 +2363,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Asset'
+              $ref: '#/definitions/api.AssetResponse'
             type: array
         "400":
           description: Bad Request
@@ -2256,7 +2393,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Consumable'
+              $ref: '#/definitions/api.ConsumableResponse'
             type: array
         "400":
           description: Bad Request
@@ -2286,14 +2423,14 @@ paths:
         name: consumable
         required: true
         schema:
-          $ref: '#/definitions/types.Consumable'
+          $ref: '#/definitions/api.ConsumableRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Consumable'
+            $ref: '#/definitions/api.ConsumableResponse'
         "400":
           description: Bad Request
           schema:
@@ -2321,6 +2458,8 @@ paths:
         name: consumableId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -2356,7 +2495,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Consumable'
+            $ref: '#/definitions/api.ConsumableResponse'
         "400":
           description: Bad Request
           schema:
@@ -2390,14 +2529,14 @@ paths:
         name: consumable
         required: true
         schema:
-          $ref: '#/definitions/types.Consumable'
+          $ref: '#/definitions/api.ConsumableRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Consumable'
+            $ref: '#/definitions/api.ConsumableResponse'
         "400":
           description: Bad Request
           schema:
@@ -2426,7 +2565,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Group'
+              $ref: '#/definitions/api.GroupResponse'
             type: array
         "400":
           description: Bad Request
@@ -2451,14 +2590,14 @@ paths:
         name: group
         required: true
         schema:
-          $ref: '#/definitions/types.Group'
+          $ref: '#/definitions/api.GroupRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Group'
+            $ref: '#/definitions/api.GroupResponse'
         "400":
           description: Bad Request
           schema:
@@ -2481,6 +2620,8 @@ paths:
         name: groupId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -2516,7 +2657,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Group'
+            $ref: '#/definitions/api.GroupResponse'
         "400":
           description: Bad Request
           schema:
@@ -2550,14 +2691,14 @@ paths:
         name: group
         required: true
         schema:
-          $ref: '#/definitions/types.Group'
+          $ref: '#/definitions/api.GroupRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Group'
+            $ref: '#/definitions/api.GroupResponse'
         "400":
           description: Bad Request
           schema:
@@ -2592,7 +2733,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Asset'
+              $ref: '#/definitions/api.AssetResponse'
             type: array
         "400":
           description: Bad Request
@@ -2626,6 +2767,8 @@ paths:
         name: assetId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -2666,7 +2809,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Asset'
+            $ref: '#/definitions/api.AssetResponse'
         "400":
           description: Bad Request
           schema:
@@ -2715,7 +2858,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/types.Tool'
+              $ref: '#/definitions/api.ToolResponse'
             type: array
         "400":
           description: Bad Request
@@ -2745,14 +2888,14 @@ paths:
         name: tool
         required: true
         schema:
-          $ref: '#/definitions/types.Tool'
+          $ref: '#/definitions/api.ToolRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/types.Tool'
+            $ref: '#/definitions/api.ToolResponse'
         "400":
           description: Bad Request
           schema:
@@ -2780,6 +2923,8 @@ paths:
         name: toolId
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "204":
           description: No Content
@@ -2815,7 +2960,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Tool'
+            $ref: '#/definitions/api.ToolResponse'
         "400":
           description: Bad Request
           schema:
@@ -2849,14 +2994,14 @@ paths:
         name: tool
         required: true
         schema:
-          $ref: '#/definitions/types.Tool'
+          $ref: '#/definitions/api.ToolRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.Tool'
+            $ref: '#/definitions/api.ToolResponse'
         "400":
           description: Bad Request
           schema:

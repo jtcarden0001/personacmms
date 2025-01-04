@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /categories (JSON) done
@@ -41,15 +41,15 @@ func (h *Api) registerCategoryRoutes() {
 //	@Description	Create an asset category
 //	@Tags			categories
 //	@Accept			json
+//	@Param			category	body	apitp.CategoryRequest	true	"Category object"
 //	@Produce		json
-//	@Param			category	body		tp.Category	true	"Category object"
-//	@Success		201			{object}	tp.Category
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201	{object}	apitp.CategoryResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories [post]
 func (h *Api) createCategory(c *gin.Context) {
-	var cat tp.Category
+	var cat apitp.CategoryRequest
 	if err := c.BindJSON(&cat); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return
@@ -64,9 +64,8 @@ func (h *Api) createCategory(c *gin.Context) {
 //	@Summary		Delete an asset category
 //	@Description	Delete an asset category
 //	@Tags			categories
-//	@Accept			json
-//	@Produce		json
 //	@Param			categoryId	path	string	true	"Category Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -82,12 +81,12 @@ func (h *Api) deleteCategory(c *gin.Context) {
 //	@Summary		Get an asset category
 //	@Description	Get a category
 //	@Tags			categories
+//	@Param			categoryId	path	string	true	"Category Id"
 //	@Produce		json
-//	@Param			categoryId	path		string	true	"Category Id"
-//	@Success		200			{object}	tp.Category
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.CategoryResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories/{categoryId} [get]
 func (h *Api) getCategory(c *gin.Context) {
 	cat, err := h.app.GetCategory(c.Param(categoryId))
@@ -100,7 +99,7 @@ func (h *Api) getCategory(c *gin.Context) {
 //	@Description	List asset categories
 //	@Tags			categories
 //	@Produce		json
-//	@Success		200	{object}	[]tp.Category
+//	@Success		200	{object}	[]apitp.CategoryResponse
 //	@Failure		500	{object}	map[string]any
 //	@Router			/categories [get]
 func (h *Api) listCategories(c *gin.Context) {
@@ -113,12 +112,12 @@ func (h *Api) listCategories(c *gin.Context) {
 //	@Summary		List asset categories
 //	@Description	List asset categories
 //	@Tags			categories
+//	@Param			assetId	path	string	true	"Asset Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Success		200		{object}	[]tp.Category
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.CategoryResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/categories [get]
 func (h *Api) listCategoriesByAsset(c *gin.Context) {
 	cats, err := h.app.ListCategoriesByAsset(c.Param(assetId))
@@ -131,16 +130,16 @@ func (h *Api) listCategoriesByAsset(c *gin.Context) {
 //	@Description	Update an asset category
 //	@Tags			categories
 //	@Accept			json
+//	@Param			categoryId	path	string					true	"Category Id"
+//	@Param			category	body	apitp.CategoryRequest	true	"Category object"
 //	@Produce		json
-//	@Param			categoryId	path		string		true	"Category Id"
-//	@Param			category	body		tp.Category	true	"Category object"
-//	@Success		200			{object}	tp.Category
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.CategoryResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/categories/{categoryId} [put]
 func (h *Api) updateCategory(c *gin.Context) {
-	var cat tp.Category
+	var cat apitp.CategoryRequest
 	if err := c.BindJSON(&cat); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{errorKey: err.Error()})
 		return

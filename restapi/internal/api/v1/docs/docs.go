@@ -37,7 +37,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -83,7 +83,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetRequest"
                         }
                     }
                 ],
@@ -91,7 +91,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -131,7 +131,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Asset Title",
+                        "description": "Asset Id",
                         "name": "assetId",
                         "in": "path",
                         "required": true
@@ -141,7 +141,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -182,7 +182,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Asset Title",
+                        "description": "Asset Id",
                         "name": "assetId",
                         "in": "path",
                         "required": true
@@ -193,7 +193,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetRequest"
                         }
                     }
                 ],
@@ -201,7 +201,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -229,7 +229,7 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete an asset",
-                "consumes": [
+                "produces": [
                     "application/json"
                 ],
                 "tags": [
@@ -298,7 +298,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Category"
+                                "$ref": "#/definitions/api.CategoryResponse"
                             }
                         }
                     },
@@ -351,7 +351,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Group"
+                                "$ref": "#/definitions/api.GroupResponse"
                             }
                         }
                     },
@@ -404,7 +404,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Task"
+                                "$ref": "#/definitions/api.TaskResponse"
                             }
                         }
                     },
@@ -457,7 +457,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskRequest"
                         }
                     }
                 ],
@@ -465,7 +465,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -522,7 +522,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -581,7 +581,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskRequest"
                         }
                     }
                 ],
@@ -589,7 +589,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Task"
+                            "$ref": "#/definitions/api.TaskResponse"
                         }
                     },
                     "400": {
@@ -617,6 +617,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tasks"
                 ],
@@ -706,7 +709,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ConsumableQuantity"
+                            "$ref": "#/definitions/api.ConsumableQuantityRequest"
                         }
                     }
                 ],
@@ -714,7 +717,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableQuantityResponse"
                         }
                     },
                     "400": {
@@ -742,6 +745,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate a consumable with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -829,7 +835,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.DateTrigger"
+                                "$ref": "#/definitions/api.DateTriggerResponse"
                             }
                         }
                     },
@@ -889,7 +895,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerRequest"
                         }
                     }
                 ],
@@ -897,7 +903,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -961,7 +967,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -1027,7 +1033,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerRequest"
                         }
                     }
                 ],
@@ -1035,7 +1041,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.DateTrigger"
+                            "$ref": "#/definitions/api.DateTriggerResponse"
                         }
                     },
                     "400": {
@@ -1063,6 +1069,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a date trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "date-triggers"
                 ],
@@ -1150,7 +1159,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.TimeTrigger"
+                                "$ref": "#/definitions/api.TimeTriggerResponse"
                             }
                         }
                     },
@@ -1210,7 +1219,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerRequest"
                         }
                     }
                 ],
@@ -1218,7 +1227,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1282,7 +1291,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1348,7 +1357,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerRequest"
                         }
                     }
                 ],
@@ -1356,7 +1365,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.TimeTrigger"
+                            "$ref": "#/definitions/api.TimeTriggerResponse"
                         }
                     },
                     "400": {
@@ -1384,6 +1393,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a time trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "time-triggers"
                 ],
@@ -1480,7 +1492,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ToolSize"
+                            "$ref": "#/definitions/api.ToolSizeRequest"
                         }
                     }
                 ],
@@ -1488,7 +1500,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolSizeResponse"
                         }
                     },
                     "400": {
@@ -1516,6 +1528,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate a tool with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -1603,7 +1618,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.UsageTrigger"
+                                "$ref": "#/definitions/api.UsageTriggerResponse"
                             }
                         }
                     },
@@ -1663,7 +1678,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerRequest"
                         }
                     }
                 ],
@@ -1671,7 +1686,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1735,7 +1750,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1801,7 +1816,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerRequest"
                         }
                     }
                 ],
@@ -1809,7 +1824,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.UsageTrigger"
+                            "$ref": "#/definitions/api.UsageTriggerResponse"
                         }
                     },
                     "400": {
@@ -1837,6 +1852,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a usage trigger",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "usage-triggers"
                 ],
@@ -1929,7 +1947,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -1957,6 +1975,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate a work order with a task",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "work-orders"
                 ],
@@ -2044,7 +2065,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.WorkOrder"
+                                "$ref": "#/definitions/api.WorkOrderResponse"
                             }
                         }
                     },
@@ -2104,7 +2125,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderRequest"
                         }
                     }
                 ],
@@ -2112,7 +2133,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2176,7 +2197,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2242,7 +2263,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderRequest"
                         }
                     }
                 ],
@@ -2250,7 +2271,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.WorkOrder"
+                            "$ref": "#/definitions/api.WorkOrderResponse"
                         }
                     },
                     "400": {
@@ -2278,6 +2299,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete an asset task work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "work-orders"
                 ],
@@ -2374,7 +2398,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ConsumableQuantity"
+                            "$ref": "#/definitions/api.ConsumableQuantityRequest"
                         }
                     }
                 ],
@@ -2382,7 +2406,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableQuantityResponse"
                         }
                     },
                     "400": {
@@ -2410,6 +2434,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate a consumable with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -2468,6 +2495,9 @@ const docTemplate = `{
         "/assets/{assetId}/work-orders/{workOrderId}/tasks": {
             "delete": {
                 "description": "Disassociate a task with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tasks"
                 ],
@@ -2557,7 +2587,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.ToolSize"
+                            "$ref": "#/definitions/api.ToolSizeRequest"
                         }
                     }
                 ],
@@ -2565,7 +2595,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolSizeResponse"
                         }
                     },
                     "400": {
@@ -2593,6 +2623,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate a tool with a work order",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -2664,7 +2697,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Category"
+                                "$ref": "#/definitions/api.CategoryResponse"
                             }
                         }
                     },
@@ -2696,7 +2729,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryRequest"
                         }
                     }
                 ],
@@ -2704,7 +2737,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2754,7 +2787,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2806,7 +2839,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryRequest"
                         }
                     }
                 ],
@@ -2814,7 +2847,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Category"
+                            "$ref": "#/definitions/api.CategoryResponse"
                         }
                     },
                     "400": {
@@ -2842,9 +2875,6 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete an asset category",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2914,7 +2944,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -2972,7 +3002,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -3000,6 +3030,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate an asset with a category",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "assets"
                 ],
@@ -3080,7 +3113,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -3124,7 +3157,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Consumable"
+                                "$ref": "#/definitions/api.ConsumableResponse"
                             }
                         }
                     },
@@ -3170,7 +3203,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableRequest"
                         }
                     }
                 ],
@@ -3178,7 +3211,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3228,7 +3261,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3280,7 +3313,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableRequest"
                         }
                     }
                 ],
@@ -3288,7 +3321,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Consumable"
+                            "$ref": "#/definitions/api.ConsumableResponse"
                         }
                     },
                     "400": {
@@ -3316,6 +3349,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a consumable",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "consumables"
                 ],
@@ -3373,7 +3409,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Group"
+                                "$ref": "#/definitions/api.GroupResponse"
                             }
                         }
                     },
@@ -3412,7 +3448,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupRequest"
                         }
                     }
                 ],
@@ -3420,7 +3456,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3463,7 +3499,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3515,7 +3551,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupRequest"
                         }
                     }
                 ],
@@ -3523,7 +3559,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Group"
+                            "$ref": "#/definitions/api.GroupResponse"
                         }
                     },
                     "400": {
@@ -3551,6 +3587,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a group",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "groups"
                 ],
@@ -3617,7 +3656,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Asset"
+                                "$ref": "#/definitions/api.AssetResponse"
                             }
                         }
                     },
@@ -3675,7 +3714,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Asset"
+                            "$ref": "#/definitions/api.AssetResponse"
                         }
                     },
                     "400": {
@@ -3703,6 +3742,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Disassociate an asset with a group",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "assets"
                 ],
@@ -3797,7 +3839,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/types.Tool"
+                                "$ref": "#/definitions/api.ToolResponse"
                             }
                         }
                     },
@@ -3843,7 +3885,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolRequest"
                         }
                     }
                 ],
@@ -3851,7 +3893,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3901,7 +3943,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3953,7 +3995,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolRequest"
                         }
                     }
                 ],
@@ -3961,7 +4003,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.Tool"
+                            "$ref": "#/definitions/api.ToolResponse"
                         }
                     },
                     "400": {
@@ -3989,6 +4031,9 @@ const docTemplate = `{
             },
             "delete": {
                 "description": "Delete a tool",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "tools"
                 ],
@@ -4092,7 +4137,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "types.Asset": {
+        "api.AssetRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4121,7 +4166,36 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Category": {
+        "api.AssetResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "make": {
+                    "type": "string"
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "modelNumber": {
+                    "type": "string"
+                },
+                "serialNumber": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.CategoryRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4135,18 +4209,21 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Consumable": {
+        "api.CategoryResponse": {
             "type": "object",
             "required": [
                 "title"
             ],
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }
             }
         },
-        "types.ConsumableQuantity": {
+        "api.ConsumableQuantityRequest": {
             "type": "object",
             "required": [
                 "quantity"
@@ -4157,15 +4234,18 @@ const docTemplate = `{
                 }
             }
         },
-        "types.DateTrigger": {
+        "api.ConsumableQuantityResponse": {
             "type": "object",
+            "required": [
+                "quantity"
+            ],
             "properties": {
-                "scheduled_date": {
+                "quantity": {
                     "type": "string"
                 }
             }
         },
-        "types.Group": {
+        "api.ConsumableRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4176,7 +4256,56 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Task": {
+        "api.ConsumableResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.DateTriggerRequest": {
+            "type": "object",
+            "properties": {
+                "scheduled_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.DateTriggerResponse": {
+            "type": "object",
+            "properties": {
+                "scheduled_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.GroupRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.GroupResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TaskRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4190,7 +4319,21 @@ const docTemplate = `{
                 }
             }
         },
-        "types.TimeTrigger": {
+        "api.TaskResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "instructions": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TimeTriggerRequest": {
             "type": "object",
             "required": [
                 "quantity",
@@ -4205,7 +4348,22 @@ const docTemplate = `{
                 }
             }
         },
-        "types.Tool": {
+        "api.TimeTriggerResponse": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "time_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "time_unit": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ToolRequest": {
             "type": "object",
             "required": [
                 "title"
@@ -4216,7 +4374,18 @@ const docTemplate = `{
                 }
             }
         },
-        "types.ToolSize": {
+        "api.ToolResponse": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ToolSizeRequest": {
             "type": "object",
             "properties": {
                 "size": {
@@ -4224,7 +4393,15 @@ const docTemplate = `{
                 }
             }
         },
-        "types.UsageTrigger": {
+        "api.ToolSizeResponse": {
+            "type": "object",
+            "properties": {
+                "size": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UsageTriggerRequest": {
             "type": "object",
             "required": [
                 "quantity",
@@ -4239,7 +4416,52 @@ const docTemplate = `{
                 }
             }
         },
-        "types.WorkOrder": {
+        "api.UsageTriggerResponse": {
+            "type": "object",
+            "required": [
+                "quantity",
+                "usage_unit"
+            ],
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "usage_unit": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.WorkOrderRequest": {
+            "type": "object",
+            "required": [
+                "status",
+                "title"
+            ],
+            "properties": {
+                "completedDate": {
+                    "type": "string"
+                },
+                "cumulativeHours": {
+                    "type": "integer"
+                },
+                "cumulativeMiles": {
+                    "type": "integer"
+                },
+                "instructions": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.WorkOrderResponse": {
             "type": "object",
             "required": [
                 "status",

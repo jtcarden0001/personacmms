@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	_ "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 var timeUnitGp = "time-units"

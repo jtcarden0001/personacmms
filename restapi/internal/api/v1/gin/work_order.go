@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // - POST /assets/{assetId}/work-orders (JSON) done
@@ -42,14 +42,14 @@ func (h *Api) registerWorkOrderRoutes() {
 //	@Summary		Associate a work order with a task
 //	@Description	Associate a work order with a task
 //	@Tags			work-orders
+//	@Param			assetId		path	string	true	"Asset ID"
+//	@Param			taskId		path	string	true	"Task ID"
+//	@Param			workOrderId	path	string	true	"Work Order ID"
 //	@Produce		json
-//	@Param			assetId		path		string	true	"Asset ID"
-//	@Param			taskId		path		string	true	"Task ID"
-//	@Param			workOrderId	path		string	true	"Work Order ID"
-//	@Success		200			{object}	tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.WorkOrderResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/tasks/{taskId}/work-orders/{workOrderId} [put]
 func (h *Api) associateWorkOrderWithTask(c *gin.Context) {
 	workOrder, err := h.app.AssociateWorkOrderWithTask(c.Param(assetId), c.Param(taskId), c.Param(workOrderId))
@@ -62,17 +62,17 @@ func (h *Api) associateWorkOrderWithTask(c *gin.Context) {
 //	@Description	Create a work order
 //	@Tags			work-orders
 //	@Accept			json
+//	@Param			assetId		path	string					true	"Asset Id"
+//	@Param			taskId		path	string					true	"Asset Task Id"
+//	@Param			workOrder	body	apitp.WorkOrderRequest	true	"Work Order object"
 //	@Produce		json
-//	@Param			assetId		path		string			true	"Asset Id"
-//	@Param			taskId		path		string			true	"Asset Task Id"
-//	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"
-//	@Success		201			{object}	tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		201	{object}	apitp.WorkOrderResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders [post]
 func (h *Api) createWorkOrder(c *gin.Context) {
-	var workOrder tp.WorkOrder
+	var workOrder apitp.WorkOrderRequest
 	if err := c.BindJSON(&workOrder); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -90,6 +90,7 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 //	@Param			assetId		path	string	true	"Asset Id"
 //	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -108,6 +109,7 @@ func (h *Api) deleteWorkOrder(c *gin.Context) {
 //	@Param			assetId		path	string	true	"Asset Id"
 //	@Param			taskId		path	string	true	"Asset Task Id"
 //	@Param			workOrderId	path	string	true	"Work Order Id"
+//	@Produce		json
 //	@Success		204
 //	@Failure		400	{object}	map[string]any
 //	@Failure		404	{object}	map[string]any
@@ -123,14 +125,14 @@ func (h *Api) disassociateWorkOrderWithTask(c *gin.Context) {
 //	@Summary		Get an asset task work order
 //	@Description	Get an asset task work order
 //	@Tags			work-orders
+//	@Param			assetId		path	string	true	"Asset Id"
+//	@Param			taskId		path	string	true	"Asset Task Id"
+//	@Param			workOrderId	path	string	true	"Work Order Id"
 //	@Produce		json
-//	@Param			assetId		path		string	true	"Asset Id"
-//	@Param			taskId		path		string	true	"Asset Task Id"
-//	@Param			workOrderId	path		string	true	"Work Order Id"
-//	@Success		200			{object}	tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.WorkOrderResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId} [get]
 func (h *Api) getWorkOrder(c *gin.Context) {
 	workOrder, err := h.app.GetWorkOrder(c.Param(assetId), c.Param(workOrderId))
@@ -142,13 +144,13 @@ func (h *Api) getWorkOrder(c *gin.Context) {
 //	@Summary		List asset task work orders
 //	@Description	List all asset task work orders
 //	@Tags			work-orders
+//	@Param			assetId	path	string	true	"Asset Id"
+//	@Param			taskId	path	string	true	"Asset Task Id"
 //	@Produce		json
-//	@Param			assetId	path		string	true	"Asset Id"
-//	@Param			taskId	path		string	true	"Asset Task Id"
-//	@Success		200		{object}	[]tp.WorkOrder
-//	@Failure		400		{object}	map[string]any
-//	@Failure		404		{object}	map[string]any
-//	@Failure		500		{object}	map[string]any
+//	@Success		200	{object}	[]apitp.WorkOrderResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders [get]
 func (h *Api) listWorkOrders(c *gin.Context) {
 	workOrders, err := h.app.ListWorkOrdersByAsset(c.Param(assetId))
@@ -161,18 +163,18 @@ func (h *Api) listWorkOrders(c *gin.Context) {
 //	@Description	Update an asset task work order
 //	@Tags			work-orders
 //	@Accept			json
+//	@Param			assetId		path	string					true	"Asset Id"
+//	@Param			taskId		path	string					true	"Asset Task Id"
+//	@Param			workOrderId	path	string					true	"Work Order Id"
+//	@Param			workOrder	body	apitp.WorkOrderRequest	true	"Work Order object"
 //	@Produce		json
-//	@Param			assetId		path		string			true	"Asset Id"
-//	@Param			taskId		path		string			true	"Asset Task Id"
-//	@Param			workOrderId	path		string			true	"Work Order Id"
-//	@Param			workOrder	body		tp.WorkOrder	true	"Work Order object"
-//	@Success		200			{object}	tp.WorkOrder
-//	@Failure		400			{object}	map[string]any
-//	@Failure		404			{object}	map[string]any
-//	@Failure		500			{object}	map[string]any
+//	@Success		200	{object}	apitp.WorkOrderResponse
+//	@Failure		400	{object}	map[string]any
+//	@Failure		404	{object}	map[string]any
+//	@Failure		500	{object}	map[string]any
 //	@Router			/assets/{assetId}/work-orders/{workOrderId} [put]
 func (h *Api) updateWorkOrder(c *gin.Context) {
-	var workOrder tp.WorkOrder
+	var workOrder apitp.WorkOrderRequest
 	if err := c.BindJSON(&workOrder); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
