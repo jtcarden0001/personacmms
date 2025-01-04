@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_TasksAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdTasksGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 
@@ -38,7 +39,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdTasksPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 
@@ -52,7 +53,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdTasksTaskIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -66,7 +67,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdTasksTaskIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -81,7 +82,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdTasksTaskIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -96,7 +97,7 @@ func Test_openapi_TasksAPIService(t *testing.T) {
 
 	t.Run("Test TasksAPIService AssetsAssetIdWorkOrdersWorkOrderIdTasksDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var workOrderId string

@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_TimeUnitsAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_TimeUnitsAPIService(t *testing.T) {
 
 	t.Run("Test TimeUnitsAPIService TimeUnitsGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.TimeUnitsAPI.TimeUnitsGet(context.Background()).Execute()
 

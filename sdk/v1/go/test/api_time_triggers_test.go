@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_TimeTriggersAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_TimeTriggersAPIService(t *testing.T) {
 
 	t.Run("Test TimeTriggersAPIService AssetsAssetIdTasksTaskIdTimeTriggersGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -39,7 +40,7 @@ func Test_openapi_TimeTriggersAPIService(t *testing.T) {
 
 	t.Run("Test TimeTriggersAPIService AssetsAssetIdTasksTaskIdTimeTriggersPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -54,7 +55,7 @@ func Test_openapi_TimeTriggersAPIService(t *testing.T) {
 
 	t.Run("Test TimeTriggersAPIService AssetsAssetIdTasksTaskIdTimeTriggersTimeTriggerIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -69,7 +70,7 @@ func Test_openapi_TimeTriggersAPIService(t *testing.T) {
 
 	t.Run("Test TimeTriggersAPIService AssetsAssetIdTasksTaskIdTimeTriggersTimeTriggerIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -85,7 +86,7 @@ func Test_openapi_TimeTriggersAPIService(t *testing.T) {
 
 	t.Run("Test TimeTriggersAPIService AssetsAssetIdTasksTaskIdTimeTriggersTimeTriggerIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string

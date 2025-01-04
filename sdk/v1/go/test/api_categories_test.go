@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_CategoriesAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService AssetsAssetIdCategoriesGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 
@@ -38,7 +39,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService CategoriesCategoryIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var categoryId string
 
@@ -51,7 +52,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService CategoriesCategoryIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var categoryId string
 
@@ -65,7 +66,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService CategoriesCategoryIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var categoryId string
 
@@ -79,7 +80,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService CategoriesGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.CategoriesAPI.CategoriesGet(context.Background()).Execute()
 
@@ -91,7 +92,7 @@ func Test_openapi_CategoriesAPIService(t *testing.T) {
 
 	t.Run("Test CategoriesAPIService CategoriesPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.CategoriesAPI.CategoriesPost(context.Background()).Execute()
 

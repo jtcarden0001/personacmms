@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_WorkOrdersAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdTasksTaskIdWorkOrdersWorkOrderIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -39,7 +40,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdTasksTaskIdWorkOrdersWorkOrderIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -55,7 +56,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdWorkOrdersGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -70,7 +71,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdWorkOrdersPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -85,7 +86,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdWorkOrdersWorkOrderIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -100,7 +101,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdWorkOrdersWorkOrderIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -116,7 +117,7 @@ func Test_openapi_WorkOrdersAPIService(t *testing.T) {
 
 	t.Run("Test WorkOrdersAPIService AssetsAssetIdWorkOrdersWorkOrderIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string

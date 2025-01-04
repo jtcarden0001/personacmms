@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_GroupsAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService AssetsAssetIdGroupsGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 
@@ -38,7 +39,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService GroupsGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.GroupsAPI.GroupsGet(context.Background()).Execute()
 
@@ -50,7 +51,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService GroupsGroupIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var groupId string
 
@@ -63,7 +64,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService GroupsGroupIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var groupId string
 
@@ -77,7 +78,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService GroupsGroupIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var groupId string
 
@@ -91,7 +92,7 @@ func Test_openapi_GroupsAPIService(t *testing.T) {
 
 	t.Run("Test GroupsAPIService GroupsPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.GroupsAPI.GroupsPost(context.Background()).Execute()
 

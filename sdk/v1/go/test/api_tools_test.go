@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/jtcarden0001/personacmms/sdk/v1/go"
 )
 
 func Test_openapi_ToolsAPIService(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService AssetsAssetIdTasksTaskIdToolsToolIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -39,7 +40,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService AssetsAssetIdTasksTaskIdToolsToolIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var taskId string
@@ -55,7 +56,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService AssetsAssetIdWorkOrdersWorkOrderIdToolsToolIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var workOrderId string
@@ -70,7 +71,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService AssetsAssetIdWorkOrdersWorkOrderIdToolsToolIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var assetId string
 		var workOrderId string
@@ -86,7 +87,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService ToolsGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ToolsAPI.ToolsGet(context.Background()).Execute()
 
@@ -98,7 +99,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService ToolsPost", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.ToolsAPI.ToolsPost(context.Background()).Execute()
 
@@ -110,7 +111,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService ToolsToolIdDelete", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var toolId string
 
@@ -123,7 +124,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService ToolsToolIdGet", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var toolId string
 
@@ -137,7 +138,7 @@ func Test_openapi_ToolsAPIService(t *testing.T) {
 
 	t.Run("Test ToolsAPIService ToolsToolIdPut", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		// t.Skip("skip test")  // remove to run test
 
 		var toolId string
 
