@@ -54,8 +54,8 @@ func (h *Api) createDateTrigger(c *gin.Context) {
 		return
 	}
 
-	dateTrigger, err := h.app.CreateDateTrigger(c.Param(assetId), c.Param(taskId), dateTrigger)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, dateTrigger))
+	dateTriggerr, err := h.app.CreateDateTrigger(c.Param(assetId), c.Param(taskId), dateTrigger)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, dateTriggerr))
 }
 
 // DeleteDateTrigger godoc
@@ -137,6 +137,6 @@ func (h *Api) updateDateTrigger(c *gin.Context) {
 		return
 	}
 
-	dateTrigger, err := h.app.UpdateDateTrigger(c.Param(assetId), c.Param(taskId), c.Param(dateTriggerId), dateTrigger)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTrigger))
+	dateTriggerr, err := h.app.UpdateDateTrigger(c.Param(assetId), c.Param(taskId), c.Param(dateTriggerId), dateTrigger)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, dateTriggerr))
 }

@@ -104,8 +104,8 @@ func (h *Api) createAsset(c *gin.Context) {
 		return
 	}
 
-	a, err := h.app.CreateAsset(a)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, a))
+	ar, err := h.app.CreateAsset(a)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, ar))
 }
 
 // deleteAsset godoc
@@ -267,6 +267,6 @@ func (h *Api) updateAsset(c *gin.Context) {
 		return
 	}
 
-	a, err := h.app.UpdateAsset(c.Param(assetId), a)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, a))
+	ar, err := h.app.UpdateAsset(c.Param(assetId), a)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, ar))
 }

@@ -54,8 +54,8 @@ func (h *Api) createTimeTrigger(c *gin.Context) {
 		return
 	}
 
-	timeTrigger, err := h.app.CreateTimeTrigger(c.Param(assetId), c.Param(taskId), timeTrigger)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, timeTrigger))
+	timeTriggerr, err := h.app.CreateTimeTrigger(c.Param(assetId), c.Param(taskId), timeTrigger)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, timeTriggerr))
 }
 
 // DeleteTimeTrigger godoc
@@ -137,6 +137,6 @@ func (h *Api) updateTimeTrigger(c *gin.Context) {
 		return
 	}
 
-	timeTrigger, err := h.app.UpdateTimeTrigger(c.Param(assetId), c.Param(taskId), c.Param(timeTriggerId), timeTrigger)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeTrigger))
+	timeTriggerr, err := h.app.UpdateTimeTrigger(c.Param(assetId), c.Param(taskId), c.Param(timeTriggerId), timeTrigger)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, timeTriggerr))
 }

@@ -56,8 +56,8 @@ func (h *Api) createTask(c *gin.Context) {
 		return
 	}
 
-	task, err := h.app.CreateTask(c.Param(assetId), task)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, task))
+	taskr, err := h.app.CreateTask(c.Param(assetId), task)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, taskr))
 }
 
 // DeleteTask godoc
@@ -153,6 +153,6 @@ func (h *Api) updateTask(c *gin.Context) {
 		return
 	}
 
-	task, err := h.app.UpdateTask(c.Param(assetId), c.Param(taskId), task)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, task))
+	taskr, err := h.app.UpdateTask(c.Param(assetId), c.Param(taskId), task)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, taskr))
 }

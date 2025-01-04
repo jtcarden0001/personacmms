@@ -51,8 +51,8 @@ func (h *Api) createUsageTrigger(c *gin.Context) {
 		return
 	}
 
-	usageTrigger, err := h.app.CreateUsageTrigger(c.Param(assetId), c.Param(taskId), usageTrigger)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, usageTrigger))
+	usageTriggerr, err := h.app.CreateUsageTrigger(c.Param(assetId), c.Param(taskId), usageTrigger)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, usageTriggerr))
 }
 
 // DeleteUsageTrigger godoc
@@ -134,6 +134,6 @@ func (h *Api) updateUsageTrigger(c *gin.Context) {
 		return
 	}
 
-	usageTrigger, err := h.app.UpdateUsageTrigger(c.Param(assetId), c.Param(taskId), c.Param(usageTriggerId), usageTrigger)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, usageTrigger))
+	usageTriggerr, err := h.app.UpdateUsageTrigger(c.Param(assetId), c.Param(taskId), c.Param(usageTriggerId), usageTrigger)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, usageTriggerr))
 }

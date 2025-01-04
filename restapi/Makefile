@@ -36,7 +36,7 @@ format:
 
 # code generation
 swag:
-	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types,internal/api/v1/gin
+	swag init -g ../../internal/api/v1/gin/gin.go -o internal/api/v1/docs -d cmd/main,internal/types/api,internal/api/v1/gin
 	swag fmt
 
 openapi:

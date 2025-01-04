@@ -64,8 +64,8 @@ func (h *Api) associateConsumableWithTask(c *gin.Context) {
 		return
 	}
 
-	consumable, err := h.app.AssociateConsumableWithTask(c.Param(assetId), c.Param(taskId), c.Param(consumableId), consumable)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
+	consumabler, err := h.app.AssociateConsumableWithTask(c.Param(assetId), c.Param(taskId), c.Param(consumableId), consumable)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumabler))
 }
 
 // AssociateConsumableWithWorkOrder godoc
@@ -91,8 +91,8 @@ func (h *Api) associateConsumableWithWorkOrder(c *gin.Context) {
 		return
 	}
 
-	consumable, err := h.app.AssociateConsumableWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(consumableId), consumable)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
+	consumabler, err := h.app.AssociateConsumableWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(consumableId), consumable)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumabler))
 }
 
 // CreateConsumable godoc
@@ -115,8 +115,8 @@ func (h *Api) createConsumable(c *gin.Context) {
 		return
 	}
 
-	consumable, err := h.app.CreateConsumable(consumable)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, consumable))
+	consumabler, err := h.app.CreateConsumable(consumable)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, consumabler))
 }
 
 // DeleteConsumable godoc
@@ -228,6 +228,6 @@ func (h *Api) updateConsumable(c *gin.Context) {
 		return
 	}
 
-	consumable, err := h.app.UpdateConsumable(c.Param(consumableId), consumable)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumable))
+	consumabler, err := h.app.UpdateConsumable(c.Param(consumableId), consumable)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, consumabler))
 }

@@ -55,8 +55,8 @@ func (h *Api) createCategory(c *gin.Context) {
 		return
 	}
 
-	cat, err := h.app.CreateCategory(cat)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, cat))
+	catr, err := h.app.CreateCategory(cat)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, catr))
 }
 
 // deleteCategory godoc
@@ -145,6 +145,6 @@ func (h *Api) updateCategory(c *gin.Context) {
 		return
 	}
 
-	newCat, err := h.app.UpdateCategory(c.Param(categoryId), cat)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, newCat))
+	catr, err := h.app.UpdateCategory(c.Param(categoryId), cat)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, catr))
 }

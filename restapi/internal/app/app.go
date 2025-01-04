@@ -3,103 +3,103 @@ package app
 import (
 	imp "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp"
 	st "github.com/jtcarden0001/personacmms/restapi/internal/store"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 // App layer hosts the business logic and forwards simple requests to the Store layer.
 type App interface {
 	// asset
-	AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error)
-	AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error)
-	CreateAsset(asset tp.Asset) (tp.Asset, error)
+	AssociateAssetWithCategory(assetId string, categoryId string) (apitp.AssetResponse, error)
+	AssociateAssetWithGroup(assetId string, groupId string) (apitp.AssetResponse, error)
+	CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error)
 	DeleteAsset(assetId string) error
 	DisassociateAssetWithCategory(assetId string, categoryId string) error
 	DisassociateAssetWithGroup(assetId string, groupId string) error
-	GetAsset(assetId string) (tp.Asset, error)
-	ListAssets() ([]tp.Asset, error)
-	ListAssetsByCategory(categoryId string) ([]tp.Asset, error)
-	ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error)
-	ListAssetsByGroup(groupId string) ([]tp.Asset, error)
-	UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error)
+	GetAsset(assetId string) (apitp.AssetResponse, error)
+	ListAssets() ([]apitp.AssetResponse, error)
+	ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, error)
+	ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]apitp.AssetResponse, error)
+	ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error)
+	UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.AssetResponse, error)
 
 	// category
-	CreateCategory(category tp.Category) (tp.Category, error)
+	CreateCategory(category apitp.CategoryRequest) (apitp.CategoryResponse, error)
 	DeleteCategory(categoryId string) error
-	GetCategory(categoryId string) (tp.Category, error)
-	ListCategories() ([]tp.Category, error)
-	ListCategoriesByAsset(assetId string) ([]tp.Category, error)
-	UpdateCategory(categoryId string, category tp.Category) (tp.Category, error)
+	GetCategory(categoryId string) (apitp.CategoryResponse, error)
+	ListCategories() ([]apitp.CategoryResponse, error)
+	ListCategoriesByAsset(assetId string) ([]apitp.CategoryResponse, error)
+	UpdateCategory(categoryId string, category apitp.CategoryRequest) (apitp.CategoryResponse, error)
 
 	// consumable
-	AssociateConsumableWithTask(assetId string, taskId string, consumableId string, consumableQuantity tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
-	AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, consumableQuantity tp.ConsumableQuantity) (tp.ConsumableQuantity, error)
-	CreateConsumable(consumable tp.Consumable) (tp.Consumable, error)
+	AssociateConsumableWithTask(assetId string, taskId string, consumableId string, consumableQuantity apitp.ConsumableQuantityRequest) (apitp.ConsumableQuantityResponse, error)
+	AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, consumableQuantity apitp.ConsumableQuantityRequest) (apitp.ConsumableQuantityResponse, error)
+	CreateConsumable(consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error)
 	DeleteConsumable(consumableId string) error
 	DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error
 	DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error
-	GetConsumable(consumableId string) (tp.Consumable, error)
-	ListConsumables() ([]tp.Consumable, error)
-	UpdateConsumable(consumableId string, consumable tp.Consumable) (tp.Consumable, error)
+	GetConsumable(consumableId string) (apitp.ConsumableResponse, error)
+	ListConsumables() ([]apitp.ConsumableRequest, error)
+	UpdateConsumable(consumableId string, consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error)
 
 	// date trigger
-	CreateDateTrigger(assetId string, taskId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error)
+	CreateDateTrigger(assetId string, taskId string, dateTrigger apitp.DateTriggerRequest) (apitp.DateTriggerResponse, error)
 	DeleteDateTrigger(assetId string, taskId string, dateTriggerId string) error
-	GetDateTrigger(assetId string, taskId string, dateTriggerId string) (tp.DateTrigger, error)
-	ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]tp.DateTrigger, error)
-	UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger tp.DateTrigger) (tp.DateTrigger, error)
+	GetDateTrigger(assetId string, taskId string, dateTriggerId string) (apitp.DateTriggerResponse, error)
+	ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]apitp.DateTriggerResponse, error)
+	UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger apitp.DateTriggerRequest) (apitp.DateTriggerResponse, error)
 
 	// group
-	CreateGroup(group tp.Group) (tp.Group, error)
+	CreateGroup(group apitp.GroupRequest) (apitp.GroupResponse, error)
 	DeleteGroup(groupId string) error
-	GetGroup(groupId string) (tp.Group, error)
-	ListGroups() ([]tp.Group, error)
-	ListGroupsByAsset(assetId string) ([]tp.Group, error)
-	UpdateGroup(groupId string, group tp.Group) (tp.Group, error)
+	GetGroup(groupId string) (apitp.GroupResponse, error)
+	ListGroups() ([]apitp.GroupRequest, error)
+	ListGroupsByAsset(assetId string) ([]apitp.GroupResponse, error)
+	UpdateGroup(groupId string, group apitp.GroupRequest) (apitp.GroupResponse, error)
 
 	// task
-	CreateTask(assetId string, task tp.Task) (tp.Task, error)
+	CreateTask(assetId string, task apitp.TaskRequest) (apitp.TaskResponse, error)
 	DeleteTask(assetId string, taskId string) error
 	DisassociateTaskWithWorkOrder(assetId string, taskId string, workOrderId string) error
-	GetTask(assetId string, taskId string) (tp.Task, error)
-	ListTasksByAsset(assetId string) ([]tp.Task, error)
-	UpdateTask(assetId string, taskId string, task tp.Task) (tp.Task, error)
+	GetTask(assetId string, taskId string) (apitp.TaskResponse, error)
+	ListTasksByAsset(assetId string) ([]apitp.TaskResponse, error)
+	UpdateTask(assetId string, taskId string, task apitp.TaskRequest) (apitp.TaskResponse, error)
 
 	// time trigger
-	CreateTimeTrigger(assetId string, taskId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error)
+	CreateTimeTrigger(assetId string, taskId string, timeTrigger apitp.TimeTriggerRequest) (apitp.TimeTriggerResponse, error)
 	DeleteTimeTrigger(assetId string, taskId string, timeTriggerId string) error
-	GetTimeTrigger(assetId string, taskId string, timeTriggerId string) (tp.TimeTrigger, error)
-	ListTimeTriggersByAssetAndTask(assetId string, taskId string) ([]tp.TimeTrigger, error)
+	GetTimeTrigger(assetId string, taskId string, timeTriggerId string) (apitp.TimeTriggerResponse, error)
+	ListTimeTriggersByAssetAndTask(assetId string, taskId string) ([]apitp.TimeTriggerResponse, error)
 	ListTimeTriggerUnits() ([]string, error)
-	UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger tp.TimeTrigger) (tp.TimeTrigger, error)
+	UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger apitp.TimeTriggerRequest) (apitp.TimeTriggerResponse, error)
 
 	// tool
-	AssociateToolWithTask(assetId string, taskId string, toolId string, toolSize tp.ToolSize) (tp.ToolSize, error)
-	AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, toolSize tp.ToolSize) (tp.ToolSize, error)
-	CreateTool(tool tp.Tool) (tp.Tool, error)
+	AssociateToolWithTask(assetId string, taskId string, toolId string, toolSize apitp.ToolSizeRequest) (apitp.ToolSizeResponse, error)
+	AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, toolSize apitp.ToolSizeRequest) (apitp.ToolSizeResponse, error)
+	CreateTool(tool apitp.ToolRequest) (apitp.ToolResponse, error)
 	DeleteTool(toolId string) error
 	DisassociateToolWithTask(assetId string, taskId string, toolId string) error
 	DisassociateToolWithWorkOrder(assetId string, workOrderId string, toolId string) error
-	GetTool(toolId string) (tp.Tool, error)
-	ListTools() ([]tp.Tool, error)
-	UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error)
+	GetTool(toolId string) (apitp.ToolResponse, error)
+	ListTools() ([]apitp.ToolResponse, error)
+	UpdateTool(toolId string, tool apitp.ToolRequest) (apitp.ToolResponse, error)
 
 	// usage trigger
-	CreateUsageTrigger(assetId string, taskId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error)
+	CreateUsageTrigger(assetId string, taskId string, usageTrigger apitp.UsageTriggerRequest) (apitp.UsageTriggerResponse, error)
 	DeleteUsageTrigger(assetId string, taskId string, usageTriggerId string) error
-	GetUsageTrigger(assetId string, taskId string, usageTriggerId string) (tp.UsageTrigger, error)
-	ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]tp.UsageTrigger, error)
+	GetUsageTrigger(assetId string, taskId string, usageTriggerId string) (apitp.UsageTriggerResponse, error)
+	ListUsageTriggersByAssetAndTask(assetId string, taskId string) ([]apitp.UsageTriggerResponse, error)
 	ListUsageTriggerUnits() ([]string, error)
-	UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger tp.UsageTrigger) (tp.UsageTrigger, error)
+	UpdateUsageTrigger(assetId string, taskId string, usageTriggerId string, usageTrigger apitp.UsageTriggerRequest) (apitp.UsageTriggerResponse, error)
 
 	// work order
-	AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (tp.WorkOrder, error)
-	CreateWorkOrder(assetId string, workOrder tp.WorkOrder) (tp.WorkOrder, error)
+	AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (apitp.WorkOrderResponse, error)
+	CreateWorkOrder(assetId string, workOrder apitp.WorkOrderRequest) (apitp.WorkOrderResponse, error)
 	DeleteWorkOrder(assetId string, workOrderId string) error
 	DisassociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) error
-	GetWorkOrder(assetId string, workOrderId string) (tp.WorkOrder, error)
-	ListWorkOrdersByAsset(assetId string) ([]tp.WorkOrder, error)
+	GetWorkOrder(assetId string, workOrderId string) (apitp.WorkOrderResponse, error)
+	ListWorkOrdersByAsset(assetId string) ([]apitp.WorkOrderResponse, error)
 	ListWorkOrderStatus() ([]string, error)
-	UpdateWorkOrder(assetId string, workOrderId string, workOrder tp.WorkOrder) (tp.WorkOrder, error)
+	UpdateWorkOrder(assetId string, workOrderId string, workOrder apitp.WorkOrderRequest) (apitp.WorkOrderResponse, error)
 }
 
 type AppTest interface {

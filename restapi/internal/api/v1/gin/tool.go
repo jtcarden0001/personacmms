@@ -64,8 +64,8 @@ func (h *Api) associateToolWithTask(c *gin.Context) {
 		return
 	}
 
-	tool, err := h.app.AssociateToolWithTask(c.Param(assetId), c.Param(taskId), c.Param(toolId), tool)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
+	toolr, err := h.app.AssociateToolWithTask(c.Param(assetId), c.Param(taskId), c.Param(toolId), tool)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, toolr))
 }
 
 // AssociateToolWithWorkOrder godoc
@@ -91,8 +91,8 @@ func (h *Api) associateToolWithWorkOrder(c *gin.Context) {
 		return
 	}
 
-	tool, err := h.app.AssociateToolWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(toolId), tool)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
+	toolr, err := h.app.AssociateToolWithWorkOrder(c.Param(assetId), c.Param(workOrderId), c.Param(toolId), tool)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, toolr))
 }
 
 // CreateTool godoc
@@ -115,8 +115,8 @@ func (h *Api) createTool(c *gin.Context) {
 		return
 	}
 
-	tool, err := h.app.CreateTool(tool)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, tool))
+	toolr, err := h.app.CreateTool(tool)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, toolr))
 }
 
 // DeleteTool godoc
@@ -228,6 +228,6 @@ func (h *Api) updateTool(c *gin.Context) {
 		return
 	}
 
-	tool, err := h.app.UpdateTool(c.Param(toolId), tool)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, tool))
+	toolr, err := h.app.UpdateTool(c.Param(toolId), tool)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, toolr))
 }

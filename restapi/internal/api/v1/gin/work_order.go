@@ -78,8 +78,8 @@ func (h *Api) createWorkOrder(c *gin.Context) {
 		return
 	}
 
-	workOrder, err := h.app.CreateWorkOrder(c.Param(assetId), workOrder)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, workOrder))
+	workOrderr, err := h.app.CreateWorkOrder(c.Param(assetId), workOrder)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, workOrderr))
 }
 
 // DeleteTaskWorkOrder godoc
@@ -180,6 +180,6 @@ func (h *Api) updateWorkOrder(c *gin.Context) {
 		return
 	}
 
-	workOrder, err := h.app.UpdateWorkOrder(c.Param(assetId), c.Param(workOrderId), workOrder)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrder))
+	workOrderr, err := h.app.UpdateWorkOrder(c.Param(assetId), c.Param(workOrderId), workOrder)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, workOrderr))
 }

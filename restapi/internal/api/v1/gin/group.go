@@ -54,8 +54,8 @@ func (h *Api) createGroup(c *gin.Context) {
 		return
 	}
 
-	group, err := h.app.CreateGroup(group)
-	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, group))
+	groupr, err := h.app.CreateGroup(group)
+	c.JSON(getStatus(err, http.StatusCreated), getResponse(err, groupr))
 }
 
 // DeleteGroup godoc
@@ -145,6 +145,6 @@ func (h *Api) updateGroup(c *gin.Context) {
 		return
 	}
 
-	group, err := h.app.UpdateGroup(c.Param(groupId), group)
-	c.JSON(getStatus(err, http.StatusOK), getResponse(err, group))
+	groupr, err := h.app.UpdateGroup(c.Param(groupId), group)
+	c.JSON(getStatus(err, http.StatusOK), getResponse(err, groupr))
 }
