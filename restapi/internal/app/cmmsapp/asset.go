@@ -4,52 +4,73 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
 // TODO: ensure the returned Asset hsa a list of references for the associated entities (categories and groups)
 
-func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (tp.Asset, error) {
+func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (apitp.AssetResponse, error) {
 	aUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
 	cUuid, err := uuid.Parse(categoryId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
-	return a.db.AssociateAssetWithCategory(aUuid, cUuid)
+	stAsset, err := a.db.AssociateAssetWithCategory(aUuid, cUuid)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithCategory failed")
+	}
+
+	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
 }
 
-func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (tp.Asset, error) {
+func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (apitp.AssetResponse, error) {
 	aUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
 	gUuid, err := uuid.Parse(groupId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
-	return a.db.AssociateAssetWithGroup(aUuid, gUuid)
+	stAsset, err := a.db.AssociateAssetWithGroup(aUuid, gUuid)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithGroup failed")
+	}
+
+	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
 }
 
-func (a *App) CreateAsset(asset tp.Asset) (tp.Asset, error) {
+func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error) {
 	if asset.Id != uuid.Nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
 	}
 	asset.Id = uuid.New()
 	err := a.validateAsset(asset)
 	if err != nil {
-		return tp.Asset{}, errors.Wrapf(err, "CreateAsset validation failed")
+		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset validation failed")
 	}
 
-	return a.db.CreateAsset(asset)
+	stAssetRequest, err := cv.ConvertApiAssetRequestToStoreAsset(asset)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset - convertApiAssetRequestToStoreAsset failed")
+	}
+
+	stAssetResponse, err := a.db.CreateAsset(stAssetRequest)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset failed")
+	}
+
+	return cv.ConvertStoreAssetToApiAssetResponse(stAssetResponse)
 }
 
 func (a *App) DeleteAsset(assetId string) error {
@@ -91,20 +112,30 @@ func (a *App) DisassociateAssetWithGroup(assetId string, groupId string) error {
 	return a.db.DisassociateAssetWithGroup(aUuid, gUuid)
 }
 
-func (a *App) GetAsset(assetId string) (tp.Asset, error) {
+func (a *App) GetAsset(assetId string) (apitp.AssetResponse, error) {
 	assetUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	return a.db.GetAsset(assetUuid)
+	stAsset, err := a.db.GetAsset(assetUuid)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "GetAsset failed")
+	}
+
+	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
 }
 
-func (a *App) ListAssets() ([]tp.Asset, error) {
-	return a.db.ListAssets()
+func (a *App) ListAssets() ([]apitp.AssetResponse, error) {
+	stAssets, err := a.db.ListAssets()
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssets failed")
+	}
+
+	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
-func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
+func (a *App) ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, error) {
 	cUuid, cFound, err := a.categoryExists(categoryId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ListAssetsByCategory - categoryExists failed")
@@ -114,10 +145,15 @@ func (a *App) ListAssetsByCategory(categoryId string) ([]tp.Asset, error) {
 		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("category with id [%s] not found", categoryId))
 	}
 
-	return a.db.ListAssetsByCategory(cUuid)
+	stAssets, err := a.db.ListAssetsByCategory(cUuid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByCategory failed")
+	}
+
+	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
-func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]tp.Asset, error) {
+func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]apitp.AssetResponse, error) {
 	cUuid, cFound, err := a.categoryExists(categoryId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup - categoryExists failed")
@@ -136,10 +172,15 @@ func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([
 		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
 	}
 
-	return a.db.ListAssetsByCategoryAndGroup(cUuid, gUuid)
+	stAssets, err := a.db.ListAssetsByCategoryAndGroup(cUuid, gUuid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup failed")
+	}
+
+	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
-func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
+func (a *App) ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error) {
 	gUuid, gFound, err := a.groupExists(groupId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ListAssetsByGroup - groupExists failed")
@@ -149,17 +190,22 @@ func (a *App) ListAssetsByGroup(groupId string) ([]tp.Asset, error) {
 		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("group with id [%s] not found", groupId))
 	}
 
-	return a.db.ListAssetsByGroup(gUuid)
+	stAssets, err := a.db.ListAssetsByGroup(gUuid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListAssetsByGroup failed")
+	}
+
+	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
-func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
+func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.AssetResponse, error) {
 	assetUuid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.Asset{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
 	if asset.Id != uuid.Nil && asset.Id != assetUuid {
-		return tp.Asset{}, ae.New(ae.CodeInvalid,
+		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid,
 			fmt.Sprintf("asset id mismatch between [%s] and [%s]",
 				asset.Id.String(), assetUuid.String()))
 	}
@@ -167,22 +213,32 @@ func (a *App) UpdateAsset(assetId string, asset tp.Asset) (tp.Asset, error) {
 	asset.Id = assetUuid
 	err = a.validateAsset(asset)
 	if err != nil {
-		return tp.Asset{}, errors.Wrapf(err, "UpdateAsset - asset validation failed")
+		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - asset validation failed")
 	}
 
-	return a.db.UpdateAsset(asset)
+	stAsset, err := cv.ConvertApiAssetRequestToStoreAsset(asset)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - convertApiAssetRequestToStoreAsset failed")
+	}
+
+	stAsset, err = a.db.UpdateAsset(stAsset)
+	if err != nil {
+		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset failed")
+	}
+
+	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
 }
 
-func (a *App) validateAsset(asset tp.Asset) error {
+func (a *App) validateAsset(asset apitp.AssetRequest) error {
 	if asset.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "asset id must not be nil")
 	}
 
-	if len(asset.Title) < tp.MinEntityTitleLength || len(asset.Title) > tp.MaxEntityTitleLength {
+	if len(asset.Title) < apitp.MinEntityTitleLength || len(asset.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("asset title length must be between [%d] and [%d] characters",
-				tp.MinEntityTitleLength,
-				tp.MaxEntityTitleLength))
+				apitp.MinEntityTitleLength,
+				apitp.MaxEntityTitleLength))
 	}
 
 	return nil

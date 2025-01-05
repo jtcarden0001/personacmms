@@ -1,11 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -17,7 +18,7 @@ func TestAssociateAssetWithCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateAssetWithCategory: failed during setup. CreateAsset() failed: %v", err)
@@ -68,7 +69,7 @@ func TestAssociateAssetWithGroup(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateAssetWithGroup: failed during setup. CreateAsset() failed: %v", err)
@@ -120,23 +121,23 @@ func TestCreateAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	conflictingAsset := utest.SetupAsset(1, false)
+	conflictingAsset := setupApiAssetRequest(1)
 	_, err = app.CreateAsset(conflictingAsset)
 	if err != nil {
 		t.Errorf("TestCreateAsset: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	emtyTitleAsset := utest.SetupAsset(2, false)
-	emtyTitleAsset.Title = ""
+	emptyTitleAsset := setupApiAssetRequest(2)
+	emptyTitleAsset.Title = ""
 
 	testCases := []struct {
 		name          string
-		asset         tp.Asset
+		asset         apitp.AssetRequest
 		shouldSucceed bool
 	}{
-		{"valid asset", utest.SetupAsset(3, false), true},
-		{"non nil id", utest.SetupAsset(4, true), false},
-		{"empty title", emtyTitleAsset, false},
+		{"valid asset", setupApiAssetRequest(3), true},
+		{"non nil id", setupApiAssetRequest(4), false},
+		{"empty title", emptyTitleAsset, false},
 		{"conflicting title", conflictingAsset, false},
 	}
 
@@ -162,7 +163,7 @@ func TestDeleteAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDeleteAsset: failed during setup. CreateAsset() failed: %v", err)
@@ -201,7 +202,7 @@ func TestDisassociateAssetWithCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithCategory: failed during setup. CreateAsset() failed: %v", err)
@@ -268,7 +269,7 @@ func TestDisassociateAssetWithGroup(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithGroup: failed during setup. CreateAsset() failed: %v", err)
@@ -335,7 +336,7 @@ func TestGetAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestGetAsset: failed during setup. CreateAsset() failed: %v", err)
@@ -375,13 +376,13 @@ func TestListAssets(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	_, err = app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListAssets: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	a = utest.SetupAsset(2, false)
+	a = setupApiAssetRequest(2)
 	_, err = app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListAssets: failed during setup. CreateAsset() failed: %v", err)
@@ -425,9 +426,9 @@ func TestListAssetByCategory(t *testing.T) {
 
 	caCount := 5
 	associatedCaCount := 3
-	var createdAssets []tp.Asset
+	var createdAssets []apitp.AssetResponse
 	for i := 0; i < caCount; i++ {
-		a := utest.SetupAsset(i, false)
+		a := setupApiAssetRequest(i)
 		createdAsset, err := app.CreateAsset(a)
 		if err != nil {
 			t.Errorf("TestListAssetByCategory: failed during setup. CreateAsset() failed: %v", err)
@@ -492,9 +493,9 @@ func TestListAssetByCategoryAndGroup(t *testing.T) {
 	aCount := 5
 	associatedAcCount := 4
 	associatedAgCount := 3 // limiting factor
-	var createdAssets []tp.Asset
+	var createdAssets []apitp.AssetResponse
 	for i := 0; i < aCount; i++ {
-		a := utest.SetupAsset(i, false)
+		a := setupApiAssetRequest(i)
 		createdAsset, err := app.CreateAsset(a)
 		if err != nil {
 			t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateAsset() failed: %v", err)
@@ -580,9 +581,9 @@ func TestListAssetsByGroup(t *testing.T) {
 
 	aCount := 5
 	associatedACount := 3
-	var createdAssets []tp.Asset
+	var createdAssets []apitp.AssetResponse
 	for i := 0; i < aCount; i++ {
-		a := utest.SetupAsset(i, false)
+		a := setupApiAssetRequest(i)
 		createdAsset, err := app.CreateAsset(a)
 		if err != nil {
 			t.Errorf("TestListAssetsByGroup: failed during setup. CreateAsset() failed: %v", err)
@@ -644,44 +645,36 @@ func TestUpdateAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	assetCount := 5
-	var ids []string
-	assets := make(map[string]tp.Asset)
-	nilIdAssets := make(map[string]tp.Asset)
-	for i := 0; i < assetCount; i++ {
-		a := utest.SetupAsset(i, false)
-		ca, err := app.CreateAsset(a)
+	assetRequests := []apitp.AssetRequest{}
+	assetResponses := []apitp.AssetResponse{}
+	for i := 0; i < 2; i++ {
+		assetReq := setupApiAssetRequest(i)
+		createdAsset, err := app.CreateAsset(assetReq)
 		if err != nil {
-			t.Errorf("TestUpdateAsset: failed during setup. CreateAsset() failed: %v", err)
+			t.Fatalf("TestUpdateAsset: failed during setup. CreateAsset() failed: %v", err)
 		}
-
-		ids = append(ids, ca.Id.String())
-		assets[ca.Id.String()] = ca
-		nilIdAssets[ca.Id.String()] = a
+		assetRequests = append(assetRequests, assetReq)
+		assetResponses = append(assetResponses, createdAsset)
 	}
 
 	testCases := []struct {
 		name          string
 		assetId       string
-		asset         tp.Asset
+		asset         apitp.AssetRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid asset with matching IDs", ids[0], assets[ids[0]], "valid title1", true},
-		{"valid asset with Asset.Id nil", ids[1], nilIdAssets[ids[1]], "valid title2", true},
-		{"mismatching asset ID and Asset.iD", ids[2], assets[ids[3]], "valid title3", false},
-		{"non-existent asset", uuid.New().String(), tp.Asset{}, "valid title3", false},
+		{"non-existent asset", uuid.New().String(), apitp.AssetRequest{}, "valid title3", false},
 
-		{"invalid asset ID", "invalid", tp.Asset{}, "valid title3", false},
-		{"nil asset ID", uuid.Nil.String(), tp.Asset{}, "valid title3", false},
-		{"empty asset ID", "", tp.Asset{}, "valid title3", false},
-		{"conflicting id", ids[4], assets[ids[3]], "valid title3", false},
+		{"invalid asset ID", "invalid", setupApiAssetRequest(1), "valid title3", false},
+		{"nil asset ID", uuid.Nil.String(), apitp.AssetRequest{}, "valid title3", false},
+		{"empty asset ID", "", apitp.AssetRequest{}, "valid title3", false},
 
-		{"empty title", ids[1], assets[ids[1]], "", false},
-		{"minimum length title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", ids[1], assets[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
-		{"conflicting title", ids[2], assets[ids[2]], assets[ids[3]].Title, false},
+		{"empty title", assetResponses[0].Id.String(), assetRequests[0], "", false},
+		{"minimum length title", assetResponses[0].Id.String(), assetRequests[0], strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", assetResponses[0].Id.String(), assetRequests[0], strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", assetResponses[0].Id.String(), assetRequests[0], strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"conflicting title", assetResponses[0].Id.String(), assetRequests[0], assetRequests[1].Title, false},
 	}
 
 	for _, tc := range testCases {
@@ -709,18 +702,18 @@ func TestValidateAsset(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		asset         tp.Asset
+		asset         apitp.AssetRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid asset", utest.SetupAsset(1, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupAsset(2, false), uuid.Nil, "valid title", false},
+		{"valid asset", setupApiAssetRequest(1), uuid.New(), "valid title", true},
+		{"nil id", setupApiAssetRequest(2), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupAsset(3, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupAsset(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupAsset(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupAsset(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiAssetRequest(3), uuid.New(), "", false},
+		{"minimum length title", setupApiAssetRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiAssetRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiAssetRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -747,7 +740,7 @@ func TestAssetExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssetExists: failed during setup. CreateAsset() failed: %v", err)
@@ -782,5 +775,18 @@ func TestAssetExists(t *testing.T) {
 				t.Errorf("assetExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiAssetRequest(identifier int) apitp.AssetRequest {
+	year := 2000 + (identifier % 22) // Random year based on identifier
+	return apitp.AssetRequest{
+		Title:        fmt.Sprintf("Asset %d", identifier),
+		Year:         utest.ToPtr(year),
+		Manufacturer: utest.ToPtr(fmt.Sprintf("Asset %d manufacturer", identifier)),
+		Make:         utest.ToPtr(fmt.Sprintf("Asset %d make", identifier)),
+		ModelNumber:  utest.ToPtr(fmt.Sprintf("Asset %d model number", identifier)),
+		SerialNumber: utest.ToPtr(fmt.Sprintf("Asset %d serial number", identifier)),
+		Description:  utest.ToPtr(fmt.Sprintf("Asset %d description", identifier)),
 	}
 }
