@@ -1,11 +1,13 @@
 package cmmsapp
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -17,13 +19,13 @@ func TestAssociateConsumableWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestAssociateConsumableWithTask: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateConsumableWithTask: failed during setup. CreateAsset() failed: %v", err)
@@ -39,13 +41,13 @@ func TestAssociateConsumableWithTask(t *testing.T) {
 		name          string
 		taskId        string
 		consumableId  string
-		cq            tp.ConsumableQuantity
+		cq            tp.ConsumableQuantityRequest
 		shouldSucceed bool
 	}{
-		{"valid consumable association", createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, true},
-		{"invalid task ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, false},
-		{"invalid consumable ID", createdTask.Id.String(), "invalid", tp.ConsumableQuantity{Quantity: "10"}, false},
-		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"valid consumable association", createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"}, true},
+		{"invalid task ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"}, false},
+		{"invalid consumable ID", createdTask.Id.String(), "invalid", tp.ConsumableQuantityRequest{Quantity: "10"}, false},
+		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), tp.ConsumableQuantityRequest{Quantity: "10"}, false},
 	}
 
 	for _, tc := range testCases {
@@ -78,13 +80,13 @@ func TestAssociateConsumableWithWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -100,13 +102,13 @@ func TestAssociateConsumableWithWorkOrder(t *testing.T) {
 		name          string
 		workOrderId   string
 		consumableId  string
-		cq            tp.ConsumableQuantity
+		cq            tp.ConsumableQuantityRequest
 		shouldSucceed bool
 	}{
-		{"valid consumable association", createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, true},
-		{"invalid work order ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"}, false},
-		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", tp.ConsumableQuantity{Quantity: "10"}, false},
-		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), tp.ConsumableQuantity{Quantity: "10"}, false},
+		{"valid consumable association", createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"}, true},
+		{"invalid work order ID", "invalid", createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"}, false},
+		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", tp.ConsumableQuantityRequest{Quantity: "10"}, false},
+		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), tp.ConsumableQuantityRequest{Quantity: "10"}, false},
 	}
 
 	for _, tc := range testCases {
@@ -140,22 +142,22 @@ func TestCreateConsumable(t *testing.T) {
 	}
 	defer cleanup()
 
-	conflictingConsumable := utest.SetupConsumable(1, false)
+	conflictingConsumable := setupApiConsumableRequest(1)
 	_, err = app.CreateConsumable(conflictingConsumable)
 	if err != nil {
 		t.Errorf("TestCreateConsumable: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	emptyTitleConsumable := utest.SetupConsumable(2, false)
+	emptyTitleConsumable := setupApiConsumableRequest(2)
 	emptyTitleConsumable.Title = ""
 
 	testCases := []struct {
 		name          string
-		consumable    tp.Consumable
+		consumable    tp.ConsumableRequest
 		shouldSucceed bool
 	}{
-		{"valid consumable", utest.SetupConsumable(3, false), true},
-		{"non nil id", utest.SetupConsumable(4, true), false},
+		{"valid consumable", setupApiConsumableRequest(3), true},
+		{"non nil id", setupApiConsumableRequest(4), false},
 		{"empty title", emptyTitleConsumable, false},
 		{"conflicting title", conflictingConsumable, false},
 	}
@@ -182,7 +184,7 @@ func TestDeleteConsumable(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestDeleteConsumable: failed during setup. CreateConsumable() failed: %v", err)
@@ -221,13 +223,13 @@ func TestDisassociateConsumableWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateAsset() failed: %v", err)
@@ -239,7 +241,7 @@ func TestDisassociateConsumableWithTask(t *testing.T) {
 		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	cq, err := app.AssociateConsumableWithTask(createdAsset.Id.String(), createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"})
+	_, err = app.AssociateConsumableWithTask(createdAsset.Id.String(), createdTask.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"})
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithTask: failed during setup. AssociateConsumableWithTask() failed: %v", err)
 	}
@@ -248,13 +250,12 @@ func TestDisassociateConsumableWithTask(t *testing.T) {
 		name          string
 		taskId        string
 		consumableId  string
-		cq            tp.ConsumableQuantity
 		shouldSucceed bool
 	}{
-		{"valid consumable disassociation", createdTask.Id.String(), createdConsumable.Id.String(), cq, true},
-		{"invalid task ID", "invalid", createdConsumable.Id.String(), cq, false},
-		{"invalid consumable ID", createdTask.Id.String(), "invalid", cq, false},
-		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), cq, false},
+		{"valid consumable disassociation", createdTask.Id.String(), createdConsumable.Id.String(), true},
+		{"invalid task ID", "invalid", createdConsumable.Id.String(), false},
+		{"invalid consumable ID", createdTask.Id.String(), "invalid", false},
+		{"non-existent consumable", createdTask.Id.String(), uuid.New().String(), false},
 	}
 
 	for _, tc := range testCases {
@@ -279,13 +280,13 @@ func TestDisassociateConsumableWithWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -297,7 +298,7 @@ func TestDisassociateConsumableWithWorkOrder(t *testing.T) {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
 	}
 
-	cq, err := app.AssociateConsumableWithWorkOrder(createdAsset.Id.String(), createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantity{Quantity: "10"})
+	_, err = app.AssociateConsumableWithWorkOrder(createdAsset.Id.String(), createdWorkOrder.Id.String(), createdConsumable.Id.String(), tp.ConsumableQuantityRequest{Quantity: "10"})
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. AssociateConsumableWithWorkOrder() failed: %v", err)
 	}
@@ -306,13 +307,12 @@ func TestDisassociateConsumableWithWorkOrder(t *testing.T) {
 		name          string
 		workOrderId   string
 		consumableId  string
-		cq            tp.ConsumableQuantity
 		shouldSucceed bool
 	}{
-		{"valid consumable disassociation", createdWorkOrder.Id.String(), createdConsumable.Id.String(), cq, true},
-		{"invalid work order ID", "invalid", createdConsumable.Id.String(), cq, false},
-		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", cq, false},
-		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), cq, false},
+		{"valid consumable disassociation", createdWorkOrder.Id.String(), createdConsumable.Id.String(), true},
+		{"invalid work order ID", "invalid", createdConsumable.Id.String(), false},
+		{"invalid consumable ID", createdWorkOrder.Id.String(), "invalid", false},
+		{"non-existent consumable", createdWorkOrder.Id.String(), uuid.New().String(), false},
 	}
 
 	for _, tc := range testCases {
@@ -334,7 +334,7 @@ func TestGetConsumable(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestGetConsumable: failed during setup. CreateConsumable() failed: %v", err)
@@ -374,13 +374,13 @@ func TestListConsumables(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	_, err = app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestListConsumables: failed during setup. CreateConsumable() failed: %v", err)
 	}
 
-	c = utest.SetupConsumable(2, false)
+	c = setupApiConsumableRequest(2)
 	_, err = app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestListConsumables: failed during setup. CreateConsumable() failed: %v", err)
@@ -424,36 +424,33 @@ func TestUpdateConsumable(t *testing.T) {
 
 	consumableCount := 5
 	var ids []string
-	consumables := make(map[string]tp.Consumable)
-	nilIdConsumables := make(map[string]tp.Consumable)
+	consumables := make(map[string]apitp.ConsumableRequest)
+	nilIdConsumables := make(map[string]apitp.ConsumableRequest)
 	for i := 0; i < consumableCount; i++ {
-		c := utest.SetupConsumable(i, false)
+		c := setupApiConsumableRequest(i)
 		cc, err := app.CreateConsumable(c)
 		if err != nil {
 			t.Errorf("TestUpdateConsumable: failed during setup. CreateConsumable() failed: %v", err)
 		}
 
 		ids = append(ids, cc.Id.String())
-		consumables[cc.Id.String()] = cc
+		consumables[cc.Id.String()] = c
 		nilIdConsumables[cc.Id.String()] = c
 	}
 
 	testCases := []struct {
 		name          string
 		consumableId  string
-		consumable    tp.Consumable
+		consumable    apitp.ConsumableRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid consumable with matching IDs", ids[0], consumables[ids[0]], "valid title1", true},
-		{"valid consumable with Consumable.Id nil", ids[1], nilIdConsumables[ids[1]], "valid title2", true},
-		{"mismatching consumable ID and Consumable.Id", ids[2], consumables[ids[3]], "valid title3", false},
-		{"non-existent consumable", uuid.New().String(), tp.Consumable{}, "valid title3", false},
+		{"valid consumable", ids[1], consumables[ids[1]], "valid title3", true},
+		{"non-existent consumable", uuid.New().String(), apitp.ConsumableRequest{}, "valid title3", false},
 
-		{"invalid consumable ID", "invalid", tp.Consumable{}, "valid title3", false},
-		{"nil consumable ID", uuid.Nil.String(), tp.Consumable{}, "valid title3", false},
-		{"empty consumable ID", "", tp.Consumable{}, "valid title3", false},
-		{"conflicting id", ids[4], consumables[ids[3]], "valid title3", false},
+		{"invalid consumable ID", "invalid", apitp.ConsumableRequest{}, "valid title3", false},
+		{"nil consumable ID", uuid.Nil.String(), apitp.ConsumableRequest{}, "valid title3", false},
+		{"empty consumable ID", "", apitp.ConsumableRequest{}, "valid title3", false},
 
 		{"empty title", ids[1], consumables[ids[1]], "", false},
 		{"minimum length title", ids[1], consumables[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
@@ -487,18 +484,18 @@ func TestValidateConsumable(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		consumable    tp.Consumable
+		consumable    apitp.ConsumableRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid consumable", utest.SetupConsumable(1, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupConsumable(2, false), uuid.Nil, "valid title", false},
+		{"valid consumable", setupApiConsumableRequest(1), uuid.New(), "valid title", true},
+		{"nil id", setupApiConsumableRequest(2), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupConsumable(3, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupConsumable(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupConsumable(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupConsumable(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiConsumableRequest(3), uuid.New(), "", false},
+		{"minimum length title", setupApiConsumableRequest(4), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiConsumableRequest(5), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", setupApiConsumableRequest(6), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -525,7 +522,7 @@ func TestConsumableExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupConsumable(1, false)
+	c := setupApiConsumableRequest(1)
 	createdConsumable, err := app.CreateConsumable(c)
 	if err != nil {
 		t.Errorf("TestConsumableExists: failed during setup. CreateConsumable() failed: %v", err)
@@ -560,5 +557,18 @@ func TestConsumableExists(t *testing.T) {
 				t.Errorf("consumableExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiConsumableRequest(identifier int) tp.ConsumableRequest {
+	return tp.ConsumableRequest{
+		Title: fmt.Sprintf("consumable title %d", identifier),
+	}
+}
+
+func setupApiConsumableQuantityRequest(identifier int) tp.ConsumableQuantityRequest {
+	return tp.ConsumableQuantityRequest{
+		Title:    fmt.Sprintf("consumable title %d", identifier),
+		Quantity: fmt.Sprintf("%d", identifier),
 	}
 }
