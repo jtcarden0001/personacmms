@@ -24,7 +24,7 @@ func TestAssociateAssetWithCategory(t *testing.T) {
 		t.Errorf("TestAssociateAssetWithCategory: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestAssociateAssetWithCategory: failed during setup. CreateCategory() failed: %v", err)
@@ -208,13 +208,13 @@ func TestDisassociateAssetWithCategory(t *testing.T) {
 		t.Errorf("TestDisassociateAssetWithCategory: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory1, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithCategory: failed during setup. CreateCategory() failed: %v", err)
 	}
 
-	c = utest.SetupCategory(2, false)
+	c = setupApiCategoryRequest(2)
 	createdCategory2, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithCategory: failed during setup. CreateCategory() failed: %v", err)
@@ -436,7 +436,7 @@ func TestListAssetByCategory(t *testing.T) {
 		createdAssets = append(createdAssets, createdAsset)
 	}
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestListAssetByCategory: failed during setup. CreateCategory() failed: %v", err)
@@ -503,7 +503,7 @@ func TestListAssetByCategoryAndGroup(t *testing.T) {
 		createdAssets = append(createdAssets, createdAsset)
 	}
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateCategory() failed: %v", err)

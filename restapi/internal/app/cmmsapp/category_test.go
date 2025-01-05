@@ -1,11 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -17,22 +18,22 @@ func TestCreateCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	conflictingCategory := utest.SetupCategory(1, false)
+	conflictingCategory := setupApiCategoryRequest(1)
 	_, err = app.CreateCategory(conflictingCategory)
 	if err != nil {
 		t.Errorf("TestCreateCategory: failed during setup. CreateCategory() failed: %v", err)
 	}
 
-	emptyTitleCategory := utest.SetupCategory(2, false)
+	emptyTitleCategory := setupApiCategoryRequest(2)
 	emptyTitleCategory.Title = ""
 
 	testCases := []struct {
 		name          string
-		category      tp.Category
+		category      apitp.CategoryRequest
 		shouldSucceed bool
 	}{
-		{"valid category", utest.SetupCategory(3, false), true},
-		{"non nil id", utest.SetupCategory(4, true), false},
+		{"valid category", setupApiCategoryRequest(3), true},
+		{"non nil id", setupApiCategoryRequest(4), false},
 		{"empty title", emptyTitleCategory, false},
 		{"conflicting title", conflictingCategory, false},
 	}
@@ -59,7 +60,7 @@ func TestDeleteCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestDeleteCategory: failed during setup. CreateCategory() failed: %v", err)
@@ -98,7 +99,7 @@ func TestGetCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestGetCategory: failed during setup. CreateCategory() failed: %v", err)
@@ -138,13 +139,13 @@ func TestListCategories(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	_, err = app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestListCategories: failed during setup. CreateCategory() failed: %v", err)
 	}
 
-	c = utest.SetupCategory(2, false)
+	c = setupApiCategoryRequest(2)
 	_, err = app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestListCategories: failed during setup. CreateCategory() failed: %v", err)
@@ -186,13 +187,13 @@ func TestListCategoriesByAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateCategory() failed: %v", err)
 	}
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListCategoriesByAsset: failed during setup. CreateAsset() failed: %v", err)
@@ -244,44 +245,39 @@ func TestUpdateCategory(t *testing.T) {
 	}
 	defer cleanup()
 
-	categoryCount := 5
-	var ids []string
-	categories := make(map[string]tp.Category)
-	nilIdCategories := make(map[string]tp.Category)
+	categoryCount := 2
+	apiCatRequests := []apitp.CategoryRequest{}
+	apiCatResponses := []apitp.CategoryResponse{}
 	for i := 0; i < categoryCount; i++ {
-		c := utest.SetupCategory(i, false)
+		c := setupApiCategoryRequest(i)
 		cc, err := app.CreateCategory(c)
 		if err != nil {
 			t.Errorf("TestUpdateCategory: failed during setup. CreateCategory() failed: %v", err)
 		}
 
-		ids = append(ids, cc.Id.String())
-		categories[cc.Id.String()] = cc
-		nilIdCategories[cc.Id.String()] = c
+		apiCatRequests = append(apiCatRequests, c)
+		apiCatResponses = append(apiCatResponses, cc)
 	}
 
 	testCases := []struct {
 		name          string
 		categoryId    string
-		category      tp.Category
+		category      apitp.CategoryRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid category with matching IDs", ids[0], categories[ids[0]], "valid title1", true},
-		{"valid category with Category.Id nil", ids[1], nilIdCategories[ids[1]], "valid title2", true},
-		{"mismatching category ID and Category.Id", ids[2], categories[ids[3]], "valid title3", false},
-		{"non-existent category", uuid.New().String(), tp.Category{}, "valid title3", false},
+		{"valid category", apiCatResponses[1].Id.String(), apiCatRequests[1], "valid title3", true},
+		{"non-existent category", uuid.New().String(), apitp.CategoryRequest{}, "valid title3", false},
 
-		{"invalid category ID", "invalid", tp.Category{}, "valid title3", false},
-		{"nil category ID", uuid.Nil.String(), tp.Category{}, "valid title3", false},
-		{"empty category ID", "", tp.Category{}, "valid title3", false},
-		{"conflicting id", ids[4], categories[ids[3]], "valid title3", false},
+		{"invalid category ID", "invalid", apitp.CategoryRequest{}, "valid title3", false},
+		{"nil category ID", uuid.Nil.String(), apitp.CategoryRequest{}, "valid title3", false},
+		{"empty category ID", "", apitp.CategoryRequest{}, "valid title3", false},
 
-		{"empty title", ids[1], categories[ids[1]], "", false},
-		{"minimum length title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", ids[1], categories[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
-		{"conflicting title", ids[2], categories[ids[2]], categories[ids[3]].Title, false},
+		{"empty title", apiCatResponses[1].Id.String(), apiCatRequests[1], "", false},
+		{"minimum length title", apiCatResponses[1].Id.String(), apiCatRequests[1], strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", apiCatResponses[1].Id.String(), apiCatRequests[1], strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", apiCatResponses[1].Id.String(), apiCatRequests[1], strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"conflicting title", apiCatResponses[2].Id.String(), apiCatRequests[2], apiCatResponses[1].Title, false},
 	}
 
 	for _, tc := range testCases {
@@ -309,18 +305,18 @@ func TestValidateCategory(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		category      tp.Category
+		category      apitp.CategoryRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid category", utest.SetupCategory(1, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupCategory(2, false), uuid.Nil, "valid title", false},
+		{"valid category", setupApiCategoryRequest(1), uuid.New(), "valid title", true},
+		{"nil id", setupApiCategoryRequest(2), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupCategory(3, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupCategory(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupCategory(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupCategory(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiCategoryRequest(3), uuid.New(), "", false},
+		{"minimum length title", setupApiCategoryRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiCategoryRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiCategoryRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -347,7 +343,7 @@ func TestCategoryExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	c := utest.SetupCategory(1, false)
+	c := setupApiCategoryRequest(1)
 	createdCategory, err := app.CreateCategory(c)
 	if err != nil {
 		t.Errorf("TestCategoryExists: failed during setup. CreateCategory() failed: %v", err)
@@ -382,5 +378,12 @@ func TestCategoryExists(t *testing.T) {
 				t.Errorf("categoryExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiCategoryRequest(identifier int) apitp.CategoryRequest {
+	return apitp.CategoryRequest{
+		Title:       fmt.Sprintf("Category %d", identifier),
+		Description: utest.ToPtr(fmt.Sprintf("Category %d description", identifier)),
 	}
 }
