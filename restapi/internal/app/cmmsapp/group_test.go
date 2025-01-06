@@ -5,8 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 func TestCreateGroup(t *testing.T) {
@@ -17,22 +16,22 @@ func TestCreateGroup(t *testing.T) {
 	}
 	defer cleanup()
 
-	conflictingGroup := utest.SetupGroup(1, false)
+	conflictingGroup := setupApiGroupRequest(1)
 	_, err = app.CreateGroup(conflictingGroup)
 	if err != nil {
 		t.Errorf("TestCreateGroup: failed during setup. CreateGroup() failed: %v", err)
 	}
 
-	emptyTitleGroup := utest.SetupGroup(2, false)
+	emptyTitleGroup := setupApiGroupRequest(2)
 	emptyTitleGroup.Title = ""
 
 	testCases := []struct {
 		name          string
-		group         tp.Group
+		group         apitp.GroupRequest
 		shouldSucceed bool
 	}{
-		{"valid group", utest.SetupGroup(3, false), true},
-		{"non nil id", utest.SetupGroup(4, true), false},
+		{"valid group", setupApiGroupRequest(3), true},
+		{"non nil id", setupApiGroupRequest(4), false},
 		{"empty title", emptyTitleGroup, false},
 		{"conflicting title", conflictingGroup, false},
 	}
@@ -59,7 +58,7 @@ func TestDeleteGroup(t *testing.T) {
 	}
 	defer cleanup()
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestDeleteGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -98,7 +97,7 @@ func TestGetGroup(t *testing.T) {
 	}
 	defer cleanup()
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestGetGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -138,13 +137,13 @@ func TestListGroups(t *testing.T) {
 	}
 	defer cleanup()
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	_, err = app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestListGroups: failed during setup. CreateGroup() failed: %v", err)
 	}
 
-	g = utest.SetupGroup(2, false)
+	g = setupApiGroupRequest(2)
 	_, err = app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestListGroups: failed during setup. CreateGroup() failed: %v", err)
@@ -196,7 +195,7 @@ func TestListGroupsByAsset(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		asset := utest.SetupAsset(1, false)
+		asset := setupApiAssetRequest(1)
 		ca, err := app.CreateAsset(asset)
 		if err != nil {
 			t.Errorf("TestListGroupsByAsset: failed during setup. CreateAsset() failed: %v", err)
@@ -204,7 +203,7 @@ func TestListGroupsByAsset(t *testing.T) {
 
 		createdGroupIds := []uuid.UUID{}
 		for i := 0; i < tc.groupCount; i++ {
-			g := utest.SetupGroup(i, false)
+			g := setupApiGroupRequest(i)
 			cg, err := app.CreateGroup(g)
 			if err != nil {
 				t.Errorf("TestListGroupsByAsset: failed during setup. CreateGroup() failed: %v", err)
@@ -248,10 +247,10 @@ func TestUpdateGroup(t *testing.T) {
 
 	groupCount := 5
 	var ids []string
-	groups := make(map[string]tp.Group)
-	nilIdGroups := make(map[string]tp.Group)
+	groups := make(map[string]apitp.GroupResponse)
+	nilIdGroups := make(map[string]apitp.GroupRequest)
 	for i := 0; i < groupCount; i++ {
-		g := utest.SetupGroup(i, false)
+		g := setupApiGroupRequest(i)
 		cg, err := app.CreateGroup(g)
 		if err != nil {
 			t.Errorf("TestUpdateGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -265,25 +264,25 @@ func TestUpdateGroup(t *testing.T) {
 	testCases := []struct {
 		name          string
 		groupId       string
-		group         tp.Group
+		group         apitp.GroupRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid group with matching IDs", ids[0], groups[ids[0]], "valid title1", true},
+		{"valid group with matching IDs", ids[0], nilIdGroups[ids[0]], "valid title1", true},
 		{"valid group with Group.Id nil", ids[1], nilIdGroups[ids[1]], "valid title2", true},
-		{"mismatching group ID and Group.Id", ids[2], groups[ids[3]], "valid title3", false},
-		{"non-existent group", uuid.New().String(), tp.Group{}, "valid title3", false},
+		{"mismatching group ID and Group.Id", ids[2], nilIdGroups[ids[3]], "valid title3", false},
+		{"non-existent group", uuid.New().String(), apitp.GroupRequest{}, "valid title3", false},
 
-		{"invalid group ID", "invalid", tp.Group{}, "valid title3", false},
-		{"nil group ID", uuid.Nil.String(), tp.Group{}, "valid title3", false},
-		{"empty group ID", "", tp.Group{}, "valid title3", false},
-		{"conflicting id", ids[4], groups[ids[3]], "valid title3", false},
+		{"invalid group ID", "invalid", apitp.GroupRequest{}, "valid title3", false},
+		{"nil group ID", uuid.Nil.String(), apitp.GroupRequest{}, "valid title3", false},
+		{"empty group ID", "", apitp.GroupRequest{}, "valid title3", false},
+		{"conflicting id", ids[4], nilIdGroups[ids[3]], "valid title3", false},
 
-		{"empty title", ids[1], groups[ids[1]], "", false},
-		{"minimum length title", ids[1], groups[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", ids[1], groups[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", ids[1], groups[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
-		{"conflicting title", ids[2], groups[ids[2]], groups[ids[3]].Title, false},
+		{"empty title", ids[1], nilIdGroups[ids[1]], "", false},
+		{"minimum length title", ids[1], nilIdGroups[ids[1]], strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", ids[1], nilIdGroups[ids[1]], strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", ids[1], nilIdGroups[ids[1]], strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"conflicting title", ids[2], nilIdGroups[ids[2]], groups[ids[3]].Title, false},
 	}
 
 	for _, tc := range testCases {
@@ -311,18 +310,18 @@ func TestValidateGroup(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		group         tp.Group
+		group         apitp.GroupRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid group", utest.SetupGroup(1, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupGroup(2, false), uuid.Nil, "valid title", false},
+		{"valid group", setupApiGroupRequest(1), uuid.New(), "valid title", true},
+		{"nil id", setupApiGroupRequest(2), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupGroup(3, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupGroup(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupGroup(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupGroup(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiGroupRequest(3), uuid.New(), "", false},
+		{"minimum length title", setupApiGroupRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiGroupRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiGroupRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -349,7 +348,7 @@ func TestGroupExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestGroupExists: failed during setup. CreateGroup() failed: %v", err)
@@ -384,5 +383,11 @@ func TestGroupExists(t *testing.T) {
 				t.Errorf("groupExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiGroupRequest(identifier int) apitp.GroupRequest {
+	return apitp.GroupRequest{
+		Title: "title" + string(identifier),
 	}
 }

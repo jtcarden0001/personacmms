@@ -75,7 +75,7 @@ func TestAssociateAssetWithGroup(t *testing.T) {
 		t.Errorf("TestAssociateAssetWithGroup: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestAssociateAssetWithGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -275,13 +275,13 @@ func TestDisassociateAssetWithGroup(t *testing.T) {
 		t.Errorf("TestDisassociateAssetWithGroup: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup1, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithGroup: failed during setup. CreateGroup() failed: %v", err)
 	}
 
-	g = utest.SetupGroup(2, false)
+	g = setupApiGroupRequest(2)
 	createdGroup2, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestDisassociateAssetWithGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -516,7 +516,7 @@ func TestListAssetByCategoryAndGroup(t *testing.T) {
 		}
 	}
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestListAssetByCategoryAndGroup: failed during setup. CreateGroup() failed: %v", err)
@@ -591,7 +591,7 @@ func TestListAssetsByGroup(t *testing.T) {
 		createdAssets = append(createdAssets, createdAsset)
 	}
 
-	g := utest.SetupGroup(1, false)
+	g := setupApiGroupRequest(1)
 	createdGroup, err := app.CreateGroup(g)
 	if err != nil {
 		t.Errorf("TestListAssetsByGroup: failed during setup. CreateGroup() failed: %v", err)

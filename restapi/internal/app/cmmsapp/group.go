@@ -4,23 +4,34 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
-func (a *App) CreateGroup(grp tp.Group) (tp.Group, error) {
+func (a *App) CreateGroup(grp apitp.GroupRequest) (apitp.GroupResponse, error) {
 	if grp.Id != uuid.Nil {
-		return tp.Group{}, ae.New(ae.CodeInvalid, "group id must be nil on create, we will create an id for you")
+		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, "group id must be nil on create, we will create an id for you")
 	}
 	grp.Id = uuid.New()
 
 	err := a.validateGroup(grp)
 	if err != nil {
-		return tp.Group{}, errors.Wrapf(err, "CreateGroup validation failed")
+		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup validation failed")
 	}
 
-	return a.db.CreateGroup(grp)
+	stGrpRequest, err := cv.ConvertApiGroupRequestToStoreGroup(grp)
+	if err != nil {
+		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup - error converting to store type")
+	}
+
+	stGrpResponse, err := a.db.CreateGroup(stGrpRequest)
+	if err != nil {
+		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup - error creating group")
+	}
+
+	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
 }
 
 func (a *App) DeleteGroup(grpId string) error {
@@ -34,56 +45,80 @@ func (a *App) DeleteGroup(grpId string) error {
 	return a.db.DeleteGroup(grpUuid)
 }
 
-func (a *App) ListGroups() ([]tp.Group, error) {
-	return a.db.ListGroups()
+func (a *App) ListGroups() ([]apitp.GroupResponse, error) {
+	stGrpResponses, err := a.db.ListGroups()
+	if err != nil {
+		return []apitp.GroupResponse{}, errors.Wrapf(err, "ListGroups - error listing groups")
+	}
+
+	return cv.ConvertStoreGroupListToApiGroupResponseList(stGrpResponses)
 }
 
-func (a *App) ListGroupsByAsset(assetId string) ([]tp.Group, error) {
+func (a *App) ListGroupsByAsset(assetId string) ([]apitp.GroupResponse, error) {
 	assetUuid, err := uuid.Parse(assetId)
 	if err != nil {
 		return nil, ae.New(ae.CodeInvalid, printInvalidUuidErrorMessage("asset", assetId))
 	}
 
-	return a.db.ListGroupsByAsset(assetUuid)
-}
-
-func (a *App) GetGroup(grpId string) (tp.Group, error) {
-	grpUuid, err := uuid.Parse(grpId)
+	stGrpResponses, err := a.db.ListGroupsByAsset(assetUuid)
 	if err != nil {
-		return tp.Group{}, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+		return []apitp.GroupResponse{}, errors.Wrapf(err, "ListGroupsByAsset - error listing groups")
 	}
 
-	return a.db.GetGroup(grpUuid)
+	return cv.ConvertStoreGroupListToApiGroupResponseList(stGrpResponses)
 }
 
-func (a *App) UpdateGroup(id string, newGroup tp.Group) (tp.Group, error) {
+func (a *App) GetGroup(grpId string) (apitp.GroupResponse, error) {
+	grpUuid, err := uuid.Parse(grpId)
+	if err != nil {
+		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+	}
+
+	stGrpResponse, err := a.db.GetGroup(grpUuid)
+	if err != nil {
+		return apitp.GroupResponse{}, errors.Wrapf(err, "GetGroup - error getting group")
+	}
+
+	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
+}
+
+func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupResponse, error) {
 	grpUuid, err := uuid.Parse(id)
 	if err != nil {
-		return tp.Group{}, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
+		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
 	}
 
 	if newGroup.Id != uuid.Nil && newGroup.Id != grpUuid {
-		return tp.Group{}, ae.New(ae.CodeInvalid, fmt.Sprintf("group id mismatch [%s] and [%s]", newGroup.Id, grpUuid))
+		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("group id mismatch [%s] and [%s]", newGroup.Id, grpUuid))
 	}
 
 	newGroup.Id = grpUuid
 	err = a.validateGroup(newGroup)
 	if err != nil {
-		return tp.Group{}, errors.Wrapf(err, "UpdateGroup validation failed")
+		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup validation failed")
 	}
 
-	return a.db.UpdateGroup(newGroup)
+	stGrpRequest, err := cv.ConvertApiGroupRequestToStoreGroup(newGroup)
+	if err != nil {
+		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup - error converting to store type")
+	}
+	stGrpResponse, err := a.db.UpdateGroup(stGrpRequest)
+	if err != nil {
+		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup - error updating group")
+	}
+
+	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
 }
 
-func (a *App) validateGroup(grp tp.Group) error {
+func (a *App) validateGroup(grp apitp.GroupRequest) error {
 	if grp.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "group id is required")
 	}
 
-	if len(grp.Title) < tp.MinEntityTitleLength || len(grp.Title) > tp.MaxEntityTitleLength {
+	if len(grp.Title) < apitp.MinEntityTitleLength || len(grp.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("group title length must be between [%d] and [%d] characters",
-			tp.MinEntityTitleLength,
-			tp.MaxEntityTitleLength))
+			apitp.MinEntityTitleLength,
+			apitp.MaxEntityTitleLength))
 	}
 
 	return nil
