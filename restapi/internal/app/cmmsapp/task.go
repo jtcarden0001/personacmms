@@ -4,33 +4,44 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
-func (a *App) CreateTask(assetId string, task tp.Task) (tp.Task, error) {
+func (a *App) CreateTask(assetId string, task tp.TaskRequest) (tp.TaskResponse, error) {
 	if task.Id != uuid.Nil {
-		return tp.Task{}, ae.New(ae.CodeInvalid, "task id must be nil on create, we will create an id for you")
+		return tp.TaskResponse{}, ae.New(ae.CodeInvalid, "task id must be nil on create, we will create an id for you")
 	}
 	task.Id = uuid.New()
 
 	aUid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.Task{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return tp.TaskResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
 	if task.AssetId != uuid.Nil && task.AssetId != aUid {
-		return tp.Task{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", task.AssetId, assetId))
+		return tp.TaskResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", task.AssetId, assetId))
 	}
 
 	task.AssetId = aUid
 	err = a.validateTask(task)
 	if err != nil {
-		return tp.Task{}, errors.Wrapf(err, "CreateTask validation failed")
+		return tp.TaskResponse{}, errors.Wrapf(err, "CreateTask validation failed")
 	}
 
-	return a.db.CreateTask(task)
+	stTaskRequest, err := cv.ConvertApiTaskRequestToStoreTask(task)
+	if err != nil {
+		return tp.TaskResponse{}, errors.Wrapf(err, "CreateTask - error converting to store type")
+	}
+
+	stTaskResponse, err := a.db.CreateTask(stTaskRequest)
+	if err != nil {
+		return tp.TaskResponse{}, errors.Wrapf(err, "CreateTask - error creating task")
+	}
+
+	return cv.ConvertStoreTaskToApiTaskResponse(stTaskResponse)
 }
 
 func (a *App) DeleteTask(assetId string, taskId string) error {
@@ -69,34 +80,34 @@ func (a *App) DisassociateTaskWithWorkOrder(assetId string, taskId string, workO
 	return a.db.DisassociateWorkOrderWithTask(t.Id, wUid)
 }
 
-func (a *App) GetTask(assetId string, taskId string) (tp.Task, error) {
+func (a *App) GetTask(assetId string, taskId string) (tp.TaskResponse, error) {
 	tUid, err := uuid.Parse(taskId)
 	if err != nil {
-		return tp.Task{}, ae.New(ae.CodeInvalid, "task id must be a valid uuid")
+		return tp.TaskResponse{}, ae.New(ae.CodeInvalid, "task id must be a valid uuid")
 	}
 
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
-		return tp.Task{}, errors.Wrapf(err, "error checking asset exists")
+		return tp.TaskResponse{}, errors.Wrapf(err, "error checking asset exists")
 	}
 
 	if !aFound {
-		return tp.Task{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
+		return tp.TaskResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
-	t, err := a.db.GetTask(tUid)
+	stTaskResponse, err := a.db.GetTask(tUid)
 	if err != nil {
-		return tp.Task{}, err
+		return tp.TaskResponse{}, err
 	}
 
-	if t.AssetId != aUid {
-		return tp.Task{}, ae.New(ae.CodeNotFound, fmt.Sprintf("no task with id [%s] found for asset with id [%s]", taskId, assetId))
+	if stTaskResponse.AssetId != aUid {
+		return tp.TaskResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("no task with id [%s] found for asset with id [%s]", taskId, assetId))
 	}
 
-	return t, nil
+	return cv.ConvertStoreTaskToApiTaskResponse(stTaskResponse)
 }
 
-func (a *App) ListTasksByAsset(assetId string) ([]tp.Task, error) {
+func (a *App) ListTasksByAsset(assetId string) ([]tp.TaskResponse, error) {
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error checking asset exists")
@@ -106,35 +117,50 @@ func (a *App) ListTasksByAsset(assetId string) ([]tp.Task, error) {
 		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
-	return a.db.ListTasksByAsset(aUid)
+	stAssetResponses, err := a.db.ListTasksByAsset(aUid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListTasksByAsset failed")
+	}
+
+	return cv.ConvertStoreTaskListToApiTaskResponseList(stAssetResponses)
 }
 
-func (a *App) UpdateTask(assetId string, taskId string, task tp.Task) (tp.Task, error) {
+func (a *App) UpdateTask(assetId string, taskId string, task tp.TaskRequest) (tp.TaskResponse, error) {
 	// check assetId and task existence and coherency (task belongs to asset)
 	t, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.Task{}, err
+		return tp.TaskResponse{}, err
 	}
 
 	if task.Id != uuid.Nil && task.Id != t.Id {
-		return tp.Task{}, ae.New(ae.CodeInvalid, fmt.Sprintf("task id mismatch [%s] and [%s]", task.Id, t.Id))
+		return tp.TaskResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("task id mismatch [%s] and [%s]", task.Id, t.Id))
 	}
 	task.Id = t.Id
 
 	if task.AssetId != uuid.Nil && task.AssetId != t.AssetId {
-		return tp.Task{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", task.AssetId, t.AssetId))
+		return tp.TaskResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", task.AssetId, t.AssetId))
 	}
 	task.AssetId = t.AssetId
 
 	err = a.validateTask(task)
 	if err != nil {
-		return tp.Task{}, errors.Wrapf(err, "UpdateTask validation failed")
+		return tp.TaskResponse{}, errors.Wrapf(err, "UpdateTask validation failed")
 	}
 
-	return a.db.UpdateTask(task)
+	stTaskRequest, err := cv.ConvertApiTaskRequestToStoreTask(task)
+	if err != nil {
+		return tp.TaskResponse{}, errors.Wrapf(err, "UpdateTask - error converting to store type")
+	}
+
+	stTaskResponse, err := a.db.UpdateTask(stTaskRequest)
+	if err != nil {
+		return tp.TaskResponse{}, errors.Wrapf(err, "UpdateTask - error updating task")
+	}
+
+	return cv.ConvertStoreTaskToApiTaskResponse(stTaskResponse)
 }
 
-func (a *App) validateTask(task tp.Task) error {
+func (a *App) validateTask(task tp.TaskRequest) error {
 	if task.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "task id is required")
 	}

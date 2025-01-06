@@ -1,11 +1,12 @@
 package cmmsapp
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -17,29 +18,29 @@ func TestCreateTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestCreateTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	conflictingTask := utest.SetupTask(1, createdAsset.Id, false)
+	conflictingTask := setupApiTaskRequest(1, createdAsset.Id)
 	_, err = app.CreateTask(createdAsset.Id.String(), conflictingTask)
 	if err != nil {
 		t.Errorf("TestCreateTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	emptyTitleTask := utest.SetupTask(2, createdAsset.Id, false)
+	emptyTitleTask := setupApiTaskRequest(2, createdAsset.Id)
 	emptyTitleTask.Title = ""
 
 	testCases := []struct {
 		name          string
 		assetID       string
-		task          tp.Task
+		task          tp.TaskRequest
 		shouldSucceed bool
 	}{
-		{"valid task", createdAsset.Id.String(), utest.SetupTask(3, createdAsset.Id, false), true},
-		{"non nil id", createdAsset.Id.String(), utest.SetupTask(4, createdAsset.Id, true), false},
+		{"valid task", createdAsset.Id.String(), setupApiTaskRequest(3, createdAsset.Id), true},
+		{"non nil id", createdAsset.Id.String(), setupApiTaskRequest(4, createdAsset.Id), false},
 		{"empty title", createdAsset.Id.String(), emptyTitleTask, false},
 	}
 
@@ -65,13 +66,13 @@ func TestDeleteTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDeleteTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	ta := utest.SetupTask(1, createdAsset.Id, false)
+	ta := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), ta)
 	if err != nil {
 		t.Errorf("TestDeleteTask: failed during setup. CreateTask() failed: %v", err)
@@ -111,13 +112,13 @@ func TestDisassociateTaskWithWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateTaskWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	ta := utest.SetupTask(1, createdAsset.Id, false)
+	ta := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), ta)
 	if err != nil {
 		t.Errorf("TestDisassociateTaskWithWorkOrder: failed during setup. CreateTask() failed: %v", err)
@@ -169,13 +170,13 @@ func TestGetTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestGetTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	ta := utest.SetupTask(1, createdAsset.Id, false)
+	ta := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), ta)
 	if err != nil {
 		t.Errorf("TestGetTask: failed during setup. CreateTask() failed: %v", err)
@@ -216,19 +217,19 @@ func TestListTasksByAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListTasksByAsset: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	t1 := utest.SetupTask(1, createdAsset.Id, false)
+	t1 := setupApiTaskRequest(1, createdAsset.Id)
 	_, err = app.CreateTask(createdAsset.Id.String(), t1)
 	if err != nil {
 		t.Errorf("TestListTasksByAsset: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	t2 := utest.SetupTask(2, createdAsset.Id, false)
+	t2 := setupApiTaskRequest(2, createdAsset.Id)
 	_, err = app.CreateTask(createdAsset.Id.String(), t2)
 	if err != nil {
 		t.Errorf("TestListTasksByAsset: failed during setup. CreateTask() failed: %v", err)
@@ -274,7 +275,7 @@ func TestUpdateTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestUpdateTask: failed during setup. CreateAsset() failed: %v", err)
@@ -282,10 +283,10 @@ func TestUpdateTask(t *testing.T) {
 
 	taskCount := 5
 	var ids []string
-	tasks := make(map[string]tp.Task)
-	nilIdTasks := make(map[string]tp.Task)
+	tasks := make(map[string]tp.TaskResponse)
+	nilIdTasks := make(map[string]tp.TaskRequest)
 	for i := 0; i < taskCount; i++ {
-		ta := utest.SetupTask(i, createdAsset.Id, false)
+		ta := setupApiTaskRequest(i, createdAsset.Id)
 		ct, err := app.CreateTask(createdAsset.Id.String(), ta)
 		if err != nil {
 			t.Errorf("TestUpdateTask: failed during setup. CreateTask() failed: %v", err)
@@ -300,24 +301,24 @@ func TestUpdateTask(t *testing.T) {
 		name          string
 		assetID       string
 		taskID        string
-		task          tp.Task
+		task          tp.TaskRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid task with matching IDs", createdAsset.Id.String(), ids[0], tasks[ids[0]], "valid title1", true},
+		{"valid task with matching IDs", createdAsset.Id.String(), ids[0], nilIdTasks[ids[0]], "valid title1", true},
 		{"valid task with Task.Id nil", createdAsset.Id.String(), ids[1], nilIdTasks[ids[1]], "valid title2", true},
-		{"mismatching task ID and Task.Id", createdAsset.Id.String(), ids[2], tasks[ids[3]], "valid title3", false},
-		{"non-existent task", createdAsset.Id.String(), uuid.New().String(), tp.Task{}, "valid title3", false},
+		{"mismatching task ID and Task.Id", createdAsset.Id.String(), ids[2], nilIdTasks[ids[3]], "valid title3", false},
+		{"non-existent task", createdAsset.Id.String(), uuid.New().String(), tp.TaskRequest{}, "valid title3", false},
 
-		{"invalid task ID", createdAsset.Id.String(), "invalid", tp.Task{}, "valid title3", false},
-		{"nil task ID", createdAsset.Id.String(), uuid.Nil.String(), tp.Task{}, "valid title3", false},
-		{"empty task ID", createdAsset.Id.String(), "", tp.Task{}, "valid title3", false},
-		{"conflicting id", createdAsset.Id.String(), ids[4], tasks[ids[3]], "valid title3", false},
+		{"invalid task ID", createdAsset.Id.String(), "invalid", tp.TaskRequest{}, "valid title3", false},
+		{"nil task ID", createdAsset.Id.String(), uuid.Nil.String(), tp.TaskRequest{}, "valid title3", false},
+		{"empty task ID", createdAsset.Id.String(), "", tp.TaskRequest{}, "valid title3", false},
+		{"conflicting id", createdAsset.Id.String(), ids[4], nilIdTasks[ids[3]], "valid title3", false},
 
-		{"empty title", createdAsset.Id.String(), ids[1], tasks[ids[1]], "", false},
-		{"minimum length title", createdAsset.Id.String(), ids[1], tasks[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", createdAsset.Id.String(), ids[1], tasks[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", createdAsset.Id.String(), ids[1], tasks[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", createdAsset.Id.String(), ids[1], nilIdTasks[ids[1]], "", false},
+		{"minimum length title", createdAsset.Id.String(), ids[1], nilIdTasks[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", createdAsset.Id.String(), ids[1], nilIdTasks[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", createdAsset.Id.String(), ids[1], nilIdTasks[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -343,7 +344,7 @@ func TestValidateTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestValidateTask: failed during setup. CreateAsset() failed: %v", err)
@@ -351,18 +352,18 @@ func TestValidateTask(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		task          tp.Task
+		task          tp.TaskRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid task", utest.SetupTask(1, createdAsset.Id, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupTask(2, createdAsset.Id, false), uuid.Nil, "valid title", false},
+		{"valid task", setupApiTaskRequest(1, createdAsset.Id), uuid.New(), "valid title", true},
+		{"nil id", setupApiTaskRequest(2, createdAsset.Id), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupTask(3, createdAsset.Id, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupTask(4, createdAsset.Id, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupTask(5, createdAsset.Id, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupTask(6, createdAsset.Id, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiTaskRequest(3, createdAsset.Id), uuid.New(), "", false},
+		{"minimum length title", setupApiTaskRequest(4, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiTaskRequest(5, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", setupApiTaskRequest(6, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -389,13 +390,13 @@ func TestTaskExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestTaskExists: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	ta := utest.SetupTask(1, createdAsset.Id, false)
+	ta := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), ta)
 	if err != nil {
 		t.Errorf("TestTaskExists: failed during setup. CreateTask() failed: %v", err)
@@ -430,5 +431,13 @@ func TestTaskExists(t *testing.T) {
 				t.Errorf("taskExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiTaskRequest(identifier int, assetId uuid.UUID) tp.TaskRequest {
+	return tp.TaskRequest{
+		Title:        fmt.Sprintf("Task %d", identifier),
+		Instructions: utest.ToPtr(fmt.Sprintf("Task %d instructions", identifier)),
+		AssetId:      assetId,
 	}
 }

@@ -5,79 +5,79 @@ import (
 
 	"github.com/google/uuid"
 	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
-func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string, cq tp.ConsumableQuantityRequest) (tp.ConsumableQuantityResponse, error) {
+func (a *App) AssociateConsumableWithTask(assetId string, taskId string, consumableId string, cq apitp.ConsumableQuantityRequest) (apitp.ConsumableQuantityResponse, error) {
 	// check asset and task exists and task is associated with asset
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, err
+		return apitp.ConsumableQuantityResponse{}, err
 	}
 
 	cUid, cFound, err := a.consumableExists(consumableId)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, errors.Wrapf(err, "error checking consumable exists")
+		return apitp.ConsumableQuantityResponse{}, errors.Wrapf(err, "error checking consumable exists")
 	}
 
 	if !cFound {
-		return tp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+		return apitp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
 	}
 
 	// TODO check that cq doesnt conflict with path params
 	stConsResponse, err := a.db.AssociateConsumableWithTask(task.Id, cUid, cq.Quantity)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, errors.Wrapf(err, "AssociateConsumableWithTask failed")
+		return apitp.ConsumableQuantityResponse{}, errors.Wrapf(err, "AssociateConsumableWithTask failed")
 	}
 
 	return cv.ConvertStoreConsumableQuantityToApiConsumableQuantityResponse(stConsResponse)
 }
 
-func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, cq tp.ConsumableQuantityRequest) (tp.ConsumableQuantityResponse, error) {
+func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string, cq apitp.ConsumableQuantityRequest) (apitp.ConsumableQuantityResponse, error) {
 	// check asset and work order exists and work order is associated with asset
 	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, err
+		return apitp.ConsumableQuantityResponse{}, err
 	}
 
 	cUid, cFound, err := a.consumableExists(consumableId)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, errors.Wrapf(err, "error checking consumable exists")
+		return apitp.ConsumableQuantityResponse{}, errors.Wrapf(err, "error checking consumable exists")
 	}
 
 	if !cFound {
-		return tp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
+		return apitp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("consumable with id [%s] not found", consumableId))
 	}
 
 	stConsResponse, err := a.db.AssociateConsumableWithWorkOrder(workOrder.Id, cUid, cq.Quantity)
 	if err != nil {
-		return tp.ConsumableQuantityResponse{}, errors.Wrapf(err, "AssociateConsumableWithWorkOrder failed")
+		return apitp.ConsumableQuantityResponse{}, errors.Wrapf(err, "AssociateConsumableWithWorkOrder failed")
 	}
 
 	return cv.ConvertStoreConsumableQuantityToApiConsumableQuantityResponse(stConsResponse)
 }
 
-func (a *App) CreateConsumable(consumable tp.ConsumableRequest) (tp.ConsumableResponse, error) {
+func (a *App) CreateConsumable(consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error) {
 	if consumable.Id != uuid.Nil {
-		return tp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be nil on create, we will create an id for you")
+		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be nil on create, we will create an id for you")
 	}
 	consumable.Id = uuid.New()
 
 	err := a.validateConsumable(consumable)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable validation failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable validation failed")
 	}
 
 	stConsRequest, err := cv.ConvertApiConsumableRequestToStoreConsumable(consumable)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
 	}
 
 	stConsResponse, err := a.db.CreateConsumable(stConsRequest)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable CreateConsumable failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable CreateConsumable failed")
 	}
 
 	return cv.ConvertStoreConsumableToApiConsumableResponse(stConsResponse)
@@ -132,21 +132,21 @@ func (a *App) DisassociateConsumableWithWorkOrder(assetId string, workOrderId st
 	return a.db.DisassociateConsumableWithWorkOrder(workOrder.Id, cUid)
 }
 
-func (a *App) GetConsumable(consumableId string) (tp.ConsumableResponse, error) {
+func (a *App) GetConsumable(consumableId string) (apitp.ConsumableResponse, error) {
 	consumableUuid, err := uuid.Parse(consumableId)
 	if err != nil {
-		return tp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
 	}
 
 	stConsResponse, err := a.db.GetConsumable(consumableUuid)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "GetConsumable failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "GetConsumable failed")
 	}
 
 	return cv.ConvertStoreConsumableToApiConsumableResponse(stConsResponse)
 }
 
-func (a *App) ListConsumables() ([]tp.ConsumableResponse, error) {
+func (a *App) ListConsumables() ([]apitp.ConsumableResponse, error) {
 	stConsResponses, err := a.db.ListConsumables()
 	if err != nil {
 		return nil, errors.Wrapf(err, "ListConsumables failed")
@@ -155,45 +155,45 @@ func (a *App) ListConsumables() ([]tp.ConsumableResponse, error) {
 	return cv.ConvertStoreConsumableListToApiConsumableResponseList(stConsResponses)
 }
 
-func (a *App) UpdateConsumable(consumableId string, consumable tp.ConsumableRequest) (tp.ConsumableResponse, error) {
+func (a *App) UpdateConsumable(consumableId string, consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error) {
 	consumableUuid, err := uuid.Parse(consumableId)
 	if err != nil {
-		return tp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
+		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
 	}
 
 	if consumable.Id != uuid.Nil && consumable.Id != consumableUuid {
-		return tp.ConsumableResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("consumable id mismatch between [%s] and [%s]", consumableId, consumable.Id.String()))
+		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("consumable id mismatch between [%s] and [%s]", consumableId, consumable.Id.String()))
 	}
 
 	consumable.Id = consumableUuid
 	err = a.validateConsumable(consumable)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable validation failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable validation failed")
 	}
 
 	stConsRequest, err := cv.ConvertApiConsumableRequestToStoreConsumable(consumable)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
 	}
 
 	stConsResponse, err := a.db.UpdateConsumable(stConsRequest)
 	if err != nil {
-		return tp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable UpdateConsumable failed")
+		return apitp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable UpdateConsumable failed")
 	}
 
 	return cv.ConvertStoreConsumableToApiConsumableResponse(stConsResponse)
 }
 
-func (a *App) validateConsumable(consumable tp.ConsumableRequest) error {
+func (a *App) validateConsumable(consumable apitp.ConsumableRequest) error {
 	if consumable.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "consumable id is required")
 	}
 
-	if len(consumable.Title) < tp.MinEntityTitleLength || len(consumable.Title) > tp.MaxEntityTitleLength {
+	if len(consumable.Title) < apitp.MinEntityTitleLength || len(consumable.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("consumable title length must be between [%d] and [%d] characters",
-				tp.MinEntityTitleLength,
-				tp.MaxEntityTitleLength))
+				apitp.MinEntityTitleLength,
+				apitp.MaxEntityTitleLength))
 	}
 
 	return nil

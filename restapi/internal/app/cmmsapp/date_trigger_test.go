@@ -5,8 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 func TestCreateDateTrigger(t *testing.T) {
@@ -23,13 +22,13 @@ func TestCreateDateTrigger(t *testing.T) {
 		t.Errorf("TestCreateDateTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestCreateDateTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	dateTrigger := tp.DateTriggerRequest{
+	dateTrigger := apitp.DateTriggerRequest{
 		ScheduledDate: time.Now().Add(24 * time.Hour),
 	}
 
@@ -37,7 +36,7 @@ func TestCreateDateTrigger(t *testing.T) {
 		name          string
 		assetID       string
 		taskID        string
-		dateTrigger   tp.DateTriggerRequest
+		dateTrigger   apitp.DateTriggerRequest
 		shouldSucceed bool
 	}{
 		{"valid date trigger", createdAsset.Id.String(), createdTask.Id.String(), dateTrigger, true},
@@ -80,7 +79,7 @@ func TestDeleteDateTrigger(t *testing.T) {
 		t.Errorf("TestDeleteDateTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDeleteDateTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -133,7 +132,7 @@ func TestGetDateTrigger(t *testing.T) {
 		t.Errorf("TestGetDateTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestGetDateTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -187,7 +186,7 @@ func TestListDateTriggersByAssetAndTask(t *testing.T) {
 		t.Errorf("TestListDateTriggersByAssetAndTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestListDateTriggersByAssetAndTask: failed during setup. CreateTask() failed: %v", err)
@@ -258,7 +257,7 @@ func TestUpdateDateTrigger(t *testing.T) {
 		t.Errorf("TestUpdateDateTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestUpdateDateTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -275,7 +274,7 @@ func TestUpdateDateTrigger(t *testing.T) {
 		assetID       string
 		taskID        string
 		dateTriggerID string
-		dateTrigger   tp.DateTriggerRequest
+		dateTrigger   apitp.DateTriggerRequest
 		shouldSucceed bool
 	}{
 		{"valid date trigger update", createdAsset.Id.String(), createdTask.Id.String(), createdDateTrigger.Id.String(), dt, true},
@@ -312,7 +311,7 @@ func TestValidateDateTrigger(t *testing.T) {
 		t.Errorf("TestValidateDateTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestValidateDateTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -320,7 +319,7 @@ func TestValidateDateTrigger(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		dateTrigger   tp.DateTriggerRequest
+		dateTrigger   apitp.DateTriggerRequest
 		id            uuid.UUID
 		scheduledDate time.Time
 		shouldSucceed bool
@@ -366,7 +365,7 @@ func TestDateTriggerExists(t *testing.T) {
 		t.Errorf("TestDateTriggerExists: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDateTriggerExists: failed during setup. CreateTask() failed: %v", err)
@@ -409,8 +408,8 @@ func TestDateTriggerExists(t *testing.T) {
 	}
 }
 
-func setupApiDateTriggerRequest(identifier int, taskId uuid.UUID) tp.DateTriggerRequest {
-	return tp.DateTriggerRequest{
+func setupApiDateTriggerRequest(identifier int, taskId uuid.UUID) apitp.DateTriggerRequest {
+	return apitp.DateTriggerRequest{
 		ScheduledDate: time.Now().AddDate(0, identifier, 0),
 		TaskId:        taskId,
 	}
