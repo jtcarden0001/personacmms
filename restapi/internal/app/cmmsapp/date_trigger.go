@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
 	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
@@ -35,7 +35,7 @@ func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger apitp
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "CreateDateTrigger validation failed")
 	}
 
-	stDtRequest, err := cv.ConvertApiDateTriggerRequestToStoreDateTrigger(dateTrigger)
+	stDtRequest, err := convertApiDateTriggerRequestToStoreDateTrigger(dateTrigger)
 	if err != nil {
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "CreateDateTrigger - error converting to store type")
 	}
@@ -45,7 +45,7 @@ func (a *App) CreateDateTrigger(assetId string, taskId string, dateTrigger apitp
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "CreateDateTrigger - error creating dateTrigger")
 	}
 
-	return cv.ConvertStoreDateTriggerToApiDateTriggerResponse(stDtResponse)
+	return convertStoreDateTriggerToApiDateTriggerResponse(stDtResponse)
 }
 
 func (a *App) DeleteDateTrigger(assetId string, taskId string, dateTriggerId string) error {
@@ -87,7 +87,7 @@ func (a *App) GetDateTrigger(assetId string, taskId string, dateTriggerId string
 				taskId))
 	}
 
-	return cv.ConvertStoreDateTriggerToApiDateTriggerResponse(dateTrigger)
+	return convertStoreDateTriggerToApiDateTriggerResponse(dateTrigger)
 }
 
 func (a *App) ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]apitp.DateTriggerResponse, error) {
@@ -102,7 +102,7 @@ func (a *App) ListDateTriggersByAssetAndTask(assetId string, taskId string) ([]a
 		return []apitp.DateTriggerResponse{}, errors.Wrapf(err, "ListDateTriggersByAssetAndTask - error listing dateTriggers")
 	}
 
-	return cv.ConvertStoreDateTriggerListToApiDateTriggerResponseList(stDtReponses)
+	return convertStoreDateTriggerListToApiDateTriggerResponseList(stDtReponses)
 }
 
 func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId string, dateTrigger apitp.DateTriggerRequest) (apitp.DateTriggerResponse, error) {
@@ -132,7 +132,7 @@ func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId str
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "UpdateDateTrigger validation failed")
 	}
 
-	stDtRequest, err := cv.ConvertApiDateTriggerRequestToStoreDateTrigger(dateTrigger)
+	stDtRequest, err := convertApiDateTriggerRequestToStoreDateTrigger(dateTrigger)
 	if err != nil {
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "UpdateDateTrigger - error converting to store type")
 	}
@@ -142,7 +142,7 @@ func (a *App) UpdateDateTrigger(assetId string, taskId string, dateTriggerId str
 		return apitp.DateTriggerResponse{}, errors.Wrapf(err, "UpdateDateTrigger - error updating dateTrigger")
 	}
 
-	return cv.ConvertStoreDateTriggerToApiDateTriggerResponse(stDtReponse)
+	return convertStoreDateTriggerToApiDateTriggerResponse(stDtReponse)
 }
 
 func (a *App) validateDateTrigger(dateTrigger apitp.DateTriggerRequest) error {
@@ -181,4 +181,16 @@ func (a *App) dateTriggerExists(dtId string) (uuid.UUID, bool, error) {
 		return uid, false, err
 	}
 	return uid, true, nil
+}
+
+func convertApiDateTriggerRequestToStoreDateTrigger(dateTriggerRequest apitp.DateTriggerRequest) (storetp.DateTrigger, error) {
+	return storetp.DateTrigger{}, ae.New(ae.CodeNotImplemented, "ConvertApiDateTriggerRequestToStoreDateTrigger not implemented")
+}
+
+func convertStoreDateTriggerListToApiDateTriggerResponseList(storeDateTriggers []storetp.DateTrigger) ([]apitp.DateTriggerResponse, error) {
+	return []apitp.DateTriggerResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreDateTriggerListToApiDateTriggerResponseList not implemented")
+}
+
+func convertStoreDateTriggerToApiDateTriggerResponse(storeDateTrigger storetp.DateTrigger) (apitp.DateTriggerResponse, error) {
+	return apitp.DateTriggerResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreDateTriggerToApiDateTriggerResponse not implemented")
 }

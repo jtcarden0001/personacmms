@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
 	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
@@ -23,7 +23,7 @@ func (a *App) CreateCategory(cat apitp.CategoryRequest) (apitp.CategoryResponse,
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory validation failed")
 	}
 
-	stCategory, err := cv.ConvertApiCategoryRequestToStoreCategory(cat)
+	stCategory, err := convertApiCategoryRequestToStoreCategory(cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory ConvertApiCategoryRequestToStoreCategory failed")
 	}
@@ -33,7 +33,7 @@ func (a *App) CreateCategory(cat apitp.CategoryRequest) (apitp.CategoryResponse,
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory CreateCategory failed")
 	}
 
-	return cv.ConvertStoreCategoryToApiCategoryResponse(stCategory)
+	return convertStoreCategoryToApiCategoryResponse(stCategory)
 }
 
 func (a *App) DeleteCategory(id string) error {
@@ -53,7 +53,7 @@ func (a *App) ListCategories() ([]apitp.CategoryResponse, error) {
 		return nil, errors.Wrapf(err, "ListCategories failed")
 	}
 
-	return cv.ConvertStoreCategoryListToApiCategoryResponseList(stCategories)
+	return convertStoreCategoryListToApiCategoryResponseList(stCategories)
 }
 
 func (a *App) GetCategory(id string) (apitp.CategoryResponse, error) {
@@ -67,7 +67,7 @@ func (a *App) GetCategory(id string) (apitp.CategoryResponse, error) {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "GetCategory failed")
 	}
 
-	return cv.ConvertStoreCategoryToApiCategoryResponse(stCategory)
+	return convertStoreCategoryToApiCategoryResponse(stCategory)
 }
 
 func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.CategoryResponse, error) {
@@ -86,7 +86,7 @@ func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.Catego
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory validation failed")
 	}
 
-	stCatRequest, err := cv.ConvertApiCategoryRequestToStoreCategory(cat)
+	stCatRequest, err := convertApiCategoryRequestToStoreCategory(cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory ConvertApiCategoryRequestToStoreCategory failed")
 	}
@@ -96,7 +96,7 @@ func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.Catego
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory UpdateCategory failed")
 	}
 
-	return cv.ConvertStoreCategoryToApiCategoryResponse(stCatResponse)
+	return convertStoreCategoryToApiCategoryResponse(stCatResponse)
 }
 
 // candidate to offload to store layer
@@ -115,7 +115,7 @@ func (a *App) ListCategoriesByAsset(assetId string) ([]apitp.CategoryResponse, e
 		return nil, errors.Wrapf(err, "ListCategoriesByAsset failed")
 	}
 
-	return cv.ConvertStoreCategoryListToApiCategoryResponseList(stCatResponses)
+	return convertStoreCategoryListToApiCategoryResponseList(stCatResponses)
 }
 
 func (a *App) validateCategory(cat apitp.CategoryRequest) error {
@@ -149,4 +149,16 @@ func (a *App) categoryExists(id string) (uuid.UUID, bool, error) {
 	}
 
 	return cUuid, true, nil
+}
+
+func convertApiCategoryRequestToStoreCategory(catRequest apitp.CategoryRequest) (storetp.Category, error) {
+	return storetp.Category{}, ae.New(ae.CodeNotImplemented, "ConvertApiCategoryRequestToStoreCategory not implemented")
+}
+
+func convertStoreCategoryListToApiCategoryResponseList(cats []storetp.Category) ([]apitp.CategoryResponse, error) {
+	return []apitp.CategoryResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreCategoryListToApiCategoryResponseList not implemented")
+}
+
+func convertStoreCategoryToApiCategoryResponse(cat storetp.Category) (apitp.CategoryResponse, error) {
+	return apitp.CategoryResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreCategoryToApiCategoryResponse not implemented")
 }

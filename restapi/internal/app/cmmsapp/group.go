@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
 	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
@@ -21,7 +21,7 @@ func (a *App) CreateGroup(grp apitp.GroupRequest) (apitp.GroupResponse, error) {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup validation failed")
 	}
 
-	stGrpRequest, err := cv.ConvertApiGroupRequestToStoreGroup(grp)
+	stGrpRequest, err := convertApiGroupRequestToStoreGroup(grp)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup - error converting to store type")
 	}
@@ -31,7 +31,7 @@ func (a *App) CreateGroup(grp apitp.GroupRequest) (apitp.GroupResponse, error) {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup - error creating group")
 	}
 
-	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
+	return convertStoreGroupToApiGroupResponse(stGrpResponse)
 }
 
 func (a *App) DeleteGroup(grpId string) error {
@@ -51,7 +51,7 @@ func (a *App) ListGroups() ([]apitp.GroupResponse, error) {
 		return []apitp.GroupResponse{}, errors.Wrapf(err, "ListGroups - error listing groups")
 	}
 
-	return cv.ConvertStoreGroupListToApiGroupResponseList(stGrpResponses)
+	return convertStoreGroupListToApiGroupResponseList(stGrpResponses)
 }
 
 func (a *App) ListGroupsByAsset(assetId string) ([]apitp.GroupResponse, error) {
@@ -65,7 +65,7 @@ func (a *App) ListGroupsByAsset(assetId string) ([]apitp.GroupResponse, error) {
 		return []apitp.GroupResponse{}, errors.Wrapf(err, "ListGroupsByAsset - error listing groups")
 	}
 
-	return cv.ConvertStoreGroupListToApiGroupResponseList(stGrpResponses)
+	return convertStoreGroupListToApiGroupResponseList(stGrpResponses)
 }
 
 func (a *App) GetGroup(grpId string) (apitp.GroupResponse, error) {
@@ -79,7 +79,7 @@ func (a *App) GetGroup(grpId string) (apitp.GroupResponse, error) {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "GetGroup - error getting group")
 	}
 
-	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
+	return convertStoreGroupToApiGroupResponse(stGrpResponse)
 }
 
 func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupResponse, error) {
@@ -98,7 +98,7 @@ func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupRe
 		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup validation failed")
 	}
 
-	stGrpRequest, err := cv.ConvertApiGroupRequestToStoreGroup(newGroup)
+	stGrpRequest, err := convertApiGroupRequestToStoreGroup(newGroup)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup - error converting to store type")
 	}
@@ -107,7 +107,7 @@ func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupRe
 		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup - error updating group")
 	}
 
-	return cv.ConvertStoreGroupToApiGroupResponse(stGrpResponse)
+	return convertStoreGroupToApiGroupResponse(stGrpResponse)
 }
 
 func (a *App) validateGroup(grp apitp.GroupRequest) error {
@@ -143,4 +143,16 @@ func (a *App) groupExists(grpId string) (uuid.UUID, bool, error) {
 
 func printInvalidUuidErrorMessage(resource, id string) string {
 	return fmt.Sprintf("%s id '%s' is not a valid uuid.  Uuid must follow the format '%s'", resource, id, uuid.Nil)
+}
+
+func convertApiGroupRequestToStoreGroup(groupRequest apitp.GroupRequest) (storetp.Group, error) {
+	return storetp.Group{}, ae.New(ae.CodeNotImplemented, "ConvertApiGroupRequestToStoreGroup not implemented")
+}
+
+func convertStoreGroupListToApiGroupResponseList(storeGroups []storetp.Group) ([]apitp.GroupResponse, error) {
+	return []apitp.GroupResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreGroupListToApiGroupResponseList not implemented")
+}
+
+func convertStoreGroupToApiGroupResponse(storeGroup storetp.Group) (apitp.GroupResponse, error) {
+	return apitp.GroupResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreGroupToApiGroupResponse not implemented")
 }

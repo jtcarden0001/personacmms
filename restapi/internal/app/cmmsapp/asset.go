@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	cv "github.com/jtcarden0001/personacmms/restapi/internal/app/cmmsapp/convert"
 	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
@@ -28,7 +28,7 @@ func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (api
 		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithCategory failed")
 	}
 
-	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
+	return convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (apitp.AssetResponse, error) {
@@ -47,7 +47,7 @@ func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (apitp.Ass
 		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithGroup failed")
 	}
 
-	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
+	return convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error) {
@@ -60,7 +60,7 @@ func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error)
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset validation failed")
 	}
 
-	stAssetRequest, err := cv.ConvertApiAssetRequestToStoreAsset(asset)
+	stAssetRequest, err := convertApiAssetRequestToStoreAsset(asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset - convertApiAssetRequestToStoreAsset failed")
 	}
@@ -70,7 +70,7 @@ func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error)
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset failed")
 	}
 
-	return cv.ConvertStoreAssetToApiAssetResponse(stAssetResponse)
+	return convertStoreAssetToApiAssetResponse(stAssetResponse)
 }
 
 func (a *App) DeleteAsset(assetId string) error {
@@ -123,7 +123,7 @@ func (a *App) GetAsset(assetId string) (apitp.AssetResponse, error) {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "GetAsset failed")
 	}
 
-	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
+	return convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) ListAssets() ([]apitp.AssetResponse, error) {
@@ -132,7 +132,7 @@ func (a *App) ListAssets() ([]apitp.AssetResponse, error) {
 		return nil, errors.Wrapf(err, "ListAssets failed")
 	}
 
-	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
+	return convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, error) {
@@ -150,7 +150,7 @@ func (a *App) ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, er
 		return nil, errors.Wrapf(err, "ListAssetsByCategory failed")
 	}
 
-	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
+	return convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]apitp.AssetResponse, error) {
@@ -177,7 +177,7 @@ func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([
 		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup failed")
 	}
 
-	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
+	return convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error) {
@@ -195,7 +195,7 @@ func (a *App) ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error) {
 		return nil, errors.Wrapf(err, "ListAssetsByGroup failed")
 	}
 
-	return cv.ConvertStoreAssetListToApiAssetResponseList(stAssets)
+	return convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.AssetResponse, error) {
@@ -216,7 +216,7 @@ func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.Asset
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - asset validation failed")
 	}
 
-	stAsset, err := cv.ConvertApiAssetRequestToStoreAsset(asset)
+	stAsset, err := convertApiAssetRequestToStoreAsset(asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - convertApiAssetRequestToStoreAsset failed")
 	}
@@ -226,7 +226,7 @@ func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.Asset
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset failed")
 	}
 
-	return cv.ConvertStoreAssetToApiAssetResponse(stAsset)
+	return convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) validateAsset(asset apitp.AssetRequest) error {
@@ -261,4 +261,16 @@ func (a *App) assetExists(assetId string) (uuid.UUID, bool, error) {
 	}
 
 	return assetUuid, true, nil
+}
+
+func convertApiAssetRequestToStoreAsset(assetRequest apitp.AssetRequest) (storetp.Asset, error) {
+	return storetp.Asset{}, ae.New(ae.CodeNotImplemented, "ConvertApiAssetRequestToStoreAsset not implemented")
+}
+
+func convertStoreAssetListToApiAssetResponseList(storeAssets []storetp.Asset) ([]apitp.AssetResponse, error) {
+	return []apitp.AssetResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreAssetListToApiAssetResponseList not implemented")
+}
+
+func convertStoreAssetToApiAssetResponse(storeAsset storetp.Asset) (apitp.AssetResponse, error) {
+	return apitp.AssetResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreAssetToApiAssetResponse not implemented")
 }
