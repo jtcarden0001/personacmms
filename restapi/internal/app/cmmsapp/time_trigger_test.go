@@ -4,8 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 func TestCreateTimeTrigger(t *testing.T) {
@@ -16,19 +15,19 @@ func TestCreateTimeTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestCreateTimeTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestCreateTimeTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	timeTrigger := tp.TimeTrigger{
+	timeTrigger := apitp.TimeTriggerRequest{
 		Quantity: 1,
 		TimeUnit: "day",
 	}
@@ -37,7 +36,7 @@ func TestCreateTimeTrigger(t *testing.T) {
 		name          string
 		assetID       string
 		taskID        string
-		timeTrigger   tp.TimeTrigger
+		timeTrigger   apitp.TimeTriggerRequest
 		shouldSucceed bool
 	}{
 		{"valid time trigger", createdAsset.Id.String(), createdTask.Id.String(), timeTrigger, true},
@@ -74,19 +73,19 @@ func TestDeleteTimeTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDeleteTimeTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDeleteTimeTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := utest.SetupTimeTrigger(1, createdTask.Id, false)
+	tt := setupApiTimeTriggerRequest(1, createdTask.Id)
 	createdTimeTrigger, err := app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt)
 	if err != nil {
 		t.Errorf("TestDeleteTimeTrigger: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -127,19 +126,19 @@ func TestGetTimeTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestGetTimeTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestGetTimeTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := utest.SetupTimeTrigger(1, createdTask.Id, false)
+	tt := setupApiTimeTriggerRequest(1, createdTask.Id)
 	createdTimeTrigger, err := app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt)
 	if err != nil {
 		t.Errorf("TestGetTimeTrigger: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -181,25 +180,25 @@ func TestListTimeTriggersByAssetAndTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListTimeTriggersByAssetAndTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestListTimeTriggersByAssetAndTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt1 := utest.SetupTimeTrigger(1, createdTask.Id, false)
+	tt1 := setupApiTimeTriggerRequest(1, createdTask.Id)
 	_, err = app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt1)
 	if err != nil {
 		t.Errorf("TestListTimeTriggersByAssetAndTask: failed during setup. CreateTimeTrigger() failed: %v", err)
 	}
 
-	tt2 := utest.SetupTimeTrigger(2, createdTask.Id, false)
+	tt2 := setupApiTimeTriggerRequest(2, createdTask.Id)
 	_, err = app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt2)
 	if err != nil {
 		t.Errorf("TestListTimeTriggersByAssetAndTask: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -252,19 +251,19 @@ func TestUpdateTimeTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestUpdateTimeTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestUpdateTimeTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := utest.SetupTimeTrigger(1, createdTask.Id, false)
+	tt := setupApiTimeTriggerRequest(1, createdTask.Id)
 	createdTimeTrigger, err := app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt)
 	if err != nil {
 		t.Errorf("TestUpdateTimeTrigger: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -275,13 +274,13 @@ func TestUpdateTimeTrigger(t *testing.T) {
 		assetID       string
 		taskID        string
 		timeTriggerID string
-		timeTrigger   tp.TimeTrigger
+		timeTrigger   apitp.TimeTriggerRequest
 		shouldSucceed bool
 	}{
-		{"valid time trigger update", createdAsset.Id.String(), createdTask.Id.String(), createdTimeTrigger.Id.String(), createdTimeTrigger, true},
-		{"invalid time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", createdTimeTrigger, false},
-		{"nil time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), createdTimeTrigger, false},
-		{"empty time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "", createdTimeTrigger, false},
+		{"valid time trigger update", createdAsset.Id.String(), createdTask.Id.String(), createdTimeTrigger.Id.String(), tt, true},
+		{"invalid time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", tt, false},
+		{"nil time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), tt, false},
+		{"empty time trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "", tt, false},
 	}
 
 	for _, tc := range testCases {
@@ -306,13 +305,13 @@ func TestValidateTimeTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestValidateTimeTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestValidateTimeTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -320,16 +319,16 @@ func TestValidateTimeTrigger(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		timeTrigger   tp.TimeTrigger
+		timeTrigger   apitp.TimeTriggerRequest
 		id            uuid.UUID
 		quantity      int
 		timeUnit      string
 		shouldSucceed bool
 	}{
-		{"valid time trigger", utest.SetupTimeTrigger(1, createdTask.Id, false), uuid.New(), 1, "day", true},
-		{"nil id", utest.SetupTimeTrigger(2, createdTask.Id, false), uuid.Nil, 1, "day", false},
-		{"invalid quantity", utest.SetupTimeTrigger(3, createdTask.Id, false), uuid.New(), 0, "day", false},
-		{"invalid time unit", utest.SetupTimeTrigger(4, createdTask.Id, false), uuid.New(), 1, "invalid", false},
+		{"valid time trigger", setupApiTimeTriggerRequest(1, createdTask.Id), uuid.New(), 1, "day", true},
+		{"nil id", setupApiTimeTriggerRequest(2, createdTask.Id), uuid.Nil, 1, "day", false},
+		{"invalid quantity", setupApiTimeTriggerRequest(3, createdTask.Id), uuid.New(), 0, "day", false},
+		{"invalid time unit", setupApiTimeTriggerRequest(4, createdTask.Id), uuid.New(), 1, "invalid", false},
 	}
 
 	for _, tc := range testCases {
@@ -357,19 +356,19 @@ func TestTimeTriggerExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestTimeTriggerExists: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestTimeTriggerExists: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tt := utest.SetupTimeTrigger(1, createdTask.Id, false)
+	tt := setupApiTimeTriggerRequest(1, createdTask.Id)
 	createdTimeTrigger, err := app.CreateTimeTrigger(createdAsset.Id.String(), createdTask.Id.String(), tt)
 	if err != nil {
 		t.Errorf("TestTimeTriggerExists: failed during setup. CreateTimeTrigger() failed: %v", err)
@@ -403,5 +402,13 @@ func TestTimeTriggerExists(t *testing.T) {
 				t.Errorf("timeTriggerExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiTimeTriggerRequest(identifier int, taskId uuid.UUID) apitp.TimeTriggerRequest {
+	return apitp.TimeTriggerRequest{
+		TaskId:   taskId,
+		Quantity: identifier,
+		TimeUnit: apitp.TimeTriggerUnitDays,
 	}
 }
