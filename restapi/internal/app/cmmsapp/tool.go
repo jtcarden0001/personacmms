@@ -4,25 +4,26 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
-func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string, ts tp.ToolSize) (tp.ToolSize, error) {
+func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string, ts apitp.ToolSizeRequest) (apitp.ToolSizeResponse, error) {
 	// check asset and task exists and task is associated with asset
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.ToolSize{}, err
+		return apitp.ToolSizeResponse{}, err
 	}
 
 	tUid, tFound, err := a.toolExists(toolId)
 	if err != nil {
-		return tp.ToolSize{}, errors.Wrapf(err, "error checking tool exists")
+		return apitp.ToolSizeResponse{}, errors.Wrapf(err, "error checking tool exists")
 	}
 
 	if !tFound {
-		return tp.ToolSize{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+		return apitp.ToolSizeResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
 	}
 
 	// TODO check that ts doesnt conflict with path params
@@ -32,23 +33,28 @@ func (a *App) AssociateToolWithTask(assetId string, taskId string, toolId string
 		s = *ts.Size
 	}
 
-	return a.db.AssociateToolWithTask(task.Id, tUid, s)
+	stToolSizeResponse, err := a.db.AssociateToolWithTask(task.Id, tUid, s)
+	if err != nil {
+		return apitp.ToolSizeResponse{}, errors.Wrapf(err, "AssociateToolWithTask failed")
+	}
+
+	return convertStoreToolSizeToApiToolSizeResponse(stToolSizeResponse)
 }
 
-func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, ts tp.ToolSize) (tp.ToolSize, error) {
+func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, toolId string, ts apitp.ToolSizeRequest) (apitp.ToolSizeResponse, error) {
 	// check asset and work order exists and work order is associated with asset
 	workOrder, err := a.GetWorkOrder(assetId, workOrderId)
 	if err != nil {
-		return tp.ToolSize{}, err
+		return apitp.ToolSizeResponse{}, err
 	}
 
 	tUid, tFound, err := a.toolExists(toolId)
 	if err != nil {
-		return tp.ToolSize{}, errors.Wrapf(err, "error checking tool exists")
+		return apitp.ToolSizeResponse{}, errors.Wrapf(err, "error checking tool exists")
 	}
 
 	if !tFound {
-		return tp.ToolSize{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
+		return apitp.ToolSizeResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("tool with id [%s] not found", toolId))
 	}
 
 	// TODO check that ts doesnt conflict with path params
@@ -58,21 +64,36 @@ func (a *App) AssociateToolWithWorkOrder(assetId string, workOrderId string, too
 		s = *ts.Size
 	}
 
-	return a.db.AssociateToolWithWorkOrder(workOrder.Id, tUid, s)
+	stToolSizeResponse, err := a.db.AssociateToolWithWorkOrder(workOrder.Id, tUid, s)
+	if err != nil {
+		return apitp.ToolSizeResponse{}, errors.Wrapf(err, "AssociateToolWithWorkOrder failed")
+	}
+
+	return convertStoreToolSizeToApiToolSizeResponse(stToolSizeResponse)
 }
 
-func (a *App) CreateTool(tool tp.Tool) (tp.Tool, error) {
+func (a *App) CreateTool(tool apitp.ToolRequest) (apitp.ToolResponse, error) {
 	if tool.Id != uuid.Nil {
-		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be nil on create, we will create an id for you")
+		return apitp.ToolResponse{}, ae.New(ae.CodeInvalid, "tool id must be nil on create, we will create an id for you")
 	}
 	tool.Id = uuid.New()
 
 	err := a.validateTool(tool)
 	if err != nil {
-		return tp.Tool{}, errors.Wrapf(err, "CreateTool validation failed")
+		return apitp.ToolResponse{}, errors.Wrapf(err, "CreateTool validation failed")
 	}
 
-	return a.db.CreateTool(tool)
+	stToolRequest, err := convertApiToolRequestToStoreTool(tool)
+	if err != nil {
+		return apitp.ToolResponse{}, errors.Wrapf(err, "CreateTool - error converting to store type")
+	}
+
+	stToolResponse, err := a.db.CreateTool(stToolRequest)
+	if err != nil {
+		return apitp.ToolResponse{}, errors.Wrapf(err, "CreateTool - error creating tool")
+	}
+
+	return convertStoreToolToApiToolResponse(stToolResponse)
 }
 
 func (a *App) DeleteTool(toolId string) error {
@@ -124,49 +145,69 @@ func (a *App) DisassociateToolWithWorkOrder(assetId string, workOrderId string, 
 	return a.db.DisassociateToolWithWorkOrder(workOrder.Id, tUid)
 }
 
-func (a *App) GetTool(toolId string) (tp.Tool, error) {
+func (a *App) GetTool(toolId string) (apitp.ToolResponse, error) {
 	tUid, err := uuid.Parse(toolId)
 	if err != nil {
-		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+		return apitp.ToolResponse{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
 	}
 
-	return a.db.GetTool(tUid)
+	stToolResponse, err := a.db.GetTool(tUid)
+	if err != nil {
+		return apitp.ToolResponse{}, err
+	}
+
+	return convertStoreToolToApiToolResponse(stToolResponse)
 }
 
-func (a *App) ListTools() ([]tp.Tool, error) {
-	return a.db.ListTools()
+func (a *App) ListTools() ([]apitp.ToolResponse, error) {
+	stToolResponses, err := a.db.ListTools()
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListTools failed")
+	}
+
+	return convertStoreToolListToApiToolResponseList(stToolResponses)
 }
 
-func (a *App) UpdateTool(toolId string, tool tp.Tool) (tp.Tool, error) {
+func (a *App) UpdateTool(toolId string, tool apitp.ToolRequest) (apitp.ToolResponse, error) {
 	tuid, err := uuid.Parse(toolId)
 	if err != nil {
-		return tp.Tool{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
+		return apitp.ToolResponse{}, ae.New(ae.CodeInvalid, "tool id must be a valid uuid")
 	}
 
 	if tool.Id != uuid.Nil && tool.Id != tuid {
-		return tp.Tool{}, ae.New(ae.CodeInvalid,
+		return apitp.ToolResponse{}, ae.New(ae.CodeInvalid,
 			fmt.Sprintf("tool id mismatch between [%s] and [%s]", toolId, tool.Id))
 	}
 
 	tool.Id = tuid
 	err = a.validateTool(tool)
 	if err != nil {
-		return tp.Tool{}, errors.Wrapf(err, "UpdateTool validation failed")
+		return apitp.ToolResponse{}, errors.Wrapf(err, "UpdateTool validation failed")
 	}
 
-	return a.db.UpdateTool(tool)
+	stToolRequest, err := convertApiToolRequestToStoreTool(tool)
+	if err != nil {
+		return apitp.ToolResponse{}, errors.Wrapf(err, "UpdateTool - error converting to store type")
+	}
+
+	stToolResponse, err := a.db.UpdateTool(stToolRequest)
+	if err != nil {
+		return apitp.ToolResponse{}, errors.Wrapf(err, "UpdateTool - error updating tool")
+	}
+
+	return convertStoreToolToApiToolResponse(stToolResponse)
 }
 
-func (a *App) validateTool(tool tp.Tool) error {
+func (a *App) validateTool(tool apitp.ToolRequest) error {
 	if tool.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "tool id is required")
 	}
 
-	if len(tool.Title) < tp.MinEntityTitleLength || len(tool.Title) > tp.MaxEntityTitleLength {
+	if len(tool.Title) < apitp.MinEntityTitleLength || len(tool.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("tool title must be between [%d] and [%d] characters",
-				tp.MinEntityTitleLength,
-				tp.MaxEntityTitleLength))
+				apitp.MinEntityTitleLength,
+				apitp.MaxEntityTitleLength))
 	}
 
 	return nil
@@ -187,4 +228,28 @@ func (a *App) toolExists(id string) (uuid.UUID, bool, error) {
 		return uid, false, err
 	}
 	return uid, true, nil
+}
+
+func convertApiToolRequestToStoreTool(tool apitp.ToolRequest) (storetp.Tool, error) {
+	return storetp.Tool{}, ae.New(ae.CodeNotImplemented, "ConvertApiToolRequestToStoreTool not implemented")
+}
+
+func convertApiToolSizeRequestToStoreToolSize(toolSize apitp.ToolSizeRequest) (storetp.ToolSize, error) {
+	return storetp.ToolSize{}, ae.New(ae.CodeNotImplemented, "ConvertApiToolSizeRequestToStoreToolSize not implemented")
+}
+
+func convertStoreToolListToApiToolResponseList(st []storetp.Tool) ([]apitp.ToolResponse, error) {
+	return []apitp.ToolResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreToolListToApiToolResponseList not implemented")
+}
+
+func convertStoreToolSizeListToApiToolSizeResponseList(st []storetp.ToolSize) ([]apitp.ToolSizeResponse, error) {
+	return []apitp.ToolSizeResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreToolSizeListToApiToolSizeResponseList not implemented")
+}
+
+func convertStoreToolSizeToApiToolSizeResponse(st storetp.ToolSize) (apitp.ToolSizeResponse, error) {
+	return apitp.ToolSizeResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreToolSizeToApiToolSizeResponse not implemented")
+}
+
+func convertStoreToolToApiToolResponse(st storetp.Tool) (apitp.ToolResponse, error) {
+	return apitp.ToolResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreToolToApiToolResponse not implemented")
 }

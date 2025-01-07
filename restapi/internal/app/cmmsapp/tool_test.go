@@ -1,11 +1,12 @@
 package cmmsapp
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -17,25 +18,25 @@ func TestAssociateToolWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithTask: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	ts := tp.ToolSize{
+	ts := apitp.ToolSizeRequest{
 		Size: nil,
 	}
 
@@ -44,7 +45,7 @@ func TestAssociateToolWithTask(t *testing.T) {
 		assetID       string
 		taskID        string
 		toolID        string
-		toolSize      tp.ToolSize
+		toolSize      apitp.ToolSizeRequest
 		shouldSucceed bool
 	}{
 		{"valid association", createdAsset.Id.String(), createdTask.Id.String(), createdTool.Id.String(), ts, true},
@@ -93,7 +94,7 @@ func TestAssociateToolWithWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -105,13 +106,13 @@ func TestAssociateToolWithWorkOrder(t *testing.T) {
 		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
 	}
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	ts := tp.ToolSize{
+	ts := apitp.ToolSizeRequest{
 		Size: nil,
 	}
 
@@ -120,7 +121,7 @@ func TestAssociateToolWithWorkOrder(t *testing.T) {
 		assetID       string
 		workOrderID   string
 		toolID        string
-		toolSize      tp.ToolSize
+		toolSize      apitp.ToolSizeRequest
 		shouldSucceed bool
 	}{
 		{"valid association", createdAsset.Id.String(), createdWorkOrder.Id.String(), createdTool.Id.String(), ts, true},
@@ -169,22 +170,22 @@ func TestCreateTool(t *testing.T) {
 	}
 	defer cleanup()
 
-	conflictingTool := utest.SetupTool(1, false)
+	conflictingTool := setupApiToolRequest(1)
 	_, err = app.CreateTool(conflictingTool)
 	if err != nil {
 		t.Errorf("TestCreateTool: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	emptyTitleTool := utest.SetupTool(2, false)
+	emptyTitleTool := setupApiToolRequest(2)
 	emptyTitleTool.Title = ""
 
 	testCases := []struct {
 		name          string
-		tool          tp.Tool
+		tool          apitp.ToolRequest
 		shouldSucceed bool
 	}{
-		{"valid tool", utest.SetupTool(3, false), true},
-		{"non nil id", utest.SetupTool(4, true), false},
+		{"valid tool", setupApiToolRequest(3), true},
+		{"non nil id", setupApiToolRequest(4), false},
 		{"empty title", emptyTitleTool, false},
 		{"conflicting title", conflictingTool, false},
 	}
@@ -211,7 +212,7 @@ func TestDeleteTool(t *testing.T) {
 	}
 	defer cleanup()
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestDeleteTool: failed during setup. CreateTool() failed: %v", err)
@@ -250,25 +251,25 @@ func TestDisassociateToolWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithTask: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	ts := tp.ToolSize{
+	ts := apitp.ToolSizeRequest{
 		Size: nil,
 	}
 
@@ -330,7 +331,7 @@ func TestDisassociateToolWithWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -342,13 +343,13 @@ func TestDisassociateToolWithWorkOrder(t *testing.T) {
 		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
 	}
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	ts := tp.ToolSize{
+	ts := apitp.ToolSizeRequest{
 		Size: nil,
 	}
 
@@ -410,7 +411,7 @@ func TestGetTool(t *testing.T) {
 	}
 	defer cleanup()
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestGetTool: failed during setup. CreateTool() failed: %v", err)
@@ -450,13 +451,13 @@ func TestListTools(t *testing.T) {
 	}
 	defer cleanup()
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	_, err = app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestListTools: failed during setup. CreateTool() failed: %v", err)
 	}
 
-	tl = utest.SetupTool(2, false)
+	tl = setupApiToolRequest(2)
 	_, err = app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestListTools: failed during setup. CreateTool() failed: %v", err)
@@ -500,10 +501,10 @@ func TestUpdateTool(t *testing.T) {
 
 	toolCount := 5
 	var ids []string
-	tools := make(map[string]tp.Tool)
-	nilIdTools := make(map[string]tp.Tool)
+	tools := make(map[string]apitp.ToolResponse)
+	nilIdTools := make(map[string]apitp.ToolRequest)
 	for i := 0; i < toolCount; i++ {
-		tl := utest.SetupTool(i, false)
+		tl := setupApiToolRequest(i)
 		ct, err := app.CreateTool(tl)
 		if err != nil {
 			t.Errorf("TestUpdateTool: failed during setup. CreateTool() failed: %v", err)
@@ -517,25 +518,25 @@ func TestUpdateTool(t *testing.T) {
 	testCases := []struct {
 		name          string
 		toolId        string
-		tool          tp.Tool
+		tool          apitp.ToolRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid tool with matching IDs", ids[0], tools[ids[0]], "valid title1", true},
+		{"valid tool with matching IDs", ids[0], nilIdTools[ids[0]], "valid title1", true},
 		{"valid tool with Tool.Id nil", ids[1], nilIdTools[ids[1]], "valid title2", true},
-		{"mismatching tool ID and Tool.Id", ids[2], tools[ids[3]], "valid title3", false},
-		{"non-existent tool", uuid.New().String(), tp.Tool{}, "valid title3", false},
+		{"mismatching tool ID and Tool.Id", ids[2], nilIdTools[ids[3]], "valid title3", false},
+		{"non-existent tool", uuid.New().String(), apitp.ToolRequest{}, "valid title3", false},
 
-		{"invalid tool ID", "invalid", tp.Tool{}, "valid title3", false},
-		{"nil tool ID", uuid.Nil.String(), tp.Tool{}, "valid title3", false},
-		{"empty tool ID", "", tp.Tool{}, "valid title3", false},
-		{"conflicting id", ids[4], tools[ids[3]], "valid title3", false},
+		{"invalid tool ID", "invalid", apitp.ToolRequest{}, "valid title3", false},
+		{"nil tool ID", uuid.Nil.String(), apitp.ToolRequest{}, "valid title3", false},
+		{"empty tool ID", "", apitp.ToolRequest{}, "valid title3", false},
+		{"conflicting id", ids[4], nilIdTools[ids[3]], "valid title3", false},
 
-		{"empty title", ids[1], tools[ids[1]], "", false},
-		{"minimum length title", ids[1], tools[ids[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", ids[1], tools[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", ids[1], tools[ids[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
-		{"conflicting title", ids[2], tools[ids[2]], tools[ids[3]].Title, false},
+		{"empty title", ids[1], nilIdTools[ids[1]], "", false},
+		{"minimum length title", ids[1], nilIdTools[ids[1]], strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", ids[1], nilIdTools[ids[1]], strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", ids[1], nilIdTools[ids[1]], strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"conflicting title", ids[2], nilIdTools[ids[2]], tools[ids[3]].Title, false},
 	}
 
 	for _, tc := range testCases {
@@ -563,18 +564,18 @@ func TestValidateTool(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		tool          tp.Tool
+		tool          apitp.ToolRequest
 		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid tool", utest.SetupTool(1, false), uuid.New(), "valid title", true},
-		{"nil id", utest.SetupTool(2, false), uuid.Nil, "valid title", false},
+		{"valid tool", setupApiToolRequest(1), uuid.New(), "valid title", true},
+		{"nil id", setupApiToolRequest(2), uuid.Nil, "valid title", false},
 
-		{"empty title", utest.SetupTool(3, false), uuid.New(), "", false},
-		{"minimum length title", utest.SetupTool(4, false), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", utest.SetupTool(5, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", utest.SetupTool(6, false), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiToolRequest(3), uuid.New(), "", false},
+		{"minimum length title", setupApiToolRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiToolRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiToolRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -601,7 +602,7 @@ func TestToolExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	tl := utest.SetupTool(1, false)
+	tl := setupApiToolRequest(1)
 	createdTool, err := app.CreateTool(tl)
 	if err != nil {
 		t.Errorf("TestToolExists: failed during setup. CreateTool() failed: %v", err)
@@ -636,5 +637,18 @@ func TestToolExists(t *testing.T) {
 				t.Errorf("toolExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiToolRequest(identifier int) apitp.ToolRequest {
+	return apitp.ToolRequest{
+		Title: "Tool " + strconv.Itoa(identifier),
+	}
+}
+
+func setupApiToolSizeRequest(identifier int, toolId uuid.UUID) apitp.ToolSizeRequest {
+	return apitp.ToolSizeRequest{
+		Title: "Tool Size " + strconv.Itoa(identifier),
+		Size:  utest.ToPtr("Size " + strconv.Itoa(identifier)),
 	}
 }
