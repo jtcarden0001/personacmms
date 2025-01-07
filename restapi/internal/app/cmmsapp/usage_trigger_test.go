@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 )
 
 func TestCreateUsageTrigger(t *testing.T) {
@@ -16,24 +16,24 @@ func TestCreateUsageTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestCreateUsageTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestCreateUsageTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	usageTrigger := tp.UsageTrigger{
+	usageTrigger := apitp.UsageTriggerRequest{
 		Quantity:  1,
 		UsageUnit: "hour",
 	}
 
-	usageTriggerWithId := tp.UsageTrigger{
+	usageTriggerWithId := apitp.UsageTriggerRequest{
 		Id:        uuid.New(),
 		Quantity:  1,
 		UsageUnit: "hour",
@@ -43,7 +43,7 @@ func TestCreateUsageTrigger(t *testing.T) {
 		name          string
 		assetID       string
 		taskID        string
-		usageTrigger  tp.UsageTrigger
+		usageTrigger  apitp.UsageTriggerRequest
 		shouldSucceed bool
 	}{
 		{"valid usage trigger", createdAsset.Id.String(), createdTask.Id.String(), usageTrigger, true},
@@ -81,19 +81,19 @@ func TestDeleteUsageTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDeleteUsageTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDeleteUsageTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	ut := utest.SetupUsageTrigger(1, createdTask.Id, false)
+	ut := setupApiUsageTriggerRequest(1, createdTask.Id)
 	createdUsageTrigger, err := app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut)
 	if err != nil {
 		t.Errorf("TestDeleteUsageTrigger: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -134,19 +134,19 @@ func TestGetUsageTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestGetUsageTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestGetUsageTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	ut := utest.SetupUsageTrigger(1, createdTask.Id, false)
+	ut := setupApiUsageTriggerRequest(1, createdTask.Id)
 	createdUsageTrigger, err := app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut)
 	if err != nil {
 		t.Errorf("TestGetUsageTrigger: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -188,25 +188,25 @@ func TestListUsageTriggersByAssetAndTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListUsageTriggersByAssetAndTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestListUsageTriggersByAssetAndTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	ut1 := utest.SetupUsageTrigger(1, createdTask.Id, false)
+	ut1 := setupApiUsageTriggerRequest(1, createdTask.Id)
 	_, err = app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut1)
 	if err != nil {
 		t.Errorf("TestListUsageTriggersByAssetAndTask: failed during setup. CreateUsageTrigger() failed: %v", err)
 	}
 
-	ut2 := utest.SetupUsageTrigger(2, createdTask.Id, false)
+	ut2 := setupApiUsageTriggerRequest(2, createdTask.Id)
 	_, err = app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut2)
 	if err != nil {
 		t.Errorf("TestListUsageTriggersByAssetAndTask: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -259,19 +259,19 @@ func TestUpdateUsageTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestUpdateUsageTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestUpdateUsageTrigger: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	ut := utest.SetupUsageTrigger(1, createdTask.Id, false)
+	ut := setupApiUsageTriggerRequest(1, createdTask.Id)
 	createdUsageTrigger, err := app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut)
 	if err != nil {
 		t.Errorf("TestUpdateUsageTrigger: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -282,13 +282,13 @@ func TestUpdateUsageTrigger(t *testing.T) {
 		assetID        string
 		taskID         string
 		usageTriggerID string
-		usageTrigger   tp.UsageTrigger
+		usageTrigger   apitp.UsageTriggerRequest
 		shouldSucceed  bool
 	}{
-		{"valid usage trigger update", createdAsset.Id.String(), createdTask.Id.String(), createdUsageTrigger.Id.String(), createdUsageTrigger, true},
-		{"invalid usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", createdUsageTrigger, false},
-		{"nil usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), createdUsageTrigger, false},
-		{"empty usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "", createdUsageTrigger, false},
+		{"valid usage trigger update", createdAsset.Id.String(), createdTask.Id.String(), createdUsageTrigger.Id.String(), ut, true},
+		{"invalid usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "invalid", ut, false},
+		{"nil usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), uuid.Nil.String(), ut, false},
+		{"empty usage trigger ID", createdAsset.Id.String(), createdTask.Id.String(), "", ut, false},
 	}
 
 	for _, tc := range testCases {
@@ -313,13 +313,13 @@ func TestValidateUsageTrigger(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestValidateUsageTrigger: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestValidateUsageTrigger: failed during setup. CreateTask() failed: %v", err)
@@ -327,16 +327,16 @@ func TestValidateUsageTrigger(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		usageTrigger  tp.UsageTrigger
+		usageTrigger  apitp.UsageTriggerRequest
 		id            uuid.UUID
 		quantity      int
 		usageUnit     string
 		shouldSucceed bool
 	}{
-		{"valid usage trigger", utest.SetupUsageTrigger(1, createdTask.Id, false), uuid.New(), 1, "hour", true},
-		{"nil id", utest.SetupUsageTrigger(2, createdTask.Id, false), uuid.Nil, 1, "hour", false},
-		{"invalid quantity", utest.SetupUsageTrigger(3, createdTask.Id, false), uuid.New(), 0, "hour", false},
-		{"invalid usage unit", utest.SetupUsageTrigger(4, createdTask.Id, false), uuid.New(), 1, "invalid", false},
+		{"valid usage trigger", setupApiUsageTriggerRequest(1, createdTask.Id), uuid.New(), 1, "hour", true},
+		{"nil id", setupApiUsageTriggerRequest(2, createdTask.Id), uuid.Nil, 1, "hour", false},
+		{"invalid quantity", setupApiUsageTriggerRequest(3, createdTask.Id), uuid.New(), 0, "hour", false},
+		{"invalid usage unit", setupApiUsageTriggerRequest(4, createdTask.Id), uuid.New(), 1, "invalid", false},
 	}
 
 	for _, tc := range testCases {
@@ -369,7 +369,7 @@ func TestListUsageTriggerUnits(t *testing.T) {
 		t.Errorf("ListUsageTriggerUnits() failed: %v", err)
 	}
 
-	if len(units) != len(tp.ValidUsageTriggerUnits) {
+	if len(units) != len(apitp.ValidUsageTriggerUnits) {
 		t.Errorf("ListUsageTriggerUnits() failed: expected %d units, got %d", len(tp.ValidUsageTriggerUnits), len(units))
 	}
 }
@@ -382,19 +382,19 @@ func TestUsageTriggerExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	createdAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestUsageTriggerExists: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, createdAsset.Id, false)
+	tk := setupApiTaskRequest(1, createdAsset.Id)
 	createdTask, err := app.CreateTask(createdAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestUsageTriggerExists: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	ut := utest.SetupUsageTrigger(1, createdTask.Id, false)
+	ut := setupApiUsageTriggerRequest(1, createdTask.Id)
 	createdUsageTrigger, err := app.CreateUsageTrigger(createdAsset.Id.String(), createdTask.Id.String(), ut)
 	if err != nil {
 		t.Errorf("TestUsageTriggerExists: failed during setup. CreateUsageTrigger() failed: %v", err)
@@ -428,5 +428,13 @@ func TestUsageTriggerExists(t *testing.T) {
 				t.Errorf("usageTriggerExists() failed: expected %t, got %t", tc.shouldExist, exists)
 			}
 		})
+	}
+}
+
+func setupApiUsageTriggerRequest(identifier int, taskId uuid.UUID) apitp.UsageTriggerRequest {
+	return apitp.UsageTriggerRequest{
+		TaskId:    taskId,
+		Quantity:  identifier,
+		UsageUnit: tp.UsageTriggerUnitDays,
 	}
 }
