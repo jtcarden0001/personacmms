@@ -124,7 +124,7 @@ func TestDisassociateTaskWithWorkOrder(t *testing.T) {
 		t.Errorf("TestDisassociateTaskWithWorkOrder: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	w := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	w := setupApiWorkOrderRequest(1, createdAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), w)
 	if err != nil {
 		t.Errorf("TestDisassociateTaskWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)

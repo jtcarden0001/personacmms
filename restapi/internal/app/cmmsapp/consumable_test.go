@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
-	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
 func TestAssociateConsumableWithTask(t *testing.T) {
@@ -91,7 +90,7 @@ func TestAssociateConsumableWithWorkOrder(t *testing.T) {
 		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo1 := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	wo1 := setupApiWorkOrderRequest(1, createdAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo1)
 	if err != nil {
 		t.Errorf("TestAssociateConsumableWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -291,7 +290,7 @@ func TestDisassociateConsumableWithWorkOrder(t *testing.T) {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo1 := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	wo1 := setupApiWorkOrderRequest(1, createdAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo1)
 	if err != nil {
 		t.Errorf("TestDisassociateConsumableWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)

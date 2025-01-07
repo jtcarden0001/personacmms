@@ -100,7 +100,7 @@ func TestAssociateToolWithWorkOrder(t *testing.T) {
 		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, createdAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestAssociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -337,7 +337,7 @@ func TestDisassociateToolWithWorkOrder(t *testing.T) {
 		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, createdAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, createdAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(createdAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestDisassociateToolWithWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)

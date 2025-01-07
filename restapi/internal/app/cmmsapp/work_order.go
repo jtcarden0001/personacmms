@@ -5,51 +5,67 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
+	storetp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 	ae "github.com/jtcarden0001/personacmms/restapi/internal/utils/apperrors"
 	"github.com/pkg/errors"
 )
 
-func (a *App) AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (tp.WorkOrder, error) {
+func (a *App) AssociateWorkOrderWithTask(assetId string, taskId string, workOrderId string) (apitp.WorkOrderResponse, error) {
 	wUid, wFound, err := a.workOrderExists(workOrderId)
 	if err != nil {
-		return tp.WorkOrder{}, errors.Wrapf(err, "error checking work order exists")
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "error checking work order exists")
 	}
 
 	if !wFound {
-		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found", workOrderId))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found", workOrderId))
 	}
 
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
-		return tp.WorkOrder{}, err
+		return apitp.WorkOrderResponse{}, err
 	}
 
-	return a.db.AssociateWorkOrderWithTask(task.Id, wUid)
+	stWOResponse, err := a.db.AssociateWorkOrderWithTask(task.Id, wUid)
+	if err != nil {
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "AssociateWorkOrderWithTask failed")
+	}
+
+	return convertStoreWorkOrderToApiWorkOrderResponse(stWOResponse)
 }
 
-func (a *App) CreateWorkOrder(assetId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (a *App) CreateWorkOrder(assetId string, wo apitp.WorkOrderRequest) (apitp.WorkOrderResponse, error) {
 	if wo.Id != uuid.Nil {
-		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "work order id must be nil on create, we will create an id for you")
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeInvalid, "work order id must be nil on create, we will create an id for you")
 	}
 	wo.Id = uuid.New()
 
 	aUid, err := uuid.Parse(assetId)
 	if err != nil {
-		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
 	if wo.AssetId != uuid.Nil && wo.AssetId != aUid {
-		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", wo.AssetId, assetId))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", wo.AssetId, assetId))
 	}
 
 	wo.AssetId = aUid
 	err = a.validateWorkOrder(wo)
 	if err != nil {
-		return tp.WorkOrder{}, errors.Wrapf(err, "CreateWorkOrder validation failed")
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "CreateWorkOrder validation failed")
 	}
 
-	return a.db.CreateWorkOrder(wo)
+	stWORequest, err := convertApiWorkOrderRequestToStoreWorkOrder(wo)
+	if err != nil {
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "CreateWorkOrder - error converting to store type")
+	}
+
+	stWOResponse, err := a.db.CreateWorkOrder(stWORequest)
+	if err != nil {
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "CreateWorkOrder - error creating work order")
+	}
+
+	return convertStoreWorkOrderToApiWorkOrderResponse(stWOResponse)
 }
 
 func (a *App) DeleteWorkOrder(assetId string, woId string) error {
@@ -77,34 +93,34 @@ func (a *App) DisassociateWorkOrderWithTask(assetId string, taskId string, workO
 	return a.DisassociateTaskWithWorkOrder(assetId, taskId, workOrderId)
 }
 
-func (a *App) GetWorkOrder(assetId string, woId string) (tp.WorkOrder, error) {
+func (a *App) GetWorkOrder(assetId string, woId string) (apitp.WorkOrderResponse, error) {
 	woUid, err := uuid.Parse(woId)
 	if err != nil {
-		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, "work order id must be a valid uuid")
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeInvalid, "work order id must be a valid uuid")
 	}
 
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
-		return tp.WorkOrder{}, errors.Wrapf(err, "error checking asset exists")
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "error checking asset exists")
 	}
 
 	if !aFound {
-		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
 	wo, err := a.db.GetWorkOrder(woUid)
 	if err != nil {
-		return tp.WorkOrder{}, err
+		return apitp.WorkOrderResponse{}, err
 	}
 
 	if wo.AssetId != aUid {
-		return tp.WorkOrder{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found on asset with id [%s]", woId, assetId))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("work order with id [%s] not found on asset with id [%s]", woId, assetId))
 	}
 
-	return wo, nil
+	return convertStoreWorkOrderToApiWorkOrderResponse(wo)
 }
 
-func (a *App) ListWorkOrdersByAsset(assetId string) ([]tp.WorkOrder, error) {
+func (a *App) ListWorkOrdersByAsset(assetId string) ([]apitp.WorkOrderResponse, error) {
 	aUid, aFound, err := a.assetExists(assetId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error checking asset exists")
@@ -114,61 +130,76 @@ func (a *App) ListWorkOrdersByAsset(assetId string) ([]tp.WorkOrder, error) {
 		return nil, ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
-	return a.db.ListWorkOrdersByAsset(aUid)
+	stWOResponses, err := a.db.ListWorkOrdersByAsset(aUid)
+	if err != nil {
+		return nil, errors.Wrapf(err, "ListWorkOrdersByAsset failed")
+	}
+
+	return convertStoreWorkOrderListToApiWorkOrderResponseList(stWOResponses)
 }
 
 func (a *App) ListWorkOrderStatus() ([]string, error) {
-	keys := make([]string, 0, len(tp.ValidWorkOrderStatuses))
-	for k := range tp.ValidWorkOrderStatuses {
+	keys := make([]string, 0, len(apitp.ValidWorkOrderStatuses))
+	for k := range apitp.ValidWorkOrderStatuses {
 		keys = append(keys, k)
 	}
 
 	return keys, nil
 }
 
-func (a *App) UpdateWorkOrder(assetId string, woId string, wo tp.WorkOrder) (tp.WorkOrder, error) {
+func (a *App) UpdateWorkOrder(assetId string, woId string, wo apitp.WorkOrderRequest) (apitp.WorkOrderResponse, error) {
 	// check asset and work order existence and coherency
 	gwo, err := a.GetWorkOrder(assetId, woId)
 	if err != nil {
-		return tp.WorkOrder{}, err
+		return apitp.WorkOrderResponse{}, err
 	}
 
 	if wo.Id != uuid.Nil && wo.Id != gwo.Id {
-		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, fmt.Sprintf("work order id mismatch [%s] and [%s]", wo.Id, gwo.Id))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("work order id mismatch [%s] and [%s]", wo.Id, gwo.Id))
 	}
 	wo.Id = gwo.Id
 
 	if wo.AssetId != uuid.Nil && wo.AssetId != gwo.AssetId {
-		return tp.WorkOrder{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", wo.AssetId, gwo.AssetId))
+		return apitp.WorkOrderResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", wo.AssetId, gwo.AssetId))
 	}
 	wo.AssetId = gwo.AssetId
 
 	err = a.validateWorkOrder(wo)
 	if err != nil {
-		return tp.WorkOrder{}, errors.Wrapf(err, "UpdateWorkOrder validation failed")
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "UpdateWorkOrder validation failed")
 	}
 
-	return a.db.UpdateWorkOrder(wo)
+	stWORequest, err := convertApiWorkOrderRequestToStoreWorkOrder(wo)
+	if err != nil {
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "UpdateWorkOrder conversion failed")
+	}
+
+	stWOResponse, err := a.db.UpdateWorkOrder(stWORequest)
+	if err != nil {
+		return apitp.WorkOrderResponse{}, errors.Wrapf(err, "UpdateWorkOrder failed")
+	}
+
+	return convertStoreWorkOrderToApiWorkOrderResponse(stWOResponse)
 }
 
-func (a *App) validateWorkOrder(wo tp.WorkOrder) error {
+func (a *App) validateWorkOrder(wo apitp.WorkOrderRequest) error {
 	if wo.Id == uuid.Nil {
 		return ae.New(ae.CodeInvalid, "work order id is required")
 	}
 
-	if len(wo.Title) < tp.MinEntityTitleLength || len(wo.Title) > tp.MaxEntityTitleLength {
+	if len(wo.Title) < apitp.MinEntityTitleLength || len(wo.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("work order title must be between [%d] and [%d] characters",
-				tp.MinEntityTitleLength,
-				tp.MaxEntityTitleLength))
+				apitp.MinEntityTitleLength,
+				apitp.MaxEntityTitleLength))
 	}
 
 	if wo.CreatedDate.After(time.Now()) {
 		return ae.New(ae.CodeInvalid, "work order created date cannot be in the future")
 	}
 
-	if !tp.ValidWorkOrderStatuses[wo.Status] {
-		return ae.New(ae.CodeInvalid, fmt.Sprintf("work order status must be one of [%s]", tp.PrintValidWorkOrderStatuses()))
+	if !apitp.ValidWorkOrderStatuses[wo.Status] {
+		return ae.New(ae.CodeInvalid, fmt.Sprintf("work order status must be one of [%s]", apitp.PrintValidWorkOrderStatuses()))
 	}
 
 	_, aFound, err := a.assetExists(wo.AssetId.String())
@@ -198,4 +229,16 @@ func (a *App) workOrderExists(id string) (uuid.UUID, bool, error) {
 		return uid, false, err
 	}
 	return uid, true, nil
+}
+
+func convertApiWorkOrderRequestToStoreWorkOrder(wo apitp.WorkOrderRequest) (storetp.WorkOrder, error) {
+	return storetp.WorkOrder{}, ae.New(ae.CodeNotImplemented, "convertApiWorkOrderRequestToStoreWorkOrder not implemented")
+}
+
+func convertStoreWorkOrderListToApiWorkOrderResponseList(wos []storetp.WorkOrder) ([]apitp.WorkOrderResponse, error) {
+	return []apitp.WorkOrderResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreWorkOrderListToApiWorkOrderResponseList not implemented")
+}
+
+func convertStoreWorkOrderToApiWorkOrderResponse(wo storetp.WorkOrder) (apitp.WorkOrderResponse, error) {
+	return apitp.WorkOrderResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreWorkOrderToApiWorkOrderResponse not implemented")
 }

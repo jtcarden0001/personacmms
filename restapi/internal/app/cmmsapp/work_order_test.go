@@ -1,12 +1,13 @@
 package cmmsapp
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	apitp "github.com/jtcarden0001/personacmms/restapi/internal/types/api"
 	utest "github.com/jtcarden0001/personacmms/restapi/internal/utils/test"
 )
 
@@ -18,19 +19,19 @@ func TestAssociateWorkOrderWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestAssociateWorkOrderWithTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, cAsset.Id, false)
+	tk := setupApiTaskRequest(1, cAsset.Id)
 	createdTask, err := app.CreateTask(cAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestAssociateWorkOrderWithTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, cAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestAssociateWorkOrderWithTask: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -89,19 +90,19 @@ func TestCreateWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestCreateWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	workOrder := utest.SetupWorkOrder(1, cAsset.Id, false)
-	workOrderWithId := utest.SetupWorkOrder(2, cAsset.Id, true)
+	workOrder := setupApiWorkOrderRequest(1, cAsset.Id)
+	workOrderWithId := setupApiWorkOrderRequest(2, cAsset.Id)
 
 	testCases := []struct {
 		name          string
 		assetID       string
-		workOrder     tp.WorkOrder
+		workOrder     apitp.WorkOrderRequest
 		shouldSucceed bool
 	}{
 		{"valid work order", cAsset.Id.String(), workOrder, true},
@@ -133,13 +134,13 @@ func TestDeleteWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDeleteWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, cAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestDeleteWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -179,19 +180,19 @@ func TestDisassociateWorkOrderWithTask(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestDisassociateWorkOrderWithTask: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	tk := utest.SetupTask(1, cAsset.Id, false)
+	tk := setupApiTaskRequest(1, cAsset.Id)
 	createdTask, err := app.CreateTask(cAsset.Id.String(), tk)
 	if err != nil {
 		t.Errorf("TestDisassociateWorkOrderWithTask: failed during setup. CreateTask() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, cAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestDisassociateWorkOrderWithTask: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -237,13 +238,13 @@ func TestGetWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestGetWorkOrder: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, cAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 	if err != nil {
 		t.Errorf("TestGetWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -284,19 +285,19 @@ func TestListWorkOrdersByAsset(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestListWorkOrdersByAsset: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo1 := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo1 := setupApiWorkOrderRequest(1, cAsset.Id)
 	_, err = app.CreateWorkOrder(cAsset.Id.String(), wo1)
 	if err != nil {
 		t.Errorf("TestListWorkOrdersByAsset: failed during setup. CreateWorkOrder() failed: %v", err)
 	}
 
-	wo2 := utest.SetupWorkOrder(2, cAsset.Id, false)
+	wo2 := setupApiWorkOrderRequest(2, cAsset.Id)
 	_, err = app.CreateWorkOrder(cAsset.Id.String(), wo2)
 	if err != nil {
 		t.Errorf("TestListWorkOrdersByAsset: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -347,8 +348,8 @@ func TestListWorkOrderStatus(t *testing.T) {
 		t.Errorf("ListWorkOrderStatus() failed: %v", err)
 	}
 
-	if len(statuses) != len(tp.ValidWorkOrderStatuses) {
-		t.Errorf("ListWorkOrderStatus() failed: expected %d statuses, got %d", len(tp.ValidWorkOrderStatuses), len(statuses))
+	if len(statuses) != len(apitp.ValidWorkOrderStatuses) {
+		t.Errorf("ListWorkOrderStatus() failed: expected %d statuses, got %d", len(apitp.ValidWorkOrderStatuses), len(statuses))
 	}
 }
 
@@ -360,7 +361,7 @@ func TestUpdateWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestUpdateWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -368,10 +369,10 @@ func TestUpdateWorkOrder(t *testing.T) {
 
 	workOrderCount := 5
 	var woIds []string
-	createdWorkOrders := make(map[string]tp.WorkOrder)
-	nilIdWorkOrders := make(map[string]tp.WorkOrder)
+	createdWorkOrders := make(map[string]apitp.WorkOrderResponse)
+	nilIdWorkOrders := make(map[string]apitp.WorkOrderRequest)
 	for i := 0; i < workOrderCount; i++ {
-		wo := utest.SetupWorkOrder(i, cAsset.Id, false)
+		wo := setupApiWorkOrderRequest(i, cAsset.Id)
 		cwo, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 		if err != nil {
 			t.Errorf("TestUpdateWorkOrder: failed during setup. CreateWorkOrder() failed: %v", err)
@@ -386,24 +387,24 @@ func TestUpdateWorkOrder(t *testing.T) {
 		name          string
 		assetID       string
 		workOrderID   string
-		workOrder     tp.WorkOrder
+		workOrder     apitp.WorkOrderRequest
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid work order with matching IDs", cAsset.Id.String(), woIds[0], createdWorkOrders[woIds[0]], "valid title1", true},
+		{"valid work order with matching IDs", cAsset.Id.String(), woIds[0], nilIdWorkOrders[woIds[0]], "valid title1", true},
 		{"valid work order with WorkOrder.Id nil", cAsset.Id.String(), woIds[1], nilIdWorkOrders[woIds[1]], "valid title2", true},
-		{"mismatching work order ID and WorkOrder.Id", cAsset.Id.String(), woIds[2], createdWorkOrders[woIds[3]], "valid title3", false},
-		{"non-existent work order", cAsset.Id.String(), uuid.New().String(), tp.WorkOrder{}, "valid title3", false},
+		{"mismatching work order ID and WorkOrder.Id", cAsset.Id.String(), woIds[2], nilIdWorkOrders[woIds[3]], "valid title3", false},
+		{"non-existent work order", cAsset.Id.String(), uuid.New().String(), apitp.WorkOrderRequest{}, "valid title3", false},
 
-		{"invalid work order ID", cAsset.Id.String(), "invalid", tp.WorkOrder{}, "valid title3", false},
-		{"nil work order ID", cAsset.Id.String(), uuid.Nil.String(), tp.WorkOrder{}, "valid title3", false},
-		{"empty work order ID", cAsset.Id.String(), "", tp.WorkOrder{}, "valid title3", false},
-		{"conflicting id", cAsset.Id.String(), woIds[4], createdWorkOrders[woIds[3]], "valid title3", false},
+		{"invalid work order ID", cAsset.Id.String(), "invalid", apitp.WorkOrderRequest{}, "valid title3", false},
+		{"nil work order ID", cAsset.Id.String(), uuid.Nil.String(), apitp.WorkOrderRequest{}, "valid title3", false},
+		{"empty work order ID", cAsset.Id.String(), "", apitp.WorkOrderRequest{}, "valid title3", false},
+		{"conflicting id", cAsset.Id.String(), woIds[4], nilIdWorkOrders[woIds[3]], "valid title3", false},
 
-		{"empty title", cAsset.Id.String(), woIds[1], createdWorkOrders[woIds[1]], "", false},
-		{"minimum length title", cAsset.Id.String(), woIds[1], createdWorkOrders[woIds[1]], strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", cAsset.Id.String(), woIds[1], createdWorkOrders[woIds[1]], strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", cAsset.Id.String(), woIds[1], createdWorkOrders[woIds[1]], strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", cAsset.Id.String(), woIds[1], nilIdWorkOrders[woIds[1]], "", false},
+		{"minimum length title", cAsset.Id.String(), woIds[1], nilIdWorkOrders[woIds[1]], strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", cAsset.Id.String(), woIds[1], nilIdWorkOrders[woIds[1]], strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", cAsset.Id.String(), woIds[1], nilIdWorkOrders[woIds[1]], strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
@@ -437,7 +438,7 @@ func TestValidateWorkOrder(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 		t.Errorf("TestValidateWorkOrder: failed during setup. CreateAsset() failed: %v", err)
@@ -450,18 +451,18 @@ func TestValidateWorkOrder(t *testing.T) {
 		createdDate   time.Time
 		status        string
 		assetId       uuid.UUID
-		workOrder     tp.WorkOrder
+		workOrder     apitp.WorkOrderRequest
 		shouldSucceed bool
 	}{
-		{"valid work order", uuid.New(), "valid title 1", time.Now(), tp.WorkOrderStatusComplete, cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), true},
-		{"invalid work order ID", uuid.Nil, "invalid title", time.Now(), "invalid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"empty title", uuid.New(), "", time.Now(), "valid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"too short title", uuid.New(), "a", time.Now(), "valid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"too long title", uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), time.Now(), "valid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"future created date", uuid.New(), "future date", time.Now().Add(24 * time.Hour), "valid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"invalid status", uuid.New(), "invalid status", time.Now(), "invalid status", cAsset.Id, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"invalid asset", uuid.New(), "invalid asset", time.Now(), "valid status", uuid.Nil, utest.SetupWorkOrder(1, cAsset.Id, false), false},
-		{"non-existent asset", uuid.New(), "non-existent asset", time.Now(), "valid status", uuid.New(), utest.SetupWorkOrder(1, cAsset.Id, false), false},
+		{"valid work order", uuid.New(), "valid title 1", time.Now(), apitp.WorkOrderStatusComplete, cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), true},
+		{"invalid work order ID", uuid.Nil, "invalid title", time.Now(), "invalid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"empty title", uuid.New(), "", time.Now(), "valid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"too short title", uuid.New(), "a", time.Now(), "valid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"too long title", uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), time.Now(), "valid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"future created date", uuid.New(), "future date", time.Now().Add(24 * time.Hour), "valid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"invalid status", uuid.New(), "invalid status", time.Now(), "invalid status", cAsset.Id, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"invalid asset", uuid.New(), "invalid asset", time.Now(), "valid status", uuid.Nil, setupApiWorkOrderRequest(1, cAsset.Id), false},
+		{"non-existent asset", uuid.New(), "non-existent asset", time.Now(), "valid status", uuid.New(), setupApiWorkOrderRequest(1, cAsset.Id), false},
 	}
 
 	for _, tc := range testCases {
@@ -491,14 +492,14 @@ func TestWorkOrderExists(t *testing.T) {
 	}
 	defer cleanup()
 
-	a := utest.SetupAsset(1, false)
+	a := setupApiAssetRequest(1)
 	cAsset, err := app.CreateAsset(a)
 	if err != nil {
 
 		t.Errorf("TestWorkOrderExists: failed during setup. CreateAsset() failed: %v", err)
 	}
 
-	wo := utest.SetupWorkOrder(1, cAsset.Id, false)
+	wo := setupApiWorkOrderRequest(1, cAsset.Id)
 	createdWorkOrder, err := app.CreateWorkOrder(cAsset.Id.String(), wo)
 	if err != nil {
 
@@ -528,5 +529,19 @@ func TestWorkOrderExists(t *testing.T) {
 				t.Errorf("WorkOrderExists() should have failed with %s", tc.name)
 			}
 		})
+	}
+}
+
+func setupApiWorkOrderRequest(identifier int, assetId uuid.UUID) apitp.WorkOrderRequest {
+	return apitp.WorkOrderRequest{
+		Title:           "Work Order " + strconv.Itoa(identifier),
+		CreatedDate:     time.Now().AddDate(0, 0, -identifier),
+		CompletedDate:   utest.ToPtr(time.Now().AddDate(0, 0, identifier)),
+		Instructions:    utest.ToPtr("Instructions " + strconv.Itoa(identifier)),
+		Notes:           utest.ToPtr("Notes " + strconv.Itoa(identifier)),
+		CumulativeMiles: utest.ToPtr(identifier * 100),
+		CumulativeHours: utest.ToPtr(identifier * 10),
+		AssetId:         assetId,
+		Status:          apitp.WorkOrderStatusComplete,
 	}
 }
