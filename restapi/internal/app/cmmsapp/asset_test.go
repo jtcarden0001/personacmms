@@ -136,7 +136,6 @@ func TestCreateAsset(t *testing.T) {
 		shouldSucceed bool
 	}{
 		{"valid asset", setupApiAssetRequest(3), true},
-		{"non nil id", setupApiAssetRequest(4), false},
 		{"empty title", emptyTitleAsset, false},
 		{"conflicting title", conflictingAsset, false},
 	}
@@ -703,22 +702,19 @@ func TestValidateAsset(t *testing.T) {
 	testCases := []struct {
 		name          string
 		asset         apitp.AssetRequest
-		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid asset", setupApiAssetRequest(1), uuid.New(), "valid title", true},
-		{"nil id", setupApiAssetRequest(2), uuid.Nil, "valid title", false},
+		{"valid asset", setupApiAssetRequest(1), "valid title", true},
 
-		{"empty title", setupApiAssetRequest(3), uuid.New(), "", false},
-		{"minimum length title", setupApiAssetRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
-		{"maximum length title", setupApiAssetRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
-		{"too long title", setupApiAssetRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiAssetRequest(3), "", false},
+		{"minimum length title", setupApiAssetRequest(4), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiAssetRequest(5), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiAssetRequest(6), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.asset.Id = tc.id
 			tc.asset.Title = tc.title
 			err := app.validateAsset(tc.asset)
 			if tc.shouldSucceed && err != nil {

@@ -38,7 +38,7 @@ type App interface {
 	DisassociateConsumableWithTask(assetId string, taskId string, consumableId string) error
 	DisassociateConsumableWithWorkOrder(assetId string, workOrderId string, consumableId string) error
 	GetConsumable(consumableId string) (apitp.ConsumableResponse, error)
-	ListConsumables() ([]apitp.ConsumableRequest, error)
+	ListConsumables() ([]apitp.ConsumableResponse, error)
 	UpdateConsumable(consumableId string, consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error)
 
 	// date trigger
@@ -52,7 +52,7 @@ type App interface {
 	CreateGroup(group apitp.GroupRequest) (apitp.GroupResponse, error)
 	DeleteGroup(groupId string) error
 	GetGroup(groupId string) (apitp.GroupResponse, error)
-	ListGroups() ([]apitp.GroupRequest, error)
+	ListGroups() ([]apitp.GroupResponse, error)
 	ListGroupsByAsset(assetId string) ([]apitp.GroupResponse, error)
 	UpdateGroup(groupId string, group apitp.GroupRequest) (apitp.GroupResponse, error)
 

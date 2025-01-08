@@ -28,7 +28,7 @@ func (a *App) AssociateAssetWithCategory(assetId string, categoryId string) (api
 		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithCategory failed")
 	}
 
-	return convertStoreAssetToApiAssetResponse(stAsset)
+	return a.convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (apitp.AssetResponse, error) {
@@ -47,20 +47,17 @@ func (a *App) AssociateAssetWithGroup(assetId string, groupId string) (apitp.Ass
 		return apitp.AssetResponse{}, errors.Wrapf(err, "AssociateAssetWithGroup failed")
 	}
 
-	return convertStoreAssetToApiAssetResponse(stAsset)
+	return a.convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error) {
-	if asset.Id != uuid.Nil {
-		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be nil on create, we will create an id for you")
-	}
-	asset.Id = uuid.New()
 	err := a.validateAsset(asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset validation failed")
 	}
 
-	stAssetRequest, err := convertApiAssetRequestToStoreAsset(asset)
+	assetId := uuid.New()
+	stAssetRequest, err := a.convertApiAssetRequestToStoreAsset(assetId, asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset - convertApiAssetRequestToStoreAsset failed")
 	}
@@ -70,7 +67,7 @@ func (a *App) CreateAsset(asset apitp.AssetRequest) (apitp.AssetResponse, error)
 		return apitp.AssetResponse{}, errors.Wrapf(err, "CreateAsset failed")
 	}
 
-	return convertStoreAssetToApiAssetResponse(stAssetResponse)
+	return a.convertStoreAssetToApiAssetResponse(stAssetResponse)
 }
 
 func (a *App) DeleteAsset(assetId string) error {
@@ -123,7 +120,7 @@ func (a *App) GetAsset(assetId string) (apitp.AssetResponse, error) {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "GetAsset failed")
 	}
 
-	return convertStoreAssetToApiAssetResponse(stAsset)
+	return a.convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) ListAssets() ([]apitp.AssetResponse, error) {
@@ -132,7 +129,7 @@ func (a *App) ListAssets() ([]apitp.AssetResponse, error) {
 		return nil, errors.Wrapf(err, "ListAssets failed")
 	}
 
-	return convertStoreAssetListToApiAssetResponseList(stAssets)
+	return a.convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, error) {
@@ -150,7 +147,7 @@ func (a *App) ListAssetsByCategory(categoryId string) ([]apitp.AssetResponse, er
 		return nil, errors.Wrapf(err, "ListAssetsByCategory failed")
 	}
 
-	return convertStoreAssetListToApiAssetResponseList(stAssets)
+	return a.convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([]apitp.AssetResponse, error) {
@@ -177,7 +174,7 @@ func (a *App) ListAssetsByCategoryAndGroup(categoryId string, groupId string) ([
 		return nil, errors.Wrapf(err, "ListAssetsByCategoryAndGroup failed")
 	}
 
-	return convertStoreAssetListToApiAssetResponseList(stAssets)
+	return a.convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error) {
@@ -195,7 +192,7 @@ func (a *App) ListAssetsByGroup(groupId string) ([]apitp.AssetResponse, error) {
 		return nil, errors.Wrapf(err, "ListAssetsByGroup failed")
 	}
 
-	return convertStoreAssetListToApiAssetResponseList(stAssets)
+	return a.convertStoreAssetListToApiAssetResponseList(stAssets)
 }
 
 func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.AssetResponse, error) {
@@ -204,19 +201,12 @@ func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.Asset
 		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	if asset.Id != uuid.Nil && asset.Id != assetUuid {
-		return apitp.AssetResponse{}, ae.New(ae.CodeInvalid,
-			fmt.Sprintf("asset id mismatch between [%s] and [%s]",
-				asset.Id.String(), assetUuid.String()))
-	}
-
-	asset.Id = assetUuid
 	err = a.validateAsset(asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - asset validation failed")
 	}
 
-	stAsset, err := convertApiAssetRequestToStoreAsset(asset)
+	stAsset, err := a.convertApiAssetRequestToStoreAsset(assetUuid, asset)
 	if err != nil {
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset - convertApiAssetRequestToStoreAsset failed")
 	}
@@ -226,14 +216,10 @@ func (a *App) UpdateAsset(assetId string, asset apitp.AssetRequest) (apitp.Asset
 		return apitp.AssetResponse{}, errors.Wrapf(err, "UpdateAsset failed")
 	}
 
-	return convertStoreAssetToApiAssetResponse(stAsset)
+	return a.convertStoreAssetToApiAssetResponse(stAsset)
 }
 
 func (a *App) validateAsset(asset apitp.AssetRequest) error {
-	if asset.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "asset id must not be nil")
-	}
-
 	if len(asset.Title) < apitp.MinEntityTitleLength || len(asset.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("asset title length must be between [%d] and [%d] characters",
@@ -263,14 +249,44 @@ func (a *App) assetExists(assetId string) (uuid.UUID, bool, error) {
 	return assetUuid, true, nil
 }
 
-func convertApiAssetRequestToStoreAsset(assetRequest apitp.AssetRequest) (storetp.Asset, error) {
-	return storetp.Asset{}, ae.New(ae.CodeNotImplemented, "ConvertApiAssetRequestToStoreAsset not implemented")
+func (a *App) convertApiAssetRequestToStoreAsset(Id uuid.UUID, assetRequest apitp.AssetRequest) (storetp.Asset, error) {
+	return storetp.Asset{
+		Id:           Id,
+		Title:        assetRequest.Title,
+		Year:         assetRequest.Year,
+		Manufacturer: assetRequest.Manufacturer,
+		Make:         assetRequest.Make,
+		ModelNumber:  assetRequest.ModelNumber,
+		SerialNumber: assetRequest.SerialNumber,
+		Description:  assetRequest.Description,
+	}, nil
 }
 
-func convertStoreAssetListToApiAssetResponseList(storeAssets []storetp.Asset) ([]apitp.AssetResponse, error) {
-	return []apitp.AssetResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreAssetListToApiAssetResponseList not implemented")
+func (a *App) convertStoreAssetListToApiAssetResponseList(storeAssets []storetp.Asset) ([]apitp.AssetResponse, error) {
+	apiAssets := make([]apitp.AssetResponse, len(storeAssets))
+	for i, storeAsset := range storeAssets {
+		apiAsset, err := a.convertStoreAssetToApiAssetResponse(storeAsset)
+		if err != nil {
+			return nil, errors.Wrapf(err, "convertStoreAssetListToApiAssetResponseList failed")
+		}
+
+		apiAssets[i] = apiAsset
+	}
+
+	return apiAssets, nil
 }
 
-func convertStoreAssetToApiAssetResponse(storeAsset storetp.Asset) (apitp.AssetResponse, error) {
-	return apitp.AssetResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreAssetToApiAssetResponse not implemented")
+func (a *App) convertStoreAssetToApiAssetResponse(storeAsset storetp.Asset) (apitp.AssetResponse, error) {
+	apiAsset := apitp.AssetResponse{
+		Id:           storeAsset.Id,
+		Title:        storeAsset.Title,
+		Year:         storeAsset.Year,
+		Manufacturer: storeAsset.Manufacturer,
+		Make:         storeAsset.Make,
+		ModelNumber:  storeAsset.ModelNumber,
+		SerialNumber: storeAsset.SerialNumber,
+		Description:  storeAsset.Description,
+	}
+
+	return apiAsset, nil
 }
