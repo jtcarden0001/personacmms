@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 )
 
 func SetupAsset(identifier int, generateId bool) tp.Asset {

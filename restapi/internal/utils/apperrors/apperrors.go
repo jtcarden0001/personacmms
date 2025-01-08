@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	tp "github.com/jtcarden0001/personacmms/restapi/internal/types"
+	tp "github.com/jtcarden0001/personacmms/restapi/internal/types/store"
 )
 
 // It is idiomatic to use pointers in custom errors and have Error() return a pointer type
@@ -25,6 +25,7 @@ func New(code string, message string) AppError {
 
 // Error codes
 var CodeAlreadyExists = "ALREADY_EXISTS"
+var CodeInternalServerError = "INTERNAL_SERVER_ERROR"
 var CodeInvalid = "INVALID"
 var CodeNotFound = "NOT_FOUND"
 var CodeNotImplemented = "NOT_IMPLEMENTED"
