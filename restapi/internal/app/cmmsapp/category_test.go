@@ -33,7 +33,6 @@ func TestCreateCategory(t *testing.T) {
 		shouldSucceed bool
 	}{
 		{"valid category", setupApiCategoryRequest(3), true},
-		{"non nil id", setupApiCategoryRequest(4), false},
 		{"empty title", emptyTitleCategory, false},
 		{"conflicting title", conflictingCategory, false},
 	}
@@ -306,22 +305,20 @@ func TestValidateCategory(t *testing.T) {
 	testCases := []struct {
 		name          string
 		category      apitp.CategoryRequest
-		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid category", setupApiCategoryRequest(1), uuid.New(), "valid title", true},
-		{"nil id", setupApiCategoryRequest(2), uuid.Nil, "valid title", false},
+		{"valid category", setupApiCategoryRequest(1), "valid title", true},
+		{"nil id", setupApiCategoryRequest(2), "valid title", false},
 
-		{"empty title", setupApiCategoryRequest(3), uuid.New(), "", false},
-		{"minimum length title", setupApiCategoryRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
-		{"maximum length title", setupApiCategoryRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
-		{"too long title", setupApiCategoryRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiCategoryRequest(3), "", false},
+		{"minimum length title", setupApiCategoryRequest(4), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiCategoryRequest(5), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiCategoryRequest(6), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.category.Id = tc.id
 			tc.category.Title = tc.title
 			err := app.validateCategory(tc.category)
 			if tc.shouldSucceed && err != nil {

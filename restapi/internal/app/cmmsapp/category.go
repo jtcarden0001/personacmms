@@ -13,17 +13,13 @@ import (
 // TODO: ensure the returned category has a list of asset referenes associated with it
 
 func (a *App) CreateCategory(cat apitp.CategoryRequest) (apitp.CategoryResponse, error) {
-	if cat.Id != uuid.Nil {
-		return apitp.CategoryResponse{}, ae.New(ae.CodeInvalid, "category id must be nil on create, we will create an id for you")
-	}
-	cat.Id = uuid.New()
-
 	err := a.validateCategory(cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory validation failed")
 	}
 
-	stCategory, err := convertApiCategoryRequestToStoreCategory(cat)
+	catId := uuid.New()
+	stCategory, err := a.convertApiCategoryRequestToStoreCategory(catId, cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory ConvertApiCategoryRequestToStoreCategory failed")
 	}
@@ -33,7 +29,7 @@ func (a *App) CreateCategory(cat apitp.CategoryRequest) (apitp.CategoryResponse,
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "CreateCategory CreateCategory failed")
 	}
 
-	return convertStoreCategoryToApiCategoryResponse(stCategory)
+	return a.convertStoreCategoryToApiCategoryResponse(stCategory)
 }
 
 func (a *App) DeleteCategory(id string) error {
@@ -53,7 +49,7 @@ func (a *App) ListCategories() ([]apitp.CategoryResponse, error) {
 		return nil, errors.Wrapf(err, "ListCategories failed")
 	}
 
-	return convertStoreCategoryListToApiCategoryResponseList(stCategories)
+	return a.convertStoreCategoryListToApiCategoryResponseList(stCategories)
 }
 
 func (a *App) GetCategory(id string) (apitp.CategoryResponse, error) {
@@ -67,7 +63,7 @@ func (a *App) GetCategory(id string) (apitp.CategoryResponse, error) {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "GetCategory failed")
 	}
 
-	return convertStoreCategoryToApiCategoryResponse(stCategory)
+	return a.convertStoreCategoryToApiCategoryResponse(stCategory)
 }
 
 func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.CategoryResponse, error) {
@@ -76,17 +72,12 @@ func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.Catego
 		return apitp.CategoryResponse{}, ae.New(ae.CodeInvalid, "category id must be a valid uuid")
 	}
 
-	if cat.Id != uuid.Nil && cat.Id != catUuid {
-		return apitp.CategoryResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("category id mismatch between [%s] and [%s]", id, cat.Id.String()))
-	}
-
-	cat.Id = catUuid
 	err = a.validateCategory(cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory validation failed")
 	}
 
-	stCatRequest, err := convertApiCategoryRequestToStoreCategory(cat)
+	stCatRequest, err := a.convertApiCategoryRequestToStoreCategory(catUuid, cat)
 	if err != nil {
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory ConvertApiCategoryRequestToStoreCategory failed")
 	}
@@ -96,7 +87,7 @@ func (a *App) UpdateCategory(id string, cat apitp.CategoryRequest) (apitp.Catego
 		return apitp.CategoryResponse{}, errors.Wrapf(err, "UpdateCategory UpdateCategory failed")
 	}
 
-	return convertStoreCategoryToApiCategoryResponse(stCatResponse)
+	return a.convertStoreCategoryToApiCategoryResponse(stCatResponse)
 }
 
 // candidate to offload to store layer
@@ -115,14 +106,10 @@ func (a *App) ListCategoriesByAsset(assetId string) ([]apitp.CategoryResponse, e
 		return nil, errors.Wrapf(err, "ListCategoriesByAsset failed")
 	}
 
-	return convertStoreCategoryListToApiCategoryResponseList(stCatResponses)
+	return a.convertStoreCategoryListToApiCategoryResponseList(stCatResponses)
 }
 
 func (a *App) validateCategory(cat apitp.CategoryRequest) error {
-	if cat.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "category id is required")
-	}
-
 	if len(cat.Title) < apitp.MinEntityTitleLength || len(cat.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("category title length must be between [%d] and [%d] characters",
@@ -151,14 +138,35 @@ func (a *App) categoryExists(id string) (uuid.UUID, bool, error) {
 	return cUuid, true, nil
 }
 
-func convertApiCategoryRequestToStoreCategory(catRequest apitp.CategoryRequest) (storetp.Category, error) {
-	return storetp.Category{}, ae.New(ae.CodeNotImplemented, "ConvertApiCategoryRequestToStoreCategory not implemented")
+func (a *App) convertApiCategoryRequestToStoreCategory(id uuid.UUID, catRequest apitp.CategoryRequest) (storetp.Category, error) {
+	storeCat := storetp.Category{
+		Id:          id,
+		Title:       catRequest.Title,
+		Description: catRequest.Description,
+	}
+
+	return storeCat, nil
 }
 
-func convertStoreCategoryListToApiCategoryResponseList(cats []storetp.Category) ([]apitp.CategoryResponse, error) {
-	return []apitp.CategoryResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreCategoryListToApiCategoryResponseList not implemented")
+func (a *App) convertStoreCategoryListToApiCategoryResponseList(cats []storetp.Category) ([]apitp.CategoryResponse, error) {
+	apiCats := make([]apitp.CategoryResponse, 0, len(cats))
+	for _, c := range cats {
+		apiCat, err := a.convertStoreCategoryToApiCategoryResponse(c)
+		if err != nil {
+			return nil, errors.Wrapf(err, "convertStoreCategoryListToApiCategoryResponseList failed")
+		}
+		apiCats = append(apiCats, apiCat)
+	}
+
+	return apiCats, nil
 }
 
-func convertStoreCategoryToApiCategoryResponse(cat storetp.Category) (apitp.CategoryResponse, error) {
-	return apitp.CategoryResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreCategoryToApiCategoryResponse not implemented")
+func (a *App) convertStoreCategoryToApiCategoryResponse(cat storetp.Category) (apitp.CategoryResponse, error) {
+	apiCat := apitp.CategoryResponse{
+		Id:          cat.Id,
+		Title:       cat.Title,
+		Description: cat.Description,
+	}
+
+	return apiCat, nil
 }
