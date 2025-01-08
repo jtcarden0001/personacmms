@@ -6,12 +6,12 @@ import "github.com/google/uuid"
 
 // TODO: add references to categories and groups
 type Asset struct {
-	Id           uuid.UUID `json:"id" swaggerignore:"true"`
-	Title        string    `json:"title" binding:"required"`
-	Year         *int      `json:"year"`
-	Manufacturer *string   `json:"manufacturer"`
-	Make         *string   `json:"make"`
-	ModelNumber  *string   `json:"modelNumber"`
-	SerialNumber *string   `json:"serialNumber"`
-	Description  *string   `json:"description"`
+	Id           uuid.UUID
+	Title        string
+	Year         *int
+	Manufacturer *string
+	Make         *string
+	ModelNumber  *string
+	SerialNumber *string
+	Description  *string
 }

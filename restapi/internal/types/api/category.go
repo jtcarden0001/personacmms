@@ -9,8 +9,8 @@ type CategoryRequest struct {
 }
 
 type CategoryResponse struct {
-	Id          uuid.UUID `json:"id" binding:"required"`
-	Title       string    `json:"title" binding:"required"`
+	Id          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
 	Description *string   `json:"description"`
 	// TODO:
 	// array string of api references "/api/v1/assets/{id}"

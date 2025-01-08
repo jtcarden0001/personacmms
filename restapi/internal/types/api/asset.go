@@ -14,8 +14,8 @@ type AssetRequest struct {
 }
 
 type AssetResponse struct {
-	Id           uuid.UUID `json:"id" swaggerignore:"true"`
-	Title        string    `json:"title" binding:"required"`
+	Id           uuid.UUID `json:"id"`
+	Title        string    `json:"title"`
 	Year         *int      `json:"year"`
 	Manufacturer *string   `json:"manufacturer"`
 	Make         *string   `json:"make"`
