@@ -353,24 +353,22 @@ func TestValidateTask(t *testing.T) {
 	testCases := []struct {
 		name          string
 		task          tp.TaskRequest
-		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid task", setupApiTaskRequest(1, createdAsset.Id), uuid.New(), "valid title", true},
-		{"nil id", setupApiTaskRequest(2, createdAsset.Id), uuid.Nil, "valid title", false},
+		{"valid task", setupApiTaskRequest(1, createdAsset.Id), "valid title", true},
+		{"nil id", setupApiTaskRequest(2, createdAsset.Id), "valid title", false},
 
-		{"empty title", setupApiTaskRequest(3, createdAsset.Id), uuid.New(), "", false},
-		{"minimum length title", setupApiTaskRequest(4, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MinEntityTitleLength), true},
-		{"maximum length title", setupApiTaskRequest(5, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength), true},
-		{"too long title", setupApiTaskRequest(6, createdAsset.Id), uuid.New(), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiTaskRequest(3, createdAsset.Id), "", false},
+		{"minimum length title", setupApiTaskRequest(4, createdAsset.Id), strings.Repeat("a", tp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiTaskRequest(5, createdAsset.Id), strings.Repeat("a", tp.MaxEntityTitleLength), true},
+		{"too long title", setupApiTaskRequest(6, createdAsset.Id), strings.Repeat("a", tp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.task.Id = tc.id
 			tc.task.Title = tc.title
-			err := app.validateTask(tc.task)
+			err := app.validateTaskAndAsset(createdAsset.Id, tc.task)
 			if tc.shouldSucceed && err != nil {
 				t.Errorf("validateTask() failed: %v", err)
 			}
@@ -438,6 +436,5 @@ func setupApiTaskRequest(identifier int, assetId uuid.UUID) tp.TaskRequest {
 	return tp.TaskRequest{
 		Title:        fmt.Sprintf("Task %d", identifier),
 		Instructions: utest.ToPtr(fmt.Sprintf("Task %d instructions", identifier)),
-		AssetId:      assetId,
 	}
 }

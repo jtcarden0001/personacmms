@@ -11,27 +11,18 @@ import (
 )
 
 func (a *App) CreateTask(assetId string, task apitp.TaskRequest) (apitp.TaskResponse, error) {
-	if task.Id != uuid.Nil {
-		return apitp.TaskResponse{}, ae.New(ae.CodeInvalid, "task id must be nil on create, we will create an id for you")
-	}
-	task.Id = uuid.New()
-
 	aUid, err := uuid.Parse(assetId)
 	if err != nil {
 		return apitp.TaskResponse{}, ae.New(ae.CodeInvalid, "asset id must be a valid uuid")
 	}
 
-	if task.AssetId != uuid.Nil && task.AssetId != aUid {
-		return apitp.TaskResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("asset id mismatch [%s] does not match [%s]", task.AssetId, assetId))
-	}
-
-	task.AssetId = aUid
-	err = a.validateTask(task)
+	err = a.validateTaskAndAsset(aUid, task)
 	if err != nil {
 		return apitp.TaskResponse{}, errors.Wrapf(err, "CreateTask validation failed")
 	}
 
-	stTaskRequest, err := convertApiTaskRequestToStoreTask(task)
+	newTaskId := uuid.New()
+	stTaskRequest, err := convertApiTaskRequestToStoreTask(aUid, newTaskId, task)
 	if err != nil {
 		return apitp.TaskResponse{}, errors.Wrapf(err, "CreateTask - error converting to store type")
 	}
@@ -132,22 +123,13 @@ func (a *App) UpdateTask(assetId string, taskId string, task apitp.TaskRequest) 
 		return apitp.TaskResponse{}, err
 	}
 
-	if task.Id != uuid.Nil && task.Id != t.Id {
-		return apitp.TaskResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("task id mismatch [%s] and [%s]", task.Id, t.Id))
-	}
-	task.Id = t.Id
-
-	if task.AssetId != uuid.Nil && task.AssetId != t.AssetId {
-		return apitp.TaskResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("asset id mismatch [%s] and [%s]", task.AssetId, t.AssetId))
-	}
-	task.AssetId = t.AssetId
-
-	err = a.validateTask(task)
+	// TODO: inefficiency here, we are validating asset above with GetTask and again in validateTaskAndAsset
+	err = a.validateTaskAndAsset(t.AssetId, task)
 	if err != nil {
 		return apitp.TaskResponse{}, errors.Wrapf(err, "UpdateTask validation failed")
 	}
 
-	stTaskRequest, err := convertApiTaskRequestToStoreTask(task)
+	stTaskRequest, err := convertApiTaskRequestToStoreTask(t.AssetId, t.Id, task)
 	if err != nil {
 		return apitp.TaskResponse{}, errors.Wrapf(err, "UpdateTask - error converting to store type")
 	}
@@ -160,24 +142,20 @@ func (a *App) UpdateTask(assetId string, taskId string, task apitp.TaskRequest) 
 	return convertStoreTaskToApiTaskResponse(stTaskResponse)
 }
 
-func (a *App) validateTask(task apitp.TaskRequest) error {
-	if task.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "task id is required")
-	}
-
+func (a *App) validateTaskAndAsset(assetId uuid.UUID, task apitp.TaskRequest) error {
 	if len(task.Title) < apitp.MinEntityTitleLength || len(task.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("task title length must be between [%d] and [%d] characters",
 			apitp.MinEntityTitleLength,
 			apitp.MaxEntityTitleLength))
 	}
 
-	_, aFound, err := a.assetExists(task.AssetId.String())
+	_, aFound, err := a.assetExists(assetId.String())
 	if err != nil {
 		return errors.Wrapf(err, "error checking asset exists")
 	}
 
 	if !aFound {
-		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", task.AssetId))
+		return ae.New(ae.CodeNotFound, fmt.Sprintf("asset with id [%s] not found", assetId))
 	}
 
 	return nil
@@ -199,14 +177,37 @@ func (a *App) taskExists(id string) (uuid.UUID, bool, error) {
 	return uid, true, nil
 }
 
-func convertApiTaskRequestToStoreTask(taskRequest apitp.TaskRequest) (storetp.Task, error) {
-	return storetp.Task{}, ae.New(ae.CodeNotImplemented, "ConvertApiTaskRequestToStoreTask not implemented")
+func convertApiTaskRequestToStoreTask(assetId uuid.UUID, taskId uuid.UUID, taskRequest apitp.TaskRequest) (storetp.Task, error) {
+	stTask := storetp.Task{
+		Id:           taskId,
+		Title:        taskRequest.Title,
+		Instructions: taskRequest.Instructions,
+		AssetId:      assetId,
+	}
+
+	return stTask, nil
 }
 
 func convertStoreTaskListToApiTaskResponseList(storeTasks []storetp.Task) ([]apitp.TaskResponse, error) {
-	return []apitp.TaskResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreTaskListToApiTaskResponseList not implemented")
+	apiTasks := make([]apitp.TaskResponse, len(storeTasks))
+	for i, stTask := range storeTasks {
+		apiTask, err := convertStoreTaskToApiTaskResponse(stTask)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error converting store task to api task")
+		}
+		apiTasks[i] = apiTask
+	}
+	return apiTasks, nil
 }
 
 func convertStoreTaskToApiTaskResponse(storeTask storetp.Task) (apitp.TaskResponse, error) {
-	return apitp.TaskResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreTaskToApiTaskResponse not implemented")
+	apiTask := apitp.TaskResponse{
+		Id:             storeTask.Id,
+		Title:          storeTask.Title,
+		Instructions:   storeTask.Instructions,
+		AssetId:        storeTask.AssetId,
+		AssetReference: fmt.Sprintf("/api/v1/assets/%s", storeTask.AssetId),
+	}
+
+	return apiTask, nil
 }
