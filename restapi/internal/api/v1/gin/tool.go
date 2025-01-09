@@ -19,6 +19,12 @@ import (
 // - PUT  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
 // - DEL  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
 
+// TODO:
+// - GET  /assets/{assetId}/tasks/{taskId}/tools
+// - GET  /assets/{assetId}/tasks/{taskId}/tools/{toolId}
+// - GET  /assets/{assetId}/work-orders/{workOrderId}/tools
+// - GET  /assets/{assetId}/work-orders/{workOrderId}/tools/{toolId}
+
 var toolId = "toolId"
 var toolGp = "tools"
 var toolResource = fmt.Sprintf("%s/:%s", toolGp, toolId)
