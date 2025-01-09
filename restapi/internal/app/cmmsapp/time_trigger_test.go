@@ -320,20 +320,18 @@ func TestValidateTimeTrigger(t *testing.T) {
 	testCases := []struct {
 		name          string
 		timeTrigger   apitp.TimeTriggerRequest
-		id            uuid.UUID
 		quantity      int
 		timeUnit      string
 		shouldSucceed bool
 	}{
-		{"valid time trigger", setupApiTimeTriggerRequest(1, createdTask.Id), uuid.New(), 1, "day", true},
-		{"nil id", setupApiTimeTriggerRequest(2, createdTask.Id), uuid.Nil, 1, "day", false},
-		{"invalid quantity", setupApiTimeTriggerRequest(3, createdTask.Id), uuid.New(), 0, "day", false},
-		{"invalid time unit", setupApiTimeTriggerRequest(4, createdTask.Id), uuid.New(), 1, "invalid", false},
+		{"valid time trigger", setupApiTimeTriggerRequest(1, createdTask.Id), 1, "day", true},
+		{"nil id", setupApiTimeTriggerRequest(2, createdTask.Id), 1, "day", false},
+		{"invalid quantity", setupApiTimeTriggerRequest(3, createdTask.Id), 0, "day", false},
+		{"invalid time unit", setupApiTimeTriggerRequest(4, createdTask.Id), 1, "invalid", false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.timeTrigger.Id = tc.id
 			tc.timeTrigger.Quantity = tc.quantity
 			tc.timeTrigger.TimeUnit = tc.timeUnit
 			err := app.validateTimeTrigger(tc.timeTrigger)
@@ -407,7 +405,6 @@ func TestTimeTriggerExists(t *testing.T) {
 
 func setupApiTimeTriggerRequest(identifier int, taskId uuid.UUID) apitp.TimeTriggerRequest {
 	return apitp.TimeTriggerRequest{
-		TaskId:   taskId,
 		Quantity: identifier,
 		TimeUnit: apitp.TimeTriggerUnitDays,
 	}

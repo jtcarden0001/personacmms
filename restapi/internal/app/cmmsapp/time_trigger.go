@@ -11,28 +11,19 @@ import (
 )
 
 func (a *App) CreateTimeTrigger(assetId string, taskId string, timeTrigger apitp.TimeTriggerRequest) (apitp.TimeTriggerResponse, error) {
-	if timeTrigger.Id != uuid.Nil {
-		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeInvalid, "timeTrigger id must be nil on create, we will create an id for you")
-	}
-	timeTrigger.Id = uuid.New()
-
 	// check namespace coherency
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "CreateTimeTrigger - error checking task exists")
 	}
 
-	if timeTrigger.TaskId != uuid.Nil && timeTrigger.TaskId != task.Id {
-		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeNotFound, fmt.Sprintf("task id mismatch [%s] does not match [%s]", timeTrigger.TaskId, task.Id))
-	}
-
-	timeTrigger.TaskId = task.Id
 	err = a.validateTimeTrigger(timeTrigger)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "CreateTimeTrigger validation failed")
 	}
 
-	stTTRequest, err := convertApiTimeTriggerRequestToStoreTimeTrigger(timeTrigger)
+	newTimeTriggerId := uuid.New()
+	stTTRequest, err := convertApiTimeTriggerRequestToStoreTimeTrigger(task, newTimeTriggerId, timeTrigger)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "CreateTimeTrigger - error converting to store type")
 	}
@@ -77,7 +68,7 @@ func (a *App) GetTimeTrigger(assetId string, taskId string, timeTriggerId string
 		return apitp.TimeTriggerResponse{}, err
 	}
 
-	if tt.TaskId != task.Id {
+	if tt.Task.Id != task.Id {
 		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeNotFound,
 			fmt.Sprintf("timeTrigger with id [%s] not found in task with id [%s]",
 				tt.Id,
@@ -112,37 +103,23 @@ func (a *App) ListTimeTriggerUnits() ([]string, error) {
 }
 
 func (a *App) UpdateTimeTrigger(assetId string, taskId string, timeTriggerId string, timeTrigger apitp.TimeTriggerRequest) (apitp.TimeTriggerResponse, error) {
-	ttUid, err := uuid.Parse(timeTriggerId)
-	if err != nil {
-		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
-	}
-
-	if timeTrigger.Id != uuid.Nil && timeTrigger.Id != ttUid {
-		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeInvalid,
-			fmt.Sprintf("timeTrigger id mismatch between [%s] and [%s]",
-				timeTriggerId, timeTrigger.Id))
-	}
-	timeTrigger.Id = ttUid
-
 	// check namespace coherency
 	task, err := a.GetTask(assetId, taskId)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "UpdateTimeTrigger - error checking task exists")
 	}
 
-	if timeTrigger.TaskId != uuid.Nil && timeTrigger.TaskId != task.Id {
-		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeNotFound,
-			fmt.Sprintf("task id mismatch [%s] does not match [%s]",
-				timeTrigger.TaskId, task.Id))
+	ttUid, err := uuid.Parse(timeTriggerId)
+	if err != nil {
+		return apitp.TimeTriggerResponse{}, ae.New(ae.CodeInvalid, "timeTrigger id must be a valid uuid")
 	}
 
-	timeTrigger.TaskId = task.Id
 	err = a.validateTimeTrigger(timeTrigger)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "UpdateTimeTrigger validation failed")
 	}
 
-	stTTRequest, err := convertApiTimeTriggerRequestToStoreTimeTrigger(timeTrigger)
+	stTTRequest, err := convertApiTimeTriggerRequestToStoreTimeTrigger(task, ttUid, timeTrigger)
 	if err != nil {
 		return apitp.TimeTriggerResponse{}, errors.Wrapf(err, "UpdateTimeTrigger - error converting to store type")
 	}
@@ -156,10 +133,6 @@ func (a *App) UpdateTimeTrigger(assetId string, taskId string, timeTriggerId str
 }
 
 func (a *App) validateTimeTrigger(timeTrigger apitp.TimeTriggerRequest) error {
-	if timeTrigger.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "timeTrigger id is required")
-	}
-
 	minTimeTriggerQuantity := 1
 	if timeTrigger.Quantity < minTimeTriggerQuantity {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("timeTrigger quantity must be greater or equal to [%d]", minTimeTriggerQuantity))
@@ -167,15 +140,6 @@ func (a *App) validateTimeTrigger(timeTrigger apitp.TimeTriggerRequest) error {
 
 	if !apitp.ValidTimeTriggerUnits[timeTrigger.TimeUnit] {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("timeTrigger unit must be one of [%s]", apitp.PrintValidTimeTriggerUnits()))
-	}
-
-	_, te, err := a.taskExists(timeTrigger.TaskId.String())
-	if err != nil {
-		return errors.Wrapf(err, "validateTimeTrigger - unexpected error validating task exists")
-	}
-
-	if !te {
-		return ae.New(ae.CodeNotFound, fmt.Sprintf("parent task with id [%s] not found", timeTrigger.TaskId.String()))
 	}
 
 	return nil
@@ -198,14 +162,42 @@ func (a *App) timeTriggerExists(id string) (uuid.UUID, bool, error) {
 	return uid, true, nil
 }
 
-func convertApiTimeTriggerRequestToStoreTimeTrigger(timeTrigger apitp.TimeTriggerRequest) (storetp.TimeTrigger, error) {
-	return storetp.TimeTrigger{}, ae.New(ae.CodeNotImplemented, "convertApiTimeTriggerRequestToStoreTimeTrigger not implemented")
-}
+func convertApiTimeTriggerRequestToStoreTimeTrigger(task apitp.TaskResponse, ttId uuid.UUID, timeTrigger apitp.TimeTriggerRequest) (storetp.TimeTrigger, error) {
+	stTT := storetp.TimeTrigger{
+		Id:       ttId,
+		Quantity: timeTrigger.Quantity,
+		TimeUnit: timeTrigger.TimeUnit,
+		Task: storetp.Task{
+			Id:      task.Id,
+			AssetId: task.AssetId,
+		},
+	}
 
-func convertStoreTimeTriggerToApiTimeTriggerResponse(timeTrigger storetp.TimeTrigger) (apitp.TimeTriggerResponse, error) {
-	return apitp.TimeTriggerResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreTimeTriggerToApiTimeTriggerResponse not implemented")
+	return stTT, nil
+
 }
 
 func convertStoreTimeTriggerListToApiTimeTriggerResponseList(timeTriggers []storetp.TimeTrigger) ([]apitp.TimeTriggerResponse, error) {
-	return []apitp.TimeTriggerResponse{}, ae.New(ae.CodeNotImplemented, "convertStoreTimeTriggerListToApiTimeTriggerResponseList not implemented")
+	apiTTs := []apitp.TimeTriggerResponse{}
+	for _, tt := range timeTriggers {
+		apiTT, err := convertStoreTimeTriggerToApiTimeTriggerResponse(tt)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error converting store time trigger to api time trigger")
+		}
+		apiTTs = append(apiTTs, apiTT)
+	}
+
+	return apiTTs, nil
+}
+
+func convertStoreTimeTriggerToApiTimeTriggerResponse(timeTrigger storetp.TimeTrigger) (apitp.TimeTriggerResponse, error) {
+	apiTT := apitp.TimeTriggerResponse{
+		Id:            timeTrigger.Id,
+		Quantity:      timeTrigger.Quantity,
+		TimeUnit:      timeTrigger.TimeUnit,
+		TaskId:        timeTrigger.Task.Id,
+		TaskReference: fmt.Sprintf("/api/v1/assets/%s/tasks/%s", timeTrigger.Task.AssetId, timeTrigger.Task.Id),
+	}
+
+	return apiTT, nil
 }
