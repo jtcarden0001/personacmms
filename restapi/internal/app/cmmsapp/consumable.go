@@ -60,17 +60,13 @@ func (a *App) AssociateConsumableWithWorkOrder(assetId string, workOrderId strin
 }
 
 func (a *App) CreateConsumable(consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error) {
-	if consumable.Id != uuid.Nil {
-		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be nil on create, we will create an id for you")
-	}
-	consumable.Id = uuid.New()
-
 	err := a.validateConsumable(consumable)
 	if err != nil {
 		return apitp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable validation failed")
 	}
 
-	stConsRequest, err := convertApiConsumableRequestToStoreConsumable(consumable)
+	newConsId := uuid.New()
+	stConsRequest, err := convertApiConsumableRequestToStoreConsumable(newConsId, consumable)
 	if err != nil {
 		return apitp.ConsumableResponse{}, errors.Wrapf(err, "CreateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
 	}
@@ -156,22 +152,17 @@ func (a *App) ListConsumables() ([]apitp.ConsumableResponse, error) {
 }
 
 func (a *App) UpdateConsumable(consumableId string, consumable apitp.ConsumableRequest) (apitp.ConsumableResponse, error) {
-	consumableUuid, err := uuid.Parse(consumableId)
+	consUuid, err := uuid.Parse(consumableId)
 	if err != nil {
 		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, "consumable id must be a valid uuid")
 	}
 
-	if consumable.Id != uuid.Nil && consumable.Id != consumableUuid {
-		return apitp.ConsumableResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("consumable id mismatch between [%s] and [%s]", consumableId, consumable.Id.String()))
-	}
-
-	consumable.Id = consumableUuid
 	err = a.validateConsumable(consumable)
 	if err != nil {
 		return apitp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable validation failed")
 	}
 
-	stConsRequest, err := convertApiConsumableRequestToStoreConsumable(consumable)
+	stConsRequest, err := convertApiConsumableRequestToStoreConsumable(consUuid, consumable)
 	if err != nil {
 		return apitp.ConsumableResponse{}, errors.Wrapf(err, "UpdateConsumable ConvertApiConsumableRequestToStoreConsumable failed")
 	}
@@ -185,10 +176,6 @@ func (a *App) UpdateConsumable(consumableId string, consumable apitp.ConsumableR
 }
 
 func (a *App) validateConsumable(consumable apitp.ConsumableRequest) error {
-	if consumable.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "consumable id is required")
-	}
-
 	if len(consumable.Title) < apitp.MinEntityTitleLength || len(consumable.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid,
 			fmt.Sprintf("consumable title length must be between [%d] and [%d] characters",
@@ -217,22 +204,57 @@ func (a *App) consumableExists(consumableId string) (uuid.UUID, bool, error) {
 	return consumableUuid, true, nil
 }
 
-func convertApiConsumableRequestToStoreConsumable(consumableRequest apitp.ConsumableRequest) (storetp.Consumable, error) {
-	return storetp.Consumable{}, ae.New(ae.CodeNotImplemented, "ConvertApiConsumableRequestToStoreConsumable not implemented")
+func convertApiConsumableRequestToStoreConsumable(id uuid.UUID, consumableRequest apitp.ConsumableRequest) (storetp.Consumable, error) {
+	stConsumable := storetp.Consumable{
+		Id:    id,
+		Title: consumableRequest.Title,
+	}
+
+	return stConsumable, nil
 }
 
 func convertStoreConsumableListToApiConsumableResponseList(storeConsumables []storetp.Consumable) ([]apitp.ConsumableResponse, error) {
-	return []apitp.ConsumableResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreConsumableListToApiConsumableResponseList not implemented")
+	apiConsumables := make([]apitp.ConsumableResponse, len(storeConsumables))
+	for i, storeConsumable := range storeConsumables {
+		apiConsumable, err := convertStoreConsumableToApiConsumableResponse(storeConsumable)
+		if err != nil {
+			return nil, errors.Wrapf(err, "convertStoreConsumableListToApiConsumableResponseList failed")
+		}
+		apiConsumables[i] = apiConsumable
+	}
+
+	return apiConsumables, nil
 }
 
 func convertStoreConsumableQuantityListToApiConsumableQuantityResponseList(storeConsumables []storetp.ConsumableQuantity) ([]apitp.ConsumableQuantityResponse, error) {
-	return []apitp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreConsumableQuantityListToApiConsumableQuantityResponseList not implemented")
+	apiConsumables := make([]apitp.ConsumableQuantityResponse, len(storeConsumables))
+	for i, storeConsumable := range storeConsumables {
+		apiConsumable, err := convertStoreConsumableQuantityToApiConsumableQuantityResponse(storeConsumable)
+		if err != nil {
+			return nil, errors.Wrapf(err, "convertStoreConsumableQuantityListToApiConsumableQuantityResponseList failed")
+		}
+		apiConsumables[i] = apiConsumable
+	}
+
+	return apiConsumables, nil
 }
 
 func convertStoreConsumableQuantityToApiConsumableQuantityResponse(storeConsumable storetp.ConsumableQuantity) (apitp.ConsumableQuantityResponse, error) {
-	return apitp.ConsumableQuantityResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreConsumableQuantityToApiConsumableQuantityResponse not implemented")
+	apiConsumable := apitp.ConsumableQuantityResponse{
+		ConsumableId: storeConsumable.ConsumableId,
+		Quantity:     storeConsumable.Quantity,
+		TaskId:       storeConsumable.TaskId,
+		WorkOrderId:  storeConsumable.WorkOrderId,
+	}
+
+	return apiConsumable, nil
 }
 
 func convertStoreConsumableToApiConsumableResponse(storeConsumable storetp.Consumable) (apitp.ConsumableResponse, error) {
-	return apitp.ConsumableResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreConsumableToApiConsumableResponse not implemented")
+	apiConsumable := apitp.ConsumableResponse{
+		Id:    storeConsumable.Id,
+		Title: storeConsumable.Title,
+	}
+
+	return apiConsumable, nil
 }

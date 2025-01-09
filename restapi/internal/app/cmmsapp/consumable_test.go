@@ -483,22 +483,20 @@ func TestValidateConsumable(t *testing.T) {
 	testCases := []struct {
 		name          string
 		consumable    apitp.ConsumableRequest
-		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid consumable", setupApiConsumableRequest(1), uuid.New(), "valid title", true},
-		{"nil id", setupApiConsumableRequest(2), uuid.Nil, "valid title", false},
+		{"valid consumable", setupApiConsumableRequest(1), "valid title", true},
+		{"nil id", setupApiConsumableRequest(2), "valid title", false},
 
-		{"empty title", setupApiConsumableRequest(3), uuid.New(), "", false},
-		{"minimum length title", setupApiConsumableRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
-		{"maximum length title", setupApiConsumableRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
-		{"too long title", setupApiConsumableRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiConsumableRequest(3), "", false},
+		{"minimum length title", setupApiConsumableRequest(4), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiConsumableRequest(5), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiConsumableRequest(6), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.consumable.Id = tc.id
 			tc.consumable.Title = tc.title
 			err := app.validateConsumable(tc.consumable)
 			if tc.shouldSucceed && err != nil {
@@ -566,7 +564,6 @@ func setupApiConsumableRequest(identifier int) apitp.ConsumableRequest {
 
 func setupApiConsumableQuantityRequest(identifier int) apitp.ConsumableQuantityRequest {
 	return apitp.ConsumableQuantityRequest{
-		Title:    fmt.Sprintf("consumable title %d", identifier),
 		Quantity: fmt.Sprintf("%d", identifier),
 	}
 }

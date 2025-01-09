@@ -7,23 +7,26 @@ import "github.com/google/uuid"
 
 // TODO: add references to tasks and work orders
 type ConsumableRequest struct {
-	Id    uuid.UUID `json:"id" swaggerignore:"true"`
-	Title string    `json:"title" binding:"required"`
+	Title string `json:"title" binding:"required"`
 }
 
 type ConsumableResponse struct {
-	Id    uuid.UUID `json:"id" swaggerignore:"true"`
-	Title string    `json:"title" binding:"required"`
+	Id    uuid.UUID `json:"id"`
+	Title string    `json:"title"`
+	// TODO: maybe add references to tasks and work orders
+	// array string of api references "/api/v1/tasks/{id}"
+	// Tasks []string `json:"associatedTasks"`
+	// array string of api references "/api/v1/workorders/{id}"
+	// WorkOrders []string `json:"associatedWorkOrders"`
 }
 
 type ConsumableQuantityRequest struct {
-	Id       uuid.UUID `json:"id" swaggerignore:"true"`
-	Title    string    `json:"title" swaggerignore:"true"`
-	Quantity string    `json:"quantity" binding:"required"`
+	Quantity string `json:"quantity" binding:"required"`
 }
 
 type ConsumableQuantityResponse struct {
-	Id       uuid.UUID `json:"id" swaggerignore:"true"`
-	Title    string    `json:"title" swaggerignore:"true"`
-	Quantity string    `json:"quantity" binding:"required"`
+	ConsumableId uuid.UUID `json:"consumableId"`
+	Quantity     string    `json:"quantity"`
+	TaskId       uuid.UUID `json:"taskId,omitempty"`
+	WorkOrderId  uuid.UUID `json:"workOrderId,omitempty"`
 }
