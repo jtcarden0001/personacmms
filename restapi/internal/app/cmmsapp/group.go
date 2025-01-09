@@ -11,17 +11,13 @@ import (
 )
 
 func (a *App) CreateGroup(grp apitp.GroupRequest) (apitp.GroupResponse, error) {
-	if grp.Id != uuid.Nil {
-		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, "group id must be nil on create, we will create an id for you")
-	}
-	grp.Id = uuid.New()
-
 	err := a.validateGroup(grp)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup validation failed")
 	}
 
-	stGrpRequest, err := convertApiGroupRequestToStoreGroup(grp)
+	newGrpId := uuid.New()
+	stGrpRequest, err := convertApiGroupRequestToStoreGroup(newGrpId, grp)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "CreateGroup - error converting to store type")
 	}
@@ -88,17 +84,12 @@ func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupRe
 		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, "group id must be a valid uuid")
 	}
 
-	if newGroup.Id != uuid.Nil && newGroup.Id != grpUuid {
-		return apitp.GroupResponse{}, ae.New(ae.CodeInvalid, fmt.Sprintf("group id mismatch [%s] and [%s]", newGroup.Id, grpUuid))
-	}
-
-	newGroup.Id = grpUuid
 	err = a.validateGroup(newGroup)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup validation failed")
 	}
 
-	stGrpRequest, err := convertApiGroupRequestToStoreGroup(newGroup)
+	stGrpRequest, err := convertApiGroupRequestToStoreGroup(grpUuid, newGroup)
 	if err != nil {
 		return apitp.GroupResponse{}, errors.Wrapf(err, "UpdateGroup - error converting to store type")
 	}
@@ -111,10 +102,6 @@ func (a *App) UpdateGroup(id string, newGroup apitp.GroupRequest) (apitp.GroupRe
 }
 
 func (a *App) validateGroup(grp apitp.GroupRequest) error {
-	if grp.Id == uuid.Nil {
-		return ae.New(ae.CodeInvalid, "group id is required")
-	}
-
 	if len(grp.Title) < apitp.MinEntityTitleLength || len(grp.Title) > apitp.MaxEntityTitleLength {
 		return ae.New(ae.CodeInvalid, fmt.Sprintf("group title length must be between [%d] and [%d] characters",
 			apitp.MinEntityTitleLength,
@@ -145,14 +132,34 @@ func printInvalidUuidErrorMessage(resource, id string) string {
 	return fmt.Sprintf("%s id '%s' is not a valid uuid.  Uuid must follow the format '%s'", resource, id, uuid.Nil)
 }
 
-func convertApiGroupRequestToStoreGroup(groupRequest apitp.GroupRequest) (storetp.Group, error) {
-	return storetp.Group{}, ae.New(ae.CodeNotImplemented, "ConvertApiGroupRequestToStoreGroup not implemented")
+func convertApiGroupRequestToStoreGroup(id uuid.UUID, groupRequest apitp.GroupRequest) (storetp.Group, error) {
+	stGp := storetp.Group{
+		Id:    id,
+		Title: groupRequest.Title,
+	}
+
+	return stGp, nil
+
 }
 
 func convertStoreGroupListToApiGroupResponseList(storeGroups []storetp.Group) ([]apitp.GroupResponse, error) {
-	return []apitp.GroupResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreGroupListToApiGroupResponseList not implemented")
+	apiGroups := make([]apitp.GroupResponse, len(storeGroups))
+	for i, storeGroup := range storeGroups {
+		apiGroup, err := convertStoreGroupToApiGroupResponse(storeGroup)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error converting store group to api group response")
+		}
+		apiGroups[i] = apiGroup
+	}
+
+	return apiGroups, nil
 }
 
 func convertStoreGroupToApiGroupResponse(storeGroup storetp.Group) (apitp.GroupResponse, error) {
-	return apitp.GroupResponse{}, ae.New(ae.CodeNotImplemented, "ConvertStoreGroupToApiGroupResponse not implemented")
+	apiGroup := apitp.GroupResponse{
+		Id:    storeGroup.Id,
+		Title: storeGroup.Title,
+	}
+
+	return apiGroup, nil
 }

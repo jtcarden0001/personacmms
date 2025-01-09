@@ -311,22 +311,20 @@ func TestValidateGroup(t *testing.T) {
 	testCases := []struct {
 		name          string
 		group         apitp.GroupRequest
-		id            uuid.UUID
 		title         string
 		shouldSucceed bool
 	}{
-		{"valid group", setupApiGroupRequest(1), uuid.New(), "valid title", true},
-		{"nil id", setupApiGroupRequest(2), uuid.Nil, "valid title", false},
+		{"valid group", setupApiGroupRequest(1), "valid title", true},
+		{"nil id", setupApiGroupRequest(2), "valid title", false},
 
-		{"empty title", setupApiGroupRequest(3), uuid.New(), "", false},
-		{"minimum length title", setupApiGroupRequest(4), uuid.New(), strings.Repeat("a", apitp.MinEntityTitleLength), true},
-		{"maximum length title", setupApiGroupRequest(5), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
-		{"too long title", setupApiGroupRequest(6), uuid.New(), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
+		{"empty title", setupApiGroupRequest(3), "", false},
+		{"minimum length title", setupApiGroupRequest(4), strings.Repeat("a", apitp.MinEntityTitleLength), true},
+		{"maximum length title", setupApiGroupRequest(5), strings.Repeat("a", apitp.MaxEntityTitleLength), true},
+		{"too long title", setupApiGroupRequest(6), strings.Repeat("a", apitp.MaxEntityTitleLength+1), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.group.Id = tc.id
 			tc.group.Title = tc.title
 			err := app.validateGroup(tc.group)
 			if tc.shouldSucceed && err != nil {
