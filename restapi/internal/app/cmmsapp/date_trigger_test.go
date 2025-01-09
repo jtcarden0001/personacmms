@@ -320,24 +320,22 @@ func TestValidateDateTrigger(t *testing.T) {
 	testCases := []struct {
 		name          string
 		dateTrigger   apitp.DateTriggerRequest
-		id            uuid.UUID
 		scheduledDate time.Time
 		shouldSucceed bool
 	}{
-		{"valid date trigger", setupApiDateTriggerRequest(1, createdTask.Id), uuid.New(), time.Now().Add(24 * time.Hour), true},
-		{"nil id", setupApiDateTriggerRequest(2, uuid.New()), uuid.Nil, time.Now().Add(24 * time.Hour), false},
+		{"valid date trigger", setupApiDateTriggerRequest(1, createdTask.Id), time.Now().Add(24 * time.Hour), true},
+		{"nil id", setupApiDateTriggerRequest(2, uuid.New()), time.Now().Add(24 * time.Hour), false},
 
-		{"nil task ID", setupApiDateTriggerRequest(2, uuid.New()), uuid.New(), time.Now().Add(24 * time.Hour), false},
-		{"invalid task ID", setupApiDateTriggerRequest(2, uuid.New()), uuid.New(), time.Now().Add(24 * time.Hour), false},
-		{"non-existent task ID", setupApiDateTriggerRequest(2, uuid.New()), uuid.New(), time.Now().Add(24 * time.Hour), false},
+		{"nil task ID", setupApiDateTriggerRequest(2, uuid.New()), time.Now().Add(24 * time.Hour), false},
+		{"invalid task ID", setupApiDateTriggerRequest(2, uuid.New()), time.Now().Add(24 * time.Hour), false},
+		{"non-existent task ID", setupApiDateTriggerRequest(2, uuid.New()), time.Now().Add(24 * time.Hour), false},
 
-		{"nil scheduled date", setupApiDateTriggerRequest(3, createdTask.Id), uuid.New(), time.Time{}, false},
-		{"past scheduled date", setupApiDateTriggerRequest(3, uuid.New()), uuid.New(), time.Now().Add(-24 * time.Hour), false},
+		{"nil scheduled date", setupApiDateTriggerRequest(3, createdTask.Id), time.Time{}, false},
+		{"past scheduled date", setupApiDateTriggerRequest(3, uuid.New()), time.Now().Add(-24 * time.Hour), false},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.dateTrigger.Id = tc.id
 			tc.dateTrigger.ScheduledDate = tc.scheduledDate
 			err := app.validateDateTrigger(tc.dateTrigger)
 			if tc.shouldSucceed && err != nil {
@@ -411,6 +409,5 @@ func TestDateTriggerExists(t *testing.T) {
 func setupApiDateTriggerRequest(identifier int, taskId uuid.UUID) apitp.DateTriggerRequest {
 	return apitp.DateTriggerRequest{
 		ScheduledDate: time.Now().AddDate(0, identifier, 0),
-		TaskId:        taskId,
 	}
 }
